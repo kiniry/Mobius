@@ -1,5 +1,4 @@
 -Make show/hide specs/source keep previous status when viewing a new class
 -Breadcrumbs/history
--Incorporate old informal html output
--Full latex formal class diagram
--Improve png quality
+-Incorporate old informal html output, switching between javadoc style, graphical bon style, informal bon style...
+-Improve latex formal class diagram, as in hand-written example

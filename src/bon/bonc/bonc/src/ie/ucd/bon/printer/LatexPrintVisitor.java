@@ -411,7 +411,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
       tp.print("$\\neq$");
       break;
     case NOTMEMBEROF:
-      tp.print("$\\nin$");
+      tp.print("$\\notin$");
       break;
     case OR:
       tp.print("\\textbf{or}");
@@ -431,10 +431,10 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
   protected void printQuantifier(Quantifier quantifier) {
     switch (quantifier) {
     case EXISTS:
-      tp.print("exists");
+      tp.print("\\exists");
       break;
     case FORALL:
-      tp.print("for_all");
+      tp.print("\\forall");
       break;
     }
   }

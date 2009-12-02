@@ -12,4 +12,3 @@ echo "Cleaning up."
 rm *.tex
 rm *.pdf
 echo "Done."
-
