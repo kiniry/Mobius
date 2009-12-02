@@ -242,11 +242,11 @@ public class Cvc3Prover extends SortedProver {
                                                   optNonnullelements, optIsallocated, optBuiltinTrans,
                                                   optUseClassLiteral, optUseDatatype,
                                                   optTest);
-	    } catch (cvc3.Cvc3Exception e) {
-		ErrorSet.fatal("Could not create cvc3: " + e);
+	    } catch (Throwable e) {
+		ErrorSet.fatal("Could not create cvc3: " + "e");
 		// to silence javac complaining that prover might not be initialized,
 		// as ErrorSet will throw an Error this will never be reached anyway:
-		throw new Error("Could not create cvc3: " + e);
+		throw new Error("Could not create cvc3: " + "e");
 	    }
 	}
 	Assert.notNull(prover);
@@ -310,7 +310,8 @@ public class Cvc3Prover extends SortedProver {
 
     public SortedProverResponse stopProver() {
 	if (printQuery) System.out.println("%% stopProver: " + stackLevel());
-	Assert.notFalse(started);
+	if (!started)
+	  return ok;//Assert.notFalse(started);
 
 	try {
 	    started = false;
