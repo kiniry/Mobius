@@ -158,7 +158,7 @@ public final class Main {
 
     if (so.isPrintSet()) {
       File outputFile = so.isPrintOutputSet() ? so.getPrintOutput() : null;
-      API.print(so.getPrint(), so.getGenClassDic(), outputFile, tracker, printTiming);
+      API.print(so.getPrint(), so.getGenClassDic(), outputFile, tracker, so.getPrintExtraWork(), printTiming);
     }
 
     if (so.isGraphSet()) {

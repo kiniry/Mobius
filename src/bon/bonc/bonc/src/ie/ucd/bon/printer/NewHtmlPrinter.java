@@ -8,6 +8,7 @@ import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.printer.template.FreeMarkerTemplate;
 import ie.ucd.bon.typechecker.BONST;
+import ie.ucd.bon.util.ExecUtil;
 import ie.ucd.bon.util.FileUtil;
 import ie.ucd.bon.util.KeyPair;
 import ie.ucd.bon.util.STUtil;
@@ -22,7 +23,7 @@ import java.util.Set;
 
 public class NewHtmlPrinter {
 
-  public static void print(final File outputDirectory, final ParsingTracker tracker) {
+  public static void print(final File outputDirectory, final ParsingTracker tracker, boolean performExtraWork) {
 
     //TODO copy relevant javascript files
     System.out.println("Doing new html printing " + outputDirectory);
@@ -48,7 +49,20 @@ public class NewHtmlPrinter {
     }
 
     //Clusters
-
+    //TODO print clusters
+    if (performExtraWork && buildImages(outputDirectory)) {
+      System.out.println("Done");
+    } else {
+      File script = relativeFile(outputDirectory, "make-images.sh");
+      if (FileUtil.copyResourceToExternalFile("templates/newhtml/" + "make-images.sh", script)) {
+        if (script.getParent().equals("")) {
+          System.out.println("Execute \"bash " + script + "\" to build the images.");
+        } else {
+          System.out.println("Execute \"cd " + script.getParent() + "; bash " + script.getName() + "\" to build the images.");
+        }
+        System.out.println("Done");
+      }
+    }
   }
 
   private static void printForClass(Clazz clazz, Map<String,Object> map, BONST st, File outputDirectory) {
@@ -106,7 +120,7 @@ public class NewHtmlPrinter {
         "js/scripty/controls.js", "js/scripty/dragdrop.js",
         "js/scripty/effects.js", "js/scripty/slider.js",
         "js/scripty/sound.js", "js/scripty/unittest.js",
-        "style.css", "js/jdoc.js", "make-images.sh",
+        "style.css", "js/jdoc.js",
         "js/sh/shCore.js", "js/sh/shCore.css", "js/sh/shThemeDefault.css",
         "js/sh/shThemeEclipse.css", "js/sh/shBrushBON.js"     
     };
@@ -184,4 +198,56 @@ public class NewHtmlPrinter {
     related.remove(null);
     return related;
   }
+  
+  private static boolean buildImages(File outputDir) {
+    if (!ExecUtil.hasBinaryOnPath("gm")) {
+      System.out.println("It doesn't look like GraphicsMagick (gm) is installed and on the system path.");
+      return false;
+    }
+    if (!ExecUtil.hasBinaryOnPath("rubber")) {
+      System.out.println("It doesn't look like rubber is installed and on the system path.");
+      return false;
+    }
+    if (!ExecUtil.hasBinaryOnPath("pdfcrop")) {
+      System.out.println("It doesn't look like pdfcrop is installed and on the system path.");
+      return false;
+    }
+    
+    System.out.println("Compiling latex...");
+    File[] texFiles = outputDir.listFiles(FileUtil.getSuffixFilenameFilter(".tex"));
+    String filesString = StringUtil.appendWithSeparator(texFiles, " ", false);    
+    int rubberReturn = ExecUtil.execWaitAndPrintToStandardChannels("rubber -d --inplace " + filesString);
+    if (rubberReturn != 0) {
+      System.out.println("Error compiling latex");
+      return false;
+    }
+    System.out.println("Done compiling latex...");
+    
+    File[] pdfFiles = outputDir.listFiles(FileUtil.getSuffixFilenameFilter(".pdf"));
+    for (File pdfFile : pdfFiles) {
+      String pdfFilePath = pdfFile.getPath();
+      System.out.println("Resizing " + pdfFile.getName());
+      if (ExecUtil.execWaitIgnoreOutput("pdfcrop " + pdfFilePath + " " + pdfFilePath) != 0) {
+        System.out.println("Error resizing " + pdfFile.getName());
+        continue;
+      }
+      System.out.println("Converting " + pdfFile.getName() + " to .png");
+      if (ExecUtil.execWaitIgnoreOutput("gm convert -scale 15%x15% -density 1000 -transparent #FFFFFF " + pdfFilePath + " " + pdfFilePath.substring(0,pdfFilePath.length()-3).concat("png")) != 0) {
+        System.out.println("Error converting " + pdfFile.getName());
+      }
+    }
+    
+    //TODO cleanup
+    System.out.println("Cleaning up.");
+    FileUtil.deleteAll(outputDir.listFiles(FileUtil.getSuffixFilenameFilter(".pdf")));
+    FileUtil.deleteAll(outputDir.listFiles(FileUtil.getSuffixFilenameFilter(".tex")));
+    FileUtil.deleteAll(outputDir.listFiles(FileUtil.getSuffixFilenameFilter(".log")));
+    FileUtil.deleteAll(outputDir.listFiles(FileUtil.getSuffixFilenameFilter(".aux")));
+    
+    
+    return true;
+  }
+  
+  
+  
 }

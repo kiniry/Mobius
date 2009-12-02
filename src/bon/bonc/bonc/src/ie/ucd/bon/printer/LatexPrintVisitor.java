@@ -146,7 +146,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
     tp.printLine("\\vspace{2mm}");
     visitAllPrintingSeparator(featureNames, ", ", false);
     visitNodeIfNonNull(hasType);
-    tp.printLine();
+    tp.printLine("\\\\");
     visitAll(arguments);
   }
 
@@ -161,7 +161,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
     tp.print("$\\rightarrow$ ");
     if (identifier != null) {
       tp.print(sanitizeIdentifier(identifier));
-      tp.print(':');
+      tp.print(": ");
     }
     type.accept(this);
     tp.printLine(" \\\\");
@@ -387,7 +387,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
       tp.print(':');
       break;
     case IMPLIES:
-      tp.print("\\rightarrow");
+      tp.print("$\\rightarrow$");
       break;
     case INTDIV:
       tp.print("//");

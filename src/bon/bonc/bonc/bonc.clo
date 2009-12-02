@@ -10,6 +10,8 @@ PrintOutput:{"-po","--print-output"}:{file}
  : "Print output to the given file instead of to stdout."
 PrettyPrint:{"-pp","--pretty-print"}
  : "Pretty-print the parsed input. This is equivalent to -p=TXT."
+PrintExtraWork:{"--print-extra-work"}:[default="true"]
+ : "Do extra work when printing (e.g. compile latex, convert images, etc.)."
 
 PrintMan:{"--print-man"}:[default="false"]
  : "Print available options in man-page format."
@@ -86,3 +88,5 @@ VALIDITY::
 {!$(Version) && !$(Help) && !$(PrintMan) && !$(PrintReadme) && !$(PrintBashCompletion) && 
  !$(ReadFromStdin) && (!$(SourceFiles?) || ($(SourceFiles)).size() == 0)} 
   : "Must provide at least one source file or read from standard input.";
+{!$(PrintExtraWork) && !$(Print?)}
+  : "--print-extra-work is only valid when printing."; 

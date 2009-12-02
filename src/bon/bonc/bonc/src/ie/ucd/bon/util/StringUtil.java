@@ -108,7 +108,7 @@ public final class StringUtil {
     return sb.toString();
   }
 
-  public static String appendWithSeparator(String[] items, String sep, boolean separatorAtEnd) {
+  public static <T> String appendWithSeparator(T[] items, String sep, boolean separatorAtEnd) {
     return appendWithSeparator(Arrays.asList(items), sep, separatorAtEnd);
   }
   

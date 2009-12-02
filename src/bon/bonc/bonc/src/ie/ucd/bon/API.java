@@ -111,7 +111,7 @@ public final class API {
   }
 
 
-  public static void print(final BONcOptionsInterface.Print printType, final boolean genClassDic, final File outputFile, final ParsingTracker tracker, final boolean timing) {
+  public static void print(final BONcOptionsInterface.Print printType, final boolean genClassDic, final File outputFile, final ParsingTracker tracker, final boolean extraWork, final boolean timing) {
 
     if (genClassDic && printType != BONcOptionsInterface.Print.DIC) {
       String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
@@ -121,7 +121,7 @@ public final class API {
       }
     }
 
-    Printer.print(printType, outputFile, tracker, timing);
+    Printer.print(printType, outputFile, tracker, extraWork, timing);
   }
 
   public static void printResults(final Problems problems, final ParsingTracker tracker, final PrintStream out) {

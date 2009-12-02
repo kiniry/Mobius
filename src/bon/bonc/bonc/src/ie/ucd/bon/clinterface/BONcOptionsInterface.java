@@ -90,6 +90,23 @@ public interface BONcOptionsInterface {
   boolean getPrettyPrint();
   
 
+// Option PrintExtraWork. 
+// Aliases: [--print-extra-work]
+
+  /**
+   * @return true if the option PrintExtraWork has been used
+   * in the command line.
+   */
+  boolean isPrintExtraWorkSet();
+
+  /**
+   * Get the value of {@code Option} PrintExtraWork.
+   * @return the value of the option PrintExtraWork if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getPrintExtraWork();
+  
+
 // Option PrintMan. 
 // Aliases: [--print-man]
 

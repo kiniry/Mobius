@@ -213,7 +213,7 @@ public final class Printer {
     }
   }
   
-  private static void printMultipleFiles(final Print printType, final File outputDirectory, final ParsingTracker tracker, final boolean timing) {
+  private static void printMultipleFiles(final Print printType, final File outputDirectory, final ParsingTracker tracker, final boolean extraWork, final boolean timing) {
     //Check outputFile is a dir
     if (outputDirectory == null) {
       System.out.println("Must specify a directory for output for printing option for print type " + printType.name());
@@ -230,16 +230,16 @@ public final class Printer {
     
     switch(printType) {
       case NEWHTML:
-        NewHtmlPrinter.print(outputDirectory, tracker);
+        NewHtmlPrinter.print(outputDirectory, tracker, extraWork);
         break;
     }
   }
   
-  public static void print(final Print printType, final File outputFile, final ParsingTracker tracker, final boolean timing) {
+  public static void print(final Print printType, final File outputFile, final ParsingTracker tracker, final boolean extraWork, final boolean timing) {
     if (isSingleFilePrintingOption(printType)) { 
       printSingleFile(printType, outputFile, tracker, timing);
     } else {
-      printMultipleFiles(printType, outputFile, tracker, timing);
+      printMultipleFiles(printType, outputFile, tracker, extraWork, timing);
     }
   }
 

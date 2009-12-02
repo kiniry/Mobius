@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -119,5 +120,23 @@ public final class FileUtil {
     } catch (IOException ioe) {
       return false;
     }
+  }
+  
+  public static FilenameFilter getSuffixFilenameFilter(final String suffix) {
+    return new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        return name.endsWith(suffix);
+      }
+    };
+  }
+  
+  public static boolean deleteAll(File... files) {
+    for (File file : files) {
+      if (!file.delete()) {
+        return false;
+      }
+    }
+    return true;
   }
 }

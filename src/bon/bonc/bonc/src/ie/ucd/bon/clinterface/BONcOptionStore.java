@@ -16,6 +16,7 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
   private final EnumOption ogPrint;
   private final FileOption ogPrintOutput;
   private final BooleanOption ogPrettyPrint;
+  private final BooleanOption ogPrintExtraWork;
   private final BooleanOption ogPrintMan;
   private final BooleanOption ogPrintReadme;
   private final BooleanOption ogPrintBashCompletion;
@@ -52,6 +53,11 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     addOption(ogPrettyPrint);
     ogPrettyPrint.setProperty("aliases", "-pp,--pretty-print");
     ogPrettyPrint.setProperty("description", "Pretty-print the parsed input. This is equivalent to -p=TXT.");
+    ogPrintExtraWork = new BooleanOption("PrintExtraWork", "(?:--print-extra-work)");
+    addOption(ogPrintExtraWork);
+    ogPrintExtraWork.setProperty("default", "true");
+    ogPrintExtraWork.setProperty("aliases", "--print-extra-work");
+    ogPrintExtraWork.setProperty("description", "Do extra work when printing (e.g. compile latex, convert images, etc.).");
     ogPrintMan = new BooleanOption("PrintMan", "(?:--print-man)");
     addOption(ogPrintMan);
     ogPrintMan.setProperty("default", "false");
@@ -153,6 +159,7 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogOption.addOptionOrGroup(ogCheckFormal);
     ogOption.addOptionOrGroup(ogCheckConsistency);
     ogOption.addOptionOrGroup(ogPrettyPrint);
+    ogOption.addOptionOrGroup(ogPrintExtraWork);
     ogOption.addOptionOrGroup(ogReadFromStdin);
     ogOption.addOptionOrGroup(ogDebug);
     ogOption.addOptionOrGroup(ogPrint);
@@ -173,6 +180,7 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogAllOptions.addOptionOrGroup(ogPrint);
     ogAllOptions.addOptionOrGroup(ogPrintOutput);
     ogAllOptions.addOptionOrGroup(ogPrettyPrint);
+    ogAllOptions.addOptionOrGroup(ogPrintExtraWork);
     ogAllOptions.addOptionOrGroup(ogPrintMan);
     ogAllOptions.addOptionOrGroup(ogPrintReadme);
     ogAllOptions.addOptionOrGroup(ogPrintBashCompletion);
@@ -269,6 +277,32 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
   
   public BooleanOption getPrettyPrintOption() {
     return ogPrettyPrint;
+  }
+  
+// Option PrintExtraWork.
+// Aliases: [--print-extra-work]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isPrintExtraWorkSet() {
+    return ogPrintExtraWork.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getPrintExtraWork() {
+    return ogPrintExtraWork.getValue();
+  }
+
+  /** Gets the value of option PrintExtraWork without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
+  public boolean getRawPrintExtraWork() {
+    return ogPrintExtraWork.getRawValue();
+  }
+  
+  public BooleanOption getPrintExtraWorkOption() {
+    return ogPrintExtraWork;
   }
   
 // Option PrintMan.
