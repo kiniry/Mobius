@@ -101,6 +101,15 @@ public class NewHtmlPrinter {
         count++;
       }
     }
+    
+    if (clazz.classInterface != null) {
+      int count = 1;
+      for (Expression inv : clazz.classInterface.invariant) {
+        map.put("equation", StringUtil.latexPrint(inv) + ";");
+        FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + "-invariant" + count + ".tex"), "newhtml/equation.ftl", map);
+        count++;
+      }
+    }
   }
 
   private static boolean setupDirectory(File outputDirectory) {
@@ -215,11 +224,13 @@ public class NewHtmlPrinter {
     
     System.out.println("Compiling latex...");
     File[] texFiles = outputDir.listFiles(FileUtil.getSuffixFilenameFilter(".tex"));
-    String filesString = StringUtil.appendWithSeparator(texFiles, " ", false);    
-    int rubberReturn = ExecUtil.execWaitAndPrintToStandardChannels("rubber -d --inplace " + filesString);
-    if (rubberReturn != 0) {
-      System.out.println("Error compiling latex");
-      return false;
+    //String filesString = StringUtil.appendWithSeparator(texFiles, " ", false);
+    for (File file : texFiles) {
+      //System.out.println("Compiling " + file);
+      if (ExecUtil.execWaitAndPrintToStandardChannels("rubber -d --inplace " + file) != 0) {
+        System.out.println("Error compiling latex");
+        return false;
+      }
     }
     System.out.println("Done compiling latex...");
     
@@ -243,8 +254,7 @@ public class NewHtmlPrinter {
     FileUtil.deleteAll(outputDir.listFiles(FileUtil.getSuffixFilenameFilter(".tex")));
     FileUtil.deleteAll(outputDir.listFiles(FileUtil.getSuffixFilenameFilter(".log")));
     FileUtil.deleteAll(outputDir.listFiles(FileUtil.getSuffixFilenameFilter(".aux")));
-    
-    
+
     return true;
   }
   

@@ -47,11 +47,23 @@ public class AstUtil {
   };
   
   public static List<String> getSourceLines(AstNode node) {
-    SourceLocation location = node.getLocation();
+    return getSourceLines(node.getLocation());
+  }
+  
+  public static List<String> getSourceLines(SourceLocation location) {
     if (location.getLineNumber() != SourceLocation.UNKNOWN && location.getEndLineNumber() != SourceLocation.UNKNOWN) {
       return SourceReader.getInstance().getSourceLines(location.getSourceFile(), location.getLineNumber(), location.getEndLineNumber());
     } else {
       return Collections.emptyList();
     }
   }
+  
+  public static List<String> getSourceLines(List<? extends AstNode> node) {
+    if (node.size() == 0) {
+      return Collections.emptyList();
+    } else {
+      return getSourceLines(new SourceLocation(node.get(0).getLocation(), node.get(node.size()-1).getLocation()));
+    }
+  }
+
 }

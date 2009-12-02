@@ -63,7 +63,7 @@
     <div class="invisible sourcediv" id="${name}-sourcetoggle">
      <pre  class="brush: bon; toolbar: false; first-line: ${feature.getLocation().getLineNumber()};">
 <#list sourcelines as line>      ${line}
-     </#list>
+      </#list>
      </pre>
     </div>
    </#if>
@@ -77,6 +77,26 @@
  </#list>
 </#list>
 <hr/>
+<#if (ci?? && ci.invariant?size > 0)>
+<div class="invisible specsdiv">
+ <p>
+  <h3>Invariant<#if (ci.invariant?size > 1)>s</#if></h3>
+  <#list ci.invariant as inv>
+  <img src="${class.name.name}-invariant${(inv_index+1)}.png"/>
+  <br/>
+  </#list>
+ </p>
+ <#assign sourcelines=AstUtil.getSourceLines(ci.invariant)/>
+ <#if (sourcelines?size > 0)>
+  <div class="invisible sourcediv" id="${class.name.name}-invariant-sourcetoggle">
+   <pre  class="brush: bon; toolbar: false; first-line: ${ci.invariant?first.getLocation().getLineNumber()};">
+<#list sourcelines as line>    ${line}
+    </#list>
+   </pre>
+  </div>
+ </#if>
+</div>
+</#if>
 <p>
  <a id="showallspecslink" href="#" onclick="return toggleShowAll('#showallspecslink','.showspecslink','.specsdiv','Show specs','Hide specs','Show all specs','Hide all specs');">Show all specs</a>
  <a id="showallsourcelink" href="#" onclick="return toggleShowAll('#showallsourcelink','.showsourcelink','.sourcediv','Show source','Hide source','Show all source','Hide all source');">Show all source</a>
