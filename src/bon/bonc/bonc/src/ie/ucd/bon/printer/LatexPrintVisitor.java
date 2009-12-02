@@ -160,7 +160,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
     tp.printLine("\\hspace{5mm}");
     tp.print("$\\rightarrow$ ");
     if (identifier != null) {
-      tp.print(identifier);
+      tp.print(sanitizeIdentifier(identifier));
       tp.print(':');
     }
     type.accept(this);
@@ -176,7 +176,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
 
   @Override
   public void visitType(Type node, String identifier, List<Type> actualGenerics, SourceLocation loc) {
-    tp.print(identifier);
+    tp.print(sanitizeIdentifier(identifier));
     if (!actualGenerics.isEmpty()) {
       tp.print('[');
       visitAllPrintingSeparator(actualGenerics, ", ", false);

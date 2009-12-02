@@ -75,13 +75,13 @@ public class NewHtmlPrinter {
       ContractClause contracts = fSpec.contracts;
       int count = 1;
       for (Expression pre : contracts.preconditions) {
-        map.put("equation", StringUtil.latexPrint(pre));
+        map.put("equation", StringUtil.latexPrint(pre) + ";");
         FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, STUtil.getFeatureSignature(featureName, fSpec, clazz, st) + "-precondition" + count + ".tex"), "newhtml/equation.ftl", map);
         count++;
       }
       count = 1;
       for (Expression post : contracts.postconditions) {
-        map.put("equation", StringUtil.latexPrint(post));
+        map.put("equation", StringUtil.latexPrint(post) + ";");
         FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, STUtil.getFeatureSignature(featureName, fSpec, clazz, st) + "-postcondition" + count + ".tex"), "newhtml/equation.ftl", map);
         count++;
       }
