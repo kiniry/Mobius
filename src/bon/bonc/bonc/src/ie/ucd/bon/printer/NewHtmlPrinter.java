@@ -242,7 +242,7 @@ public class NewHtmlPrinter {
         System.out.println("Error resizing " + pdfFile.getName());
         continue;
       }
-      System.out.println("Converting " + pdfFile.getName() + " to .png");
+      System.out.println("Converting " + pdfFile.getName() + " to png");
       if (ExecUtil.execWaitIgnoreOutput("gm convert -scale 15%x15% -density 1000 -transparent #FFFFFF " + pdfFilePath + " " + pdfFilePath.substring(0,pdfFilePath.length()-3).concat("png")) != 0) {
         System.out.println("Error converting " + pdfFile.getName());
       }

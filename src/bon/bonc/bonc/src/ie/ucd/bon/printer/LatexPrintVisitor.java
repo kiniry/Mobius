@@ -90,7 +90,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
     tp.printLine("\\end{varwidth}");
     tp.decreaseIndentation();
 
-    tp.printLine("\\nodepart{second}");
+    tp.printLine("\\nodepart{third}");
     tp.increaseIndentation();
     tp.printLine("\\begin{varwidth}[t!]{1.0\\textwidth}");
     tp.printLine("\\begin{flushleft}");
@@ -101,7 +101,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
     tp.printLine("\\end{varwidth}");
     tp.decreaseIndentation();
 
-    tp.printLine("\\nodepart{third}");
+    tp.printLine("\\nodepart{fourth}");
     tp.increaseIndentation();
     tp.printLine("\\begin{varwidth}[t!]{1.0\\textwidth}");
     tp.printLine("\\begin{flushleft}");
@@ -116,7 +116,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
       Boolean reused, Boolean persistent, Boolean interfaced, String comment, SourceLocation loc) {
     tp.printLine("\\begin{tikzpicture}");
     tp.printLine("\\pgfsetcornersarced{\\pgfpoint{20mm}{20mm}}");
-    tp.printLine("\\node [bonclass] [rectangle split, rectangle split, rectangle split parts=3] (box) {%");
+    tp.printLine("\\node [bonclass] [name=" + name.name + ", rectangle split, rectangle split, rectangle split parts=4] {%");
     tp.increaseIndentation();
     tp.print("\\textbf{");
     name.accept(this);
@@ -126,6 +126,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
 
     tp.decreaseIndentation();
     tp.printLine("};");
+    tp.printLine("\\node[rectangle, fill=white] at (" + name.name + ".third split) {\\textbf{Invariant}};");
     tp.printLine("\\end{tikzpicture}");
   }
 
@@ -217,8 +218,10 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
   public void visitUnaryExp(UnaryExp node, ie.ucd.bon.ast.UnaryExp.Op op,
       Expression expression, SourceLocation loc) {
     printUnaryExpOp(op);
+    tp.print('(');
     tp.printSpace();
     expression.accept(this);
+    tp.print(')');
   }
 
   @Override

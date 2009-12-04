@@ -15,7 +15,7 @@
 
 <#macro pclass class><a href="" onclick="return navTo('class:${class.name.name}');">${StringUtil.prettyPrintShortenedClass(class)}</a></#macro>
 
-<#macro methodlink f name>#class:${STUtil.getQualifiedClassString(class.name.name,st)}:doc:<@ifspecsignoparamnames f=f name=name/></#macro>
+<#macro methodlink f name>class:${class.name.name}:doc:${name}</#macro>
 
 <#macro indexing indexing>
  <dl class="indexing">

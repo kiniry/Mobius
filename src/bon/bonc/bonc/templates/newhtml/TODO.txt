@@ -2,3 +2,4 @@
 -Breadcrumbs/history
 -Incorporate old informal html output, switching between javadoc style, graphical bon style, informal bon style...
 -Improve latex formal class diagram, as in hand-written example
+-Clusters

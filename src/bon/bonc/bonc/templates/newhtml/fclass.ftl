@@ -1,7 +1,7 @@
 <#include "macros.ftl"/>
 
 <#macro ifspecreturn f><#if f.hasType??><@ptype type=f.hasType.type/><#else>Void</#if></#macro>
-<#macro ifspecsig f name><a href="<@methodlink f=f name=name/>">${name}</a><#if (f.arguments?size > 0)>(<#list f.arguments as arg><@parg arg=arg/><#if arg_has_next>, </#if></#list>)</#if></#macro>
+<#macro ifspecsig f name><a href="#<@methodlink f=f name=name/>">${name}</a><#if (f.arguments?size > 0)>(<#list f.arguments as arg><@parg arg=arg/><#if arg_has_next>, </#if></#list>)</#if></#macro>
 
 <#macro ifspecsignoparamnames f name>${name}<#if (f.arguments?size > 0)>(<#list f.arguments as arg>${arg.type.identifier}<#if arg_has_next>,</#if></#list>)</#if></#macro>
 

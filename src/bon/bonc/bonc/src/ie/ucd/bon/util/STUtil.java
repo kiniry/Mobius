@@ -2,14 +2,11 @@ package ie.ucd.bon.util;
 
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
-import ie.ucd.bon.ast.FeatureArgument;
 import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.typechecker.BONST;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 import java.util.TreeSet;
 
 public class STUtil {
@@ -30,6 +27,11 @@ public class STUtil {
     } else {
       return getQualifiedClusterString(clusters.iterator().next().name, st) + '.' + c;
     }
+  }
+  
+  public static String getQualifiedClusterStringForClass(Clazz c, BONST st) {
+    Cluster cluster = st.classClusterMap.get(c.name.name);
+    return cluster == null ? "" : getQualifiedClusterString(cluster.name, st);
   }
 
   public static Collection<Clazz> getAllDescendants(Clazz clazz, BONST st) {
@@ -104,5 +106,9 @@ public class STUtil {
   
   public static String getFeatureSignature(String name, FeatureSpecification fSpec, BONST st) {
     return getFeatureSignature(name, fSpec, st.featureDeclaringClassMap.get(fSpec), st);
+  }
+  
+  public static Collection<KeyPair<String,FeatureSpecification>> getFeaturesForClass(Clazz clazz, BONST st) {
+    return st.featuresMap.getAllPairs(clazz);
   }
 }
