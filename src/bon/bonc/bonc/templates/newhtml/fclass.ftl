@@ -98,7 +98,7 @@
 </div>
 </#if>
 <p>
- <a id="showallspecslink" href="#" onclick="return toggleShowAll('#showallspecslink','.showspecslink','.specsdiv','Show specs','Hide specs','Show all specs','Hide all specs');">Show all specs</a>
- <a id="showallsourcelink" href="#" onclick="return toggleShowAll('#showallsourcelink','.showsourcelink','.sourcediv','Show source','Hide source','Show all source','Hide all source');">Show all source</a>
+ <a id="showallspecslink" href="#" onclick="return toggleShowAll('specs');">Show all specs</a>
+ <a id="showallsourcelink" href="#" onclick="return toggleShowAll('source');">Show all source</a>
 </p>
 </#if>

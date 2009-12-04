@@ -1,4 +1,13 @@
 
+var showAllStatus = { 'specs': 
+                       {'show': false, 'alllinkid': '#showallspecslink', 'singlelinkclass': '.showspecslink',
+	                    'showclass': '.specsdiv', 'showtext': 'Show specs', 'hidetext': 'Hide specs', 
+	                    'showalltext': 'Show all specs', 'hidealltext': 'Hide all specs'}, 
+	                  'source':
+	                   {'show': false, 'alllinkid': '#showallsourcelink', 'singlelinkclass': '.showsourcelink',
+		                'showclass': '.sourcediv', 'showtext': 'Show source', 'hidetext': 'Hide source', 
+		                'showalltext': 'Show all source', 'hidealltext': 'Hide all source'}
+};
 
 function setup() {
 	$j('#search-box').val('Search...');
@@ -10,7 +19,7 @@ function setup() {
 	$j(document).history(function(e,curr,prev) { processHash(curr); });
 
 	var autocompleter = new Autocompleter.Local('search-box', 'search-results', elements_list, {updateElement: selectedAuto, partialChars: 1, fullSearch: true, selector: customSearch});
-
+	
 	$j('#search-box').focus(function(event){
 		$('search-box').morph('width: 500px; font-size: 20px;', {duration: 0.2});
 		$('search-pane').morph('width: 500px; font-size: 20px;', {duration: 0.2});
@@ -95,6 +104,7 @@ function loadEntity(parts) {
 	var page = parts[2] == 'diagram' ? parts[1] + "-diagram.html" : parts[1] + '.html';
 	$j('#main-display').load(page, function() {
 		SyntaxHighlighter.highlight();
+		$j.each(showAllStatus, function(i,sa) { showAllByStatus(sa); }); //Correctly show all by status
 		if ($j('#' + parts.join(':')).length > 0) {
 			//TODO - not working
 			Effect.ScrollTo('#' + parts.join(':'), {duration: 0.2});
@@ -126,17 +136,26 @@ function toggleShow(id,link,showtext,hidetext) {
 	return false;
 }
 
-function toggleShowAll(alllinkid,singlelinkclass,showclass,showtext,hidetext,showalltext,hidealltext) {
-	if ($j(alllinkid).text() == showalltext) {
+function toggleShowAll(showallid) {
+	var sa = showAllStatus[showallid];
+	if (!sa) return false;
+	sa['show'] = !sa['show'];
+	showAllByStatus(sa);
+	return false;
+}
+
+function showAllByStatus(sa) {
+	if (!sa) return false;
+	if (sa['show']) {
 		//Show all
-		$j(alllinkid).text(hidealltext);
-		$j(singlelinkclass).text(hidetext);
-		$j(showclass).removeClass('invisible');
+		$j(sa['alllinkid']).text(sa['hidealltext']);
+		$j(sa['singlelinkclass']).text(sa['hidetext']);
+		$j(sa['showclass']).removeClass('invisible');
 	} else {
 		//Hide all
-		$j(alllinkid).text(showalltext);
-		$j(singlelinkclass).text(showtext);
-		$j(showclass).addClass('invisible');
+		$j(sa['alllinkid']).text(sa['showalltext']);
+		$j(sa['singlelinkclass']).text(sa['showtext']);
+		$j(sa['showclass']).addClass('invisible');
 	}
 	return false;
 }
