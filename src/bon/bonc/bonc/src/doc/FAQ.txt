@@ -1,0 +1,40 @@
+Copyright (c) 2007, Fintan Fairmichael, University College Dublin
+All rights reserved.
+
+FREQUENTLY ASKED QUESTIONS
+
+If you have a question that is not answered here, please contact the developer
+via email:
+  Fintan Fairmichael <fintan dot fairmichael at ucd dot ie>
+
+Contents:
+
+  1. When I try to run the tool I get "Missing library XXX. Check that you have
+     set BON_HOME correctly.", and the tool does not run. How do I fix it?
+  2. When I try to run the tool I get "JAVA_HOME appears to be incorrectly set. 
+     XXX/bin/java does not exist.", and the tool does not run. How do I fix it?
+
+
+#1
+==
+
+Q:
+  When I try to run the tool I get "Missing library XXX. Check that you have
+  set BON_HOME correctly.", and the tool does not run. How do I fix it?
+
+A:
+  This warning indicates you are missing one of the required jar files. Try 
+  reinstallying the software, by following the instructions in INSTALLATION.txt
+
+
+#2
+==
+
+Q:
+  When I try to run the tool I get "JAVA_HOME appears to be incorrectly set. 
+  XXX/bin/java does not exist.", and the tool does not run. How do I fix it?
+
+A:
+  This warning indicates that the JAVA_HOME environment variable is not set to
+  a valid location. See section 2.3.1 of INSTALLATION.txt for instructions on
+  how to correctly set the JAVA_HOME environment variable.

@@ -1,0 +1,121 @@
+
+3.2 Printing
+------------
+
+  The printing framework allows parsed source to be printed to a variety of 
+  formats. The general syntax for printing to standard out is:
+    bonc -p <print-type> file1 [file2 ...]
+
+  In the above "<print-type>" is one of the allowed printing types. These are
+  detailed below.
+
+  Alternatively, to print the output to a file, use this syntax:
+    bonc -p <print-type> -po <output-file> file1 [file2 ...]
+
+  "<output-file>" should be the path to the file you wish to print to. Note
+  that if the path is to an existing file, it will be overwritten.
+
+3.2.1 Class dictionary generation
+
+  It is possible to automatically generate a class dictionary for the given 
+  input. In order to print the generated textual BON to stdout(1), or to a 
+  file(2) use the following:
+    (1) bonc -p dic file1 [file2 ...]
+    (2) bonc -p dic -po <output-file> file1 [file2 ...]
+
+  Class dictionaries can also be computed on the fly and included when 
+  performing other printing operations. In fact, this is the default behaviour.
+  To prevent automatic class dictionary generation, provide the option
+  "-ngcd"/"--no-gen-class-dic". For example:
+    bonc -ngcd -p <print-type> [-po <output-file>] file1 [file2 ...]
+
+3.2.2 Pretty-printing
+
+  This is the most basic printing type. The parsed text will be pretty-printed
+  in plain text. In order to pretty-print to stdout(1), or to a file(2) use the
+  following:
+    (1) bonc -p txt file1 [file2 ...]
+    (2) bonc -p txt -po <output-file> file1 [file2 ...]
+
+  The option "-pp"/"--pretty-print" is a synonym for "-p txt", thus the below 
+  is equivalent to the above, and will pretty-print to stdout(1), or to a 
+  file(2):
+    (1) bonc -pp file1 [file2 ...]
+    (2) bonc -pp -po <output-file> file1 [file2 ...]
+
+3.2.3 HTML printing
+
+  This printing option generates a fancy XHTML version of the informal charts
+  included in the input. It will generate a single HTML page, with the charts
+  styled to emulate those given in the BON book. To generate the HTML to 
+  stdout(1), or to a file(2) use the following:
+    (1) bonc -p html file1 [file2 ...]
+    (2) bonc -p html -po <output-file> file1 [file2 ...]
+
+3.2.3 Graph printing
+
+  It is possible to create graphs representing the clustering and inheritance
+  relationships in the given BON source. For the chosen graph type, the output
+  will be in the DOT language (see http://www.graphviz.org/doc/info/lang.html).
+  
+  The available graph printing options currently are:
+    (1) icg - Informal cluster graph
+              A graph showing the cluster hierarchy from the system cluster
+              down to the leaf cluters. This graph will also show which 
+              cluster(s) each class is contained in.
+    (2) iig - Informal inheritance graph
+              A graph showing the class hierarchy for the given system.
+
+  An example of printing one of these graphs (subsititute print-type for other 
+  graph types):
+    bonc -i -p icg -po icg.dot file1 [file2 ...]
+
+  There are numerous pieces of software available for viewing/working with .dot
+  files. Some of the most popular of these are available from Graphviz 
+  (http://www.graphviz.org/).
+
+  For those working on Ubuntu, simply install the "graphviz" package (should be
+  similarly available on other linux flavours. For an example of usage, assume
+  we have created a graph "graph.dot". We can use the graphviz to convert to 
+  svg:
+    dot -Tsvg -o graph.svg graph.dot
+
+  The above will create an svg file "graph.svg" that can be viewed/used as you 
+  wish. The dot command can also output to postscript, png, and several other 
+  types. See the graphviz documentation for more information (or "man dot").  
+
+
+4. SOURCE
+=========
+
+  All source for this tool is available from the subversion repository. The
+  repository is located at: 
+    https://mobius.ucd.ie/repos/src/bon/bonc
+
+  You can browse the source in your web browser:
+    https://mobius.ucd.ie/browser/src/bon
+
+   For more information on how to download and build this software, please read
+   INSTALLATION.txt.
+
+
+5. BUG REPORTS
+==============
+
+  Bug tracking is handled on the Mobius Trac (https://mobius.ucd.ie/). 
+
+  To create a new ticket either complete the form at:
+    https://mobius.ucd.ie/newticket?owner=fintan&component=BON
+  or send an email to:
+    bon-ticket@mobius.ucd.ie
+
+  Please include the following details (where possible):
+  - The commandline arguments with which you invoked the tool 
+    (e.g. "bonc -i test.bon").
+  - The operating system and java version you are using.
+  - Any input files used to recreate the bug.  
+  - The output generated when you detected the bug.
+
+  Filing bugs will help to improve this software, so if you notice something
+  amiss please do report it!
+

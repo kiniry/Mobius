@@ -45,14 +45,14 @@
      <#if (feature.contracts.preconditions?size > 0)>
       Requires:<br/>
       <#list feature.contracts.preconditions as pre>
-       <img src="${STUtil.getFeatureSignature(name, feature, st)}-precondition${(pre_index+1)}.png"/>
+       <@image file="${STUtil.getFeatureSignature(name, feature, st)}-precondition${(pre_index+1)}.png"/>
        <br/>
       </#list>
      </#if>
      <#if (feature.contracts.postconditions?size > 0)>
       Ensures:<br/>
       <#list feature.contracts.postconditions as post>
-       <img src="${STUtil.getFeatureSignature(name, feature, st)}-postcondition${(post_index+1)}.png"/>
+       <@image file="${STUtil.getFeatureSignature(name, feature, st)}-postcondition${(post_index+1)}.png"/>
        <br/>
       </#list>
      </#if>
@@ -82,7 +82,7 @@
  <p>
   <h3>Invariant<#if (ci.invariant?size > 1)>s</#if></h3>
   <#list ci.invariant as inv>
-  <img src="${class.name.name}-invariant${(inv_index+1)}.png"/>
+  <@image file="${class.name.name}-invariant${(inv_index+1)}.png"/>
   <br/>
   </#list>
  </p>

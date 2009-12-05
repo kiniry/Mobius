@@ -17,6 +17,15 @@
 
 <#macro methodlink f name>class:${class.name.name}:doc:${name}</#macro>
 
+<#macro image file>
+<#assign dim=FileUtil.getImageDimensions(outputDirPath + file)/>
+<#if (dim.x == -1 || dim.y == -1)>
+<img src="${file}"/>
+<#else>
+<img src="${file}" height="${dim.y}" width="${dim.x}"/>
+</#if>
+</#macro>
+
 <#macro indexing indexing>
  <dl class="indexing">
   <dt>Indexing</dt>

@@ -10,11 +10,11 @@ options {
 }
 
 @members {
-	private TestCase currentTestCase;
-	private String testsDir;
-	private String testLocation;
-  private String currentDir;
-	private int testNumber = 1;
+    private TestCase currentTestCase;
+    private String testsDir;
+    private String testLocation;
+    private String currentDir;
+    private int testNumber = 1;
 
   private String fileString(String fileName) {
     if (currentDir == null) {
@@ -38,7 +38,7 @@ options {
 
 @lexer::header {
 /**
- * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  */
 package ie.ucd.bon.tests;

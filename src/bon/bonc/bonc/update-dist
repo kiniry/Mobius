@@ -1,9 +1,0 @@
-#!/bin/bash
-
-old=`pwd`
-
-cd /home/fintan/workspace/bonc
-
-ant dist
-
-cd $old

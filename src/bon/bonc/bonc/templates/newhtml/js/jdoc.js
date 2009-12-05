@@ -68,7 +68,7 @@ function setup() {
 		switchToType('doc');
 	});
 
-};
+}
 
 function switchToType(type) {
 	var currentHash = $j.history.getCurrent();
@@ -127,7 +127,7 @@ function navTo(loc) {
 }
 
 function toggleShow(id,link,showtext,hidetext) {
-	$j(id).toggleClass('invisible')
+	$j(id).toggleClass('invisible');
 	if ($j(id).hasClass('invisible')) {
 		$j(link).text(showtext);
 	} else {
@@ -138,24 +138,24 @@ function toggleShow(id,link,showtext,hidetext) {
 
 function toggleShowAll(showallid) {
 	var sa = showAllStatus[showallid];
-	if (!sa) return false;
-	sa['show'] = !sa['show'];
+	if (!sa) { return false; }
+	sa.show = !sa.show;
 	showAllByStatus(sa);
 	return false;
 }
 
 function showAllByStatus(sa) {
-	if (!sa) return false;
-	if (sa['show']) {
+	if (!sa) { return false; }
+	if (sa.show) {
 		//Show all
-		$j(sa['alllinkid']).text(sa['hidealltext']);
-		$j(sa['singlelinkclass']).text(sa['hidetext']);
-		$j(sa['showclass']).removeClass('invisible');
+		$j(sa.alllinkid).text(sa.hidealltext);
+		$j(sa.singlelinkclass).text(sa.hidetext);
+		$j(sa.showclass).removeClass('invisible');
 	} else {
 		//Hide all
-		$j(sa['alllinkid']).text(sa['showalltext']);
-		$j(sa['singlelinkclass']).text(sa['showtext']);
-		$j(sa['showclass']).addClass('invisible');
+		$j(sa.alllinkid).text(sa.showalltext);
+		$j(sa.singlelinkclass).text(sa.showtext);
+		$j(sa.showclass).addClass('invisible');
 	}
 	return false;
 }
@@ -163,12 +163,12 @@ function showAllByStatus(sa) {
 function customSearch(instance) {
 	var ret       = []; //matches
 	var search    = instance.element.value; //User input
-	var searchParts = $j.grep(search.split(/\s+/),function(s){ return s.length != 0; }); //Array of parts, filter for ''
+	var searchParts = $j.grep(search.split(/\s+/),function(s){ return s.length !== 0; }); //Array of parts, filter for ''
 	var originalNormalSearchParts = [];
 	var normalSearchParts = [];
 	var featureSearchParts = [];
 	//Fill the two arrays
-	$j.each(searchParts,function(i,s){ if (s.charAt(0) == '.') featureSearchParts.push(s.substring(1).toLowerCase()); else originalNormalSearchParts.push(s.toLowerCase()); });
+	$j.each(searchParts,function(i,s){ if (s.charAt(0) == '.') { featureSearchParts.push(s.substring(1).toLowerCase()); } else { originalNormalSearchParts.push(s.toLowerCase()); } });
 
 	//Allow for class.method searches
 	$j.each(originalNormalSearchParts, function(i,s) {
@@ -187,7 +187,7 @@ function customSearch(instance) {
 	//Recognise a loan '.'
 	var hadFeatureSearch = featureSearchParts.length > 0;
 	//Filter empty feature searches
-	featureSearchParts = $j.grep(featureSearchParts,function(s){ return s.length != 0; });
+	featureSearchParts = $j.grep(featureSearchParts,function(s){ return s.length !== 0; });
 
 	for (var i = 0; i < instance.options.array.length ; i++) {
 		var elem = instance.options.array[i]; 
@@ -206,10 +206,10 @@ function customSearch(instance) {
 		});
 
 		if (match) {
-			if (normalSearchParts.length != 0 && !hadFeatureSearch) {
+			if (normalSearchParts.length !== 0 && !hadFeatureSearch) {
 				matchRegions.sort();
 				ret.push([matchRegions[0][0], elem.name, "<li id=\"class:" + elem.name + "\">" + annotateMatch(elem.name,matchRegions) + "</li>"]);
-			} else if (featureSearchParts.length != 0 || (hadFeatureSearch && normalSearchParts.length != 0)) {
+			} else if (featureSearchParts.length !== 0 || (hadFeatureSearch && normalSearchParts.length !== 0)) {
 				var features = elem.features;
 				for (var j=0; j < features.length; j++) {
 					var feature = features[j];
@@ -227,7 +227,7 @@ function customSearch(instance) {
 					});
 					if (featureMatch) {
 						matchRegions.sort();
-						if(featureSearchParts.length == 0) {
+						if(featureSearchParts.length === 0) {
 							ret.push([matchRegions[0][0], elem.name,
 									"<li id=\"class:" + elem.name + ":" + feature + "\">" + annotateMatch(elem.name,matchRegions) + "." + annotateMatch(feature,featureMatchRegions.sort()) + "</li>"]);
 						} else {
@@ -243,7 +243,7 @@ function customSearch(instance) {
 	}
 
 	ret.sort();
-	ret = ret.slice(0,instance.options.choices)
+	ret = ret.slice(0,instance.options.choices);
 	ret = $j.map(ret, function(n) { return n[n.length-1]; });
 
 	return "<ul>" + ret.join('') + "</ul>";

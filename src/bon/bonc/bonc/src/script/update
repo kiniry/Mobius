@@ -1,0 +1,23 @@
+#!/bin/bash
+
+###
+# Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+# See LICENCE.TXT for details.
+###
+
+LATEST=`wget -qO - http://kind.ucd.ie/products/opensource/BONc/releases/version`
+
+if [[ -e "version" ]]; then
+  CURRENT=`cat version`
+else
+  CURRENT="ZZZZ"
+fi
+
+if [[ "$LATEST" != "$CURRENT" ]]; then
+  echo "New version $LATEST detected."
+  echo "Downloading $LATEST.tar.gz"
+  wget -q http://kind.ucd.ie/products/opensource/BONc/releases/$LATEST.tar.gz && tar xzf $LATEST.tar.gz && rm $LATEST.tar.gz
+  echo "Success!"  
+else
+  echo "Already at latest version."
+fi

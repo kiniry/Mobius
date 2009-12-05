@@ -1,6 +1,0 @@
-#!/bin/bash
-
-export BON_HOME=/opt/bon
-export JAVA_HOME=/opt/jdk-1.6
-
-$BON_HOME/bonc $*
