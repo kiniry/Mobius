@@ -77,7 +77,7 @@ public class NewHtmlPrinter {
 
     //Classes
     for (Clazz clazz : st.classes.values()) {
-      printForClass(clazz, map);
+      printForClass(clazz);
     }
 
     //Clusters
@@ -151,7 +151,8 @@ public class NewHtmlPrinter {
     }
   }
 
-  private void printForClass(Clazz clazz, Map<String,Object> map) {
+  private void printForClass(Clazz clazz) {
+    prepareMapForClass(clazz);
     map.put("children", STUtil.getAllDescendants(clazz, st));
     FreeMarkerTemplate.writeTemplateToFile(relativeFile(clazz.name.name + ".html"), "newhtml/fclass.ftl", map);
     map.put("related", getRelated(clazz));
