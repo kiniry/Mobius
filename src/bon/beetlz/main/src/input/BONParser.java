@@ -87,7 +87,7 @@ public final class BONParser {
     final int two = 2;
     final SortedSet  <  ClassModifier  > mod    = new TreeSet < ClassModifier > ();
     final Visibility vis                        = new Visibility(VisibilityModifier.PUBLIC);
-    final List  < SmartString > generics   		= new Vector < SmartString > ();
+    final List  < SmartString > generics        = new Vector < SmartString > ();
     final SortedSet < SmartString > interfaces  = new TreeSet < SmartString > ();
     Invariant inv                               = null;
     final List < SmartString > clus             = new Vector < SmartString > ();

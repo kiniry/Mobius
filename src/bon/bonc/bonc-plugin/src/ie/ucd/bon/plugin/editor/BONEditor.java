@@ -14,7 +14,6 @@ import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.plugin.editor.outline.BONOutlinePage;
 import ie.ucd.bon.plugin.util.PluginUtil;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.util.AstUtil;
 
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -77,6 +76,7 @@ public class BONEditor extends TextEditor {
 	}
 
 	IContentOutlinePage outline = null;
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter(Class adapter) {
     if (IContentOutlinePage.class.equals(adapter)) {

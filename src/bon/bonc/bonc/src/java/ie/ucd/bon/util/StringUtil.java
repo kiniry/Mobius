@@ -112,6 +112,10 @@ public final class StringUtil {
     return appendWithSeparator(Arrays.asList(items), sep, separatorAtEnd);
   }
   
+  public static <T> String appendWithSeparator(T[] items, String sep) {
+    return appendWithSeparator(Arrays.asList(items), sep);
+  }
+  
   private static final PrettyPrintVisitor ppv = new PrettyPrintVisitor();
   public static String prettyPrint(AstNode node) {
     if (node == null) {

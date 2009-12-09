@@ -54,7 +54,7 @@ import check.ClassTranslator;
 public class Beetlz {
   
   /** The id for this (Eclipse) plugin */
-  public static final String PLUGIN_ID = "Beetlz";
+  public static final String PLUGIN_ID = "ie.ucd.bon.beetlz";
   /** The path to the built-in jmlspecs for this plugin */
   public static final String JMLSPECS_PATH = "lib/openjml.jar";
   

@@ -66,7 +66,7 @@
             <not>
                <objectState
                      name="nature"
-                     value="BeetlzPlugin.beetlzNature">
+                     value="ie.ucd.bon.beetlz.plugin.beetlznature">
                </objectState>
             </not></visibility>
       </objectContribution>
@@ -86,7 +86,7 @@
          <visibility>
             <objectState
                   name="nature"
-                  value="BeetlzPlugin.beetlzNature">
+                  value="ie.ucd.bon.beetlz.plugin.beetlznature">
             </objectState></visibility>
       </objectContribution>
    </extension>
@@ -212,7 +212,7 @@
       </page>
    </extension>
    <extension
-         id="beetlzBuilder"
+         id="beetlzbuilder"
          name="Beetlz Consistency Checker"
          point="org.eclipse.core.resources.builders">
       <builder
@@ -223,7 +223,7 @@
       </builder>
    </extension>
    <extension
-         id="beetlzNature"
+         id="beetlznature"
          name="Beetlz Nature"
          point="org.eclipse.core.resources.natures">
       <runtime>
@@ -232,7 +232,7 @@
          </run>
       </runtime>
       <builder
-            id="BeetlzPlugin.beetlzBuilder">
+            id="ie.ucd.bon.beetlz.plugin.beetlzbuilder">
       </builder>
    </extension>
    

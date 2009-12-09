@@ -7,11 +7,12 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import beetlzplugin.Activator;
 import beetlzplugin.runner.BeetlzRunner;
 
 public class BeetlzBuilder extends IncrementalProjectBuilder {
 
-	public static final String BUILDER_ID = "BeetlzPlugin.beetlzBuilder";
+	public static final String BUILDER_ID = Activator.PLUGIN_ID + ".beetlzbuilder";
 
 	/*
 	 * (non-Javadoc)

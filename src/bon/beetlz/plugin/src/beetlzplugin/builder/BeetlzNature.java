@@ -13,7 +13,7 @@ public class BeetlzNature implements IProjectNature {
 	/**
 	 * ID of this project nature
 	 */
-	public static final String NATURE_ID = Activator.PLUGIN_ID + ".beetlzNature";
+	public static final String NATURE_ID = Activator.PLUGIN_ID + ".beetlznature";
 
 	private IProject project;
 
