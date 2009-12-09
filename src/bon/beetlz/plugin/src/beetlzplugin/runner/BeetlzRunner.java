@@ -11,7 +11,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -20,7 +19,6 @@ import log.CCLevel;
 import log.CCLogRecord;
 import main.Beetlz;
 import main.Beetlz.Status;
-import mobius.util.plugin.Utils;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -70,7 +68,7 @@ public class BeetlzRunner {
   private PrintStream outStream;
 
   /** Remember which resource has which name. */
-  private Map<String,IResource> pathResourceMap;
+  private Map<File,IResource> pathResourceMap;
 
   /** The last used specs path, stored so it can be removed from the classpath when changed. */
   private static String lastUsedSpecsPath;
@@ -189,7 +187,7 @@ public class BeetlzRunner {
     final List<String> args = settings.getUserOptionsAsArgs(); 
 
     //Classpath for openjml
-    List<String> cpEntries = Utils.getProjectClassPathEntries(JavaCore.create(project));
+    List<String> cpEntries = PluginUtil.getProjectClassPathEntries(JavaCore.create(project));
     String setSpecPath = UserSettings.getAppropriatePreferenceStore(project).getString(PreferenceConstants.SPEC_PATH);
     cpEntries.add(setSpecPath);
     String openJMLPath = PreferenceInitializer.attemptToGetJMLSpecsPath();
@@ -268,7 +266,7 @@ public class BeetlzRunner {
           if (location != null && location.exists() && location.getSourceFile() != null) {
             //Normal error with location
             File file = location.getSourceFile();
-            final IResource resource = pathResourceMap.get(file.getAbsolutePath());
+            final IResource resource = pathResourceMap.get(file);
             if (resource != null) {
               IMarker marker = resource.createMarker(getMarkerIDForLevel(rec.getLevel()));
 
@@ -319,7 +317,6 @@ public class BeetlzRunner {
 
   private List<String> getFileArgsForProject(final IProject project) {
     List<String> args = new ArrayList<String>();
-    pathResourceMap = new HashMap < String,IResource> ();
     final ResourceVisitor visitor = new ResourceVisitor();
     try {
       project.accept(visitor);
@@ -327,10 +324,10 @@ public class BeetlzRunner {
       e.printStackTrace();
     }
     final List<IResource> resources = visitor.getResources();
-    for (final IResource r : resources) {
-      final File javaPath = r.getLocation().toFile();
-      args.add(javaPath.getAbsolutePath());
-      pathResourceMap.put(javaPath.getAbsolutePath(), r);
+    
+    pathResourceMap = PluginUtil.getResourceMap(resources);
+    for (final File f : pathResourceMap.keySet()) {
+      args.add(f.getAbsolutePath());
     }
     return args;
   }

@@ -13,7 +13,6 @@ import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
 import ie.ucd.bon.printer.PrettyPrintVisitor;
 import ie.ucd.bon.typechecker.BONST;
-import ie.ucd.bon.util.AstUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,8 +51,8 @@ import structure.Signature;
 import structure.Spec;
 import structure.Visibility;
 import utils.BConst;
-import utils.FeatureType;
 import utils.BeetlzSourceLocation;
+import utils.FeatureType;
 import utils.ModifierManager.ClassModifier;
 import utils.ModifierManager.ClassType;
 import utils.ModifierManager.FeatureModifier;
@@ -751,13 +750,13 @@ public final class BONParser {
     final SmartString name = new TypeSmartString(a_type.getIdentifier());
     final List < SmartString > params = new Vector < SmartString > ();
     for (final Type t : a_type.actualGenerics) {
-      if (t.getFullString().equals("ANY")) { //$NON-NLS-1$
+      if (t.getIdentifier().equals("ANY")) { //$NON-NLS-1$
         params.add(WildcardSmartString.getBONWildcard());
       } else {
         params.add(getType(t));
       }
     }
-    return new ParametrizedSmartString(a_type.getFullString(), name, params);
+    return new ParametrizedSmartString(a_type.identifier, name, params);
   }
 
   /**
@@ -770,7 +769,7 @@ public final class BONParser {
       final List < SmartString > list = new Vector < SmartString > ();
       list.add(getType(a_generic.getType()));
       final String name = a_generic.identifier + " -> " +
-      a_generic.getType().getFullString(); //$NON-NLS-1$
+      a_generic.getType().identifier; //$NON-NLS-1$
       return new GenericParameter(name, a_generic.identifier, list);
     }
     return new GenericParameter(a_generic.identifier, a_generic.identifier, null);

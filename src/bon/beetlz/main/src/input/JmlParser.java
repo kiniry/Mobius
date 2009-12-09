@@ -200,7 +200,7 @@ public final class JmlParser {
     final int lineNum = a_cu.getLineMap().getLineNumber(startPos);
     final int posInLine = a_cu.getLineMap().getColumnNumber(startPos);
     
-    final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, posInLine, startPos, endPos, true);
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, posInLine, startPos, endPos, lineNum, true);
     //Create class
     final ClassStructure parsedClass = new ClassStructure(ClassType.JAVA, mod,
                                                           vis, generics, name,
@@ -386,7 +386,7 @@ public final class JmlParser {
     final int endPos = startPos + a_method.name.toString().length();
     final int posInLine = the_cu.getLineMap().getColumnNumber(startPos);
     
-    final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, posInLine, startPos, endPos, true);
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, posInLine, startPos, endPos, lineNum, true);
 
     final FeatureStructure feat = new FeatureStructure(mod, vis, name, sign, spec,
                                                        src, null, null, an_encl_class);

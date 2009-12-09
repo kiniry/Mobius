@@ -11,6 +11,7 @@ import ie.ucd.bon.graph.Grapher;
 import ie.ucd.bon.linguistical.MiscLing;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
+import ie.ucd.bon.printer.BONPrintMonitor;
 import ie.ucd.bon.printer.ClassDictionaryGenerator;
 import ie.ucd.bon.printer.LatexPrintVisitor;
 import ie.ucd.bon.printer.NewHtmlPrinter;
@@ -188,7 +189,7 @@ public final class Printer {
     }
   }
   
-  private static void printSingleFile(final Print printType, final File outputFile, final ParsingTracker tracker, final boolean timing) {
+  private static void printSingleFile(final Print printType, final File outputFile, final ParsingTracker tracker, final boolean timing, final BONPrintMonitor monitor) {
     PrintStream outputStream;
     if (outputFile != null) {
       try {
@@ -213,7 +214,7 @@ public final class Printer {
     }
   }
   
-  private static void printMultipleFiles(final Print printType, final File outputDirectory, final ParsingTracker tracker, final boolean extraWork, final boolean timing) {
+  private static void printMultipleFiles(final Print printType, final File outputDirectory, final ParsingTracker tracker, final boolean extraWork, final boolean timing, final BONPrintMonitor monitor) {
     //Check outputFile is a dir
     if (outputDirectory == null) {
       System.out.println("Must specify a directory for output for printing option for print type " + printType.name());
@@ -231,7 +232,7 @@ public final class Printer {
     long startTime = System.nanoTime();
     switch(printType) {
       case NEWHTML:
-        new NewHtmlPrinter(outputDirectory, tracker, extraWork).print();
+        new NewHtmlPrinter(outputDirectory, tracker, extraWork).print(monitor);
         break;
     }
     if (timing) {
@@ -239,11 +240,11 @@ public final class Printer {
     }
   }
   
-  public static void print(final Print printType, final File outputFile, final ParsingTracker tracker, final boolean extraWork, final boolean timing) {
+  public static void print(final Print printType, final File outputFile, final ParsingTracker tracker, final boolean extraWork, final boolean timing, final BONPrintMonitor monitor) {
     if (isSingleFilePrintingOption(printType)) { 
-      printSingleFile(printType, outputFile, tracker, timing);
+      printSingleFile(printType, outputFile, tracker, timing, monitor);
     } else {
-      printMultipleFiles(printType, outputFile, tracker, extraWork, timing);
+      printMultipleFiles(printType, outputFile, tracker, extraWork, timing, monitor);
     }
   }
 

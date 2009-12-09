@@ -1,5 +1,6 @@
 package beetlzplugin.popup.actions;
 
+import ie.ucd.bon.plugin.util.PluginUtil;
 import ie.ucd.bon.util.StringUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -14,7 +15,6 @@ import java.util.Vector;
 
 import main.Beetlz;
 import main.Beetlz.Status;
-import mobius.util.plugin.Utils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -187,7 +187,7 @@ public class BeetlzSkeleton implements IObjectActionDelegate {
     }
 
     //Classpath for openjml
-    List<String> cpEntries = Utils.getProjectClassPathEntries(JavaCore.create(my_project));
+    List<String> cpEntries = PluginUtil.getProjectClassPathEntries(JavaCore.create(my_project));
     String cp = StringUtil.appendWithSeparator(cpEntries, File.pathSeparator);
     args.add("-javajmlcp");
     args.add(cp);

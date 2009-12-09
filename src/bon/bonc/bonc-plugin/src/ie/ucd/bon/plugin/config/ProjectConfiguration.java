@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,7 +20,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
-public class ProjectConfiguration extends PropertyPage implements org.eclipse.jface.util.IPropertyChangeListener {
+public class ProjectConfiguration extends PropertyPage implements IPropertyChangeListener {
 
   private static final int GRID_WIDTH = 3;
   

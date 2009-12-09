@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -81,23 +82,27 @@ public class ExecUtil {
   }
 
   public static int execWait(String command, boolean outputStdout, boolean outputStderr) {
+    return execWait(command, outputStdout ? System.out : null, outputStderr ? System.err : null);
+  }
+  
+  public static int execWait(String command, PrintStream outputStream, PrintStream errStream) {
     try {
       Runtime runtime = Runtime.getRuntime();
       Process process = runtime.exec(command);
       
-      if (outputStdout) {
+      if (outputStream != null) {
         BufferedReader or = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String lineo;
         while ((lineo = or.readLine()) != null) {
-          System.out.println(lineo);
+          outputStream.println(lineo);
         }
       }
       
-      if (outputStderr) {
+      if (errStream != null) {
         BufferedReader er = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         String linee;
         while ((linee = er.readLine()) != null) {
-          System.err.println(linee);
+          errStream.println(linee);
         }
       }
       

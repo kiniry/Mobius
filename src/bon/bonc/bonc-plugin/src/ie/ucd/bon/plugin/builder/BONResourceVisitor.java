@@ -32,5 +32,15 @@ public class BONResourceVisitor implements IResourceVisitor {
   public List<IResource> getBONResources() {
     return bonResources;
   }
+  
+  public static List<IResource> getBONResources(IResource resource) {
+    BONResourceVisitor v = new BONResourceVisitor();
+    try {
+      resource.accept(v); 
+    } catch (CoreException ce) {
+      //Do nothing?
+    }
+    return v.getBONResources();
+  }
 
 }

@@ -4,11 +4,9 @@ import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.ClientRelation;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.TypeMark;
-import ie.ucd.bon.graph.Graph;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.typechecker.BONST;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

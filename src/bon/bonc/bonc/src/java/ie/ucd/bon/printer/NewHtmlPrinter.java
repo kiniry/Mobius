@@ -47,6 +47,8 @@ public class NewHtmlPrinter {
   private final boolean compileImages;
   private final Map<String,Object> map;
 
+  private BONPrintMonitor monitor;
+  
   public NewHtmlPrinter(File outputDirectory, ParsingTracker tracker, boolean compileImages) {
     this.outputDirectory = outputDirectory;
     this.tracker = tracker;
@@ -55,10 +57,14 @@ public class NewHtmlPrinter {
     this.map = prepareMap();
   }
 
-  public void print() {
-
+  public void print(BONPrintMonitor monitor) {
+    this.monitor = monitor;
+    
+    int work = getTotalWork();
+    monitor.begin("Generating BON html documentation", work);
+    
     //TODO copy relevant javascript files
-    System.out.println("Doing new html printing " + outputDirectory);
+    monitor.setInfo("Doing new html printing " + outputDirectory);
 
     if (!setupOutputDirectory()) {
       return;
@@ -77,16 +83,16 @@ public class NewHtmlPrinter {
 
     //Classes
     for (Clazz clazz : st.classes.values()) {
+      monitor.setInfo("Generating html for " + clazz.name.name);
       printForClass(clazz);
+      monitor.progress(1);
     }
 
     //Clusters
     //TODO print clusters
     
     
-    if (imagesCompiled) {
-      System.out.println("Done");
-    } else {
+    if (!imagesCompiled) {
       File script = relativeFile("make-images.sh");
       if (FileUtil.copyResourceToExternalFile("templates/newhtml/" + "make-images.sh", script)) {
         if (script.getParent().equals("")) {
@@ -94,14 +100,18 @@ public class NewHtmlPrinter {
         } else {
           System.out.println("Execute \"cd " + script.getParent() + "; bash " + script.getName() + "\" to build the images.");
         }
-        System.out.println("Done");
       }
     }
+    
+    monitor.complete();
   }
 
   private void printAllImageLatex() {
+    monitor.setInfo("Generating latex source");
     for (Clazz clazz : st.classes.values()) {
+      monitor.setInfo("Generating latex for " + clazz.name.name);
       printClassImageLatex(clazz);
+      monitor.progress(1);
     }
   }
 
@@ -183,12 +193,12 @@ public class NewHtmlPrinter {
   private boolean checkDirectory(File directory) {
     if (directory.exists()) {
       if (!directory.isDirectory()) {
-        System.out.println(directory.getPath() + " exists and is not a directory.");
+        monitor.finishWithErrorMessage(directory.getPath() + " exists and is not a directory.");
         return false;
       }
     } else {
       if (!directory.mkdir()) {
-        System.out.println("Unable to make directory " + directory.getPath());
+        monitor.finishWithErrorMessage("Unable to make directory " + directory.getPath());
         return false;
       }
     }
@@ -264,26 +274,26 @@ public class NewHtmlPrinter {
       return false;
     }   
 
-    System.out.println("Cleaning up.");
+    monitor.setInfo("Cleaning up.");
     FileUtil.deleteAll(outputDirectory.listFiles(FileUtil.getSuffixFilenameFilter(".pdf")));
     FileUtil.deleteAll(outputDirectory.listFiles(FileUtil.getSuffixFilenameFilter(".tex")));
     FileUtil.deleteAll(outputDirectory.listFiles(FileUtil.getSuffixFilenameFilter(".log")));
     FileUtil.deleteAll(outputDirectory.listFiles(FileUtil.getSuffixFilenameFilter(".aux")));
-
+    
     return true;
   }
 
   private boolean checkTools() {
     if (!ExecUtil.hasBinaryOnPath("gm")) {
-      System.out.println("It doesn't look like GraphicsMagick (gm) is installed and on the system path.");
+      monitor.finishWithErrorMessage("It doesn't look like GraphicsMagick (gm) is installed and on the system path.");
       return false;
     }
     if (!ExecUtil.hasBinaryOnPath("rubber")) {
-      System.out.println("It doesn't look like rubber is installed and on the system path.");
+      monitor.finishWithErrorMessage("It doesn't look like rubber is installed and on the system path.");
       return false;
     }
     if (!ExecUtil.hasBinaryOnPath("pdfcrop")) {
-      System.out.println("It doesn't look like pdfcrop is installed and on the system path.");
+      monitor.finishWithErrorMessage("It doesn't look like pdfcrop is installed and on the system path.");
       return false;
     }
     return true;
@@ -293,33 +303,58 @@ public class NewHtmlPrinter {
     File[] pdfFiles = outputDirectory.listFiles(FileUtil.getSuffixFilenameFilter(".pdf"));
     for (File pdfFile : pdfFiles) {
       String pdfFilePath = pdfFile.getPath();
-      System.out.println("Resizing " + pdfFile.getName());
+      monitor.setInfo("Resizing " + pdfFile.getName());
       if (ExecUtil.execWaitIgnoreOutput("pdfcrop " + pdfFilePath + " " + pdfFilePath) != 0) {
-        System.out.println("Error resizing " + pdfFile.getName());
-        continue;
+        monitor.finishWithErrorMessage("Error resizing " + pdfFile.getName());
+        return false;
       }
-      System.out.println("Converting " + pdfFile.getName() + " to png");
+      monitor.progress(1);
+      monitor.setInfo("Converting " + pdfFile.getName() + " to png");
       if (ExecUtil.execWaitIgnoreOutput("gm convert -scale 15%x15% -density 1000 -transparent #FFFFFF " + pdfFilePath + " " + pdfFilePath.substring(0,pdfFilePath.length()-3).concat("png")) != 0) {
-        System.out.println("Error converting " + pdfFile.getName());
+        monitor.finishWithErrorMessage("Error converting " + pdfFile.getName());
+        return false;
       }
+      monitor.progress(1);
     }
     return true;
   }
 
   private boolean compileLatex() {
-    System.out.println("Compiling latex...");
-    //TODO, go back to all in one command?
+    monitor.setInfo("Compiling latex...");
     File[] texFiles = outputDirectory.listFiles(FileUtil.getSuffixFilenameFilter(".tex"));
     //String filesString = StringUtil.appendWithSeparator(texFiles, " ", false);
     for (File file : texFiles) {
-      //System.out.println("Compiling " + file);
+      monitor.setInfo("Compiling latex " + file);
       if (ExecUtil.execWaitAndPrintToStandardChannels("rubber -d --inplace " + file) != 0) {
-        System.out.println("Error compiling latex");
+        monitor.finishWithErrorMessage("Error compiling latex");
         return false;
       }
+      monitor.progress(1);
     }
-    System.out.println("Done compiling latex...");
+    monitor.setInfo("Done compiling latex...");
     return true;
+  }
+  
+  private int getTotalWork() {
+    //Count one for each class html
+    int count = st.classes.values().size();
+    //Count 4 for each latex file (print, compile, resize, convert)
+    count += 4 * getNumLatexFiles();
+    
+    return count;
+  }
+  
+  private int getNumLatexFiles() {
+    int count = st.classes.size(); //1 diagram per class
+    for (Clazz clazz : st.classes.values()) {
+      for (KeyPair<String,FeatureSpecification> pair : st.featuresMap.getAllPairs(clazz)) {
+        count += pair.b.contracts.preconditions.size() + pair.b.contracts.postconditions.size();
+      }
+      if (clazz.classInterface != null) {
+        count += clazz.classInterface.invariant.size();
+      }
+    }
+    return count;
   }
 
 }

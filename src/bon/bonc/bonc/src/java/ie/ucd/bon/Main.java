@@ -18,6 +18,8 @@ import ie.ucd.clops.util.OptionUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -136,15 +138,17 @@ public final class Main {
   public static Problems run(final List<File> files, final BONcOptionsInterface so) {
     Problems totalProblems = new Problems("Total problems");
 
+    List<File> filesDuplicatesRemoved = new ArrayList<File>(new HashSet<File>(files));
+    
     //Timing info?
     boolean printTiming = so.getTime();
     boolean readFromStdIn = so.getReadFromStdin();
 
-    ParsingTracker tracker = API.parse(files, readFromStdIn, printTiming);
+    ParsingTracker tracker = API.parse(filesDuplicatesRemoved, readFromStdIn, printTiming);
     Problems parseProblems = tracker.getErrorsAndWarnings();
     totalProblems.addProblems(parseProblems);
     if (readFromStdIn) {
-      files.add(null);
+      filesDuplicatesRemoved.add(null);
     }
 
     if (tracker.continueFromParse()) {

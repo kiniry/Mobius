@@ -3,15 +3,13 @@
  */
 package structure;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.Vector;
 
 import main.Beetlz;
-import utils.FeatureType;
 import utils.BeetlzSourceLocation;
+import utils.FeatureType;
 import utils.ModifierManager.FeatureModifier;
 import utils.ModifierManager.VisibilityModifier;
 import utils.smart.FeatureSmartString;

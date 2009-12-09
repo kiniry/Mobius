@@ -35,9 +35,9 @@
    
    <extension point="org.eclipse.ui.popupMenus">
       <objectContribution
-            objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
-            id="ie.ucd.bon.plugin.project.popupMenu">
+            id="ie.ucd.bon.plugin.project.popupMenu"
+            objectClass="org.eclipse.core.resources.IResource">
          <menu
                label="BONc"
                path="additions"
@@ -49,35 +49,47 @@
       <objectContribution
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
-            id="ie.ucd.bon.plugin.project.popupMenu">
+            id="ie.ucd.bon.plugin.project.addNature">
          <visibility>
              <not>
                  <objectState name="nature" value="ie.ucd.bon.plugin.boncnature"/>
              </not>
          </visibility>
          <action
-             id="ie.ucd.bon.plugin.project.addNature"
+             id="ie.ucd.bon.plugin.project.addNatureAction"
              label="Add BONc Nature to Project"
              tooltip="Add the BONc nature to the selected project(s), allowing the BONc builder to run on them."
              menubarPath="ie.ucd.bon.plugin.project.popupSubMenu/content"
              enablesFor="+"
-             class="ie.ucd.bon.plugin.ui.AddBONcNatureActionDelegate">
+             class="ie.ucd.bon.plugin.ui.actions.AddBONcNatureActionDelegate">
          </action>
       </objectContribution>
       <objectContribution
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
-            id="ie.ucd.bon.plugin.project.popupMenu">
+            id="ie.ucd.bon.plugin.project.removeNature">
          <visibility>
              <objectState name="nature" value="ie.ucd.bon.plugin.boncnature"/>
          </visibility>
          <action
-             id="ie.ucd.bon.plugin.project.removeNature"
+             id="ie.ucd.bon.plugin.project.removeNatureAction"
              label="Remove BONc Nature from Project"
              tooltip="Remove the BONc nature from the selected project(s). This will remove the BONc builder."
              menubarPath="ie.ucd.bon.plugin.project.popupSubMenu/content"
              enablesFor="+"
-             class="ie.ucd.bon.plugin.ui.RemoveBONcNatureActionDelegate">
+             class="ie.ucd.bon.plugin.ui.actions.RemoveBONcNatureActionDelegate">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="ie.ucd.bon.plugin.project.generateDocs"
+            objectClass="org.eclipse.core.resources.IResource">
+         <action
+               class="ie.ucd.bon.plugin.ui.actions.GenerateBONDocumentationAction"
+               id="ie.ucd.bon.plugin.project.generateDocsAction"
+               label="Generate BON Documentation"
+               menubarPath="ie.ucd.bon.plugin.project.popupSubMenu/content"
+               tooltip="Generate documentation for the selected BON file(s)/project(s).">
          </action>
       </objectContribution>
       

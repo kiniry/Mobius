@@ -14,7 +14,8 @@ public class BONPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "ie.ucd.bon.plugin";
-
+	public static final String NATURE_ID = PLUGIN_ID + ".boncnature";
+	
 	// The shared instance
 	private static BONPlugin plugin;
 	

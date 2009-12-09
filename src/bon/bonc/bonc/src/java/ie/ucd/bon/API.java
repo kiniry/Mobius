@@ -11,6 +11,7 @@ import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.display.PrefuseGraphDisplay;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
+import ie.ucd.bon.printer.BONPrintMonitor;
 import ie.ucd.bon.source.SourceReader;
 import ie.ucd.bon.util.StringUtil;
 
@@ -111,7 +112,7 @@ public final class API {
   }
 
 
-  public static void print(final BONcOptionsInterface.Print printType, final boolean genClassDic, final File outputFile, final ParsingTracker tracker, final boolean extraWork, final boolean timing) {
+  public static void print(final BONcOptionsInterface.Print printType, final boolean genClassDic, final File outputFile, final ParsingTracker tracker, final boolean extraWork, final boolean timing, final BONPrintMonitor monitor) {
 
     if (genClassDic && printType != BONcOptionsInterface.Print.DIC) {
       String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
@@ -121,8 +122,13 @@ public final class API {
       }
     }
 
-    Printer.print(printType, outputFile, tracker, extraWork, timing);
+    Printer.print(printType, outputFile, tracker, extraWork, timing, monitor);
   }
+  
+  public static void print(final BONcOptionsInterface.Print printType, final boolean genClassDic, final File outputFile, final ParsingTracker tracker, final boolean extraWork, final boolean timing) {
+    print(printType, genClassDic, outputFile, tracker, extraWork, timing, BONPrintMonitor.JUST_PRINTS_MONITOR);
+  }
+      
 
   public static void printResults(final Problems problems, final ParsingTracker tracker, final PrintStream out) {
     printResults(problems, out);

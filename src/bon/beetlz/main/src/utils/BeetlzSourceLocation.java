@@ -36,13 +36,13 @@ public class BeetlzSourceLocation extends SourceLocation {
    * @param a_line_number if -1, no line number specifiable
    */
   public BeetlzSourceLocation(/*@ non_null @*/final File a_source_file, final int a_line_number, boolean isJava) {
-    super(a_source_file, a_line_number, UNKNOWN, UNKNOWN, UNKNOWN);
+    super(a_source_file, a_line_number, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
     this.isJava = isJava;
   }
 
   public BeetlzSourceLocation(File sourceFile, int lineNumber, int charPositionInLine, int absoluteCharPositionStart,
-      int absoluteCharPositionEnd, boolean isJava) {
-    super(sourceFile, lineNumber, charPositionInLine, absoluteCharPositionStart, absoluteCharPositionEnd);
+      int absoluteCharPositionEnd, int endLineNumber, boolean isJava) {
+    super(sourceFile, lineNumber, charPositionInLine, absoluteCharPositionStart, absoluteCharPositionEnd, endLineNumber);
     this.isJava = isJava;
   }
 
