@@ -14,7 +14,7 @@ public class ArrayUtil {
         list.add(t);
       }
     }
-    T[] res = newArray(arr.getClass(), list.size());
+    T[] res = newArray(arr, list.size());
     return list.toArray(res);
   }
   
@@ -30,7 +30,7 @@ public class ArrayUtil {
         foundAlready = true;
       }
     }
-    T[] res = newArray(arr.getClass(), list.size());
+    T[] res = newArray(arr, list.size());
     return list.toArray(res);
   }
   
@@ -39,8 +39,9 @@ public class ArrayUtil {
     return (T[])Array.newInstance(clazz.getComponentType(), length);
   }
   
+  @SuppressWarnings("unchecked")
   public static <T> T[] newArray(T[] arrOfSameType, int length) {
-    return newArray(arrOfSameType.getClass(), length);
+    return (T[])Array.newInstance(arrOfSameType.getClass().getComponentType(), length);
   }
   
   public static <T> T[] join(T[] arr1, T[] arr2) {
