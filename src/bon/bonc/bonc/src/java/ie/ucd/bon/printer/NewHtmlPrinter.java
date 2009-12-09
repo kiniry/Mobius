@@ -49,12 +49,16 @@ public class NewHtmlPrinter {
 
   private BONPrintMonitor monitor;
   
+  private final ExecUtil exec;
+  
   public NewHtmlPrinter(File outputDirectory, ParsingTracker tracker, boolean compileImages) {
     this.outputDirectory = outputDirectory;
     this.tracker = tracker;
     this.st = tracker.getSymbolTable();
     this.compileImages = compileImages;
     this.map = prepareMap();
+    
+    exec = ExecUtil.instance;
   }
 
   public void print(BONPrintMonitor monitor) {
@@ -66,7 +70,10 @@ public class NewHtmlPrinter {
     //TODO copy relevant javascript files
     monitor.setInfo("Doing new html printing " + outputDirectory);
 
+    monitor.finishWithErrorMessage("Test");
+    
     if (!setupOutputDirectory()) {
+      monitor.finishWithErrorMessage("Unable to setup files in " + outputDirectory);
       return;
     }
 
@@ -284,15 +291,15 @@ public class NewHtmlPrinter {
   }
 
   private boolean checkTools() {
-    if (!ExecUtil.hasBinaryOnPath("gm")) {
+    if (!exec.hasBinaryOnPath("gm")) {
       monitor.finishWithErrorMessage("It doesn't look like GraphicsMagick (gm) is installed and on the system path.");
       return false;
     }
-    if (!ExecUtil.hasBinaryOnPath("rubber")) {
+    if (!exec.hasBinaryOnPath("rubber")) {
       monitor.finishWithErrorMessage("It doesn't look like rubber is installed and on the system path.");
       return false;
     }
-    if (!ExecUtil.hasBinaryOnPath("pdfcrop")) {
+    if (!exec.hasBinaryOnPath("pdfcrop")) {
       monitor.finishWithErrorMessage("It doesn't look like pdfcrop is installed and on the system path.");
       return false;
     }
@@ -304,13 +311,13 @@ public class NewHtmlPrinter {
     for (File pdfFile : pdfFiles) {
       String pdfFilePath = pdfFile.getPath();
       monitor.setInfo("Resizing " + pdfFile.getName());
-      if (ExecUtil.execWaitIgnoreOutput("pdfcrop " + pdfFilePath + " " + pdfFilePath) != 0) {
+      if (exec.execWaitIgnoreOutput("pdfcrop " + pdfFilePath + " " + pdfFilePath) != 0) {
         monitor.finishWithErrorMessage("Error resizing " + pdfFile.getName());
         return false;
       }
       monitor.progress(1);
       monitor.setInfo("Converting " + pdfFile.getName() + " to png");
-      if (ExecUtil.execWaitIgnoreOutput("gm convert -scale 15%x15% -density 1000 -transparent #FFFFFF " + pdfFilePath + " " + pdfFilePath.substring(0,pdfFilePath.length()-3).concat("png")) != 0) {
+      if (exec.execWaitIgnoreOutput("gm convert -scale 15%x15% -density 1000 -transparent #FFFFFF " + pdfFilePath + " " + pdfFilePath.substring(0,pdfFilePath.length()-3).concat("png")) != 0) {
         monitor.finishWithErrorMessage("Error converting " + pdfFile.getName());
         return false;
       }
@@ -325,7 +332,7 @@ public class NewHtmlPrinter {
     //String filesString = StringUtil.appendWithSeparator(texFiles, " ", false);
     for (File file : texFiles) {
       monitor.setInfo("Compiling latex " + file);
-      if (ExecUtil.execWaitAndPrintToStandardChannels("rubber -d --inplace " + file) != 0) {
+      if (exec.execWaitAndPrintToStandardChannels("rubber -d --inplace " + file) != 0) {
         monitor.finishWithErrorMessage("Error compiling latex");
         return false;
       }

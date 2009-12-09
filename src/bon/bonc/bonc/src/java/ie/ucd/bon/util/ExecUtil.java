@@ -11,37 +11,60 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import com.google.common.collect.ImmutableList;
 
 public class ExecUtil {
 
-  private static List<String> path;
-  private static List<File> pathFiles;
-  private static final Map<File,Set<String>> filesOnPathMap = new HashMap<File,Set<String>>();
+  private final static String[] additionalPaths = { "/bin", "/usr/bin", "/opt/local/bin" };
   
-  public static List<String> getPath() {
-    if (path == null) {
-      String pathString = System.getenv("PATH");
-      if (pathString != null) {
-        path = Arrays.asList(pathString.split(File.pathSeparator));
-      } else {
-        path = Collections.emptyList();
-      }
+  public static final ExecUtil instance = new ExecUtil(true);
+  
+  private final Map<File,Set<String>> filesOnPathMap;
+  private final Collection<File> pathFiles;
+
+  public ExecUtil(boolean useAdditionalPaths) {
+    String pathString = System.getenv("PATH");
+    if (pathString == null) {
+      pathString = "";
+    } else {
+      pathString += File.pathSeparator;
     }
-    return path;
+    if (useAdditionalPaths) {
+      System.out.println("Before: " + pathString);
+      pathString += StringUtil.appendWithSeparator(additionalPaths, File.pathSeparator);
+      System.out.println("After: " + pathString);
+    }
+    pathFiles = getPathAsFiles(pathString);
+    filesOnPathMap = new HashMap<File,Set<String>>();
+    System.out.println(System.getenv());
   }
   
-  public static List<File> getPathAsFiles() {
-    if (pathFiles == null) {
-      pathFiles = new ArrayList<File>();
-      for (String pathEntry : getPath()) {
+  private String[] createNewEnv() {
+    List<String> entries = new ArrayList<String>();
+    Map<String,String> env = System.getenv();
+    for (Entry<String,String> entry : env.entrySet()) {
+      if (entry.equals("PATH")) {
+        
+      } else {
+        entries.add(entry.getKey() + '=' + entry.getValue());
+      }
+    }
+    return ArrayUtil.toArray(entries);
+  }
+
+  private static Collection<File> getPathAsFiles(String pathString) {
+    String[] parts = pathString.split(File.pathSeparator);
+    Collection<File> pathFiles = new ArrayList<File>();
+    for (String pathEntry : parts) {
+      if (!pathEntry.isEmpty()) {
         try {
           File file = new File(pathEntry);
           if (file.isDirectory()) {
@@ -52,11 +75,12 @@ public class ExecUtil {
         }
       }
     }
+    System.out.println("Path: " + StringUtil.appendWithSeparator(pathFiles, ":"));
     return ImmutableList.copyOf(pathFiles);
   }
-  
-  public static boolean hasBinaryOnPath(String binaryName, boolean useCache) {
-    for (File file : getPathAsFiles()) {
+
+  public boolean hasBinaryOnPath(String binaryName, boolean useCache) {
+    for (File file : pathFiles) {
       Set<String> fileNames = null;
       boolean foundInCache = false;
       if (useCache) {
@@ -76,20 +100,21 @@ public class ExecUtil {
     }
     return false;
   }
-  
-  public static boolean hasBinaryOnPath(String binaryName) {
+
+  public boolean hasBinaryOnPath(String binaryName) {
     return hasBinaryOnPath(binaryName, true);
   }
 
-  public static int execWait(String command, boolean outputStdout, boolean outputStderr) {
+  public int execWait(String command, boolean outputStdout, boolean outputStderr) {
     return execWait(command, outputStdout ? System.out : null, outputStderr ? System.err : null);
   }
-  
-  public static int execWait(String command, PrintStream outputStream, PrintStream errStream) {
+
+  public int execWait(String command, PrintStream outputStream, PrintStream errStream) {
     try {
       Runtime runtime = Runtime.getRuntime();
-      Process process = runtime.exec(command);
       
+      Process process = runtime.exec(command);
+
       if (outputStream != null) {
         BufferedReader or = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String lineo;
@@ -97,7 +122,7 @@ public class ExecUtil {
           outputStream.println(lineo);
         }
       }
-      
+
       if (errStream != null) {
         BufferedReader er = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         String linee;
@@ -105,7 +130,7 @@ public class ExecUtil {
           errStream.println(linee);
         }
       }
-      
+
       return process.waitFor();
     } catch (IOException ioe) {
       return 1;
@@ -113,13 +138,13 @@ public class ExecUtil {
       return 1;
     }
   }
-  
-  public static int execWaitIgnoreOutput(String command) {
+
+  public int execWaitIgnoreOutput(String command) {
     return execWait(command, false, false);
   }
-  
-  public static int execWaitAndPrintToStandardChannels(String command) {
+
+  public int execWaitAndPrintToStandardChannels(String command) {
     return execWait(command, true, true);
   }
-  
+
 }
