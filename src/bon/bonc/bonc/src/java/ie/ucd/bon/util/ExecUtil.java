@@ -28,6 +28,7 @@ public class ExecUtil {
   public static final ExecUtil instance = new ExecUtil(true);
   
   private final Map<File,Set<String>> filesOnPathMap;
+  private final Map<String,File> binariesOnPathMap;
   private final Collection<File> pathFiles;
   private final String[] newEnv;
 
@@ -39,10 +40,12 @@ public class ExecUtil {
       pathString += File.pathSeparator;
     }
     if (useAdditionalPaths) {
+      System.out.println("Old path: " + pathString);
       pathString += StringUtil.appendWithSeparator(additionalPaths, File.pathSeparator);
     }
     pathFiles = getPathAsFiles(pathString);
     filesOnPathMap = new HashMap<File,Set<String>>();
+    binariesOnPathMap = new HashMap<String,File>();
     newEnv = createNewEnv();
   }
   
@@ -94,7 +97,14 @@ public class ExecUtil {
         filesOnPathMap.put(file, fileNames);
       }
       if (fileNames.contains(binaryName)) {
-        return file.canExecute();
+        String path = file.getAbsolutePath();
+        path += path.endsWith(File.separator) ? "" : File.separator;
+        path += binaryName;
+        File binary = new File(path);
+        if (binary.canExecute()) {
+          binariesOnPathMap.put(binaryName, binary);
+          return true;
+        }
       }
     }
     return false;
@@ -102,6 +112,15 @@ public class ExecUtil {
 
   public boolean hasBinaryOnPath(String binaryName) {
     return hasBinaryOnPath(binaryName, true);
+  }
+  
+  public String findAbsoluteCommandPath(String command) {
+    if (!hasBinaryOnPath(command)) {
+      return command; //Return unchanged
+    } else {
+      File newCmd = binariesOnPathMap.get(command);
+      return newCmd == null ? command : newCmd.getAbsolutePath();
+    }
   }
 
   public int execWait(String command, boolean outputStdout, boolean outputStderr) {
@@ -112,7 +131,10 @@ public class ExecUtil {
     try {
       Runtime runtime = Runtime.getRuntime();
       
-      Process process = runtime.exec(command, newEnv);
+      String[] commandParts = command.split("\\s+");
+      commandParts[0] = findAbsoluteCommandPath(commandParts[0]);
+      
+      Process process = runtime.exec(commandParts, newEnv);
 
       if (outputStream != null) {
         BufferedReader or = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -132,8 +154,10 @@ public class ExecUtil {
 
       return process.waitFor();
     } catch (IOException ioe) {
+      System.out.println("IOException: " + ioe);
       return 1;
     } catch (InterruptedException ie) {
+      System.out.println("InterruptedException: " + ie);
       return 1;
     }
   }

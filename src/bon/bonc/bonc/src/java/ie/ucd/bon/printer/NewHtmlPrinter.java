@@ -69,17 +69,27 @@ public class NewHtmlPrinter {
     
     //TODO copy relevant javascript files
     monitor.setInfo("Doing new html printing " + outputDirectory);
-
-    monitor.finishWithErrorMessage("Test");
     
     if (!setupOutputDirectory()) {
       monitor.finishWithErrorMessage("Unable to setup files in " + outputDirectory);
       return;
     }
 
+    if (monitor.isCancelled()) {
+      return;
+    }
+    
     printAllImageLatex();
     
+    if (monitor.isCancelled()) {
+      return;
+    }
+    
     boolean imagesCompiled = compileImages && buildImages();
+    
+    if (monitor.isCancelled()) {
+      return;
+    }
     
     //JS gen
     FreeMarkerTemplate.writeTemplateToFile(relativeFile("js/vars.js"), "newhtml/vars.ftl", map);
@@ -93,6 +103,9 @@ public class NewHtmlPrinter {
       monitor.setInfo("Generating html for " + clazz.name.name);
       printForClass(clazz);
       monitor.progress(1);
+      if (monitor.isCancelled()) {
+        return;
+      }
     }
 
     //Clusters
@@ -119,6 +132,9 @@ public class NewHtmlPrinter {
       monitor.setInfo("Generating latex for " + clazz.name.name);
       printClassImageLatex(clazz);
       monitor.progress(1);
+      if (monitor.isCancelled()) {
+        return;
+      }
     }
   }
 
@@ -272,14 +288,26 @@ public class NewHtmlPrinter {
     if (!checkTools()) {
       return false;
     }
+    
+    if (monitor.isCancelled()) {
+      return false;
+    }
 
     if (!compileLatex()) {
+      return false;
+    }
+    
+    if (monitor.isCancelled()) {
       return false;
     }
 
     if (!resizeAndConvertImage()) {
       return false;
-    }   
+    }
+    
+    if (monitor.isCancelled()) {
+      return false;
+    }
 
     monitor.setInfo("Cleaning up.");
     FileUtil.deleteAll(outputDirectory.listFiles(FileUtil.getSuffixFilenameFilter(".pdf")));
@@ -316,12 +344,18 @@ public class NewHtmlPrinter {
         return false;
       }
       monitor.progress(1);
+      if (monitor.isCancelled()) {
+        return false;
+      }
       monitor.setInfo("Converting " + pdfFile.getName() + " to png");
       if (exec.execWaitIgnoreOutput("gm convert -scale 15%x15% -density 1000 -transparent #FFFFFF " + pdfFilePath + " " + pdfFilePath.substring(0,pdfFilePath.length()-3).concat("png")) != 0) {
         monitor.finishWithErrorMessage("Error converting " + pdfFile.getName());
         return false;
       }
       monitor.progress(1);
+      if (monitor.isCancelled()) {
+        return false;
+      }
     }
     return true;
   }
@@ -332,11 +366,14 @@ public class NewHtmlPrinter {
     //String filesString = StringUtil.appendWithSeparator(texFiles, " ", false);
     for (File file : texFiles) {
       monitor.setInfo("Compiling latex " + file);
-      if (exec.execWaitAndPrintToStandardChannels("rubber -d --inplace " + file) != 0) {
+      if (exec.execWaitIgnoreOutput("rubber -d --inplace " + file) != 0) {
         monitor.finishWithErrorMessage("Error compiling latex");
         return false;
       }
       monitor.progress(1);
+      if (monitor.isCancelled()) {
+        return false;
+      }
     }
     monitor.setInfo("Done compiling latex...");
     return true;
