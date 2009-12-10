@@ -29,6 +29,7 @@ public class ExecUtil {
   
   private final Map<File,Set<String>> filesOnPathMap;
   private final Collection<File> pathFiles;
+  private final String[] newEnv;
 
   public ExecUtil(boolean useAdditionalPaths) {
     String pathString = System.getenv("PATH");
@@ -38,26 +39,24 @@ public class ExecUtil {
       pathString += File.pathSeparator;
     }
     if (useAdditionalPaths) {
-      System.out.println("Before: " + pathString);
       pathString += StringUtil.appendWithSeparator(additionalPaths, File.pathSeparator);
-      System.out.println("After: " + pathString);
     }
     pathFiles = getPathAsFiles(pathString);
     filesOnPathMap = new HashMap<File,Set<String>>();
-    System.out.println(System.getenv());
+    newEnv = createNewEnv();
   }
   
   private String[] createNewEnv() {
     List<String> entries = new ArrayList<String>();
     Map<String,String> env = System.getenv();
     for (Entry<String,String> entry : env.entrySet()) {
-      if (entry.equals("PATH")) {
-        
+      if (entry.getKey().equals("PATH")) {
+        entries.add("PATH=" + StringUtil.appendWithSeparator(pathFiles, File.pathSeparator));
       } else {
         entries.add(entry.getKey() + '=' + entry.getValue());
       }
     }
-    return ArrayUtil.toArray(entries);
+    return entries.toArray(new String[entries.size()]);
   }
 
   private static Collection<File> getPathAsFiles(String pathString) {
@@ -113,7 +112,7 @@ public class ExecUtil {
     try {
       Runtime runtime = Runtime.getRuntime();
       
-      Process process = runtime.exec(command);
+      Process process = runtime.exec(command, newEnv);
 
       if (outputStream != null) {
         BufferedReader or = new BufferedReader(new InputStreamReader(process.getInputStream()));
