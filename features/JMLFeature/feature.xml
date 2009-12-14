@@ -2,11 +2,7 @@
 <feature
       id="mobius.jml"
       label="JML"
-      version="1.0.2">
-
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
-   </description>
+      version="1.0.3">
 
    <copyright url="http://www.example.com/copyright">
       [Enter Copyright Description here.]
@@ -33,5 +29,25 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="ch.ethz.inf.pm.jml.plugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.ethz.inf.pm.jml.plugin.help"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.ethz.inf.pm.jml.plugin.resources"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
