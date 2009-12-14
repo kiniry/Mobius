@@ -1,0 +1,1188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>Preliminary Design of JML: 1. Introduction</title>
+
+<meta name="description" content="Preliminary Design of JML: 1. Introduction">
+<meta name="keywords" content="Preliminary Design of JML: 1. Introduction">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Introduction"></a>
+<a name="SEC1"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC2" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[ &lt;&lt; ]</td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 1. Introduction </h1>
+
+<p align="center"> <b>Abstract</b>
+</p>
+<blockquote><p>JML is a behavioral interface specification language tailored to Java(TM).
+Besides pre- and postconditions,
+it also allows assertions to be intermixed with Java code; these aid
+verification and debugging.  JML is designed to be used by working
+software engineers; to do this it follows Eiffel in using Java
+expressions in assertions.  JML combines this idea from Eiffel with the
+model-based approach to specifications, typified by VDM and Larch,
+which results in greater expressiveness.  Other expressiveness
+advantages over Eiffel include quantifiers, specification-only
+variables, and frame conditions.
+</p>
+<p>This paper discusses the goals of JML, the overall approach, and
+describes the basic features of the language through examples.  It is
+intended for readers who have some familiarity with both Java and
+behavioral specification using pre- and postconditions.
+</p></blockquote>
+
+<a name="IDX1"></a>
+<a name="IDX2"></a>
+<a name="IDX3"></a>
+<a name="IDX4"></a>
+<a name="IDX5"></a>
+<a name="IDX6"></a>
+<a name="IDX7"></a>
+<a name="IDX8"></a>
+<a name="IDX9"></a>
+<a name="IDX10"></a>
+<a name="IDX11"></a>
+<a name="IDX12"></a>
+<p>JML stands for &ldquo;Java Modeling Language&rdquo; [Leavens-Baker-Ruby99].
+JML is a <em>behavioral interface specification language</em> (BISL)
+[Wing87]
+designed to specify
+Java [Arnold-Gosling-Holmes00] [Gosling-etal00] 
+modules.
+Java <em>modules</em> are classes and interfaces.
+</p>
+<a name="IDX13"></a>
+<p>The main goal of our research on JML is to better understand
+how to make BISLs (and BISL tools)
+that are practical and effective for production software environments.
+In order to understand this goal, and the more detailed discussion
+of our goals for JML, it helps to define more precisely what
+a behavioral interface specification is.
+After doing this, we return
+to describing the goals of JML,
+and then give a brief overview of the tool support for JML and an
+outline of the rest of the paper.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC2">1.1 Behavioral Interface Specification</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC3">1.2 Lightweight Specifications</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC4">1.3 Goals</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                       
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC5">1.4 Tool Support</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC10">1.5 Outline</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                     
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Behavioral-Interface-Specification"></a>
+<a name="SEC2"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC1" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC3" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 1.1 Behavioral Interface Specification </h2>
+
+<p>As a BISL,
+JML describes two important aspects of a Java module:
+</p><ul>
+<li>
+its <em>interface</em>, which consists of the names and static information
+found in Java declarations,
+and
+
+</li><li>
+its <em>behavior</em>, which tells how the module acts when used.
+</li></ul>
+
+<a name="IDX14"></a>
+<a name="IDX15"></a>
+<a name="IDX16"></a>
+<p>BISLs are inherently language-specific [Wing87],
+because they describe interface details for clients written in a specific
+programming language,
+For example, a BISL tailored to C++, such as Larch/C++ [Leavens97c],
+describes how to use a module in a C++ program.
+A Larch/C++ specification cannot be implemented correctly in Java,
+and a JML specification cannot be correctly implemented in C++
+(except for methods that are specified as native code).
+</p>
+<a name="IDX17"></a>
+<a name="IDX18"></a>
+<a name="IDX19"></a>
+<a name="IDX20"></a>
+<a name="IDX21"></a>
+<p>JML specifications can either be written in separate files
+or as annotations in Java program files.
+To a Java compiler such annotations are comments that are ignored
+[Luckham-vonHenke85] [Luckham-etal87] [Rosenblum95] [Tan94] [Tan95].
+This allows JML specifications, such as the specification below,
+to be embedded in Java program files.
+Consider the following
+simple example of a behavioral interface specification in JML,
+written as annotations in a Java program file, &lsquo;<tt>IntMathOps.java</tt>&rsquo;.
+</p>
+<a name="IDX22"></a>
+<a name="IDX23"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">
+public class IntMathOps {                                // 1
+                                                         // 2
+  /*@ public normal_behavior                             // 3
+    @   requires y &gt;= 0;                                 // 4
+    @   assignable \nothing;                             // 5
+    @   ensures 0 &lt;= \result                             // 6
+    @        &amp;&amp; \result * \result &lt;= y                   // 7
+    @        &amp;&amp; ((0 &lt;= (\result + 1) * (\result + 1))    // 8
+    @            ==&gt; y &lt; (\result + 1) * (\result + 1)); // 9
+    @*/                                                  //10
+  public static int isqrt(int y)                         //11
+  {                                                      //12
+    return (int) Math.sqrt(y);                           //13
+  }                                                      //14
+}                                                        //15
+</pre></td></tr></table>
+
+<a name="IDX24"></a>
+<a name="IDX25"></a>
+<a name="IDX26"></a>
+<a name="IDX27"></a>
+<p>The specification above describes a Java class, <code>IntMathOps</code>
+that contains one static method (function member) named <code>isqrt</code>.
+The single-line comments to the far right (which start with <code>//</code>)
+give the line numbers in this specification;
+they are ignored by both Java and JML.
+Comments with an immediately following at-sign, <code>//@</code>,
+or, as on lines 3&ndash;10, C-style comments
+starting with <code>/*@</code>, are <em>annotations</em>.
+Annotations are treated as comments by a Java compiler,
+but JML processes the text of an annotation.
+The text of an annotation is either the remainder of a line
+following <code>//@</code>
+or the characters between the annotation markers <code>/*@</code> and <code>@*/</code>.
+In the second form, at-signs (<code>@</code>) at the beginning of lines
+are ignored;
+they can be used to help the reader see the extent of an annotation.
+</p>
+<p>In the above specification,
+interface information is declared in lines 1 and 11.
+Line 1 declares a class named <code>IntMathOps</code>,
+and line 11 declares a method named <code>isqrt</code>.
+Note that all of Java's declaration syntax is allowed in JML,
+including, on lines 1 and 11, that the names declared are <code>public</code>,
+that the method is <code>static</code> (line 11),
+that its return type is <code>int</code> (line 11),
+and that it takes one <code>int</code> argument.
+</p>
+<a name="IDX28"></a>
+<p>Such interface declarations must be found in a Java module
+that correctly implements this specification.
+This is automatically the case in the file &lsquo;<tt>IntMathOps.java</tt>&rsquo;
+shown above, since that file also contains the implementation.
+In fact, when Java annotations are embedded in &lsquo;<tt>.java</tt>&rsquo; files,
+the interface specification is the actual Java source code.
+</p>
+<a name="IDX29"></a>
+<a name="IDX30"></a>
+<a name="IDX31"></a>
+<a name="IDX32"></a>
+<p>To be correct, an implementation must have both the specified interface
+and the specified behavior.
+In the above specification,
+the behavioral information is specified in the annotation text
+on lines 3&ndash;10.<a name="DOCF1" href="prelimdesign_fot.html#FOOT1">(1)</a>
+The keywords <code>public normal_behavior</code> are used to say that
+the specification is intended for callers (hence &ldquo;public&rdquo;),
+and that when the precondition is satisfied
+a call must return normally, without throwing an exception (hence &ldquo;normal&rdquo;).
+In such a public specification, only names with public visibility
+may be used.<a name="DOCF2" href="prelimdesign_fot.html#FOOT2">(2)</a>
+<a name="IDX33"></a>
+<a name="IDX34"></a>
+<a name="IDX35"></a>
+<a name="IDX36"></a>
+<a name="IDX37"></a>
+<a name="IDX38"></a>
+On line 4 is a precondition, which follows the keyword
+<code>requires</code>.<a name="DOCF3" href="prelimdesign_fot.html#FOOT3">(3)</a>
+On line 5 is frame condition, which says that this method, when called,
+does not assign to any locations.
+On lines 6&ndash;9 is a postcondition,
+which follows the keyword <code>ensures</code>.<a name="DOCF4" href="prelimdesign_fot.html#FOOT4">(4)</a>
+The precondition says what must be true about the arguments
+(and other parts of the state);
+if the precondition is true, then the method must terminate normally
+in a state that satisfies the postcondition.
+<a name="IDX39"></a>
+<a name="IDX40"></a>
+<a name="IDX41"></a>
+<a name="IDX42"></a>
+<a name="IDX43"></a>
+<a name="IDX44"></a>
+<a name="IDX45"></a>
+<a name="IDX46"></a>
+This is a contract between the caller of the method and the implementor
+[Hoare69] [Jones90] [Jonkers91] [Guttag-Horning93] [Meyer92a] [Meyer97] [Morgan94].
+The caller is obligated to make the precondition true,
+and gets the benefit of having the postcondition then be satisfied.
+The implementor gets the benefit of being able to assume the precondition,
+and is obligated to make the postcondition true in that case.
+</p>
+<a name="IDX47"></a>
+<a name="IDX48"></a>
+<a name="IDX49"></a>
+<p>In general, pre- and postconditions in JML are written using an
+extended form of Java expressions.
+In this case, the only extension visible is the keyword <code>\result</code>,
+which is used in the postcondition to denote the value returned by the method.
+The type of <code>\result</code> is the return type of the method;
+for example, the type of <code>\result</code> in <code>isqrt</code> is
+<code>int</code>.
+The postcondition says that the result is an integer approximation to the
+square root of <code>y</code>.  The first conjunct on line 6,
+<code>0 &lt;= \result</code>
+say that the result is non-negative.
+The second and third conjuncts state that the result is an integer
+approximation to the square root of the argument <code>y</code>.
+The second conjunct, on line 7, says that the result squared is no
+larger than the argument, <code>y</code>.
+The third conjunct, on lines
+8&ndash;9, is an implication; it has two expressions connected by
+<code>==&gt;</code>, which means implication in JML.
+This implication says that if the result plus one squared is
+non-negative, then the result plus one squared is strictly larger than
+<code>y</code>.<a name="DOCF5" href="prelimdesign_fot.html#FOOT5">(5)</a>
+Note that the behavioral specification does not give an algorithm for finding
+the square root.
+</p>
+<a name="IDX50"></a>
+<a name="IDX51"></a>
+<a name="IDX52"></a>
+<a name="IDX53"></a>
+<a name="IDX54"></a>
+<a name="IDX55"></a>
+<a name="IDX56"></a>
+<a name="IDX57"></a>
+<a name="IDX58"></a>
+<a name="IDX59"></a>
+<a name="IDX60"></a>
+<p>Method specifications may also be written in Java's documentation comments.
+The following is an example.  The part that JML sees is enclosed within
+the HTML &ldquo;tags&rdquo; <code>&lt;jml&gt;</code> and <code>&lt;/jml&gt;</code>.<a name="DOCF6" href="prelimdesign_fot.html#FOOT6">(6)</a>
+As in this example, one can use surrounding
+tags <code>&lt;pre&gt;</code> and <code>&lt;/pre&gt;</code> to tell javadoc to ignore what JML sees,
+and to leave the formatting of it alone.  The <code>&lt;pre&gt;</code> and <code>&lt;/pre&gt;</code>
+tags are not 
+required by JML tools (including jmldoc, which does a better job of formatting
+specifications than does javadoc).
+</p>
+<a name="IDX61"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">
+public class IntMathOps4 { 
+
+  /** Integer square root function.
+   * @param y the number to take the root of
+   * @return an integer approximating
+   *         the positive square root of y
+   * &lt;pre&gt;&lt;jml&gt;
+   *   public normal_behavior
+   *     requires y &gt;= 0;   
+   *     assignable \nothing; 
+   *     ensures 0 &lt;= \result
+   *        &amp;&amp; \result * \result &lt;= y
+   *        &amp;&amp; ((0 &lt;= (\result + 1) * (\result + 1))
+   *            ==&gt; y &lt; (\result + 1) * (\result + 1));
+   * &lt;/jml&gt;&lt;/pre&gt;
+   **/
+  public static int isqrt(int y)
+  {
+     return (int) Math.sqrt(y);
+  }
+}
+</pre></td></tr></table>
+
+<a name="IDX62"></a>
+<a name="IDX63"></a>
+<a name="IDX64"></a>
+<p>Because we expect most of our users to write specifications in Java
+code files, most of our examples will be given as annotations
+in &lsquo;<tt>.java</tt>&rsquo; files as in the specifications above.
+However, it is possible to use JML to write documentation in separate,
+non-Java files,
+such as the file &lsquo;<tt>IntMathOps2.jml-refined</tt>&rsquo; below.
+Since these files are not Java program files,
+JML requires the user to omit the code for concrete methods in such a
+file (except that code for &ldquo;model&rdquo; methods can be present,
+see section <a href="prelimdesign_2.html#SEC35">Purity</a>).
+The specification below shows how this is done, using a semicolon (<code>;</code>),
+as in a Java abstract method declaration.
+</p>
+<a name="IDX65"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">
+//@ model import org.jmlspecs.models.*;
+
+public /*+@ spec_bigint_math @+*/ class IntMathOps2 {
+
+ /*@ public normal_behavior
+   @   requires y &gt;= 0;
+   @   assignable \nothing;
+   @   ensures -y &lt;= \result &amp;&amp; \result &lt;= y;
+   @   ensures \result * \result &lt;= y;
+   @   ensures y &lt; (Math.abs(\result) + 1)
+   @               * (Math.abs(\result) + 1);
+   @*/
+  public static int isqrt(int y);
+}
+</pre></td></tr></table>
+
+<a name="IDX66"></a>
+<a name="IDX67"></a>
+<a name="IDX68"></a>
+<a name="IDX69"></a>
+<a name="IDX70"></a>
+<p>Besides files with suffixes of &lsquo;<tt>.jml-refined</tt>&rsquo; or &lsquo;<tt>.jml</tt>&rsquo;,
+JML also works with files with the suffixes &lsquo;<tt>.spec</tt>&rsquo;
+and &lsquo;<tt>.spec-refined</tt>&rsquo;.
+All these files use Java's syntax, and one must use annotation markers
+just as in a &lsquo;<tt>.java</tt>&rsquo; file.
+However, since these kinds of files files are not Java files,
+in such a file one must also omit the code for concrete, non-model methods.
+</p>
+<a name="IDX71"></a>
+<a name="IDX72"></a>
+<p>The specification of <code>IntMathOps2</code> below
+is written in <code>spec_bigint_math</code> mode [Chalin04].
+This means that integer mathematics inside the specifications in the
+class <code>IntMathOps2</code> are done in infinite precision arithmetic,
+instead of the usual Java arithmetic.  This leads to a simpler
+specification, especially in the ensures clause.<a name="DOCF7" href="prelimdesign_fot.html#FOOT7">(7)</a>
+</p>
+<a name="IDX74"></a>
+<a name="IDX75"></a>
+<p>The above specification also demonstrates that ensures clauses can be
+repeated in a specification.  In <code>IntMathOps2</code>'s specification of
+<code>isqrt</code>, there are three ensures clauses; all of them must be
+satisfied. Thus the meaning is the same as the conjunction of all of
+the postconditions specified in the individual ensures clauses.
+This specification is also more underspecified than the specifications
+given previously, as it allows negative numbers to be returned as results.
+</p>
+<a name="IDX76"></a>
+<p>The above specification would be implemented
+in the file &lsquo;<tt>IntMathOps2.java</tt>&rsquo;,
+which is shown below.
+This file contains a <code>refine</code> clause,
+which tells the reader of the &lsquo;<tt>.java</tt>&rsquo;
+file what is being refined
+and the file in which to find its specification.
+</p>
+<a name="IDX77"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">
+//@ refine &quot;IntMathOps2.jml-refined&quot;;
+
+//@ model import org.jmlspecs.models.*;
+
+public class IntMathOps2 {
+
+  public static int isqrt(int y)
+  {
+     return (int) Math.sqrt(y);
+  }
+}
+</pre></td></tr></table>
+
+<p>To summarize, a behavioral interface specification describes both the
+interface details of a module, and its behavior.
+The interface details are written in the syntax of the programming language;
+thus JML uses the Java declaration syntax.
+The behavioral specification uses pre- and postconditions.
+</p>
+<hr size="6">
+<a name="Lightweight-Specifications"></a>
+<a name="SEC3"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC2" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC4" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 1.2 Lightweight Specifications </h2>
+
+<p>Although we find it best to illustrate JML's features in this paper using
+specifications that are detailed and complete, one
+can use JML to write less detailed specifications.
+In particular, one can use JML to write &ldquo;lightweight&rdquo;
+specifications (as in ESC/Java).  The syntax of JML allows one to write
+specifications that consist of individual clauses, so that one can say
+just what is desired.  More precisely, a <em>lightweight</em> specification
+is one that does not use a behavior keyword  (like
+<code>normal_behavior</code>).
+By way of contrast, we call a specification a <em>heavyweight</em>
+specification if it uses one of the behavior keywords.
+</p>
+<p>For example, one might wish to specify just that <code>isqrt</code>
+should be called only on positive arguments, but not want to be
+bothered with saying anything formal about the locations
+that can be assigned to by the method or about the result.
+This could be done as shown below.
+Notice that the only specification given below is
+a single <code>requires</code> clause.
+Since the specification of <code>isqrt</code> has no behavior keyword,
+it is a lightweight specification.
+</p>
+<a name="IDX78"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">
+public class IntMathOps3 {
+
+  //@ requires y &gt;= 0;
+  public static int isqrt(int y)
+  {
+    return (int) Math.sqrt(y);
+  }
+}
+</pre></td></tr></table>
+
+<a name="IDX79"></a>
+<a name="IDX80"></a>
+<a name="IDX81"></a>
+<p>What is the access restriction, or privacy level,
+of such a lightweight specification?
+The syntax for lightweight specifications does not
+have a place to specify the privacy level,
+so JML assumes that such a lightweight specification
+has the same level of visibility as the method itself.
+(Thus, the specification below is implicitly <code>public</code>.)
+What about the omitted parts of the specification, such as the ensures clause?
+JML assumes nothing about these.
+In the example below when the precondition is met,
+an implementation might either signal an
+exception or terminate normally, so this specification technically
+allows exceptions to be thrown. However, the gain in brevity often
+outweighs the need for this level of precision.
+</p>
+<a name="IDX82"></a>
+<a name="IDX83"></a>
+<p>JML has a semantics that allows most clauses to be sensibly omitted
+from a specification.  When the <code>requires</code> clause is omitted, for
+example, it means that no requirements are placed on the caller.  When
+the <code>assignable</code> clause is omitted, it means that nothing is
+promised about what locations may not be assigned to by the method;
+that is, the method may assign to all locations that it can otherwise
+legally assign to.  When the <code>ensures</code> clause is omitted, it
+means that nothing is promised about the state resulting from a method
+call.  See section <a href="prelimdesign_5.html#SEC54">Specification Case Defaults</a>, for the default meanings of
+various other clauses.
+</p>
+<hr size="6">
+<a name="Goals"></a>
+<a name="SEC4"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC3" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC5" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 1.3 Goals </h2>
+
+<p>As mentioned above,
+the main goal of our research is to better understand
+how to develop BISLs (and BISL tools)
+that are practical and effective.
+We are concerned with both technical requirements
+and with other factors such as training and documentation,
+although in the rest of this paper we will only be concerned with
+technical requirements for the BISL itself.
+The practicality and
+effectiveness of JML will be judged by how well
+it can document reusable class libraries, frameworks, and
+Application Programming Interfaces (APIs).
+</p>
+<p>We believe that to meet the overall goal of practical and effective
+behavioral interface specification,
+JML must meet the following subsidiary goals.
+</p><ul>
+<li>
+JML must be able to document the interfaces and behavior of existing software,
+regardless of the analysis and design methods used to create it.
+
+<p>If JML were limited to only handling certain Java features,
+certain kinds of software, or software designed according to certain
+analysis and design methods,
+then some APIs would not be amenable to documentation using JML.
+This would mean that some existing software could not be documented
+using JML.
+Since the effort put into writing such documentation will have a proportionally
+larger payoff for software that is more widely reused,
+it is important to be able to document existing software components.
+</p>
+<p>(However, it should be noted that we make some exceptions to this goal.
+One is that JML requires that all subtypes be behavioral subtypes
+[Dhara-Leavens96] [Leavens97c] [Wing87] of their supertypes.
+This is done because otherwise one cannot reason modularly about
+programs that use subtyping and dynamic dispatch.
+Another is that we specify <code>Object</code>'s method <code>equals</code> as a
+pure method, which prohibits even benevolent side effects in any
+<code>equals</code> method that takes an <code>Object</code> as an argument.  This
+is done to permit purity checking for collection classes that contain
+objects as members and use <code>equals</code> to compare them, as in the
+collection types found in <code>java.util</code>.)
+</p>
+</li><li>
+The notation used in JML should be readily understandable by Java programmers,
+including those with only standard mathematical training.
+
+<a name="IDX84"></a>
+<a name="IDX85"></a>
+<a name="IDX86"></a>
+<a name="IDX87"></a>
+<a name="IDX88"></a>
+<a name="IDX89"></a>
+<p>A preliminary study by Finney [Finney96] indicates that
+graphic mathematical notations,
+such as those found in Z [Hayes93] [Spivey92] [Woodcock-Davies96]
+may make such specifications
+hard to read, even for programmers trained in the notation.
+This accords with our experience in teaching formal specification notations
+to programmers.
+Hence, our strategy for meeting this goal has been to shun most special-purpose
+mathematical notations in favor of Java's own expression syntax.
+</p>
+</li><li>
+The language must be capable of being given a rigorous, formal semantics,
+and must also be amenable to tool support.
+
+<p>This goal also helps ensure that the specification language does not suffer
+from logical problems, which would make it less useful for
+static analysis, prototyping, and testing tools.
+</p></li></ul>
+
+<a name="IDX90"></a>
+<a name="IDX91"></a>
+<a name="IDX92"></a>
+<a name="IDX93"></a>
+<p>We also have in mind a long range goal of a specification compiler,
+that would produce prototypes from specifications that happen to be 
+constructive [Wahls-Leavens-Baker00].
+</p>
+<a name="IDX94"></a>
+<a name="IDX95"></a>
+<a name="IDX96"></a>
+<a name="IDX97"></a>
+<p>Our partners at Compaq SRC and the
+University of Nijmegen have other goals in mind.  At Compaq SRC, the
+goal is to make static analysis tools for Java programs that can help
+detect bugs.  At the University of Nijmegen, the goal is to be able to
+do full program verification on Java programs.
+</p>
+<a name="IDX98"></a>
+<a name="IDX99"></a>
+<a name="IDX100"></a>
+<a name="IDX101"></a>
+<a name="IDX102"></a>
+<a name="IDX103"></a>
+<a name="IDX104"></a>
+<a name="IDX105"></a>
+<a name="IDX106"></a>
+<a name="IDX107"></a>
+<a name="IDX108"></a>
+<a name="IDX109"></a>
+<p>As a general strategy for achieving these goals,
+we have tried to blend the Eiffel [Meyer92a] [Meyer92b] [Meyer97],
+Larch [Wing87] [Wing90a] [Guttag-Horning93] [LeavensLarchFAQ],
+and refinement calculus
+[Back88] [Back-vonWright98] [Morgan-Vickers94] [Morgan94]
+approaches to specification.
+From Eiffel we have taken the idea that assertions can be written in
+a language that is based on Java expressions.
+<a name="IDX110"></a>
+We also adapt the &ldquo;<code>old</code>&rdquo; notation from Eiffel,
+which appears in JML as <code>\old</code>,
+instead of the Larch-style annotation of names with state functions.
+However, Eiffel specifications, as written by Meyer,
+are typically not as detailed as model-based specifications
+written, for example, in Larch BISLs or in
+<a name="IDX111"></a>
+<a name="IDX112"></a>
+<a name="IDX113"></a>
+<a name="IDX114"></a>
+<a name="IDX115"></a>
+VDM-SL [Fitzgerald-Larsen98] [ISO96] [Jones90].
+Hence, we have combined these approaches, by using syntactic ideas
+from Eiffel and semantic ideas from model-based specification languages.
+</p>
+<a name="IDX116"></a>
+<a name="IDX117"></a>
+<a name="IDX118"></a>
+<a name="IDX119"></a>
+<a name="IDX120"></a>
+<a name="IDX121"></a>
+<p>JML also has some other differences from Eiffel
+(and its cousins Sather and Sather-K).
+The most important is the concept of specification-only
+declarations.
+These declarations allow more abstract and exact specifications of behavior
+than is typically done in Eiffel;
+they allow one to write specifications that are similar to the spirit of VDM
+or Larch BISLs.
+A major difference is that we have extended
+the syntax of Java expressions with quantifiers and other constructs
+that are needed for logical expressiveness, but which are not always
+executable.
+Finally, we ban side-effects
+and other problematic features of code in assertions.
+</p>
+<a name="IDX122"></a>
+<a name="IDX123"></a>
+<p>On the other hand,
+our experience with Larch/C++ has taught us to adapt
+the model-based approach in two ways, with the aim of making it more
+practical and easy to learn.
+The first adaptation is again the use of specification-only
+model variables.
+An object will thus have (in general) several such <em>model fields</em>,
+which are used only for the purpose of describing, abstractly, the values
+of objects.
+This simplifies the use of JML, as compared with most Larch BISLs,
+since specifiers (and their readers)
+hardly ever need to know about algebraic-style specification.
+It also makes designing a model for a Java class or interface similar,
+in some respects, to designing an implementation data structure in Java.
+We hope that this similarity
+will make the specification language easier to understand.
+(This kind of model also has some technical advantages
+that will be described below.)
+</p>
+<a name="IDX124"></a>
+<a name="IDX125"></a>
+<a name="IDX126"></a>
+<a name="IDX127"></a>
+<p>The second adaptation is hiding the details of mathematical
+modeling behind a facade of Java classes.
+In the Larch approach to behavioral interface specification [Wing87],
+the mathematical notation used in assertions is presented directly
+to the specifier.
+This allows the same mathematical notation to be used in many different
+specification languages.
+However, it also means that the user of such a specification language has to
+learn a notation for assertions that is different than their programming
+language's notation for expressions.
+In JML we use a compromise approach, hiding these details behind Java classes.
+These classes have objects with many &ldquo;pure&rdquo; methods,
+in the sense that they do not use side-effects
+(at least not in any observable way).
+Such classes are intended to present the underlying
+mathematical concepts using Java syntax.
+Besides insulating the user of JML from the details of the mathematical
+notation, this compromise approach also insulates the design of JML
+from the details of the mathematical logic used for theorem proving.
+</p>
+<a name="IDX128"></a>
+<a name="IDX129"></a>
+<a name="IDX130"></a>
+<a name="IDX131"></a>
+<a name="IDX132"></a>
+<a name="IDX133"></a>
+<a name="IDX134"></a>
+<p>We have generally taken features wholesale from the refinement calculus
+[Back88] [Back-vonWright98] [Morgan-Vickers94] [Morgan94].
+Our adaptation of it consists in blending it with the idea
+of interface specification and adding features for object-oriented programming.
+We are using the adaptation of the refinement calculus by
+B&uuml;chi and Weck [Buechi-Weck00],
+which helps in specifying callbacks.
+However, since the refinement calculus is mostly needed for advanced
+specifications, in the remainder of this paper 
+we do not discuss the JML features related to refinement,
+such as model programs.
+</p>
+<hr size="6">
+<a name="Tool-Support"></a>
+<a name="SEC5"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC4" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC6" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 1.4 Tool Support </h2>
+
+<p>Our partners at
+Compaq SRC have built a tool, ESC/Java, that does static analysis
+for Java programs [Leino-etal00].
+ESC/Java uses a subset of the JML specification syntax,
+to help detect bugs in Java code.
+<a name="IDX135"></a>
+<a name="IDX136"></a>
+<a name="IDX137"></a>
+<a name="IDX138"></a>
+<a name="IDX139"></a>
+At the University of Nijmegen the LOOP tool [Huisman01] [Jacobs-etal98] 
+is being adapted to use JML
+as its input language.  This tool would generate verification conditions
+that could be checked using a theorem prover such as PVS or Isabelle/HOL.
+<a name="IDX140"></a>
+<a name="IDX141"></a>
+<a name="IDX142"></a>
+At the Massachusetts Institute of Technology (MIT),
+the Daikon invariant detector project [Ernst-etal01]
+is using a subset of JML to record invariants detected by runs of a program.
+Recent work uses ESC/Java to validate the invariants that are found.
+</p>
+<a name="IDX143"></a>
+<a name="IDX144"></a>
+<a name="IDX145"></a>
+<a name="IDX146"></a>
+<a name="IDX147"></a>
+<p>In the rest of the section we concentrate on the tool support found in
+the JML release from Iowa State.
+Iowa State's JML release
+has tool support for: static type checking of specifications,
+run-time assertion checking, generation of HTML pages,
+and generation of unit testing harnesses.
+Use a web browser on the &lsquo;<tt>JML.html</tt>&rsquo; file in the Iowa State JML release
+to access more detailed documentation on these tools.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC6">1.4.1 Type Checking Specifications</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC7">1.4.2 Generating HTML Documentation</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC8">1.4.3 Run Time Assertion Checking</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC9">1.4.4 Unit Testing with JML</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">       
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Type-Checking-Specifications"></a>
+<a name="SEC6"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC5" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC7" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC5" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 1.4.1 Type Checking Specifications </h3>
+
+<p>Details on how to run the JML checker can be found in its manual page,
+which is part of the JML release.
+Here we only indicate the most basic uses of the
+checker.  Running the checker with filenames as arguments will perform
+type checking on all the specifications contained in the given files.
+For example, one could check the specifications in the file
+&lsquo;<tt>UnboundedStack.java</tt>&rsquo; by executing the following command.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   jml UnboundedStack.java
+</pre></td></tr></table>
+
+<p>One can also pass several files to the checker.
+For example, the following shows a handy pattern to catch all of the JML
+files in the current directory.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   jml *.*j* *.*spec*
+</pre></td></tr></table>
+
+<a name="IDX148"></a>
+<p>One can also pass directories to the JML checker, for example
+the following will check all the specifications in the current directory.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   jml .
+</pre></td></tr></table>
+
+<a name="IDX149"></a>
+<p>By default, the checker does not recurse into subdirectories, but this
+can be changed by using the -R option.  For example, the following
+checks specifications in the current directory and all subdirectories.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">   jml -R .
+</pre></td></tr></table>
+
+<a name="IDX150"></a>
+<a name="IDX151"></a>
+<a name="IDX152"></a>
+<a name="IDX153"></a>
+<a name="IDX154"></a>
+<a name="IDX155"></a>
+<a name="IDX156"></a>
+<a name="IDX157"></a>
+<a name="IDX158"></a>
+<a name="IDX159"></a>
+<a name="IDX160"></a>
+<a name="IDX161"></a>
+<a name="IDX162"></a>
+<a name="IDX163"></a>
+<a name="IDX164"></a>
+<a name="IDX165"></a>
+<a name="IDX166"></a>
+<a name="IDX167"></a>
+<a name="IDX168"></a>
+<a name="IDX169"></a>
+<p>To allow specifications to be split into several files and to allow
+documentation of code without changing existing files,
+the checker recognizes several filename suffixes.
+The checker recognizes several filename suffixes.
+The following are considered to be &ldquo;active&rdquo; suffixes:
+&lsquo;<tt>.refines-java</tt>&rsquo;, &lsquo;<tt>.refines-spec</tt>&rsquo;, &lsquo;<tt>.refines-jml</tt>&rsquo;,
+&lsquo;<tt>.java</tt>&rsquo;, &lsquo;<tt>.spec</tt>&rsquo;, and &lsquo;<tt>.jml</tt>&rsquo;;
+There are also three &ldquo;passive&rdquo; suffixes:
+&lsquo;<tt>.java-refined</tt>&rsquo;, &lsquo;<tt>.spec-refined</tt>&rsquo;, and &lsquo;<tt>.jml-refined</tt>&rsquo;.
+Files with passive suffixes can be used in refinements
+(see section <a href="#SEC2">Behavioral Interface Specification</a>)
+but should not normally be passed explicitly to the checker
+on its command line.
+Graphical user interface tools for JML should, by default,
+only present the active suffixes for selection.
+Among files in a directory with the same prefix,
+but with different active suffixes, the one whose suffix appears first
+in the list of active suffixes above should be considered primary
+by such a tool.
+</p>
+<a name="IDX170"></a>
+<p>Files with different suffixes should be connected to each other using
+<code>refines</code> clauses.  We give several examples in the remainder
+of this paper.
+</p>
+<hr size="6">
+<a name="Generating-HTML-Documentation"></a>
+<a name="SEC7"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC6" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC5" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 1.4.2 Generating HTML Documentation </h3>
+
+<p>To generate HTML documentation that can be browsed on the web, 
+one uses the <code>jmldoc</code> tool.<a name="DOCF8" href="prelimdesign_fot.html#FOOT8">(8)</a>
+This tool is a replacement for <code>javadoc</code> that understands JML
+specifications.
+In addition to generating web pages for JML files and for JML
+annotated Java files,
+<code>jmldoc</code> also generates the indexes and other HTML files that
+surround these and provide access, in the same way that <code>javadoc</code> does.
+</p>
+<p>For example, here is how we use <code>jmldoc</code> to generate the HTML pages for
+the MultiJava project. 
+</p><table><tr><td>&nbsp;</td><td><pre class="example">rm -fr $HOME/MJ/javadocs
+jmldoc -Q -private -d $HOME/MJ/javadocs \
+  -link file:/cygwin/usr/local/jdk1.4/docs/api \
+  -link file:/cygwin/usr/local/antlr/javadocs \
+  --sourcepath $HOME/MJ  \
+  org.multijava.dis org.multijava.javadoc org.multijava.mjc \
+  org.multijava.mjdoc org.multijava.util org.multijava.util.backend \
+  org.multijava.util.classfile org.multijava.util.compiler \
+  org.multijava.util.jperf org.multijava.util.lexgen \
+  org.multijava.util.msggen org.multijava.util.optgen \
+  org.multijava.util.optimize org.multijava.util.testing
+</pre></td></tr></table>
+
+<p>The options used in the above invocation of <code>jmldoc</code> make jmldoc be
+quiet (<code>-Q</code>), document all members (including private ones) of classes and
+interfaces (<code>-private</code>),  write the HTML files relative to
+&lsquo;<tt>$HOME/MJ/javadocs</tt>&rsquo; (<code>-d</code>), link
+to existing HTML files for the JDK and for ANTLR (<code>-link</code>),
+and find listed packages relative to &lsquo;<tt>$HOME/MJ</tt>&rsquo;
+(<code>--sourcepath</code>).
+More details on running <code>jmldoc</code> are available from its manual
+page, which is part of the JML release.
+</p>
+<hr size="6">
+<a name="Run-Time-Assertion-Checking"></a>
+<a name="SEC8"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC7" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC9" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC5" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 1.4.3 Run Time Assertion Checking </h3>
+
+<p>The JML runtime assertion checking compiler is called <code>jmlc</code>.
+It type checks assertions (so there is no need to run <code>jml</code>
+separately), and then generates a class file with the executable parts
+of the specified assertions, invariants, preconditions, and postconditions
+(and other JML constructs)
+checked at run-time.
+Its basic usage is similar to a Java compiler, as shown in
+the following example.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   jmlc TestUnboundedStack.java UnboundedStack.java
+</pre></td></tr></table>
+
+<p>This will produce output telling what the compiler is doing, as well
+as class files
+&lsquo;<tt>TestUnboundedStack.class</tt>&rsquo; and &lsquo;<tt>UnboundedStack.class</tt>&rsquo;.
+</p>
+<a name="IDX171"></a>
+<p>To run or test a program compiled with <code>jmlc</code>, you should use the 
+script <code>jmlrac</code>.  The <code>jmlrac</code> script
+runs the resulting code with a <code>CLASSPATH</code>
+that includes various JAR files containing code needed for run-time assertion
+checking. The following is an example.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   jmlrac org.jmlspecs.samples.stacks.TestUnboundedStack
+</pre></td></tr></table>
+
+<p>Using the <code>jmlrac</code> script is necessary.
+If you do not use <code>jmlrac</code> to run the program, you will
+get errors, since the code that <code>jmlc</code> compiles expects various
+runtime library classes to be available.
+</p>
+<a name="IDX172"></a>
+<p>More details on invoking <code>jmlc</code> and <code>jmlrac</code> are available
+from their manual pages, which are available in the JML release.
+See also the &lsquo;<tt>README.html</tt>&rsquo; file in the JML release for more
+details and troubleshooting tips.
+Details on the implementation of <code>jmlc</code> are found in a paper by
+Cheon and Leavens [Cheon-Leavens02b].
+</p>
+<hr size="6">
+<a name="Unit-Testing-with-JML"></a>
+<a name="SEC9"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC8" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC10" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC5" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 1.4.4 Unit Testing with JML </h3>
+
+<p>The run time assertion checker is also integrated with a tool, <code>jmlunit</code>
+that can write out a JUnit [Beck-Gamma98]
+test oracle class for given Java files.
+For example, to generate the classes
+<code>UnboundedStack_JML_Test</code> and 
+<code>UnboundedStack_JML_TestData</code>
+from <code>UnboundedStack</code>,
+one would execute the following.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   jmlunit UnboundedStack.java
+</pre></td></tr></table>
+
+<a name="IDX173"></a>
+<p>The file &lsquo;<tt>UnboundedStack_JML_Test.java</tt>&rsquo; will then contain code
+for an abstract class to drive the tests.  This class uses the runtime
+assertion checker to decide test success or failure. (Tests are only
+as good as the quality of the specifications; hence the specifications
+must be reasonably complete to permit reasonably complete testing.)
+</p>
+<a name="IDX174"></a>
+<a name="IDX175"></a>
+<p>The file &lsquo;<tt>UnboundedStack_JML_TestData.java</tt>&rsquo; will contain code for
+the superclass of <code>UnboundedStack_JML_Test</code>
+that can be used to fill in test data for such testing.  You need to fill in
+the test data in the code for this subclass, as described in the
+comments.  The file &lsquo;<tt>UnboundedStack_JML_TestData.java</tt>&rsquo; is
+produced automatically the first time you run <code>jmlunit</code> as
+described above. However, subsequent runs of <code>jmlunit</code> never
+overwrite or change an &lsquo;<tt>_JML_TestData.java</tt>&rsquo; file such as this if
+it exists.  Hence it is safe to edit the file to add test data (and
+even additional test methods if you wish).
+</p>
+<p>To run the test use the script <code>jml-junit</code>, as in the following example.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   jml-junit org.jmlspecs.samples.stacks.UnboundedStack_JML_TestData
+</pre></td></tr></table>
+
+<p>More details on invoking these tools can be found in their manual
+pages which ship with the JML release.
+More discussion on this integration of JML and JUnit are explained
+in the ECOOP 2002 paper by Cheon and Leavens [Cheon-Leavens02].
+</p>
+<a name="IDX176"></a>
+<p>JML also provides a tool, <code>jtest</code>, that combines both <code>jmlc</code>
+and <code>jmlunit</code>.
+The <code>jtest</code> tool both compiles a class
+with run-time assertion checks enabled using <code>jmlc</code>,
+and also generates the test oracle and test data classes, using
+<code>jmlunit</code>.
+</p>
+<hr size="6">
+<a name="Outline"></a>
+<a name="SEC10"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC9" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 1.5 Outline </h2>
+
+<p>In the next sections we describe more about JML
+and its semantics.
+See section <a href="prelimdesign_2.html#SEC11">Class and Interface Specifications</a>,
+for examples that show how Java classes and interfaces are specified;
+this section also briefly describes the semantics of subtyping and refinement.
+See section <a href="prelimdesign_3.html#SEC49">Extensions to Java Expressions</a>,
+for a description of the expressions
+that can be used in specifications.
+See section <a href="prelimdesign_4.html#SEC52">Conclusions</a>, for conclusions from our
+preliminary design effort.
+See the <cite>JML Reference Manual</cite> [Leavens-etal-JMLRef]
+for details on the syntax of JML.
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

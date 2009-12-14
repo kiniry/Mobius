@@ -1,0 +1,1583 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 2. Fundamental Concepts</title>
+
+<meta name="description" content="JML Reference Manual: 2. Fundamental Concepts">
+<meta name="keywords" content="JML Reference Manual: 2. Fundamental Concepts">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Fundamental-Concepts"></a>
+<a name="SEC8"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_1.html#SEC7" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC9" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_1.html#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 2. Fundamental Concepts </h1>
+
+<p>This chapter discusses fundamental concepts that are used in
+explaining the semantics of JML.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC9">2.1 Types can be Classes and Interfaces</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC10">2.2 Model and Ghost</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC11">2.3 Lightweight and Heavyweight Specifications</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC12">2.4 Privacy Modifiers and Visibility</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC13">2.5 Instance vs. Static</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC14">2.6 Locations and Aliasing</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">      
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC15">2.7 Expression Evaluation and Undefinedness</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC16">2.8 Null is Not the Default</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC17">2.9 Language Levels</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Types-can-be-Classes-and-Interfaces"></a>
+<a name="SEC9"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC8" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC10" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.1 Types can be Classes and Interfaces </h2>
+
+<p>In this manual we use <em>type</em> to mean either a class, interface, or
+primitive value type in Java.  (Primitive value types include
+<code>boolean</code>, <code>int</code>, etc.)
+</p>
+<a name="IDX182"></a>
+<p>A <em>reference type</em> is a type that is not a primitive value type,
+that is either a class or interface.  When it is not necessary to
+emphasize that primitive value types are not included, we often shorten
+&ldquo;reference type&rdquo; to just &ldquo;type&rdquo;.
+</p>
+<hr size="6">
+<a name="Model-and-Ghost"></a>
+<a name="SEC10"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC9" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.2 Model and Ghost </h2>
+
+<p>In JML one can declare various names with the modifier <code>model</code>; for
+example one can declare model fields, methods, and even types.
+One can also declare some fields as <code>ghost</code> fields.
+JML also has a <code>model import</code> directive (see section <a href="jmlrefman_5.html#SEC32">Compilation Units</a>).
+</p>
+<a name="IDX183"></a>
+<p>The meaning of a feature declared with <code>model</code> is that it is only
+present for specification purposes.  For example a model field is an
+imaginary field that is only used for specifications and is not
+available for use in Java code outside of annotations.
+Similarly, a model method is a method that can be used in annotations,
+but cannot be used in ordinary Java code.  A model import directive
+imports names that can be used only within annotations.
+</p>
+<a name="IDX184"></a>
+<a name="IDX185"></a>
+<a name="IDX186"></a>
+<a name="IDX187"></a>
+<a name="IDX188"></a>
+<a name="IDX189"></a>
+<p>The most common and useful model declarations are model fields.
+A model field should be thought of as the abstraction of one or more
+non-model (i.e., Java or <em>concrete</em>) fields [Cheon-etal05].
+(By contrast, some authors refer to what JML calls model fields as
+&ldquo;abstract fields&rdquo; [Leino98].)
+The value of a model field is determined by the concrete fields it
+abstracts from; in JML this relationship is specified by a
+<code>represents</code> clause (see section <a href="jmlrefman_8.html#SEC74">Represents Clauses</a>).
+(Thus the values of the model fields in an object determines its
+&ldquo;abstract value&rdquo; [Hoare72a].) 
+A model field also defines a data group [Leino98],
+which collects model and concrete fields and is used to tell JML what
+concrete fields may be assigned by various methods (see section <a href="jmlrefman_10.html#SEC118">Data Groups</a>).
+</p>
+<a name="IDX190"></a>
+<a name="IDX191"></a>
+<p>Unlike model fields, model methods and model types are not
+abstractions of non-model methods or types.  They are simply methods or
+types that we imagine that the program has, to help in a specification.
+</p>
+<a name="IDX192"></a>
+<a name="IDX193"></a>
+<p>A <code>ghost</code> field is similar to a model field, in that it is
+also only present for purposes of specification and thus cannot be
+used outside of annotations.
+However, unlike a model field, a ghost field does not have a value
+determined by a represents clause; instead its value is directly
+determined by its initialization or by a <var>set-statement</var>
+(see section <a href="jmlrefman_12.html#SEC163">Statements and Annotation Statements</a>).
+</p>
+<a name="IDX194"></a>
+<a name="IDX195"></a>
+<a name="IDX196"></a>
+<a name="IDX197"></a>
+<a name="IDX198"></a>
+<a name="IDX199"></a>
+<a name="IDX200"></a>
+<p>Although these model and ghost names are used only for specifications,
+JML uses the same namespace for such names as for normal Java names.
+Thus, one cannot declare a field to be both a model (or ghost) field and
+a normal Java field in the same class (or in a refinement, see section <a href="jmlrefman_16.html#SEC193">Refinement</a>).
+Similarly, a method is either a model method or not.
+In part, this is done because JML has no syntactic distinction between
+Java and JML field access or method calls.
+This decision makes it an error for someone to use the same name as a
+model or ghost feature in an implementation.
+In such a case if the Java code is considered to be the goal, one can
+either change the name of the JML feature or have one declaration in which
+the Java feature is modified with the JML modifier <code>spec_public</code>.
+See section <a href="#SEC12">Privacy Modifiers and Visibility</a>, for more about <code>spec_public</code>.
+</p>
+<hr size="6">
+<a name="Lightweight-and-Heavyweight-Specifications"></a>
+<a name="SEC11"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC10" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC12" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.3 Lightweight and Heavyweight Specifications </h2>
+
+<p>In JML one is not required to specify behavior completely.  Indeed, JML
+has a style of method specification case, called <em>lightweight</em>, in
+which the user only says what interests them.  On the other hand, in a
+<em>heavyweight</em> specification case, JML expects that the user is fully
+aware of the defaults involved. In a heavyweight specification case,
+JML expects that a user only omits parts of the specification case
+when the user believes that the default is appropriate.
+</p>
+<a name="IDX201"></a>
+<a name="IDX202"></a>
+<a name="IDX203"></a>
+<p>Users distinguish these between such cases of method specifications by
+using different syntaxes. See section <a href="jmlrefman_9.html#SEC82">Organization of Method Specifications</a>,
+for details, but in essence in a method specification case that
+uses one of the behavior keywords (such as <code>normal_behavior</code>,
+<code>exceptional_behavior</code>, or <code>behavior</code>) is heavyweight,
+while one that does not use such a keyword is lightweight.
+</p>
+<hr size="6">
+<a name="Privacy-Modifiers-and-Visibility"></a>
+<a name="SEC12"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC11" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC13" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.4 Privacy Modifiers and Visibility </h2>
+
+<p>Java code that is not within an annotation uses the usual access control
+rules for
+determining visibility (or accessibility) of Java [Arnold-Gosling-Holmes00]
+[Gosling-etal00].
+That is, a name declared in package <i>P</i> and type <i>P.T</i>
+may be referenced from outside <i>P</i>
+only if it is declared as <code>public</code>,
+or if it is declared as <code>protected</code>
+and the reference occurs within a subclass of <i>P.T</i>.
+This name may be referenced from within <i>P</i>
+but outside of <i>P.T</i>
+only if it is declared as <code>public</code>, default access,
+or <code>protected</code>.
+Such a name may always be referenced from within <i>P.T</i>,
+even if it is declared as <code>private</code>.
+See the Java language specification [Gosling-etal00]
+for details on visibility rules
+applied to nested and inner classes.
+</p>
+<a name="IDX204"></a>
+<a name="IDX205"></a>
+<a name="IDX206"></a>
+<a name="IDX207"></a>
+<a name="IDX208"></a>
+<a name="IDX209"></a>
+<p>Within annotations, JML imposes some extra rules in addition
+to the usual Java visibility rules [Leavens-Baker-Ruby06] [Leavens-Mueller07].
+These rules depend not just on the declaration of the name but also on
+the visibility level of the context that is referring to the name in
+question. 
+For purposes of this section, the <em>annotation context</em> of a
+reference to a name is the smallest grammatical unit with an attached
+(or implicit) visibility.  For example, this annotation context can be a method
+specification case, an invariant, a history constraint, or a field declaration.
+The visibility level of such an annotation context can be <code>public</code>, 
+<code>protected</code>, <code>private</code>, or default (package) visibility. 
+</p>
+<p>The JML rule, in essence, is that an annotation context cannot refer to names
+that are more hidden than the context's own visibility.
+That is, for a reference to a name <i>x</i> to be legal,
+the visibility of the annotation context that contains the
+reference to <i>x</i> must be at least as permissive as the declaration
+of <i>x</i> itself.  The reason for this restriction is that
+the people who are allowed to see the annotation should be able to
+see each of the names used in that annotation [Meyer97],
+otherwise they might not understand it.  For example, public clients
+should be able to see all the declarations of names in publicly
+visible annotations, hence public annotations should not contain
+protected, default access, or private names.
+</p>
+<p>In more detail, 
+suppose <i>x</i> is a name declared in package <i>P</i> and type <i>P.T</i>.
+</p><ul>
+<li>
+An expression in a public annotation context
+(e.g., in  a public method specification)
+can refer to <i>x</i> only if <i>x</i> is declared as <code>public</code>.
+
+</li><li>
+An expression in a protected annotation context
+(e.g., in a protected method specification)
+can refer to <i>x</i> only if <i>x</i> is declared as <code>public</code>
+or <code>protected</code>, and <i>x</i> must also be visible according to
+Java's rules (so if <i>x</i> is <code>protected</code>,
+then the reference must either be from within <i>P</i>
+or, if it is from outside <i>P</i>,
+then the reference must occur in a subclass of <i>P.T</i>).
+
+</li><li>
+An expression in a default (package) visibility annotation context
+(e.g., in a default visibility method specification)
+can refer to <i>x</i> only if <i>x</i> is declared as <code>public</code>,
+<code>protected</code>, or with default visibility,
+and <i>x</i> must also be visible according to
+Java's rules (so if <i>x</i> has default visibility,
+then the reference must be from within <i>P</i>).
+
+</li><li>
+An expression in a <code>private</code> visibility annotation context
+(e.g., in a private method specification)
+can refer to <i>x</i> only if <i>x</i> is visible according to
+Java's rules (so if <i>x</i> has private visibility,
+then the reference must be from within <i>P.T</i>).
+</li></ul>
+
+<p>In the following example, the comments on the right show which uses of
+the various privacy level names are legal and illegal.  Similar
+examples could be given for method specifications, history
+constraints, and so on.
+</p>
+<a name="IDX210"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">public class PrivacyDemoLegalAndIllegal {
+   public int pub;
+   protected int prot;
+   int def;
+   private int priv;
+
+   //@ public invariant pub &gt; 0;      // legal
+   //@ public invariant prot &gt; 0;     // illegal!
+   //@ public invariant def &gt; 0;      // illegal!
+   //@ public invariant priv &lt; 0;     // illegal!
+
+   //@ protected invariant pub &gt; 1;   // legal
+   //@ protected invariant prot &gt; 1;  // legal
+   //@ protected invariant def &gt; 1;   // illegal!
+   //@ protected invariant priv &lt; 1;  // illegal!
+
+   //@ invariant pub &gt; 1;              // legal
+   //@ invariant prot &gt; 1;             // legal
+   //@ invariant def &gt; 1;              // legal
+   //@ invariant priv &lt; 1;             // illegal!
+
+   //@ private invariant pub &gt; 1;      // legal
+   //@ private invariant prot &gt; 1;     // legal
+   //@ private invariant def &gt; 1;      // legal
+   //@ private invariant priv &lt; 1;     // legal
+}
+</pre></td></tr></table>
+
+<a name="IDX211"></a>
+<a name="IDX212"></a>
+<a name="IDX213"></a>
+<a name="IDX214"></a>
+<a name="IDX215"></a>
+<a name="IDX216"></a>
+<a name="IDX217"></a>
+<p>Note that in a lightweight method specification,
+the privacy level is assumed to be the same privacy level as the
+method itself.  That is, for example, a protected method with a
+lightweight method specification is considered to be
+a protected annotation context for purposes of checking proper visibility usage
+[Leavens-Baker-Ruby06] [Mueller02].
+See section <a href="#SEC11">Lightweight and Heavyweight Specifications</a>, for more about the
+differences between lightweight and heavyweight specification cases.
+</p>
+<a name="IDX218"></a>
+<a name="IDX219"></a>
+<a name="IDX220"></a>
+<a name="IDX221"></a>
+<a name="IDX222"></a>
+<p>The ESC/Java2 system has the same visibility rules as described above.
+(However, this was not true of the old version of ESC/Java
+[Leino-Nelson-Saxe00].)
+</p>
+<a name="IDX223"></a>
+<a name="IDX224"></a>
+<p>The JML keywords <code>spec_public</code> and <code>spec_protected</code> provide
+a way to make a declaration 
+that has different visibilities for Java and JML.  For example, the
+following declaration declares an integer field that Java regards as
+private but JML regards as public.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">    private /*@ spec_public @*/ int length;
+</pre></td></tr></table>
+
+<p>Thus for example, <code>length</code> in the above declaration
+could be used in a public method specification or invariant.
+</p>
+<a name="IDX225"></a>
+<a name="IDX226"></a>
+<p>However, <code>spec_public</code> is more than just a way to change the
+visibility of a name for specification purposes.  When applied to
+fields it can be considered to be shorthand for the declaration of a
+model field with the same name.  That is, the declaration of <code>length</code>
+above can be thought of as equivalent to the following
+declarations, together with a rewrite of the Java code that uses
+<code>length</code> to use <code>_length</code> instead
+(where we assume <code>_length</code> is fresh, i.e., not used elsewhere).
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">  //@ public model int length;
+  private int _length; //@ in length;
+  //@ private represents length &lt;- _length;
+</pre></td></tr></table>
+
+<p>The above desugaring allows one to change the underlying field without
+affecting the readers of the specification.
+</p>
+<a name="IDX227"></a>
+<a name="IDX228"></a>
+<p>The desugaring of <code>spec_protected</code> is the same as for
+<code>spec_public</code>, except that one uses <code>protected</code>
+instead of <code>public</code> in the desugared form.
+</p>
+<hr size="6">
+<a name="Instance-vs_002e-Static"></a>
+<a name="SEC13"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC12" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC14" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.5 Instance vs. Static </h2>
+
+<p>In Java, a feature of a class or interface may declared to be
+<code>static</code>.  This means that the feature is not part of instances
+of that type, and it means that references to that feature (from
+outside the type and its subtypes) must use a qualified name of the
+form <i>T.f</i>, which refers to the static feature <i>f</i> in type <i>T</i>.
+</p>
+<a name="IDX229"></a>
+<p>A feature, such as a field or method, of a type that is not static is
+an <em>instance</em> feature.  For example, in a Java interface, all the
+methods declared are instance methods, although fields are static by
+default.  In a Java class the default is that all features are
+instance features, unless the modifier <code>static</code> is used.
+</p>
+<a name="IDX230"></a>
+<p>In JML declarations follow the normal Java rules for determining
+whether they are instance or static features of a type.  However,
+within annotations it is possible to explicitly label features as
+<code>instance</code> (see section <a href="jmlrefman_6.html#SEC35">Type Definitions</a> for the syntax).
+The use of the <code>instance</code> modifier is necessary to declare model
+and ghost instance fields in interfaces, since otherwise the Java
+default modifier for fields in interfaces (static) would apply.
+</p>
+<p>It is also useful, in JML, to label invariants as either static or
+instance invariants. See section <a href="jmlrefman_8.html#SEC66">Static vs. instance invariants</a>, for more
+on this topic.
+</p>
+<hr size="6">
+<a name="Locations-and-Aliasing"></a>
+<a name="SEC14"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC13" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC15" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.6 Locations and Aliasing </h2>
+
+<p>A <em>location</em> is a field of an object or a local variable.  A
+<em>local variable</em> is either a variable declared inside a method or
+a formal parameter of a method.
+</p>
+<a name="IDX231"></a>
+<p>An <em>access path</em> is an expression either of the form <i>x</i>, where 
+<i>x</i> is an identifier, or <i>p</i><code>.</code><i>x</i>, where <i>p</i> is an access
+path and <i>x</i> is an identifier.<a name="DOCF5" href="jmlrefman_fot.html#FOOT5">(5)</a>
+(In forming an access path, we ignore visibility.)
+</p>
+<a name="IDX232"></a>
+<a name="IDX233"></a>
+<p>In a given program state, <i>s</i>, a location <i>l</i> is <em>aliased</em> if there
+are two or more access paths that, in <i>s</i>, both denote <i>l</i>.
+The access paths in question are said to be <em>aliases</em> for <i>l</i>.
+Similarly, we say that an object <i>o</i> is aliased in a state <i>s</i>
+if there are two access paths that, in <i>s</i>, both have <i>o</i> as their value.
+In Java, it is impossible to alias local variables, so the only
+aliasing possible involves objects and their fields.
+</p>
+<hr size="6">
+<a name="Expression-Evaluation-and-Undefinedness"></a>
+<a name="SEC15"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC14" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC16" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.7 Expression Evaluation and Undefinedness </h2>
+
+<p>Within JML annotations, Java expressions have the values that
+are defined in the Java Language Specification [Gosling-etal00].
+<a name="IDX234"></a>
+<a name="IDX235"></a>
+<a name="IDX236"></a>
+<a name="IDX237"></a>
+<a name="IDX238"></a>
+This has consequences on the interpretation of assertion expressions
+[Chalin07] [Rioux-Chalin07]:
+an assertion is taken to be valid if and only if its interpretation
+</p><ul>
+<li>
+does not cause an exception to be raised, and
+</li><li>
+yields the value true.
+</li></ul>
+<a name="IDX239"></a>
+<a name="IDX240"></a>
+<a name="IDX241"></a>
+<a name="IDX242"></a>
+<a name="IDX243"></a>
+<a name="IDX244"></a>
+<a name="IDX245"></a>
+<a name="IDX246"></a>
+<a name="IDX247"></a>
+<a name="IDX248"></a>
+<a name="IDX249"></a>
+<a name="IDX250"></a>
+<a name="IDX251"></a>
+<a name="IDX252"></a>
+<a name="IDX253"></a>
+<a name="IDX254"></a>
+<p>Note that this interpretation of assertions, said to be based on
+&ldquo;strong validity&rdquo; [Chalin07], was made the default assertion
+semantics for JML in 2007.  Prior to that, assertions were interpreted
+using a classical defintion of validity [Leavens-etal05]
+[Leavens-Baker-Ruby06] [Gries-Schneider95] [Jones95e].
+</p>
+<p>The strong validity semantics for assertion evaluation means that
+exceptions may arise during evaluation of subexpressions within assertions.
+These exceptions should be avoided by the specifier and tools are
+encouraged to warn users when they detect that an exception may arise
+during assertion evalution.
+</p>
+<a name="IDX255"></a>
+<a name="IDX256"></a>
+<a name="IDX257"></a>
+<a name="IDX258"></a>
+<a name="IDX259"></a>
+<a name="IDX260"></a>
+<a name="IDX261"></a>
+<a name="IDX262"></a>
+<a name="IDX263"></a>
+<a name="IDX264"></a>
+<a name="IDX265"></a>
+<p>To avoid exceptions during assertion evaluation, specifiers should
+practice good Java coding habits, and write specifications that
+prevent such exceptions. 
+To do this, one can use left-to-right ordering of evaluation of
+subexpressions and the short-curcuit nature of the Java 
+operators <code>&amp;&amp;</code> and <code>||</code>.
+JML also evaluates the its two implication operators,
+<code>==&gt;</code> and <code>&lt;==</code> in short-curcuit fashion.
+Within a specification case, the precondition can
+protect the rest of the specification from exceptions
+[Leavens-Wing98].
+That is, one can assume that the precondition holds in the remainder
+of the clauses in a specification case.
+JML also evaluates multiple occurrences of clauses of the same kind
+(such as <code>requires</code> or <code>ensures</code>) within a spec case in top
+to bottom order, so earlier clauses can protect later ones, just as if they
+were combined with <code>&amp;&amp;</code>.
+</p>
+<hr size="6">
+<a name="Null-is-Not-the-Default"></a>
+<a name="SEC16"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC15" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC17" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.8 Null is Not the Default </h2>
+
+<p>One common problem that occurs in Java and JML specifications
+is the possibility of <code>null</code> dereferences.  For example,
+if <code>x</code> is <code>null</code> then <code>x.f</code> and <code>x.m()</code> both
+result in a <code>NullPointerException</code>.
+Such null pointer exceptions cause undefinedness
+in expression evaluation, as described above
+(see section <a href="#SEC15">Expression Evaluation and Undefinedness</a>).
+</p>
+<a name="IDX266"></a>
+<a name="IDX267"></a>
+<p>To avoid having to constantly specify that declarations (other than
+local variables) are non-null, JML makes them implicitly <code>non_null</code> by default.
+That is, unless a 
+</p><ul>
+<li> member field (see section <a href="jmlrefman_7.html#SEC59">Field and Variable Declarations</a>),
+</li><li> formal parameter, (see section <a href="jmlrefman_7.html#SEC55">Formal Parameters</a>),
+</li><li> method return type (see section <a href="jmlrefman_7.html#SEC54">Method and Constructor Declarations</a>), or 
+</li><li> bound variable (see section <a href="jmlrefman_11.html#SEC154">Modifiers for Bound Variables</a>)
+</li></ul>
+<p>is explicitly annotated with the
+modifier <code>nullable</code>, that declaration is assumed to be <code>non_null</code>.
+</p>
+<p>For a field whose type is an array of reference types, such as a field
+of type <code>Object[]</code>, both the field that refers to the array and
+the elements of the array are <code>non_null</code> by default.
+If a field whose type is an array of reference types is declared as
+<code>nullable</code>, then both the reference to the array and all of its
+elements may potentially be null.  To specify that the field is not
+null but the elements may be null, use an invariant to state that the
+field cannot contain null, as follows.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">private /*@ spec_public nullable @*/ Object[] a;
+//@ public invariant a != null;
+</pre></td></tr></table>
+
+<p>While these defaults differ from Java, research has
+found that in most cases a declaration is expected to
+be non-null [Chalin-Rioux05].
+More importantly, since
+one of the most common mistakes in JML specifications (and in Java
+programs) is forgetting to specify that a declaration
+is non-null, making the default be that they cannot hold null
+helps eliminate a source of common errors in specifications.
+</p>
+<p>See section <a href="jmlrefman_6.html#SEC51">Nullity Modifiers</a>, for more details on the nullity modifiers.
+</p>
+<hr size="6">
+<a name="Language-Levels"></a>
+<a name="SEC17"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC16" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC18" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.9 Language Levels </h2>
+
+<p>One of JML's goals is to provide a single language that can be used
+with a variety of different tools.  However, JML is also
+an evolving language that is used as a research vehicle
+by many groups.  The evolution of JML means that some features are not
+completely documented or implemented.  Use of JML in research means
+that some tools will have features that are not supported by other
+tools.  All of this has the potential to threaten portability and to
+make JML more difficult to learn and use.
+</p>
+<p>The research groups working on JML are committed to making these
+problems as invisible to non-researchers as possible, and for this
+reason have defined several <em>language levels</em>.  The goal of defining these
+language levels is to make it easier to learn and use JML and its
+various tools.
+</p>
+<p>We define the following language levels.<a name="DOCF6" href="jmlrefman_fot.html#FOOT6">(6)</a>
+</p><ul class="toc">
+<li>
+<a name="IDX268"></a>
+Level 0 should be supported by all JML tools and constitutes the
+heart of JML.  All users should be familiar with these level 0
+features.
+They are fundamental to all uses of JML, including its use as a design by
+contract language, as documentation, and as formal specification for
+formal verification efforts.  Thus the level 0 features
+should be the ones that tutorial materials concentrate on.  Users
+should be able to count on these features
+being understood and checked by all tools.
+
+
+</li><li>
+<a name="IDX269"></a>
+Level 1 should be supported by most JML tools and should be a first
+priority for developers after implementing the Level 0 features.
+There are three categories of features that level 1 adds to level 0.
+The first is the redundancy features of JML, which are useful in
+documentation, but not absolutely vital.
+The second is features that are sugars for features present in level 0.
+The third is various features for which modular static verification
+is still problematic, although a runtime assertion checking semantics
+has been implemented.  This includes the use of methods and constructor
+calls in assertions.
+
+
+</li><li>
+<a name="IDX270"></a>
+Level 2 contains features
+that are more specialized to particular uses of JML, but are
+still useful for several different tools.  It also contains some
+features that are mainly needed to explain JML's semantics, and have
+not been heavily used (so far).  
+
+
+</li><li>
+<a name="IDX271"></a>
+Level 3 features are even less commonly used and more exotic features.  The
+semantics of some of these features are not yet well understood, and
+the features are not implemented by many tools.
+
+</li><li>
+<a name="IDX272"></a>
+Level C contains features related to specification and verification of
+concurrent Java programs.  Some of these are from ESC/Java
+[Leino-Nelson-Saxe00], and others are from [Rodriguez-etal05].
+
+</li><li>
+<a name="IDX273"></a>
+Level X contains experimental features, which may eventually be moved
+to other levels.  Many tools will have other experimental features not
+documented here.
+
+
+</li></ul>
+
+<a name="IDX274"></a>
+<a name="IDX275"></a>
+<p>When learning JML, one should focus on
+levels 0 features first, as these form the heart of the language
+which should be understood by all JML tools.
+Features at level 1 are next in importance and should be supported by
+most tools that are interested in having a large user base.  Features
+at higher levels are less important and may not be present in all
+tools.  Users should feel free to ignore them unless they meet some
+specific need.
+</p>
+<a name="IDX276"></a>
+<a name="IDX277"></a>
+<a name="IDX278"></a>
+<a name="IDX279"></a>
+<p>The language levels also provide guidance for tool designers.  JML
+tools should parse all of the syntax in this reference manual that is
+not marked as experimental.  This is the most important way to
+guarantee portability for users, and the easiest way for tools to get
+feedback.   In addition, tools should check at least level 0, and
+preferably level 1 features.  Features at levels 2 and 3 are
+candidates for the tool to just parse and ignore, if they are not
+features of interest for that tool.  Experimental features may ignored
+(or added) by any tool.
+</p>
+<p>Many tool developers may want to start off supporting only a subset of
+JML defined by level 0 and then move on to higher levels.
+</p>
+<p>It is also suggested that tools give users optional feedback, perhaps
+in a verbose mode, as to which features are fully and partially 
+supported.  Clearly stating which JML levels are supported in a 
+tool release is also very important.
+</p>
+<p>More details are provided in the subsections below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC18">2.9.1 Level 0 Features</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC19">2.9.2 Level 1 Features</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC20">2.9.3 Level 2 Features</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC21">2.9.4 Level 3 Features</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC22">2.9.5 Level C Features</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC23">2.9.6 Level X Features</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Level-0-Features"></a>
+<a name="SEC18"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC17" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC19" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC17" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.9.1 Level 0 Features </h3>
+
+<p>The features in this level form the core of JML and should be
+understood and checked by all JML tools.  Beginning users should pay
+the most attention to these features.  These features include all of Java and
+the syntax described in the rest of this section. 
+</p>
+<p>Many, but not all, of the JML additions to Java's <var>modifier</var>s
+(see section <a href="jmlrefman_6.html#SEC39">Modifiers</a>) are level 0 features. The following modifiers are
+included in level 0.
+</p>
+<ul>
+<li>
+The <var>modifier</var> <code>spec_public</code> (see section <a href="jmlrefman_6.html#SEC41">Spec Public</a>).
+
+</li><li>
+The <var>modifier</var> <code>spec_protected</code> (see section <a href="jmlrefman_6.html#SEC42">Spec Protected</a>).
+
+</li><li>
+The <var>modifier</var> <code>instance</code> (see section <a href="jmlrefman_6.html#SEC46">Instance</a>).
+
+</li><li>
+The <var>modifier</var> <code>model</code> (see section <a href="jmlrefman_6.html#SEC44">Model</a>), as applied to field
+declarations (see section <a href="jmlrefman_7.html#SEC60">JML Modifiers for Fields</a>).
+Note that this modifier as applied to other
+declarations is not a level 0 feature.
+
+</li><li>
+The <var>modifier</var> <code>ghost</code> (see section <a href="jmlrefman_6.html#SEC45">Ghost</a>), as applied to both
+field and variable declarations (see section <a href="jmlrefman_7.html#SEC59">Field and Variable Declarations</a>).
+
+</li><li>
+The <var>modifier</var> <code>helper</code> (see section <a href="jmlrefman_6.html#SEC47">Helper</a>).
+</li></ul>
+
+<p>Type specifications (see section <a href="jmlrefman_8.html#SEC63">Type Specifications</a>) are a level 0
+feature, although not all clauses and features of type
+specifications are level 0.  The following type-level clauses are
+included in level 0.
+</p>
+<ul>
+<li>
+Object invariants, that is an <var>invariant</var> (see section <a href="jmlrefman_8.html#SEC65">Invariants</a>)
+that is either written in an interface using the
+<var>modifier</var> <code>instance</code> (see section <a href="jmlrefman_6.html#SEC46">Instance</a>) or one that is
+written in a class and that does not use the <var>modifier</var> <code>static</code>
+(see section <a href="jmlrefman_8.html#SEC66">Static vs. instance invariants</a>).
+
+</li><li>
+The functional form of a <var>represents-clause</var> (see section <a href="jmlrefman_8.html#SEC74">Represents Clauses</a>).
+That is, a represents
+clause that uses <var>l-arrow-or-eq</var> and (not <code>\such_that</code>).
+
+</li><li>
+The <var>initially-clause</var> (see section <a href="jmlrefman_8.html#SEC75">Initially Clauses</a>).
+
+</li><li>
+The <var>type-spec</var> <code>\TYPE</code> (optionally, as a type of array
+element).
+See section <a href="jmlrefman_7.html#SEC61">Type-Specs</a>, for more details.
+</li></ul>
+
+<p>Method specifications (see section <a href="jmlrefman_9.html#SEC80">Method Specifications</a>) are a level 0
+feature.
+This includes the ability to combine specification cases using
+<code>also</code>
+(see section <a href="jmlrefman_9.html#SEC96">Semantics of nested behavior specification cases</a>)
+and specification inheritance [Dhara-Leavens96] [Leavens-Naumann06] [Leavens06b].
+It also includes the use of <code>\not_specified</code> for all
+specification clauses that are at level 0.
+However, not all clauses and features of method
+specifications are level 0. The following parts of method
+specifications are included in level 0.
+Redundancy features of method specifications are only present at
+level 1, not at level 0.  The details are described below.
+</p>
+<ul>
+<li>
+Lightweight specification cases (see section <a href="jmlrefman_9.html#SEC84">Lightweight Specification Cases</a>),
+although not all clauses that are allowed in the syntax are
+in level 0.
+
+</li><li>
+Heavyweight specification cases (see section <a href="jmlrefman_9.html#SEC87">Heavyweight Specification Cases</a>) 
+that do not use the keyword <code>code</code>.
+This includes 
+<var>behavior-spec-case</var> (see section <a href="jmlrefman_9.html#SEC88">Behavior Specification Cases</a>),
+<var>normal-behavior-spec-case</var>
+(see section <a href="jmlrefman_9.html#SEC97">Normal Behavior Specification Cases</a>),
+and 
+<var>exceptional-behavior-spec-case</var>
+(see section <a href="jmlrefman_9.html#SEC98">Exceptional Behavior Specification Cases</a>).
+However, note that not all clauses that are allowed in the syntax are
+in level 0.
+
+</li><li>
+The <var>requires-clause</var> (see section <a href="jmlrefman_9.html#SEC104">Requires Clauses</a>).
+The redundant form of this clause
+(<code>requires_redundantly</code>, <code>pre_redundantly</code>) is a level 1 feature.
+
+</li><li>
+The <var>ensures-clause</var> (see section <a href="jmlrefman_9.html#SEC105">Ensures Clauses</a>).
+The redundant form of this clause
+(<code>ensures_redundantly</code>, <code>post_redundantly</code>) is a level 1 feature.
+
+</li><li>
+The <var>signals-clause</var> (see section <a href="jmlrefman_9.html#SEC106">Signals Clauses</a>).
+The redundant form of this clause
+(<code>signals_redundantly</code>, <code>exsures_redundantly</code>) is a level 1 feature.
+
+</li><li>
+The <var>signals_only-clause</var> (see section <a href="jmlrefman_9.html#SEC107">Signals-Only Clauses</a>).
+The redundant form of this clause
+(<code>signals_only_redundantly</code>) is a level 1 feature.
+
+</li><li>
+The <var>assignable-clause</var> (see section <a href="jmlrefman_9.html#SEC111">Assignable Clauses</a>).
+The redundant form of this clause
+(<code>assignable_redundantly</code>, <code>modifiable_redundantly</code>,
+<code>modifies_redundantly</code>) is a level 1 feature. 
+</li></ul>
+
+<p>Only static data groups (see section <a href="jmlrefman_10.html#SEC118">Data Groups</a>) are part of level 0.
+</p>
+<ul>
+<li>
+The <var>in-group-clause</var> (see section <a href="jmlrefman_10.html#SEC119">Static Data Group Inclusions</a>)
+kind of <var>jml-data-group-clause</var>
+that attaches to field declarations 
+(see section <a href="jmlrefman_7.html#SEC59">Field and Variable Declarations</a>).
+</li></ul>
+
+<p>Some of JML's extensions to Java's <var>expression</var> syntax
+(see section <a href="jmlrefman_11.html#SEC121">Predicates and Specification Expressions</a>), but not all of them,
+can be used at level 0.  Note that
+calls to pure methods and constructors in <var>spec-expression</var>s are
+<em>not</em> part of level 0, but are only found at level 1.
+We describe the level 0 specification
+expressions below. 
+</p>
+<ul>
+<li>
+The <var>result-expression</var> (see section <a href="jmlrefman_11.html#SEC126"><code>\result</code></a>).
+
+</li><li>
+The <var>old-expression</var> (see section <a href="jmlrefman_11.html#SEC127"><code>\old</code> and <code>\pre</code></a>).
+
+</li><li>
+The <var>fresh-expression</var> (see section <a href="jmlrefman_11.html#SEC134"><code>\fresh</code></a>).
+
+</li><li>
+The <var>nonnullelements-expression</var> (see section <a href="jmlrefman_11.html#SEC139"><code>\nonnullelements</code></a>).
+
+</li><li>
+The <var>informal-description</var> (see section <a href="jmlrefman_11.html#SEC140">Informal Predicates</a>).
+
+</li><li>
+The <var>typeof-expression</var> (see section <a href="jmlrefman_11.html#SEC141"><code>\typeof</code></a>).
+
+</li><li>
+The <var>elemtype-expression</var> (see section <a href="jmlrefman_11.html#SEC142"><code>\elemtype</code></a>).
+
+</li><li>
+The <var>type-expression</var> (see section <a href="jmlrefman_11.html#SEC143"><code>\type</code></a>).
+
+</li><li>
+The <var>spec-quantified-expr</var> (see section <a href="jmlrefman_11.html#SEC149">Quantified Expressions</a>) forms
+that use the <var>quantifier</var> keywords
+<code>\forall</code> and <code>\exists</code>
+(see section <a href="jmlrefman_11.html#SEC150">Universal and Existential Quantifiers</a>). 
+
+<p>(The <var>quantifier</var> keywords
+<code>\max</code>, <code>\min</code>, <code>\product</code>, and <code>\sum</code>
+(see section <a href="jmlrefman_11.html#SEC151">Generalized Quantifiers</a>), as well as <code>\num_of</code>
+(see section <a href="jmlrefman_11.html#SEC152">Numerical Quantifier</a>, are all level 1 features.)
+</p>
+</li><li>
+The <code>&lt;:</code> operator (see section <a href="jmlrefman_11.html#SEC158">Subtype operator</a>).
+
+</li><li>
+The <code>&lt;==&gt;</code> and <code>&lt;=!=&gt;</code> operators
+(see section <a href="jmlrefman_11.html#SEC159">Equivalence and Inequivalence Operators</a>).
+
+</li><li>
+The <code>==&gt;</code> and <code>&lt;==</code> operators
+(see section <a href="jmlrefman_11.html#SEC160">Forward and Reverse Implication Operators</a>).
+
+</li><li>
+The syntax for <var>store-ref</var>s (see section <a href="jmlrefman_11.html#SEC162">Store Refs</a>).
+</li></ul>
+
+<p>All of the Java statements and most of the JML extensions
+for adding assertions to statements and annotation statements
+(see section <a href="jmlrefman_12.html#SEC163">Statements and Annotation Statements</a>) are at level 0.  But redundancy
+features of the JML extensions are only present at 
+level 1, not at level 0. 
+We describe the level 0 extension to statements below.
+</p>
+<ul>
+<li>
+Using the <var>modifier</var> <code>ghost</code> in <var>local-declaration</var>s
+(see section <a href="jmlrefman_12.html#SEC165">Modifiers for Local Declarations</a>).
+
+</li><li>
+The <var>possibly-annotated-loop</var> statement (see section <a href="jmlrefman_12.html#SEC166">Loop Statements</a>),
+with a <var>loop-invariant</var> (see section <a href="jmlrefman_12.html#SEC167">Loop Invariants</a>).
+The redundant forms of <var>loop-invariant</var>s, namely those
+that use the keywords <code>maintaining_redundantly</code> and
+<code>loop_invariant_redundantly</code> are level 1 features.
+Furthermore, the <var>variant-function</var> is a level 1 feature.
+
+</li><li>
+The <var>assert-statement</var> (see section <a href="jmlrefman_12.html#SEC169">Assert Statements</a>).
+Note that the <var>assert-redundantly-statement</var>,
+which uses the keyword <code>assert_redundantly</code>, is in level 1.
+
+</li><li>
+The non-redundant form of the <var>assume-statement</var>
+(see section <a href="jmlrefman_12.html#SEC171">Assume Statements</a>).
+Use of the keyword <code>assume_redundantly</code> is a level 1 feature.
+
+</li><li>
+The <var>set-statement</var> (see section <a href="jmlrefman_12.html#SEC172">Set Statements</a>).
+</li></ul>
+
+<p>The ability to
+use a <code>.spec</code> file (see section <a href="jmlrefman_16.html#SEC194">File Name Suffixes</a>)
+to give a separate specification for a
+compilation unit that only appears in binary form (e.g., in a
+<code>.class</code> file) is a level 0 feature.
+Use of the <var>refine-prefix</var> (see section <a href="jmlrefman_16.html#SEC193">Refinement</a>) is a
+level 1 feature.
+</p>
+<p>Some syntax from the Universe type system
+(see section <a href="jmlrefman_18.html#SEC203">Universe Type System</a>) is included in level 0.
+However, <code>readonly</code> is considered to be in level X, as is the semantics
+of the Universe type system.  The <code>rep</code> and <code>peer</code> modifiers
+are included in level 0 because, in some form, they are important to
+the semantics of several level 0 features
+[Mueller-Poetzsch-Heffter-Leavens03] [Mueller-Poetzsch-Heffter-Leavens06].
+</p>
+<ul>
+<li>
+The <code>\rep</code> and <code>rep</code> <var>ownership-modifier</var>s
+(see section <a href="jmlrefman_18.html#SEC205">Rep and Peer</a>).
+
+</li><li>
+The <code>\peer</code> and <code>peer</code> <var>ownership-modifier</var>s
+(see section <a href="jmlrefman_18.html#SEC205">Rep and Peer</a>).
+</li></ul>
+
+
+<hr size="6">
+<a name="Level-1-Features"></a>
+<a name="SEC19"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC18" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC20" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC17" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.9.2 Level 1 Features </h3>
+
+<p>The features in this level will be 
+understood and checked by many JML tools.  They are quite important in
+practice, especially the use of methods and constructors in writing
+the specifications of other methods and constructors. 
+Also useful are all of JML's redundancy features
+(see section <a href="jmlrefman_13.html#SEC177">Redundancy</a>), which are included here for level 0 features and
+for other features at level 1.
+</p>
+
+<p>The following additions to Java's <var>modifier</var>s
+(see section <a href="jmlrefman_6.html#SEC39">Modifiers</a>) are level 1 features.
+</p>
+<ul>
+<li>
+Method or constructor declarations that use the
+<var>modifier</var> <code>model</code> (see section <a href="jmlrefman_7.html#SEC56">Model Methods and Constructors</a>).
+However, note that using <code>model</code> on a field
+declarations is a level 0 feature and that using <code>model</code> on a
+type declaration is a level 2 feature.
+
+</li><li>
+<var>import-definition</var>s that use the modifier <code>model</code>
+(see section <a href="jmlrefman_5.html#SEC34">Import Definitions</a>).
+
+</li><li>
+The <var>modifier</var> <code>pure</code> (see section <a href="jmlrefman_6.html#SEC43">Pure</a>).
+
+
+</li><li>
+The <var>modifier</var> <code>uninitialized</code> (see section <a href="jmlrefman_6.html#SEC49">Uninitialized</a>).
+</li></ul>
+
+<p>The following type-level clauses
+(see section <a href="jmlrefman_8.html#SEC63">Type Specifications</a>) are included in level 1.
+</p>
+<ul>
+<li>
+Attaching a <var>method-specification</var> to a
+<var>class-initializer-decl</var> (see section <a href="jmlrefman_7.html#SEC62">Class Initializer Declarations</a>).
+
+</li><li>
+Static invariants, that is an <var>invariant</var> (see section <a href="jmlrefman_8.html#SEC65">Invariants</a>)
+that is either written in an interface without using the
+<var>modifier</var> <code>instance</code> (see section <a href="jmlrefman_6.html#SEC46">Instance</a>), or one that is
+written in a class and that uses the <var>modifier</var> <code>static</code>
+(see section <a href="jmlrefman_8.html#SEC66">Static vs. instance invariants</a>).
+
+</li><li>
+Both object and static <var>history-constraint</var>s (see section <a href="jmlrefman_8.html#SEC70">Constraints</a>).
+
+</li><li>
+The <var>axiom-clause</var> (see section <a href="jmlrefman_8.html#SEC76">Axioms</a>).
+
+</li><li>
+The <var>maps-into-clause</var> (see section <a href="jmlrefman_10.html#SEC120">Dynamic Data Group Mappings</a>)
+kind of <var>jml-data-group-clause</var>
+that attaches to field declarations (see section <a href="jmlrefman_7.html#SEC59">Field and Variable Declarations</a>).
+</li></ul>
+
+<p>The following features of method specifications
+(see section <a href="jmlrefman_9.html#SEC80">Method Specifications</a>) are included in level 1.
+</p>
+<ul>
+<li>
+The <var>spec-var-decls</var> that may occur in a specification case
+(see section <a href="jmlrefman_9.html#SEC101">Specification Variable Declarations</a>).
+
+</li><li>
+The <var>redundant-spec</var> parts of a method specification
+(see section <a href="jmlrefman_13.html#SEC177">Redundancy</a>) are also included in level 1.
+The following describes these parts.
+
+<ul>
+<li>
+The <var>implications</var> (<code>implies_that</code>) part of a <var>redundant-spec</var>
+(see section <a href="jmlrefman_13.html#SEC178">Redundant Implications and Redundantly Clauses</a>).
+
+</li><li>
+The <var>examples</var> (<code>for_example</code>) part of a <var>redundant-spec</var>.
+</li></ul>
+</li></ul>
+
+<p>The following extensions to Java's <var>expression</var> syntax
+(see section <a href="jmlrefman_11.html#SEC121">Predicates and Specification Expressions</a>)
+are included in level 1.
+</p>
+<ul>
+<li>
+The <var>spec-quantified-expr</var> (see section <a href="jmlrefman_11.html#SEC149">Quantified Expressions</a>) forms
+that use the <var>quantifier</var> keywords
+<code>\max</code>, <code>\min</code>, <code>\product</code>, and <code>\sum</code>
+(see section <a href="jmlrefman_11.html#SEC151">Generalized Quantifiers</a>), as well as <code>\num_of</code>
+(see section <a href="jmlrefman_11.html#SEC152">Numerical Quantifier</a>).
+
+<p>(Note that the <code>\max</code> quantifier is distinct from the
+<var>max-expression</var> (see section <a href="jmlrefman_11.html#SEC145"><code>\max</code></a>), which is a level C
+feature.
+Also, note that the <var>quantifier</var> keywords <code>\forall</code> and
+<code>\exists</code> are level 0 features.)
+</p>
+</li><li>
+Calls to pure methods and constructors 
+(see section <a href="jmlrefman_7.html#SEC57">Pure Methods and Constructors</a>)
+in <var>spec-expression</var>s (see section <a href="jmlrefman_11.html#SEC121">Predicates and Specification Expressions</a>).
+
+</li><li>
+The <var>set-comprehension</var> expression (see section <a href="jmlrefman_11.html#SEC156">Set Comprehensions</a>).
+</li></ul>
+
+<p>The following additions to Java's statement syntax 
+(see section <a href="jmlrefman_12.html#SEC163">Statements and Annotation Statements</a>)
+are included in level 1.
+</p>
+<ul>
+<li>
+The use of redundant forms of <var>loop-invariant</var>s (see section <a href="jmlrefman_12.html#SEC167">Loop Invariants</a>)
+namely those that use the keywords <code>maintaining_redundantly</code> and
+<code>loop_invariant_redundantly</code>.
+Non-redundant <var>loop-invariant</var>s are in level 0.
+
+</li><li>
+The <var>possibly-annotated-loop</var> statement (see section <a href="jmlrefman_12.html#SEC166">Loop Statements</a>),
+with a <var>variant-function</var> (see section <a href="jmlrefman_12.html#SEC168">Loop Variant Functions</a>).
+
+</li><li>
+The <var>assert-redundantly-statement</var> (see section <a href="jmlrefman_12.html#SEC169">Assert Statements</a>);
+that is, assert statements that use the keyword <code>assert_redundantly</code>.
+The non-redundant <var>assert-statement</var>s are a level 0 feature.
+
+</li><li>
+The redundant form of the <var>assume-statement</var>
+(see section <a href="jmlrefman_12.html#SEC171">Assume Statements</a>); that is, assume statements that use
+the keyword <code>assume_redundantly</code>.
+The non-redundant <var>assume-statement</var>s are a level 0 feature.
+</li></ul>
+
+<p>The <var>refine-prefix</var> (see section <a href="jmlrefman_16.html#SEC193">Refinement</a>).  However, the ability to
+use a <code>.spec</code> file to give a separate specification for a
+compilation unit that only appears in binary form (e.g., in a
+<code>.class</code> file) is a level 0 feature.
+</p>
+<p>The <code>\bigint</code> type (see section <a href="jmlrefman_19.html#SEC214">\bigint</a>)
+from the safe math extensions (see section <a href="jmlrefman_19.html#SEC213">Safe Math Extensions</a>) is a level 1
+feature.
+</p>
+
+<hr size="6">
+<a name="Level-2-Features"></a>
+<a name="SEC20"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC19" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC21" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC17" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.9.3 Level 2 Features </h3>
+
+<p>Level 2 contains features that are more specialized to particular uses
+of JML, but are still useful for several different tools.  It also
+contains some features that are mainly needed to explain JML's
+semantics, and have not been heavily used (so far).
+</p>
+<p>The <var>nowarn-pragma</var> (see section <a href="jmlrefman_4.html#SEC27">Lexical Pragmas</a>).
+</p>
+<p>The following type-level clauses
+(see section <a href="jmlrefman_8.html#SEC63">Type Specifications</a>) are included in level 2.
+</p>
+<ul>
+<li>
+The relational form of a <var>represents-clause</var> (see section <a href="jmlrefman_8.html#SEC74">Represents Clauses</a>).
+That is, a represents
+clause that uses <code>\such_that</code>.
+Note that the functional form of such represents clauses is a level 0
+feature.
+
+</li><li>
+The <var>readable-if-clause</var> clause (see section <a href="jmlrefman_8.html#SEC77">Readable If Clauses</a>).
+
+</li><li>
+The <var>writable-if-clause</var> clause (see section <a href="jmlrefman_8.html#SEC78">Writable If Clauses</a>).
+</li></ul>
+
+<p>The following features of method specifications
+(see section <a href="jmlrefman_9.html#SEC80">Method Specifications</a>) are included in level 2.
+</p>
+<ul>
+<li>
+The <var>diverges-clause</var> (see section <a href="jmlrefman_9.html#SEC109">Diverges Clauses</a>).
+
+</li><li>
+The <var>accessible-clause</var> (see section <a href="jmlrefman_9.html#SEC112">Accessible Clauses</a>).
+
+</li><li>
+The <var>callable-clause</var> (see section <a href="jmlrefman_9.html#SEC113">Callable Clauses</a>).
+
+</li><li>
+The <var>measured-by-clause</var> (see section <a href="jmlrefman_9.html#SEC114">Measured By Clauses</a>).
+
+</li><li>
+The <var>captures-clause</var> (see section <a href="jmlrefman_9.html#SEC115">Captures Clauses</a>).
+
+</li><li>
+The <var>working-space-clause</var> (see section <a href="jmlrefman_9.html#SEC116">Working Space Clauses</a>).
+
+</li><li>
+The <var>duration-clause</var> (see section <a href="jmlrefman_9.html#SEC117">Duration Clauses</a>).
+
+</li><li>
+The <var>model-program</var> style of method specification
+(see section <a href="jmlrefman_14.html#SEC180">Model Programs</a>).
+
+</li><li>
+The <var>refining-statement</var> (see section <a href="jmlrefman_12.html#SEC173">Refining Statements</a>).
+
+</li><li>
+The <code>extract</code> modifier (see section <a href="jmlrefman_14.html#SEC182">Extracting Model Program Specifications</a>).
+</li></ul>
+
+<p>The following extensions to Java's <var>expression</var> syntax
+(see section <a href="jmlrefman_11.html#SEC121">Predicates and Specification Expressions</a>)
+are included in level 2.
+</p>
+<ul>
+<li>
+The <var>not-assigned-expression</var> (see section <a href="jmlrefman_11.html#SEC128"><code>\not_assigned</code></a>).
+
+</li><li>
+The <var>not-modified-expression</var> (see section <a href="jmlrefman_11.html#SEC129"><code>\not_modified</code></a>).
+
+</li><li>
+The <var>only-accessed-expression</var> (see section <a href="jmlrefman_11.html#SEC130"><code>\only_accessed</code></a>).
+
+</li><li>
+The <var>only-assigned-expression</var> (see section <a href="jmlrefman_11.html#SEC131"><code>\only_assigned</code></a>).
+
+</li><li>
+The <var>only-called-expression</var> (see section <a href="jmlrefman_11.html#SEC132"><code>\only_called</code></a>).
+
+</li><li>
+The <var>only-captured-expression</var> (see section <a href="jmlrefman_11.html#SEC133"><code>\only_captured</code></a>).
+
+</li><li>
+The <var>reach-expression</var> (see section <a href="jmlrefman_11.html#SEC135"><code>\reach</code></a>).
+
+</li><li>
+The <var>is-initialized-expression</var> (see section <a href="jmlrefman_11.html#SEC146"><code>\is_initialized</code></a>).
+
+</li><li>
+The <var>invariant-for-expression</var> (see section <a href="jmlrefman_11.html#SEC147"><code>\invariant_for</code></a>).
+
+</li><li>
+The <var>lblneg-expression</var> and the <var>lblpos-expression</var>
+(see section <a href="jmlrefman_11.html#SEC148"><code>\lblneg</code> and <code>\lblpos</code></a>).
+</li></ul>
+
+<p>The following additions to Java's statement syntax 
+(see section <a href="jmlrefman_12.html#SEC163">Statements and Annotation Statements</a>)
+are included in level 2.
+</p>
+<ul>
+<li>
+The <var>unreachable-statement</var> (see section <a href="jmlrefman_12.html#SEC174">Unreachable Statements</a>).
+
+</li><li>
+The <var>debug-statement</var> (see section <a href="jmlrefman_12.html#SEC175">Debug Statements</a>)
+
+</li><li>
+The <var>hence-by-statement</var> (see section <a href="jmlrefman_12.html#SEC176">Hence By Statements</a>).
+</li></ul>
+
+<p>Note that all the <var>model-prog-statement</var>s (see section <a href="jmlrefman_14.html#SEC180">Model Programs</a>)
+are at level 2, because the model program style of method specification
+is at this level.
+</p>
+<p>Aside from the <code>\bigint</code> type (see section <a href="jmlrefman_19.html#SEC214">\bigint</a>),
+which is a level 1 feature, the rest of the safe math extensions
+(see section <a href="jmlrefman_19.html#SEC213">Safe Math Extensions</a>) are level 2
+features.  This includes the following particulars.
+</p>
+<ul>
+<li>
+The <code>\real</code> type (see section <a href="jmlrefman_19.html#SEC215">\real</a>).
+
+</li><li>
+The <var>modifier</var>s  <code>code_bigint_math</code>, <code>code_java_math</code>, 
+<code>code_safe_math</code>, <code>spec_bigint_math</code>,
+<code>spec_java_math</code>, and <code>spec_safe_math</code> (see section <a href="jmlrefman_6.html#SEC50">Math Modifiers</a>).
+</li></ul>
+
+<hr size="6">
+<a name="Level-3-Features"></a>
+<a name="SEC21"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC20" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC22" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC17" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.9.4 Level 3 Features </h3>
+
+<p>Level 3 features are more exotic and even less commonly used.  The
+semantics of some of these features are not yet well understood, and
+the features are not implemented by many tools.
+</p>
+<ul>
+<li>
+<var>type-definition</var>s that use the modifier <code>model</code>
+(see section <a href="jmlrefman_6.html#SEC38">Modifiers for Type Definitions</a>).
+
+</li><li>
+The <var>duration-expression</var> (see section <a href="jmlrefman_11.html#SEC136"><code>\duration</code></a>).
+
+</li><li>
+The <var>space-expression</var> (see section <a href="jmlrefman_11.html#SEC137"><code>\space</code></a>).
+
+</li><li>
+The <var>working-space-expression</var> (see section <a href="jmlrefman_11.html#SEC138"><code>\working_space</code></a>).
+</li></ul>
+
+<hr size="6">
+<a name="Level-C-Features"></a>
+<a name="SEC22"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC21" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC23" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC17" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.9.5 Level C Features </h3>
+
+<p>The features in this level are related to the specification of concurrency.
+This includes features inherited from ESC/Java having to do with
+concurrency.  The features of this level are as follows.
+</p>
+<ul>
+<li>
+The <var>monitors-for-clause</var> clause (see section <a href="jmlrefman_8.html#SEC79">Monitors For Clause</a>).
+
+</li><li>
+The <var>when-clause</var> (see section <a href="jmlrefman_9.html#SEC110">When Clauses</a>).
+
+</li><li>
+The <var>lockset-expression</var> (see section <a href="jmlrefman_11.html#SEC144"><code>\lockset</code></a>).
+
+</li><li>
+The <var>max-expression</var> (see section <a href="jmlrefman_11.html#SEC145"><code>\max</code></a>).  Note that this is
+<em>not</em> the quantifier <code>\max</code>
+(see section <a href="jmlrefman_11.html#SEC151">Generalized Quantifiers</a>), which is a level 1 feature. 
+
+</li><li>
+The <code>&lt;</code> and <code>&lt;=</code> operators applied to test ordering of locks
+(see section <a href="jmlrefman_11.html#SEC161">Lockset Ordering</a>).
+</li></ul>
+
+<hr size="6">
+<a name="Level-X-Features"></a>
+<a name="SEC23"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC22" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC17" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.9.6 Level X Features </h3>
+
+<p>The features in this level are experimental.
+They are as follows.
+</p>
+<ul>
+<li>
+The MultiJava extensions to JML (see section <a href="jmlrefman_17.html#SEC200">MultiJava Extensions to JML</a>),
+including the syntax for <var>multijava-top-level-declaration</var>
+(see section <a href="jmlrefman_17.html#SEC201">Augmenting Method Declarations</a>)
+and <var>multijava-param-declaration</var> (see section <a href="jmlrefman_17.html#SEC202">MultiMethods</a>).
+
+</li><li>
+The <code>\readonly</code> and <code>readonly</code> <var>ownership-modifier</var>s
+from the Universe type system (see section <a href="jmlrefman_18.html#SEC203">Universe Type System</a>).
+Note that the <code>\peer</code> and <code>\rep</code> modifiers are level 0 features.
+</li></ul>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

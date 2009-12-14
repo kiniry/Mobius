@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 5. Compilation Units</title>
+
+<meta name="description" content="JML Reference Manual: 5. Compilation Units">
+<meta name="keywords" content="JML Reference Manual: 5. Compilation Units">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Compilation-Units"></a>
+<a name="SEC32"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_4.html#SEC31" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC33" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_4.html#SEC25" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_6.html#SEC35" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 5. Compilation Units </h1>
+
+
+<p>A compilation unit in JML is similar to that in Java, with some
+additions.  It has the following syntax.
+</p>
+<a name="IDX931"></a>
+<a name="IDX932"></a>
+<a name="IDX933"></a>
+<a name="IDX934"></a>
+<a name="IDX935"></a>
+<a name="IDX936"></a>
+<a name="IDX937"></a>
+<a name="IDX938"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>compilation-unit</var> ::= [ <var>package-definition</var> ]
+              [ <var>refine-prefix</var> ] 
+              [ <var>import-definition</var> ] &hellip;
+              [ <var>top-level-definition</var> ] &hellip;
+<var>top-level-definition</var> ::= <var>type-definition</var>
+        | <var>multijava-top-level-declaration</var>  <i>// When parsing MultiJava</i>
+</pre></td></tr></table>
+
+<a name="IDX939"></a>
+<a name="IDX940"></a>
+<a name="IDX941"></a>
+<p>The <var>compilation-unit</var> rule is the start rule for the JML grammar.
+(In this syntactic rule and in all other rules in the rest of the body
+of this manual, <var>white-space</var> may appear between any two
+tokens. See section <a href="jmlrefman_4.html#SEC25">Lexical Conventions</a>, for details.)
+</p>
+<p>See section <a href="jmlrefman_6.html#SEC35">Type Definitions</a>, for the syntax and semantics of
+<var>type-definition</var>s.
+See section <a href="jmlrefman_17.html#SEC201">Augmenting Method Declarations</a>, for the syntax and semantics of 
+<var>multijava-top-level-declaration</var>.
+See section <a href="jmlrefman_16.html#SEC193">Refinement</a>, for a discussion of the <var>refine-prefix</var> and its uses.
+</p>
+<a name="IDX942"></a>
+<a name="IDX943"></a>
+<a name="IDX944"></a>
+<a name="IDX945"></a>
+<a name="IDX946"></a>
+<p>Some JML tools may support various optional extensions to JML.  This
+manual partially describes two such extensions:
+MultiJava [Clifton-etal00] 
+and
+the Universe type system [Dietl-Mueller05].
+Comments in the grammar indicate optional productions; these are only
+used by tools that select an option to parse the syntax in question.
+Tools for JML do not have to support these extensions to JML, and may
+themselves support other JML extensions.  In general, JML tools will
+support a (hopefully well-documented) variant of the language described
+in this manual.
+</p>
+<a name="IDX947"></a>
+<a name="IDX948"></a>
+<a name="IDX949"></a>
+<p>The Java code in a compilation unit must be legal Java code (or legal
+code in the Java extension, such as MultiJava, selected by any options);
+in particular it must obey all of Java's static restrictions.
+For example, at most one of the type definitions in a compilation unit
+may be declared <code>public</code>.
+See the <cite>Java Language Specification</cite> [Gosling-etal00] 
+for details.
+</p>
+<a name="IDX950"></a>
+<a name="IDX951"></a>
+<p>As in Java, JML can be implemented
+using files to store compilation units.  When this is done there must also
+be a correspondence between the name of any public type defined in a
+compilation unit and the file name.  This is done exactly as in Java,
+although JML allows additional file name suffixes.
+See section <a href="jmlrefman_16.html#SEC194">File Name Suffixes</a>, for details on the file name suffixes
+allowed in JML.
+</p>
+<a name="IDX952"></a>
+<p>The specification of the compilation unit consists of the
+specifications of the <var>top-level-definition</var>s it contains, placed in
+the declared package (if any).  The interface part of this specification is
+determined as in Java [Gosling-etal00] (or as in the Java extension used).
+The specifications of each <var>type-definition</var> are computed by starting
+from an environment that contains the declared package (if any),
+each top-level definition in the compilation unit (to allow for
+mutual recursion), and the imports [Gosling-etal00].
+In JML, not only is the package <code>java.lang</code> implicitly imported, but also
+there is an implicit model import of <code>org.jmlspecs.lang</code>.
+(See section <a href="#SEC34">Import Definitions</a>, for the meaning of a model import.)
+</p>
+<a name="IDX953"></a>
+<p>Ignoring refinement,
+a Java compilation unit satisfies such a JML specification if it
+satisfies the specified <var>package-definition</var> (if any), and if
+for each specified <var>type-definition</var>, there
+is a corresponding Java <var>type-definition</var> that satisfies that
+type's JML specification. 
+Furthermore, if the JML specification does not contain a
+public type, then the Java compilation unit may not contain a public
+type.
+</p>
+<p>The syntax and semantics of <var>package-definition</var>s and
+<var>import-definition</var>s are discussed in the subsections below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC33">5.1 Package Definitions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC34">5.2 Import Definitions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Package-Definitions"></a>
+<a name="SEC33"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC32" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC34" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC32" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC32" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_6.html#SEC35" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 5.1 Package Definitions </h2>
+
+<p>The syntax of a <var>package-definition</var> is as in Java [Gosling-etal00].
+</p>
+<a name="IDX954"></a>
+<a name="IDX955"></a>
+<a name="IDX956"></a>
+<a name="IDX957"></a>
+<a name="IDX958"></a>
+<a name="IDX959"></a>
+<a name="IDX960"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>package-definition</var> ::= <code>package</code> <var>name</var> <code>;</code>
+<var>name</var> ::= <var>ident</var>  [ <code>.</code> <var>ident</var> ] &hellip;
+</pre></td></tr></table>
+
+<a name="IDX961"></a>
+<a name="IDX962"></a>
+<p>A Java package definition satisfies the JML specification only if it
+is the same as that specified.  That is, the Java code has
+to be the same (modulo <var>white-space</var>) as the JML specification.
+</p>
+<hr size="6">
+<a name="Import-Definitions"></a>
+<a name="SEC34"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC33" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_6.html#SEC35" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC32" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC32" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_6.html#SEC35" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 5.2 Import Definitions </h2>
+
+<p>The syntax of a <var>import-definition</var> is as follows.
+The only difference from the Java syntax [Gosling-etal00]
+is the optional <code>model</code> modifier.
+</p>
+<a name="IDX963"></a>
+<a name="IDX964"></a>
+<a name="IDX965"></a>
+<a name="IDX966"></a>
+<a name="IDX967"></a>
+<a name="IDX968"></a>
+<a name="IDX969"></a>
+<a name="IDX970"></a>
+<a name="IDX971"></a>
+<a name="IDX972"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>import-definition</var> ::= [ <code>model</code> ] <code>import</code> <var>name-star</var> <code>;</code>
+<var>name-star</var> ::= <var>ident</var> [ <code>.</code> <var>ident</var> ] &hellip; [ <code>.</code> <code>*</code> ]
+</pre></td></tr></table>
+
+<a name="IDX973"></a>
+<p>An <var>import-definition</var> may use the <code>model</code> modifier
+if and only if the whole <var>import-definition</var> is entirely contained
+within a single annotation. For example, the following is illegal.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="display"><code>/*@ model @*/ import com.foo.*; // illegal!</code> 
+</pre></td></tr></table>
+
+<p>To write an import that affects both the JML annotations and Java
+code, just use a normal java import, without using the <code>model</code>
+modifier.
+</p>
+<p>The effect on the interface computed for a compilation unit of an
+<var>import-definition</var> without the <code>model</code> 
+keyword is the same as in Java [Gosling-etal00].  Such import
+directives affect the computation of the interface of the Java code as
+well as the JML specification (that is, they apply to both equally).
+</p>
+<a name="IDX974"></a>
+<a name="IDX975"></a>
+<a name="IDX976"></a>
+<p>When the <code>model</code> keyword is used, 
+the import only has an effect on the JML annotations (and not on the
+Java code).  The abbreviation permitted by the use of such an import,
+however, is the same as would be effected by a normal Java import.
+Such model imports can affect the computation of the interface
+of the JML specification by being used in the declarations of model
+and ghost features.
+</p>
+<p>Both normal Java and model imports do not themselves contribute to the
+interface of a JML specification.  As such, they do not have to be
+present in a correct implementation of the specification.  An
+implementation could, for example, use different forms of import, or
+it could use fully qualified names instead of imports, and achieve the
+same effect as using the imports in the specification.
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC32" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_6.html#SEC35" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

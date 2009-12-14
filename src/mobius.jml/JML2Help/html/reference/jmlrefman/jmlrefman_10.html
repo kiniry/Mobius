@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 10. Data Groups</title>
+
+<meta name="description" content="JML Reference Manual: 10. Data Groups">
+<meta name="keywords" content="JML Reference Manual: 10. Data Groups">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Data-Groups"></a>
+<a name="SEC118"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC117" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC119" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_11.html#SEC121" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 10. Data Groups </h1>
+
+<p>A <em>data group</em> is a set of locations; data groups are used in
+JML's frame axioms (see section <a href="jmlrefman_9.html#SEC111">Assignable Clauses</a>) to name such sets of
+locations in a way that does not expose representation details [Leino98].
+</p>
+<p>Each field in a program defines a data group, whose name is the same
+as that of the field.
+</p>
+<p>The main purpose for putting locations into data groups is so that
+these locations may be assigned during the executions of methods that
+have permission to assign to the data group.  For example, if
+locations <code>x.f</code> and <code>x.y</code> are in data group <code>x.d</code>, then
+an assignable clause of the form
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   assignable x.d;
+</pre></td></tr></table>
+
+<p>allows <code>x.d</code>, <code>x.f</code>, <code>x.y</code>, and any other locations in
+the data group of <code>x.d</code> to be assigned during the execution of a
+method.
+</p>
+<p>One should always put private or protected fields that are used to compute
+the value of a public model field (see section <a href="jmlrefman_8.html#SEC74">Represents Clauses</a>) into the data
+group of that model field.  However, one can also put other fields
+into a model field's data group, just to allow them to be assigned
+when the model field is assignable.
+</p>
+<p>It is sometimes convenient to declare a data group without any other
+information about the model of data.  This can be done using the type
+<code>org.jmlspecs.models.JMLDataGroup</code>. This type has exactly one
+non-null object, named <code>JMLDataGroup.IT</code>.  For example, the class
+<code>java.lang.Object</code> has the following data group declaration.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">    //&nbsp;public non_null model JMLDataGroup objectState;
+</pre></td></tr></table>
+
+<p>The <code>objectState</code> data group provides a convenient way to talk
+about &ldquo;the state&rdquo; of an object without committing to any modeling or
+representation details.
+</p>
+<p>[[[ needs discussion - default data groups ]]]
+</p>
+<p>To place a field or array element in a data group, one uses the
+following syntax.
+</p>
+<a name="IDX1661"></a>
+<a name="IDX1662"></a>
+<a name="IDX1663"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>jml-data-group-clause</var> ::= <var>in-group-clause</var> | <var>maps-into-clause</var>
+</pre></td></tr></table>
+
+<p>The details of the two kinds of data group clauses are discussed below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC119">10.1 Static Data Group Inclusions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC120">10.2 Dynamic Data Group Mappings</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Static-Data-Group-Inclusions"></a>
+<a name="SEC119"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC118" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC120" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC118" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC118" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_11.html#SEC121" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 10.1 Static Data Group Inclusions </h2>
+
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>in-group-clause</var> ::= <var>in-keyword</var> <var>group-list</var> <code>;</code> 
+<var>in-keyword</var> ::= <code>in</code> | <code>in_redundantly</code>
+<var>group-list</var> ::= <var>group-name</var> [ <code>,</code> <var>group-name</var> ] &hellip;
+<var>group-name</var> ::= [ <var>group-name-prefix</var> ] <var>ident</var> 
+<var>group-name-prefix</var> ::= <code>super</code> <code>.</code> | <code>this</code> <code>.</code> 
+</pre></td></tr></table>
+
+<p>The <var>in-group-clause</var> puts the field being declared in all the
+data groups named in the <var>group-list</var>.
+</p>
+<p>[[[needs discussion]]]
+</p>
+<hr size="6">
+<a name="Dynamic-Data-Group-Mappings"></a>
+<a name="SEC120"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC119" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_11.html#SEC121" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC118" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC118" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_11.html#SEC121" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 10.2 Dynamic Data Group Mappings </h2>
+
+<p>See section <a href="jmlrefman_11.html#SEC162">Store Refs</a>, for the definition of <var>spec-array-ref-expr</var>.
+</p>
+<a name="IDX1664"></a>
+<a name="IDX1665"></a>
+<a name="IDX1666"></a>
+<a name="IDX1667"></a>
+<a name="IDX1668"></a>
+<a name="IDX1669"></a>
+<a name="IDX1670"></a>
+<a name="IDX1671"></a>
+<a name="IDX1672"></a>
+<a name="IDX1673"></a>
+<a name="IDX1674"></a>
+<a name="IDX1675"></a>
+<a name="IDX1676"></a>
+<a name="IDX1677"></a>
+<a name="IDX1678"></a>
+<a name="IDX1679"></a>
+<a name="IDX1680"></a>
+<a name="IDX1681"></a>
+<a name="IDX1682"></a>
+<a name="IDX1683"></a>
+<a name="IDX1684"></a>
+<a name="IDX1685"></a>
+<a name="IDX1686"></a>
+<a name="IDX1687"></a>
+<a name="IDX1688"></a>
+<a name="IDX1689"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>maps-into-clause</var> ::= <var>maps-keyword</var> <var>member-field-ref</var> <code>\into</code> <var>group-list</var> <code>;</code> 
+<var>maps-keyword</var> ::= <code>maps</code> | <code>maps_redundantly</code>
+<var>member-field-ref</var> ::= <var>ident</var> <code>.</code> <var>maps-member-ref-expr</var>
+          | <var>maps-array-ref-expr</var> [ <code>.</code> <var>maps-member-ref-expr</var> ]
+<var>maps-member-ref-expr</var> ::= <var>ident</var> | <code>*</code> 
+<var>maps-array-ref-expr</var> ::= <var>ident</var> <var>maps-spec-array-dim</var>
+                        [ <var>maps-spec-array-dim</var> ] &hellip; 
+<var>maps-spec-array-dim</var> ::= `<code>[</code>' <var>spec-array-ref-expr</var> `<code>]</code>'
+</pre></td></tr></table>
+
+<p>The <var>maps-into-clause</var> describes elements of a data group that are
+determined dynamically, through a field reference or an array index, or
+a field of an array index.  The pattern <code>*</code> may be used to
+specify all fields of an object or all elements of an array.
+</p>
+<p>The fields of a model object do not denote locations because model 
+objects are abstract and do not have concrete fields.  
+Therefore, in JML, the maps clause is not allowed in the declaration of a model 
+field because such maps clauses do not denote a specific set of 
+locations to be added to a data group, and this is the primary purpose of the 
+maps clause (see also the discussion of model fields in the assignable 
+clause).  
+</p>
+<p>[[[ needs discussion ]]]
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC118" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_11.html#SEC121" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

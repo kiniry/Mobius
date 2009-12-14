@@ -1,0 +1,1317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 4. Lexical Conventions</title>
+
+<meta name="description" content="JML Reference Manual: 4. Lexical Conventions">
+<meta name="keywords" content="JML Reference Manual: 4. Lexical Conventions">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Lexical-Conventions"></a>
+<a name="SEC25"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC26" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_3.html#SEC24" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_5.html#SEC32" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 4. Lexical Conventions </h1>
+
+<p>This chapter presents the lexical conventions of JML,
+that is, the microsyntax of JML.
+</p>
+<a name="IDX291"></a>
+<a name="IDX292"></a>
+<a name="IDX293"></a>
+<p>Throughout this chapter,
+grammatical productions are to be understood lexically.
+That is, no <var>white-space</var> (see section <a href="#SEC26">White Space</a>) may intervene between the
+characters of a token.  (However, outside this chapter, the opposite
+of this convention is in force.)
+</p>
+<a name="IDX294"></a>
+<p>The microsyntax of JML
+is described by the production <var>microsyntax</var> below;
+it describes what a program looks like from the point of view of
+a lexical analyzer [Watt91].
+</p>
+<a name="IDX295"></a>
+<a name="IDX296"></a>
+<a name="IDX297"></a>
+<a name="IDX298"></a>
+<a name="IDX299"></a>
+<a name="IDX300"></a>
+<a name="IDX301"></a>
+<a name="IDX302"></a>
+<a name="IDX303"></a>
+<a name="IDX304"></a>
+<a name="IDX305"></a>
+<a name="IDX306"></a>
+<a name="IDX307"></a>
+<a name="IDX308"></a>
+<a name="IDX309"></a>
+<a name="IDX310"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>microsyntax</var> ::= <var>lexeme</var> [ <var>lexeme</var> ] &hellip;
+<var>lexeme</var> ::= <var>white-space</var> | <var>lexical-pragma</var> | <var>comment</var>
+        | <var>annotation-marker</var> | <var>doc-comment</var> | <var>token</var> 
+<var>token</var> ::= <var>ident</var> | <var>keyword</var> | <var>special-symbol</var>
+        | <var>java-literal</var> | <var>informal-description</var>
+</pre></td></tr></table>
+
+<p>In the rest of this section we provide more details on each of the major
+nonterminals used in the above grammar.
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC26">4.1 White Space</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                 
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC27">4.2 Lexical Pragmas</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC28">4.3 Comments</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                    
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC29">4.4 Annotation Markers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC30">4.5 Documentation Comments</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">      
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC31">4.6 Tokens</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                      
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="White-Space"></a>
+<a name="SEC26"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC25" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC27" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_5.html#SEC32" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 4.1 White Space </h2>
+
+<p>Blanks, horizontal and vertical tabs, carriage returns, formfeeds,
+and newlines, collectively called <em>white space</em>,
+are ignored except as they serve to separate tokens.
+Newlines and carriage returns
+are special in that they cannot appear in some contexts where
+other whitespace can appear, and are also used to end Java-style comments
+(see section <a href="#SEC28">Comments</a>).
+</p>
+<a name="IDX311"></a>
+<a name="IDX312"></a>
+<a name="IDX313"></a>
+<a name="IDX314"></a>
+<a name="IDX315"></a>
+<a name="IDX316"></a>
+<a name="IDX317"></a>
+<a name="IDX318"></a>
+<a name="IDX319"></a>
+<a name="IDX320"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>white-space</var> ::= <var>non-nl-white-space</var> | <var>end-of-line</var>
+<var>non-nl-white-space</var> ::= a blank, tab, or formfeed character
+<var>end-of-line</var> ::= <var>newline</var> | <var>carriage-return</var>
+        | <var>carriage-return</var> <var>newline</var>
+<var>newline</var> ::= a newline character
+<var>carriage-return</var> ::= a carriage return character
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Lexical-Pragmas"></a>
+<a name="SEC27"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC26" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC28" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_5.html#SEC32" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 4.2 Lexical Pragmas </h2>
+
+<p>ESC/Java [Leino-etal00] has a single kind of &ldquo;lexical pragma&rdquo;, <code>nowarn</code>,
+whose syntax is described below in general terms.
+The JML checker currently ignores these lexical pragmas,
+but <code>nowarn</code> is only recognized within an annotation.
+Note that, unlike ESC/Java, the semicolon is mandatory.
+This restriction seems to be necessary to prevent lexical ambiguity.
+</p>
+<a name="IDX321"></a>
+<a name="IDX322"></a>
+<a name="IDX323"></a>
+<a name="IDX324"></a>
+<a name="IDX325"></a>
+<a name="IDX326"></a>
+<a name="IDX327"></a>
+<a name="IDX328"></a>
+<a name="IDX329"></a>
+<a name="IDX330"></a>
+<a name="IDX331"></a>
+<a name="IDX332"></a>
+<a name="IDX333"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>lexical-pragma</var> ::= <var>nowarn-pragma</var>
+<var>nowarn-pragma</var> ::= <code>nowarn</code> [ <var>spaces</var> ] [ <var>nowarn-label-list</var> ] <code>;</code>
+<var>spaces</var> ::= <var>non-nl-white-space</var> [ <var>non-nl-white-space</var> ] &hellip;
+<var>nowarn-label-list</var> ::= <var>nowarn-label</var> [ <var>spaces</var> ]
+             [ <code>,</code> [ <var>spaces</var> ] <var>nowarn-label</var> [ <var>spaces</var> ] ] &hellip;
+<var>nowarn-label</var> ::= <var>letter</var> [ <var>letter</var> ] &hellip;
+</pre></td></tr></table>
+
+<p>See section <a href="#SEC31">Tokens</a>, for the syntax of <var>letter</var>.
+</p>
+<hr size="6">
+<a name="Comments"></a>
+<a name="SEC28"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC27" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC29" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_5.html#SEC32" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 4.3 Comments </h2>
+
+<p>Both kinds of Java comments are allowed in JML: multiline C-style
+comments and single line C++-style comments.
+However, if what looks like a comment starts with the at-sign (<code>@</code>)
+character, or with a plus sign and an at-sign (<code>+@</code>),
+then it is considered to be the start of an annotation by JML,
+and not a comment.
+Furthermore, if what looks like a comment starts with an asterisk (<code>*</code>),
+then it is a documentation comment, which is parsed by JML.
+</p>
+<a name="IDX334"></a>
+<a name="IDX335"></a>
+<a name="IDX336"></a>
+<a name="IDX337"></a>
+<a name="IDX338"></a>
+<a name="IDX339"></a>
+<a name="IDX340"></a>
+<a name="IDX341"></a>
+<a name="IDX342"></a>
+<a name="IDX343"></a>
+<a name="IDX344"></a>
+<a name="IDX345"></a>
+<a name="IDX346"></a>
+<a name="IDX347"></a>
+<a name="IDX348"></a>
+<a name="IDX349"></a>
+<a name="IDX350"></a>
+<a name="IDX351"></a>
+<a name="IDX352"></a>
+<a name="IDX353"></a>
+<a name="IDX354"></a>
+<a name="IDX355"></a>
+<a name="IDX356"></a>
+<a name="IDX357"></a>
+<a name="IDX358"></a>
+<a name="IDX359"></a>
+<a name="IDX360"></a>
+<a name="IDX361"></a>
+<a name="IDX362"></a>
+<a name="IDX363"></a>
+<a name="IDX364"></a>
+<a name="IDX365"></a>
+<a name="IDX366"></a>
+<a name="IDX367"></a>
+<a name="IDX368"></a>
+<a name="IDX369"></a>
+<a name="IDX370"></a>
+<a name="IDX371"></a>
+<a name="IDX372"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>comment</var> ::= <var>C-style-comment</var> | <var>C++-style-comment</var>
+<var>C-style-comment</var> ::= <code>/*</code> [ <var>C-style-body</var> ] <var>C-style-end</var>
+<var>C-style-body</var> ::= <var>non-at-plus-star</var> [ <var>non-stars-slash</var> ] &hellip;
+        | <code>+</code> <var>non-at</var> [ <var>non-stars-slash</var> ] &hellip;
+        | <var>stars-non-slash</var> [ <var>non-stars-slash</var> ] &hellip;
+<var>non-stars-slash</var> ::= <var>non-star</var>
+        | <var>stars-non-slash</var>
+<var>stars-non-slash</var> ::= <code>*</code> [ <code>*</code> ] &hellip; <var>non-star-slash</var>
+<var>non-at-plus-star</var> ::= any character except <code>@</code>, <code>+</code>, or <code>*</code>
+<var>non-at</var> ::= any character except <code>@</code>
+<var>non-star</var> ::= any character except <code>*</code>
+<var>non-slash</var> ::= any character except <code>/</code>
+<var>non-star-slash</var> ::= any character except <code>*</code> or <code>/</code>
+<var>C-style-end</var> ::= [ <code>*</code> ] &hellip; <code>*/</code>
+<var>C++-style-comment</var> ::= <code>//</code> [ <code>+</code> ] <var>end-of-line</var>
+        | <code>//</code> <var>non-at-plus-end-of-line</var> [ <var>non-end-of-line</var> ] &hellip; <var>end-of-line</var>
+        | <code>//+</code> <var>non-at-end-of-line</var> [ <var>non-end-of-line</var> ] &hellip; <var>end-of-line</var>
+<var>non-end-of-line</var> ::= any character except a newline or carriage return
+<var>non-at-plus-end-of-line</var> ::= any character except <code>@</code>, <code>+</code>, newline, or carriage return
+<var>non-at-end-of-line</var> ::= any character except <code>@</code>, newline, or carriage return
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Annotation-Markers"></a>
+<a name="SEC29"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC28" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC30" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_5.html#SEC32" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 4.4 Annotation Markers </h2>
+
+<p>If what looks to Java like a comment starts with an at-sign (<code>@</code>)
+as its first character, then it is not considered a comment by JML.
+We refer to the tokens between <code>//@</code> and the following
+<var>end-of-line</var>, and between pairs of 
+annotation start ( <code>/*@</code> or <code>/*+@</code> ) and 
+end ( <code>*/</code> or <code>@*/</code> or <code>@+*/</code> ) markers
+as <em>annotations</em>.
+</p>
+<a name="IDX373"></a>
+<a name="IDX374"></a>
+<a name="IDX375"></a>
+<a name="IDX376"></a>
+<a name="IDX377"></a>
+<a name="IDX378"></a>
+<p>Annotations must hold entire grammatical units of JML specifications,
+in the sense that the text of some nonterminals may not be split across
+two separate annotations.
+For example the following is illegal, because the 
+<var>postcondition</var> of the ensures clause is split over two annotations,
+and thus each contains a fragment instead of a complete grammatical unit.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  //@ ensures 0 &lt;= x             // illegal!
+  //@      &amp;&amp; x &lt; a.length;
+</pre></td></tr></table>
+<p>Implementations are not required to check for such errors.
+However, note that ESC/Java [Leino-Nelson-Saxe00] and ESC/Java2
+assume that nonterminals that define clauses are not split into
+separate annotations, and so effectively do check for them.
+</p>
+<a name="IDX379"></a>
+<a name="IDX380"></a>
+<a name="IDX381"></a>
+<a name="IDX382"></a>
+<a name="IDX383"></a>
+<a name="IDX384"></a>
+<a name="IDX385"></a>
+<a name="IDX386"></a>
+<a name="IDX387"></a>
+<a name="IDX388"></a>
+<a name="IDX389"></a>
+<p>Annotations look like comments to Java, and are thus ignored by it,
+but they are significant to JML.
+One way that this can be achieved is by having JML drop (ie., ignore)
+the character sequences that are <var>annotation-marker</var>s:
+<code>//@</code>, <code>//+@</code>, <code>/*@</code>, <code>/*+@</code>, and <code>@+*/</code>,
+<code>@*/</code>. 
+The at-sign (<code>@</code>) in <code>@*/</code> is optional, and more than one
+at-sign may appear in it and the other annotation markers.
+However, JML will recognize <var>jml-keywords</var> only within annotations.
+</p>
+<a name="IDX390"></a>
+<p>Within annotations, on each line,
+initial white-space and any immediately following at-signs (<code>@</code>)
+are ignored. 
+The definition of an annotation marker is given below.
+</p>
+<a name="IDX391"></a>
+<a name="IDX392"></a>
+<a name="IDX393"></a>
+<a name="IDX394"></a>
+<a name="IDX395"></a>
+<a name="IDX396"></a>
+<a name="IDX397"></a>
+<a name="IDX398"></a>
+<a name="IDX399"></a>
+<a name="IDX400"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>annotation-marker</var> ::= <code>//@</code> [ <code>@</code> ] &hellip; | <code>//+@</code> [ <code>@</code> ] &hellip;
+        | <code>/*@</code> [ <code>@</code> ] &hellip; | <code>/*+@</code> [ <code>@</code> ] &hellip; | [ <code>@</code> ] &hellip; <code>@+*/</code> | [ <code>@</code> ] &hellip; <code>*/</code>
+<var>ignored-at-in-annotation</var> ::= <code>@</code>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Documentation-Comments"></a>
+<a name="SEC30"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC29" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC31" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_5.html#SEC32" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 4.5 Documentation Comments </h2>
+
+<p>If what looks like a C-style comment starts with an asterisk (<code>*</code>)
+then it is a <em>documentation comment</em>.
+The syntax is given below.
+The syntax <var>doc-comment-ignored</var> is used for documentation comments
+that are ignored by JML.
+</p>
+
+<a name="IDX401"></a>
+<a name="IDX402"></a>
+<a name="IDX403"></a>
+<a name="IDX404"></a>
+<a name="IDX405"></a>
+<a name="IDX406"></a>
+<a name="IDX407"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>doc-comment</var> ::= <code>/**</code> [ <code>*</code> ] &hellip; <var>doc-comment-body</var> <code>*/</code>
+<var>doc-comment-ignored</var> ::= <var>doc-comment</var>
+</pre></td></tr></table>
+
+<a name="IDX408"></a>
+<a name="IDX409"></a>
+<p>At the level of the rest of the JML grammar, a documentation comment
+that does not contain an embedded JML method specification is essentially
+described by the above, and the fact that a <var>doc-comment-body</var> cannot
+contain the two-character sequence <code>*/</code>.
+</p>
+<a name="IDX410"></a>
+<p>However, JML and <code>javadoc</code> both pay attention
+to the syntax inside of these documentation comments.  This syntax is
+really best described by a context-free syntax that builds on
+a lexical syntax.  However, because much of the documentation is free-form,
+the context-free syntax has a lexical flavor to it, and is quite line-oriented.
+Thus it should come as no surprise that the first non-whitespace, non-asterisk
+(ie., not <code>*</code>) character on a line determines its interpretation.
+</p>
+<a name="IDX411"></a>
+<a name="IDX412"></a>
+<a name="IDX413"></a>
+<a name="IDX414"></a>
+<a name="IDX415"></a>
+<a name="IDX416"></a>
+<a name="IDX417"></a>
+<a name="IDX418"></a>
+<a name="IDX419"></a>
+<a name="IDX420"></a>
+<a name="IDX421"></a>
+<a name="IDX422"></a>
+<a name="IDX423"></a>
+<a name="IDX424"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>doc-comment-body</var> ::= [ <var>description</var> ] &hellip;
+                     [ <var>tagged-paragraph</var> ] &hellip; 
+                     [ <var>jml-specs</var> ] [ <var>description</var> ]
+<var>description</var> ::= <var>doc-non-empty-textline</var>
+<var>tagged-paragraph</var> ::= <var>paragraph-tag</var> [ <var>doc-non-nl-ws</var> ] &hellip;
+             [ <var>doc-atsign</var> ] &hellip; [ <var>description</var> ] &hellip;
+<var>jml-specs</var> ::= <var>jml-tag</var> [ <var>method-specification</var> ] <var>end-jml-tag</var>
+             [ <var>jml-tag</var> [ <var>method-specification</var> ] <var>end-jml-tag</var> ] &hellip;
+</pre></td></tr></table>
+
+<a name="IDX425"></a>
+<a name="IDX426"></a>
+<p>The microsyntax or lexical grammar used within documentation comments
+is as follows.  Note that the token <var>doc-nl-ws</var> can only occur at
+the end of a line, and is always ignored
+within documentation comments.  Ignoring <var>doc-nl-ws</var>
+means that any asterisks at the beginning of the next line, even in the part
+that would be a JML <var>method-specification</var>, are also ignored.
+Otherwise the lexical syntax within a <var>method-specification</var> is as in
+the rest of JML.  This method specification is attached to
+the following method or constructor declaration.
+(Currently there is no useful way to use such specifications
+in the documentation comments for other declarations.)
+Note the exception to the grammar of <var>doc-non-empty-textline</var>.
+</p>
+<a name="IDX427"></a>
+<a name="IDX428"></a>
+<a name="IDX429"></a>
+<a name="IDX430"></a>
+<a name="IDX431"></a>
+<a name="IDX432"></a>
+<a name="IDX433"></a>
+<a name="IDX434"></a>
+<a name="IDX435"></a>
+<a name="IDX436"></a>
+<a name="IDX437"></a>
+<a name="IDX438"></a>
+<a name="IDX439"></a>
+<a name="IDX440"></a>
+<a name="IDX441"></a>
+<a name="IDX442"></a>
+<a name="IDX443"></a>
+<a name="IDX444"></a>
+<a name="IDX445"></a>
+<a name="IDX446"></a>
+<a name="IDX447"></a>
+<a name="IDX448"></a>
+<a name="IDX449"></a>
+<a name="IDX450"></a>
+<a name="IDX451"></a>
+<a name="IDX452"></a>
+<a name="IDX453"></a>
+<a name="IDX454"></a>
+<a name="IDX455"></a>
+<a name="IDX456"></a>
+<a name="IDX457"></a>
+<a name="IDX458"></a>
+<a name="IDX459"></a>
+<a name="IDX460"></a>
+<a name="IDX461"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>paragraph-tag</var> ::= <code>@author</code> | <code>@deprecated</code> | <code>@exception</code> 
+        | <code>@param</code> | <code>@return</code> | <code>@see</code>
+        | <code>@serial</code> | <code>@serialdata</code> | <code>@serialfield</code>
+        | <code>@since</code> | <code>@throws</code> | <code>@version</code>
+        | <code>@</code> <var>letter</var> [ <var>letter</var> ] &hellip;
+<var>doc-atsign</var> ::= <code>@</code>
+<var>doc-nl-ws</var> ::= <var>end-of-line</var>
+          [ <var>doc-non-nl-ws</var> ] &hellip; [ <code>*</code> [ <code>*</code> ] &hellip; [ <var>doc-non-nl-ws</var> ] &hellip; ]
+<var>doc-non-nl-ws</var> ::= <var>non-nl-white-space</var>
+<var>doc-non-empty-textline</var> ::= <var>non-at-end-of-line</var> [ <var>non-end-of-line</var> ] &hellip;
+<var>jml-tag</var> ::= <code>&lt;jml&gt;</code> | <code>&lt;JML&gt;</code> | <code>&lt;esc&gt;</code> | <code>&lt;ESC&gt;</code>
+<var>end-jml-tag</var> ::= <code>&lt;/jml&gt;</code> | <code>&lt;/JML&gt;</code> | <code>&lt;/esc&gt;</code> | <code>&lt;/ESC&gt;</code>
+</pre></td></tr></table>
+
+<p>A <var>jml-tag</var> marks the (temporary) end of a documentation comment and the
+beginning of text contributing to a method specification.  The corresponding
+<var>end-jml-tag</var> marks the reverse transition.
+The <var>end-jml-tag</var> must match the corresponding <var>jml-tag</var>.
+</p>
+<hr size="6">
+<a name="Tokens"></a>
+<a name="SEC31"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC30" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_5.html#SEC32" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_5.html#SEC32" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 4.6 Tokens </h2>
+
+<p>Character strings that are Java reserved words
+are made into the token for that reserved word,
+instead of being made into an <var>ident</var> token.
+Within an <var>annotation</var> this also applies to <var>jml-keyword</var>s.
+The details are given below.
+</p>
+<a name="IDX462"></a>
+<a name="IDX463"></a>
+<a name="IDX464"></a>
+<a name="IDX465"></a>
+<a name="IDX466"></a>
+<a name="IDX467"></a>
+<a name="IDX468"></a>
+<a name="IDX469"></a>
+<a name="IDX470"></a>
+<a name="IDX471"></a>
+<a name="IDX472"></a>
+<a name="IDX473"></a>
+<a name="IDX474"></a>
+<a name="IDX475"></a>
+<a name="IDX476"></a>
+<a name="IDX477"></a>
+<a name="IDX478"></a>
+<a name="IDX479"></a>
+<a name="IDX480"></a>
+<a name="IDX481"></a>
+<a name="IDX482"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>ident</var> ::= <var>letter</var> [ <var>letter-or-digit</var> ] &hellip;
+<var>letter</var> ::= <code>_</code>, <code>$</code>, <code>a</code> through <code>z</code>, or <code>A</code> through <code>Z</code>
+<var>digit</var> ::= <code>0</code> | <code>1</code> | <code>2</code> | <code>3</code> | <code>4</code> | <code>5</code> | <code>6</code> | <code>7</code> | <code>8</code> | <code>9</code>
+<var>letter-or-digit</var> ::= <var>letter</var> | <var>digit</var>
+</pre></td></tr></table>
+
+<a name="IDX483"></a>
+<p>Several strings of characters are recognized as keywords or reserved
+words in JML. These fall into three separate categories: Java keywords,
+JML predicate keywords (which start with a backslash), and JML keywords.
+Java keywords are truly reserved words, and are recognized in all
+contexts.  The nonterminal <var>java-reserved-word</var> represents the reserved
+words in Java (as in the JDK version 1.4). 
+</p>
+<a name="IDX484"></a>
+<p>The <var>jml-keyword</var>s are only
+recognized as keywords when they occur within an annotation,
+but outside of a <var>spec-expression</var>
+<var>store-ref-list</var> or <var>constrained-list</var>.
+JML predicate keywords are also only recognized within annotations, but
+they are recognized only inside <var>spec-expression</var>s,
+<var>store-ref-list</var>s, and <var>constrained-list</var>s.
+</p>
+<a name="IDX485"></a>
+<a name="IDX486"></a>
+<a name="IDX487"></a>
+<p>There are options to the JML tools that extend the language in various
+ways.  When an option to parse the syntax for MultiJava
+[Clifton-etal00] is in turned on, the word <code>resend</code>,
+which is the only word in the nonterminal <var>multijava-reserved</var>, is
+recognized as a reserved word.  It is thus recognized in all contexts.
+When this option is on, the <var>multijava-separators</var> (see below) are also
+recognized. 
+</p>
+<a name="IDX488"></a>
+<a name="IDX489"></a>
+<a name="IDX490"></a>
+<a name="IDX491"></a>
+<p>Similarly, when an option to parse the syntax for the Universe type system 
+[Dietl-Mueller05] is used, 
+the words listed in the nonterminal <code>java-universe-reserved</code>
+also act like reserved words in Java (and are thus recognized in all contexts).
+When an option to recognize the Universe system syntax in annotations
+is used, these words instead act as <var>jml-keyword</var>s and are only
+recognized in annotations.
+However, even when no Universe options are used,
+<code>pure</code> is recognized as a keyword in annotations,
+since it is also a <var>jml-keyword</var>.
+(The Universe type system support in JML is experimental.  Most likely
+the list of <code>java-universe-reserved</code> will be added to the list of
+<var>jml-keyword</var>s eventually.)
+</p>
+<p>However, even without the Universe option being on,
+the <code>jml-universe-pkeyword</code> syntax is recognized within JML
+annotations in the same way as JML predicate keywords are recognized.
+</p>
+<p>The details are given below.
+</p>
+
+<a name="IDX492"></a>
+<a name="IDX493"></a>
+<a name="IDX494"></a>
+<a name="IDX495"></a>
+<a name="IDX496"></a>
+<a name="IDX497"></a>
+<a name="IDX498"></a>
+<a name="IDX499"></a>
+<a name="IDX500"></a>
+<a name="IDX501"></a>
+<a name="IDX502"></a>
+<a name="IDX503"></a>
+<a name="IDX504"></a>
+<a name="IDX505"></a>
+<a name="IDX506"></a>
+<a name="IDX507"></a>
+<a name="IDX508"></a>
+<a name="IDX509"></a>
+<a name="IDX510"></a>
+<a name="IDX511"></a>
+<a name="IDX512"></a>
+<a name="IDX513"></a>
+<a name="IDX514"></a>
+<a name="IDX515"></a>
+<a name="IDX516"></a>
+<a name="IDX517"></a>
+<a name="IDX518"></a>
+<a name="IDX519"></a>
+<a name="IDX520"></a>
+<a name="IDX521"></a>
+<a name="IDX522"></a>
+<a name="IDX523"></a>
+<a name="IDX524"></a>
+<a name="IDX525"></a>
+<a name="IDX526"></a>
+<a name="IDX527"></a>
+<a name="IDX528"></a>
+<a name="IDX529"></a>
+<a name="IDX530"></a>
+<a name="IDX531"></a>
+<a name="IDX532"></a>
+<a name="IDX533"></a>
+<a name="IDX534"></a>
+<a name="IDX535"></a>
+<a name="IDX536"></a>
+<a name="IDX537"></a>
+<a name="IDX538"></a>
+<a name="IDX539"></a>
+<a name="IDX540"></a>
+<a name="IDX541"></a>
+<a name="IDX542"></a>
+<a name="IDX543"></a>
+<a name="IDX544"></a>
+<a name="IDX545"></a>
+<a name="IDX546"></a>
+<a name="IDX547"></a>
+<a name="IDX548"></a>
+<a name="IDX549"></a>
+<a name="IDX550"></a>
+<a name="IDX551"></a>
+<a name="IDX552"></a>
+<a name="IDX553"></a>
+<a name="IDX554"></a>
+<a name="IDX555"></a>
+<a name="IDX556"></a>
+<a name="IDX557"></a>
+<a name="IDX558"></a>
+<a name="IDX559"></a>
+<a name="IDX560"></a>
+<a name="IDX561"></a>
+<a name="IDX562"></a>
+<a name="IDX563"></a>
+<a name="IDX564"></a>
+<a name="IDX565"></a>
+<a name="IDX566"></a>
+<a name="IDX567"></a>
+<a name="IDX568"></a>
+<a name="IDX569"></a>
+<a name="IDX570"></a>
+<a name="IDX571"></a>
+<a name="IDX572"></a>
+<a name="IDX573"></a>
+<a name="IDX574"></a>
+<a name="IDX575"></a>
+<a name="IDX576"></a>
+<a name="IDX577"></a>
+<a name="IDX578"></a>
+<a name="IDX579"></a>
+<a name="IDX580"></a>
+<a name="IDX581"></a>
+<a name="IDX582"></a>
+<a name="IDX583"></a>
+<a name="IDX584"></a>
+<a name="IDX585"></a>
+<a name="IDX586"></a>
+<a name="IDX587"></a>
+<a name="IDX588"></a>
+<a name="IDX589"></a>
+<a name="IDX590"></a>
+<a name="IDX591"></a>
+<a name="IDX592"></a>
+<a name="IDX593"></a>
+<a name="IDX594"></a>
+<a name="IDX595"></a>
+<a name="IDX596"></a>
+<a name="IDX597"></a>
+<a name="IDX598"></a>
+<a name="IDX599"></a>
+<a name="IDX600"></a>
+<a name="IDX601"></a>
+<a name="IDX602"></a>
+<a name="IDX603"></a>
+<a name="IDX604"></a>
+<a name="IDX605"></a>
+<a name="IDX606"></a>
+<a name="IDX607"></a>
+<a name="IDX608"></a>
+<a name="IDX609"></a>
+<a name="IDX610"></a>
+<a name="IDX611"></a>
+<a name="IDX612"></a>
+<a name="IDX613"></a>
+<a name="IDX614"></a>
+<a name="IDX615"></a>
+<a name="IDX616"></a>
+<a name="IDX617"></a>
+<a name="IDX618"></a>
+<a name="IDX619"></a>
+<a name="IDX620"></a>
+<a name="IDX621"></a>
+<a name="IDX622"></a>
+<a name="IDX623"></a>
+<a name="IDX624"></a>
+<a name="IDX625"></a>
+<a name="IDX626"></a>
+<a name="IDX627"></a>
+<a name="IDX628"></a>
+<a name="IDX629"></a>
+<a name="IDX630"></a>
+<a name="IDX631"></a>
+<a name="IDX632"></a>
+<a name="IDX633"></a>
+<a name="IDX634"></a>
+<a name="IDX635"></a>
+<a name="IDX636"></a>
+<a name="IDX637"></a>
+<a name="IDX638"></a>
+<a name="IDX639"></a>
+<a name="IDX640"></a>
+<a name="IDX641"></a>
+<a name="IDX642"></a>
+<a name="IDX643"></a>
+<a name="IDX644"></a>
+<a name="IDX645"></a>
+<a name="IDX646"></a>
+<a name="IDX647"></a>
+<a name="IDX648"></a>
+<a name="IDX649"></a>
+<a name="IDX650"></a>
+<a name="IDX651"></a>
+<a name="IDX652"></a>
+<a name="IDX653"></a>
+<a name="IDX654"></a>
+<a name="IDX655"></a>
+<a name="IDX656"></a>
+<a name="IDX657"></a>
+<a name="IDX658"></a>
+<a name="IDX659"></a>
+<a name="IDX660"></a>
+<a name="IDX661"></a>
+<a name="IDX662"></a>
+<a name="IDX663"></a>
+<a name="IDX664"></a>
+<a name="IDX665"></a>
+<a name="IDX666"></a>
+<a name="IDX667"></a>
+<a name="IDX668"></a>
+<a name="IDX669"></a>
+<a name="IDX670"></a>
+<a name="IDX671"></a>
+<a name="IDX672"></a>
+<a name="IDX673"></a>
+<a name="IDX674"></a>
+<a name="IDX675"></a>
+<a name="IDX676"></a>
+<a name="IDX677"></a>
+<a name="IDX678"></a>
+<a name="IDX679"></a>
+<a name="IDX680"></a>
+<a name="IDX681"></a>
+<a name="IDX682"></a>
+<a name="IDX683"></a>
+<a name="IDX684"></a>
+<a name="IDX685"></a>
+<a name="IDX686"></a>
+<a name="IDX687"></a>
+<a name="IDX688"></a>
+<a name="IDX689"></a>
+<a name="IDX690"></a>
+<a name="IDX691"></a>
+<a name="IDX692"></a>
+<a name="IDX693"></a>
+<a name="IDX694"></a>
+<a name="IDX695"></a>
+<a name="IDX696"></a>
+<a name="IDX697"></a>
+<a name="IDX698"></a>
+<a name="IDX699"></a>
+<a name="IDX700"></a>
+<a name="IDX701"></a>
+<a name="IDX702"></a>
+<a name="IDX703"></a>
+<a name="IDX704"></a>
+<a name="IDX705"></a>
+<a name="IDX706"></a>
+<a name="IDX707"></a>
+<a name="IDX708"></a>
+<a name="IDX709"></a>
+<a name="IDX710"></a>
+<a name="IDX711"></a>
+<a name="IDX712"></a>
+<a name="IDX713"></a>
+<a name="IDX714"></a>
+<a name="IDX715"></a>
+<a name="IDX716"></a>
+<a name="IDX717"></a>
+<a name="IDX718"></a>
+<a name="IDX719"></a>
+<a name="IDX720"></a>
+<a name="IDX721"></a>
+<a name="IDX722"></a>
+<a name="IDX723"></a>
+<a name="IDX724"></a>
+<a name="IDX725"></a>
+<a name="IDX726"></a>
+<a name="IDX727"></a>
+<a name="IDX728"></a>
+<a name="IDX729"></a>
+<a name="IDX730"></a>
+<a name="IDX731"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>keyword</var> ::= <var>java-reserved-word</var>
+        | <var>jml-predicate-keyword</var> | <var>jml-keyword</var>
+<var>java-reserved-word</var> ::= <code>abstract</code> | <code>assert</code>
+        | <code>boolean</code> | <code>break</code> | <code>byte</code>
+        | <code>case</code> | <code>catch</code> | <code>char</code>
+        | <code>class</code> | <code>const</code> | <code>continue</code>
+        | <code>default</code> | <code>do</code> | <code>double</code>
+        | <code>else</code> | <code>extends</code> | <code>false</code>
+        | <code>final</code> | <code>finally</code> | <code>float</code>
+        | <code>for</code> | <code>goto</code> | <code>if</code>
+        | <code>implements</code> | <code>import</code> | <code>instanceof</code>
+        | <code>int</code> | <code>interface</code> | <code>long</code>
+        | <code>native</code> | <code>new</code> | <code>null</code>
+        | <code>package</code> | <code>private</code> | <code>protected</code>
+        | <code>public</code> | <code>return</code> | <code>short</code>
+        | <code>static</code> | <code>strictfp</code> | <code>super</code>
+        | <code>switch</code> | <code>synchronized</code> | <code>this</code>
+        | <code>throw</code> | <code>throws</code> | <code>transient</code>
+        | <code>true</code> | <code>try</code> | <code>void</code>
+        | <code>volatile</code> | <code>while</code>
+        | <var>multijava-reserved</var>      <i>// When the MultiJava option is on</i>
+        | <var>java-universe-reserved</var>  <i>// When the Universe option is on</i>
+<var>multijava-reserved</var> ::= <code>resend</code>
+<var>java-universe-reserved</var> ::= <code>peer</code> | <code>pure</code>
+        | <code>readonly</code> | <code>rep</code>
+<var>jml-predicate-keyword</var> ::= <code>\TYPE</code>
+        | <code>\bigint</code> | <code>\bigint_math</code> | <code>\duration</code>
+        | <code>\elemtype</code> | <code>\everything</code> | <code>\exists</code>
+        | <code>\forall</code> | <code>\fresh</code>
+        | <code>\into</code> | <code>\invariant_for</code> | <code>\is_initialized</code>
+        | <code>\java_math</code> | <code>\lblneg</code> | <code>\lblpos</code>
+        | <code>\lockset</code> | <code>\max</code> | <code>\min</code>
+        | <code>\nonnullelements</code> | <code>\not_assigned</code>
+        | <code>\not_modified</code> | <code>\not_specified</code>
+        | <code>\nothing</code> | <code>\nowarn</code> | <code>\nowarn_op</code>
+        | <code>\num_of</code> | <code>\old</code> | <code>\only_accessed</code> 
+        | <code>\only_assigned</code> | <code>\only_called</code>
+        | <code>\only_captured</code> | <code>\pre</code>
+        | <code>\product</code> | <code>\reach</code> | <code>\real</code>
+        | <code>\result</code> | <code>\same</code> | <code>\safe_math</code>
+        | <code>\space</code> | <code>\such_that</code> | <code>\sum</code>
+        | <code>\typeof</code> | <code>\type</code> | <code>\warn_op</code>
+        | <code>\warn</code> | <code>\working_space</code> 
+        | <var>jml-universe-pkeyword</var>
+<var>jml-universe-pkeyword</var> ::= <code>\peer</code> | <code>\readonly</code> | <code>\rep</code>
+<var>jml-keyword</var> ::= <code>abrupt_behavior</code> | <code>abrupt_behaviour</code>
+        | <code>accessible</code> | <code>accessible_redundantly</code>
+        | <code>also</code> | <code>assert_redundantly</code>
+        | <code>assignable</code> | <code>assignable_redundantly</code>
+        | <code>assume</code> | <code>assume_redundantly</code> | <code>axiom</code>
+        | <code>behavior</code> | <code>behaviour</code>
+        | <code>breaks</code> | <code>breaks_redundantly</code>
+        | <code>callable</code> | <code>callable_redundantly</code>
+        | <code>captures</code> | <code>captures_redundantly</code>
+        | <code>choose</code> | <code>choose_if</code> 
+        | <code>code</code> | <code>code_bigint_math</code> | 
+        | <code>code_java_math</code> | <code>code_safe_math</code>
+        | <code>constraint</code> | <code>constraint_redundantly</code>
+        | <code>constructor</code> | <code>continues</code> | <code>continues_redundantly</code>
+        | <code>decreases</code> | <code>decreases_redundantly</code> 
+        | <code>decreasing</code> | <code>decreasing_redundantly</code> 
+        | <code>diverges</code> | <code>diverges_redundantly</code>
+        | <code>duration</code> | <code>duration_redundantly</code>
+        | <code>ensures</code> | <code>ensures_redundantly</code> | <code>example</code>
+        | <code>exceptional_behavior</code> | <code>exceptional_behaviour</code>
+        | <code>exceptional_example</code>
+        | <code>exsures</code> | <code>exsures_redundantly</code> | <code>extract</code>
+        | <code>field</code> | <code>forall</code>
+        | <code>for_example</code> | <code>ghost</code>
+        | <code>helper</code> | <code>hence_by</code> | <code>hence_by_redundantly</code>
+        | <code>implies_that</code> | <code>in</code> | <code>in_redundantly</code>
+        | <code>initializer</code> | <code>initially</code> | <code>instance</code>
+        | <code>invariant</code> | <code>invariant_redundantly</code>
+        | <code>loop_invariant</code> | <code>loop_invariant_redundantly</code>
+        | <code>maintaining</code> | <code>maintaining_redundantly</code>
+        | <code>maps</code> | <code>maps_redundantly</code>
+        | <code>measured_by</code> | <code>measured_by_redundantly</code>
+        | <code>method</code> | <code>model</code> | <code>model_program</code>
+        | <code>modifiable</code> | <code>modifiable_redundantly</code>
+        | <code>modifies</code> | <code>modifies_redundantly</code>
+        | <code>monitored</code> | <code>monitors_for</code> | <code>non_null</code>
+        | <code>normal_behavior</code> | <code>normal_behaviour</code>
+        | <code>normal_example</code> | <code>nowarn</code>
+        | <code>nullable</code> | <code>nullable_by_default</code>
+        | <code>old</code> | <code>or</code>
+        | <code>post</code> | <code>post_redundantly</code>
+        | <code>pre</code> | <code>pre_redundantly</code>
+        | <code>pure</code> | <code>readable</code> 
+        | <code>refine</code> | <code>refines</code> | <code>refining</code>
+        | <code>represents</code> | <code>represents_redundantly</code>
+        | <code>requires</code> | <code>requires_redundantly</code>
+        | <code>returns</code> | <code>returns_redundantly</code>
+        | <code>set</code> | <code>signals</code> | <code>signals_only</code>
+        | <code>signals_only_redundantly</code> | <code>signals_redundantly</code>
+        | <code>spec_bigint_math</code> | <code>spec_java_math</code>
+        | <code>spec_protected</code> | <code>spec_public</code> | <code>spec_safe_math</code>
+        | <code>static_initializer</code> | <code>uninitialized</code>
+        | <code>unreachable</code> | <code>weakly</code>
+        | <code>when</code> | <code>when_redundantly</code>
+        | <code>working_space</code> | <code>working_space_redundantly</code>
+        | <code>writable</code>
+        | <var>jml-universe-keyword</var>
+<var>jml-universe-keyword</var> ::= <code>peer</code> | <code>readonly</code> | <code>rep</code>
+</pre></td></tr></table>
+
+<a name="IDX732"></a>
+<a name="IDX733"></a>
+<a name="IDX734"></a>
+<a name="IDX735"></a>
+<p>The following describes the special symbols used in JML.  The
+nonterminal <var>java-special-symbol</var> is the special symbols of Java,
+taken without change from Java [Gosling-Joy-Steele96].
+</p>
+
+<a name="IDX736"></a>
+<a name="IDX737"></a>
+<a name="IDX738"></a>
+<a name="IDX739"></a>
+<a name="IDX740"></a>
+<a name="IDX741"></a>
+<a name="IDX742"></a>
+<a name="IDX743"></a>
+<a name="IDX744"></a>
+<a name="IDX745"></a>
+<a name="IDX746"></a>
+<a name="IDX747"></a>
+<a name="IDX748"></a>
+<a name="IDX749"></a>
+<a name="IDX750"></a>
+<a name="IDX751"></a>
+<a name="IDX752"></a>
+<a name="IDX753"></a>
+<a name="IDX754"></a>
+<a name="IDX755"></a>
+<a name="IDX756"></a>
+<a name="IDX757"></a>
+<a name="IDX758"></a>
+<a name="IDX759"></a>
+<a name="IDX760"></a>
+<a name="IDX761"></a>
+<a name="IDX762"></a>
+<a name="IDX763"></a>
+<a name="IDX764"></a>
+<a name="IDX765"></a>
+<a name="IDX766"></a>
+<a name="IDX767"></a>
+<a name="IDX768"></a>
+<a name="IDX769"></a>
+<a name="IDX770"></a>
+<a name="IDX771"></a>
+<a name="IDX772"></a>
+<a name="IDX773"></a>
+<a name="IDX774"></a>
+<a name="IDX775"></a>
+<a name="IDX776"></a>
+<a name="IDX777"></a>
+<a name="IDX778"></a>
+<a name="IDX779"></a>
+<a name="IDX780"></a>
+<a name="IDX781"></a>
+<a name="IDX782"></a>
+<a name="IDX783"></a>
+<a name="IDX784"></a>
+<a name="IDX785"></a>
+<a name="IDX786"></a>
+<a name="IDX787"></a>
+<a name="IDX788"></a>
+<a name="IDX789"></a>
+<a name="IDX790"></a>
+<a name="IDX791"></a>
+<a name="IDX792"></a>
+<a name="IDX793"></a>
+<a name="IDX794"></a>
+<a name="IDX795"></a>
+<a name="IDX796"></a>
+<a name="IDX797"></a>
+<a name="IDX798"></a>
+<a name="IDX799"></a>
+<a name="IDX800"></a>
+<a name="IDX801"></a>
+<a name="IDX802"></a>
+<a name="IDX803"></a>
+<a name="IDX804"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>special-symbol</var> ::= <var>java-special-symbol</var> | <var>jml-special-symbol</var>
+<var>java-special-symbol</var> ::= <var>java-separator</var> | <var>java-operator</var>
+<var>java-separator</var> ::= <code>(</code> | <code>)</code> | <code>{</code> | <code>}</code> | `<code>[</code>' | `<code>]</code>' | <code>;</code> | <code>,</code> | <code>.</code>
+        | <var>multijava-separator</var>   <i>// When the MultiJava option is on</i>
+<var>multijava-separator</var> ::= <code>@</code> | <code>@@</code>
+<var>java-operator</var> ::= <code>=</code> | <code>&lt;</code> | <code>&gt;</code> | <code>!</code> | <code>~</code> | <code>?</code> | <code>:</code>
+        | <code>==</code> | <code>&lt;=</code> | <code>&gt;=</code> | <code>!=</code> | <code>&amp;&amp;</code> | `<code>||</code>' | <code>++</code> | <code>--</code>
+        | <code>+</code> | <code>-</code> | <code>*</code> | <code>/</code> | <code>&amp;</code> | `<code>|</code>' | <code>^</code> | <code>%</code> | <code>&lt;&lt;</code> | <code>&gt;&gt;</code> | <code>&gt;&gt;&gt;</code>
+        | <code>+=</code> | <code>-=</code> | <code>*=</code> | <code>/=</code> | <code>&amp;=</code> | `<code>|=</code>' | <code>^=</code> | <code>%=</code>
+        | <code>&lt;&lt;=</code> | <code>&gt;&gt;=</code> | <code>&gt;&gt;&gt;=</code>
+<var>jml-special-symbol</var> ::= <code>==&gt;</code> | <code>&lt;==</code> | <code>&lt;==&gt;</code> | <code>&lt;=!=&gt;</code>
+        | <code>-&gt;</code> | <code>&lt;-</code> | <code>&lt;:</code> | <code>..</code> | `<code>{|</code>' | `<code>|}</code>'
+</pre></td></tr></table>
+
+<a name="IDX805"></a>
+<a name="IDX806"></a>
+<a name="IDX807"></a>
+<a name="IDX808"></a>
+<p>The nonterminal <var>java-literal</var> represents Java literals
+which are taken without change from Java [Gosling-Joy-Steele96].
+</p>
+<a name="IDX809"></a>
+<a name="IDX810"></a>
+<a name="IDX811"></a>
+<a name="IDX812"></a>
+<a name="IDX813"></a>
+<a name="IDX814"></a>
+<a name="IDX815"></a>
+<a name="IDX816"></a>
+<a name="IDX817"></a>
+<a name="IDX818"></a>
+<a name="IDX819"></a>
+<a name="IDX820"></a>
+<a name="IDX821"></a>
+<a name="IDX822"></a>
+<a name="IDX823"></a>
+<a name="IDX824"></a>
+<a name="IDX825"></a>
+<a name="IDX826"></a>
+<a name="IDX827"></a>
+<a name="IDX828"></a>
+<a name="IDX829"></a>
+<a name="IDX830"></a>
+<a name="IDX831"></a>
+<a name="IDX832"></a>
+<a name="IDX833"></a>
+<a name="IDX834"></a>
+<a name="IDX835"></a>
+<a name="IDX836"></a>
+<a name="IDX837"></a>
+<a name="IDX838"></a>
+<a name="IDX839"></a>
+<a name="IDX840"></a>
+<a name="IDX841"></a>
+<a name="IDX842"></a>
+<a name="IDX843"></a>
+<a name="IDX844"></a>
+<a name="IDX845"></a>
+<a name="IDX846"></a>
+<a name="IDX847"></a>
+<a name="IDX848"></a>
+<a name="IDX849"></a>
+<a name="IDX850"></a>
+<a name="IDX851"></a>
+<a name="IDX852"></a>
+<a name="IDX853"></a>
+<a name="IDX854"></a>
+<a name="IDX855"></a>
+<a name="IDX856"></a>
+<a name="IDX857"></a>
+<a name="IDX858"></a>
+<a name="IDX859"></a>
+<a name="IDX860"></a>
+<a name="IDX861"></a>
+<a name="IDX862"></a>
+<a name="IDX863"></a>
+<a name="IDX864"></a>
+<a name="IDX865"></a>
+<a name="IDX866"></a>
+<a name="IDX867"></a>
+<a name="IDX868"></a>
+<a name="IDX869"></a>
+<a name="IDX870"></a>
+<a name="IDX871"></a>
+<a name="IDX872"></a>
+<a name="IDX873"></a>
+<a name="IDX874"></a>
+<a name="IDX875"></a>
+<a name="IDX876"></a>
+<a name="IDX877"></a>
+<a name="IDX878"></a>
+<a name="IDX879"></a>
+<a name="IDX880"></a>
+<a name="IDX881"></a>
+<a name="IDX882"></a>
+<a name="IDX883"></a>
+<a name="IDX884"></a>
+<a name="IDX885"></a>
+<a name="IDX886"></a>
+<a name="IDX887"></a>
+<a name="IDX888"></a>
+<a name="IDX889"></a>
+<a name="IDX890"></a>
+<a name="IDX891"></a>
+<a name="IDX892"></a>
+<a name="IDX893"></a>
+<a name="IDX894"></a>
+<a name="IDX895"></a>
+<a name="IDX896"></a>
+<a name="IDX897"></a>
+<a name="IDX898"></a>
+<a name="IDX899"></a>
+<a name="IDX900"></a>
+<a name="IDX901"></a>
+<a name="IDX902"></a>
+<a name="IDX903"></a>
+<a name="IDX904"></a>
+<a name="IDX905"></a>
+<a name="IDX906"></a>
+<a name="IDX907"></a>
+<a name="IDX908"></a>
+<a name="IDX909"></a>
+<a name="IDX910"></a>
+<a name="IDX911"></a>
+<a name="IDX912"></a>
+<a name="IDX913"></a>
+<a name="IDX914"></a>
+<a name="IDX915"></a>
+<a name="IDX916"></a>
+<a name="IDX917"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>java-literal</var> ::= <var>integer-literal</var>
+        | <var>floating-point-literal</var> | <var>boolean-literal</var>
+        | <var>character-literal</var> | <var>string-literal</var> | <var>null-literal</var>
+
+<var>integer-literal</var> ::= <var>decimal-integer-literal</var>
+        | <var>hex-integer-literal</var> | <var>octal-integer-literal</var>
+<var>decimal-integer-literal</var> ::= <var>decimal-numeral</var> [ <var>integer-type-suffix</var> ]
+<var>decimal-numeral</var> ::= <code>0</code> | <var>non-zero-digit</var> [ <var>digits</var> ]
+<var>digits</var> ::= <var>digit</var> [ <var>digit</var> ] &hellip;
+<var>digit</var> ::= <code>0</code> | <var>non-zero-digit</var>
+<var>non-zero-digit</var> ::= <code>1</code> | <code>2</code> | <code>3</code> | <code>4</code> | <code>5</code> | <code>6</code> | <code>7</code> | <code>8</code> | <code>9</code>
+<var>integer-type-suffix</var> ::= <code>l</code> | <code>L</code>
+<var>hex-integer-literal</var> ::= <var>hex-numeral</var>  [ <var>integer-type-suffix</var> ]
+<var>hex-numeral</var> ::= <code>0x</code> <var>hex-digit</var> [ <var>hex-digit</var> ] &hellip;
+        | <code>0X</code> <var>hex-digit</var>  [ <var>hex-digit</var> ] &hellip;
+<var>hex-digit</var> ::= <var>digit</var> | <code>a</code> | <code>b</code> | <code>c</code> | <code>d</code> | <code>e</code> | <code>f</code>
+        | <code>A</code> | <code>B</code> | <code>C</code> | <code>D</code> | <code>E</code> | <code>F</code>
+<var>octal-integer-literal</var> ::= <var>octal-numeral</var>  [ <var>integer-type-suffix</var> ]
+<var>octal-numeral</var> ::= <code>0</code> <var>octal-digit</var> [ <var>octal-digit</var> ] &hellip; 
+<var>octal-digit</var> ::= <code>0</code> | <code>1</code> | <code>2</code> | <code>3</code> | <code>4</code> | <code>5</code> | <code>6</code> | <code>7</code>
+
+<var>floating-point-literal</var> ::= <var>digits</var> <code>.</code> [ <var>digits</var> ]
+          [ <var>exponent-part</var> ] [ <var>float-type-suffix</var> ]
+        | <code>.</code> <var>digits</var> [ <var>exponent-part</var> ] [ <var>float-type-suffix</var> ]
+        | <var>digits</var> <var>exponent-part</var> [ <var>float-type-suffix</var> ]
+        | <var>digits</var> [ <var>exponent-part</var> ] <var>float-type-suffix</var>
+<var>exponent-part</var> ::= <var>exponent-indicator</var> <var>signed-integer</var>
+<var>exponent-indicator</var> ::= <code>e</code> | <code>E</code>
+<var>signed-integer</var> ::= [ <var>sign</var> ] <var>digits</var>
+<var>sign</var> ::= <code>+</code> | <code>-</code>
+<var>float-type-suffix</var> ::= <code>f</code> | <code>F</code> | <code>d</code> | <code>D</code>
+
+<var>boolean-literal</var> ::= <code>true</code> | <code>false</code>
+
+<var>character-literal</var> ::= <code>'</code> <var>single-character</var> <code>'</code> | <code>'</code> <var>escape-sequence</var> <code>'</code>
+<var>single-character</var> ::= any character except <code>'</code>, <code>\</code>, carriage return, or newline
+<var>escape-sequence</var> ::= <code>\b</code>    <i>// backspace</i>
+         | <code>\t</code>                   <i>// tab</i>
+         | <code>\n</code>                   <i>// newline</i>
+         | <code>\r</code>                   <i>// carriage return</i>
+         | <code>\'</code>                   <i>// single quote</i>
+         | <code>\&quot;</code>                   <i>// double quote</i>
+         | <code>\\</code>                   <i>// backslash</i>
+         | <var>octal-escape</var>
+         | <var>unicode-escape</var>
+<var>octal-escape</var> ::= <code>\</code> <var>octal-digit</var> [ <var>octal-digit</var> ]
+         | <code>\</code> <var>zero-to-three</var> <var>octal-digit</var> <var>octal-digit</var>
+<var>zero-to-three</var> ::= <code>0</code> | <code>1</code> | <code>2</code> | <code>3</code>
+<var>unicode-escape</var> ::= <code>\u</code> <var>hex-digit</var> <var>hex-digit</var> <var>hex-digit</var> <var>hex-digit</var>
+
+<var>string-literal</var> ::= <code>&quot;</code> [ <var>string-character</var> ] &hellip; <code>&quot;</code>
+<var>string-character</var> ::= <var>escape-sequence</var>
+         | any character except <code>&quot;</code>, <code>\</code>, carriage return, or newline
+
+<var>null-literal</var> ::= <code>null</code>
+</pre></td></tr></table>
+
+<a name="IDX918"></a>
+<p>An <var>informal-description</var> looks like <code>(* some text *)</code>.
+It is used in predicates (see section <a href="jmlrefman_11.html#SEC122">Predicates</a>)
+and store-ref expressions (see section <a href="jmlrefman_11.html#SEC162">Store Refs</a>) as an escape from formality.
+</p>
+<p>The exact syntax is given below.
+</p>
+<a name="IDX919"></a>
+<a name="IDX920"></a>
+<a name="IDX921"></a>
+<a name="IDX922"></a>
+<a name="IDX923"></a>
+<a name="IDX924"></a>
+<a name="IDX925"></a>
+<a name="IDX926"></a>
+<a name="IDX927"></a>
+<a name="IDX928"></a>
+<a name="IDX929"></a>
+<a name="IDX930"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>informal-description</var> ::= <code>(*</code> <var>non-stars-close</var> [ <var>non-stars-close</var> ] &hellip; <code>*)</code>
+<var>non-stars-close</var> ::= <var>non-star</var>
+        | <var>stars-non-close</var>
+<var>stars-non-close</var> ::= <code>*</code> [ <code>*</code> ] &hellip; <var>non-star-close</var>
+<var>non-star-close</var> ::= any character except <code>)</code> or <code>*</code>
+</pre></td></tr></table>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC25" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_5.html#SEC32" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

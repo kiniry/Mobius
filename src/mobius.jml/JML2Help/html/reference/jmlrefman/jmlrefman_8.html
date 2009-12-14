@@ -1,0 +1,1309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 8. Type Specifications</title>
+
+<meta name="description" content="JML Reference Manual: 8. Type Specifications">
+<meta name="keywords" content="JML Reference Manual: 8. Type Specifications">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Type-Specifications"></a>
+<a name="SEC63"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC62" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC64" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 8. Type Specifications </h1>
+
+<p>This chapter describes the way JML can be used to specify abstract
+data types (ADTs).
+</p>
+<p>Overall the mechanisms used in JML to specify ADTs can be described as
+follows.  First, the interface of a type is described using the Java
+syntax for such a type's declaration
+(see section <a href="jmlrefman_7.html#SEC52">Class and Interface Member Declarations</a>); this includes any
+required fields and methods, along with their types and visibilities,
+etc.  Second, the behavior of a type is described by declaring model
+and ghost fields to be the client (or subtype) visible abstractions of
+the concrete state of the objects of that type, by writing method
+specifications using those fields, and by writing various
+<var>jml-declaration</var>s to further refine the logical model defined by
+these fields.  These <var>jml-declaration</var>s can also be used to record
+various design and implementation decisions.
+</p>
+<p>The syntax of these <var>jml-declaration</var>s is as follows.
+</p>
+<a name="IDX1215"></a>
+<a name="IDX1216"></a>
+<a name="IDX1217"></a>
+<a name="IDX1218"></a>
+<a name="IDX1219"></a>
+<a name="IDX1220"></a>
+<a name="IDX1221"></a>
+<a name="IDX1222"></a>
+<a name="IDX1223"></a>
+<a name="IDX1224"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>jml-declaration</var> ::= <var>modifiers</var> <var>invariant</var>
+        | <var>modifiers</var> <var>history-constraint</var>
+        | <var>modifiers</var> <var>represents-clause</var>
+        | <var>modifiers</var> <var>initially-clause</var> 
+        | <var>modifiers</var> <var>monitors-for-clause</var>
+        | <var>modifiers</var> <var>readable-if-clause</var>
+        | <var>modifiers</var> <var>writable-if-clause</var>
+        | <var>axiom-clause</var>
+</pre></td></tr></table>
+
+<p>The semantics of each of kind of <var>jml-declaration</var> is discussed in
+the sections below. 
+However, before getting to the details,
+we start with some introductory examples.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC64">8.1 Introductory ADT Specification Examples</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC65">8.2 Invariants</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC70">8.3 Constraints</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                 
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC74">8.4 Represents Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC75">8.5 Initially Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">           
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC76">8.6 Axioms</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                      
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC77">8.7 Readable If Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC78">8.8 Writable If Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC79">8.9 Monitors For Clause</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Introductory-ADT-Specification-Examples"></a>
+<a name="SEC64"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC63" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC65" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 8.1 Introductory ADT Specification Examples </h2>
+
+<p>[[[Need examples here, which should be first written into the
+org.jmlspecs.samples.jmlrefman package and then included and discussed
+here.]]]
+</p>
+<hr size="6">
+<a name="Invariants"></a>
+<a name="SEC65"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC64" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC66" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 8.2 Invariants </h2>
+
+
+<p>The syntax of an invariant declaration is as follows.
+</p>
+<a name="IDX1225"></a>
+<a name="IDX1226"></a>
+<a name="IDX1227"></a>
+<a name="IDX1228"></a>
+<a name="IDX1229"></a>
+<a name="IDX1230"></a>
+<a name="IDX1231"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>invariant</var> ::= <var>invariant-keyword</var> <var>predicate</var> <code>;</code>
+<var>invariant-keyword</var> ::= <code>invariant</code> | <code>invariant_redundantly</code>
+</pre></td></tr></table>
+
+<p>An example of an invariant is given below.
+The invariant in the example has default (package) visibility,
+and says that in every state that is a visible state for an object of
+type <code>Invariant</code>, the object's field <code>b</code>
+is not null and the array it refers to has exactly 6 elements.
+In this example, no postcondition is necessary for the constructor
+since the invariant is an implicit postcondition for it.
+</p>
+<a name="IDX1232"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;
+ 
+public abstract class Invariant {
+
+    boolean[] b; 
+
+    //@ invariant b != null &amp;&amp; b.length == 6;
+
+    //@ assignable b;
+    Invariant() {
+        b = new boolean[6];
+    }
+}
+</pre></td></tr></table>
+
+<a name="IDX1233"></a>
+<a name="IDX1234"></a>
+<a name="IDX1235"></a>
+<a name="IDX1236"></a>
+<a name="IDX1237"></a>
+<a name="IDX1238"></a>
+<a name="IDX1239"></a>
+<p>Invariants are properties that have to hold in all visible states.
+The notion of visible state is of crucial importance in the explanation of
+the semantics of both invariants and constraints.  A state is a
+<em>visible state</em> for an object <i>o</i> if it is the state that occurs
+at one of these moments in a program's execution:
+</p>
+<ul>
+<li>
+at end of a non-helper constructor invocation that is initializing
+<i>o</i>,
+
+</li><li>
+at the beginning of a non-helper finalizer invocation that is
+finalizing <i>o</i>,
+
+</li><li>
+at the beginning or end of a non-helper non-static non-finalizer
+method invocation with <i>o</i> as the receiver,
+
+</li><li>
+at the beginning or end of a non-helper static method invocation for a
+method in <i>o</i>'s class or some superclass of <i>o</i>'s class, or
+
+</li><li>
+when no constructor, destructor, non-static method invocation with
+<i>o</i> as receiver, or static method invocation for a method in <i>o</i>'s
+class or some superclass of <i>o</i>'s class is in progress.
+</li></ul>
+
+<a name="IDX1240"></a>
+<a name="IDX1241"></a>
+<a name="IDX1242"></a>
+<p>Note that visible states for an object <i>o</i> do not include states at
+the beginning and end of invocations of <em>helpers</em>: constructors or
+methods declared with the <code>helper</code> modifier
+(see section <a href="jmlrefman_9.html#SEC95">Helper methods and constructors</a>).
+Thus the post-state of a helper constructor and the pre- and
+post-states of helper methods are not visible states.
+</p>
+<a name="IDX1243"></a>
+<p>A state is a <em>visible state</em> for a type <i>T</i> if it occurs after
+static initialization for <i>T</i> is complete and it is a visible state
+for some object that has type <i>T</i>.
+</p>
+
+<a name="IDX1244"></a>
+<a name="IDX1245"></a>
+<a name="IDX1246"></a>
+<a name="IDX1247"></a>
+<p>JML distinguishes <em>static</em> and <em>instance</em> invariants.  These are
+mutually exclusive and any invariant is either a static or instance
+invariant.  An invariant may be explicitly declared to be static or
+instance by using one of the modifiers <code>static</code> or <code>instance</code>
+in the declaration of the invariant.  An invariant declared in a class
+declaration is, by default, an instance invariant.  An invariant
+declared in an interface declaration is, by default, a static invariant.
+</p>
+<p>For example, the invariant declared in the class <code>Invariant</code> above
+is an instance invariant, because it occurs inside a class declaration.
+If <code>Invariant</code> had been an interface instead of a class, then this
+invariant would have been a static invariant.
+</p>
+<p>A static invariant may only refer to static fields of an object.  An
+instance invariant, on the other hand, may refer to both static and
+non-static fields.
+</p>
+<p>The distinction between static and instance invariants also affects
+when the invariants are supposed to hold.  A static invariant declared
+in a type <i>T</i> must hold in every state that is a visible state for
+type <i>T</i>.  An instance invariant declared in a type <i>T</i> must
+hold for every object <i>o</i> of type <i>T</i>, for every state that is a
+visible state for <i>o</i>.
+</p>
+<a name="IDX1248"></a>
+<a name="IDX1249"></a>
+<a name="IDX1250"></a>
+<a name="IDX1251"></a>
+<a name="IDX1252"></a>
+<a name="IDX1253"></a>
+<p>For reasoning about invariants we make a distinction between assuming,
+establishing, and preserving an invariant.  A method or constructor
+<em>assumes</em> an invariant if the invariant must hold in its
+pre-state.  A method or constructor <em>establishes</em> an invariant if
+the invariant must hold in its post-state.  A method or constructor
+<em>preserves</em> an invariant if the invariant is both assumed and
+established.
+</p>
+<a name="IDX1254"></a>
+<a name="IDX1255"></a>
+<p>JML's verification logic enforces invariants by making sure that
+each non-helper method, constructor, or finalizer:
+</p><ul>
+<li>
+assumes the static invariants of all types, <i>T</i>, for which
+its pre-state is a visible state for <i>T</i>,
+
+</li><li>
+establishes the static invariants of all types, <i>T</i>, for which
+its post-state is a visible state for <i>T</i>,
+
+</li><li>
+assumes the instance invariants of all objects, <i>o</i>,
+for which its pre-state is a visible state for <i>o</i>, and
+
+</li><li>
+establishes the instance invariants of all objects, <i>o</i>,
+for which its post-state is a visible state for <i>o</i>.
+</li></ul>
+
+<p>This means that each non-helper constructor found in a class <i>C</i>
+preserves the static invariants of all types, including <i>C</i>, that
+have finished their static initialization, establishes the instance
+invariant of the object under construction, and, modulo creation and
+deletion of objects, preserves the instance invariants of all other
+objects.  (Objects that are created by a constructor must have their
+instance invariant established; and objects that are deleted by the
+action of the constructor can be assumed to satisfy their instance
+invariant in the constructor's pre-state.)  Note in particular that,
+at the beginning of a constructor invocation, the instance invariant
+of the object being initialized does not have to hold yet.
+</p>
+<p>Furthermore, each non-helper non-static method found in a type <i>T</i>
+preserves the static invariants of all types that have finished their
+static initialization, including <i>T</i>, and, modulo creation and
+deletion of objects, preserves the instance invariants of all objects,
+in particular the receiver object.
+However, finalizers do only assume the instance invariant of the
+receiver object, and do not have to establish it on exit.
+</p>
+<a name="IDX1256"></a>
+<a name="IDX1257"></a>
+<p>The semantics given above is highly non-modular, but is in general
+necessary for the enforcement of invariance when no mechanisms are
+available to prevent aliasing problems, or when constructs like
+(concrete) public fields are used [Poetzsch-Heffter97].  Of course, one
+would like to enforce invariants in a more modular way.  By a modular
+enforcement of invariants, we mean that one could verify each type
+independently of the types that it does not use, and that a well-formed
+program put together from such verified types would still satisfy the
+semantics for invariants given above.  That is, each type would be
+responsible for the enforcement of the invariants it declares and would
+be able to assume, without checking, the invariants of other types it
+uses.
+</p>
+<a name="IDX1258"></a>
+<a name="IDX1259"></a>
+<a name="IDX1260"></a>
+<a name="IDX1261"></a>
+<a name="IDX1262"></a>
+<a name="IDX1263"></a>
+<a name="IDX1264"></a>
+<a name="IDX1265"></a>
+<p>To accomplish this ideal, it seems that some mechanism for object
+ownership and alias control [Noble-Vitek-Potter98]
+[Mueller-Poetzsch-Heffter00] [Mueller-Poetzsch-Heffter00a]
+[Mueller-Poetzsch-Heffter01a] [Mueller02]
+[Mueller-Poetzsch-Heffter-Leavens03] is necessary.  However,
+this mechanism is still not a part of JML, although some design work
+in this direction has taken place
+[Mueller-Poetzsch-Heffter-Leavens06].
+</p>
+<p>On the other hand, people generally assume that there are no object
+ownership alias problems; this is perhaps a reasonable strategy for some
+tools, like run-time assertion checkers, to take.  The alternative,
+tracking which types and objects are in visible states, and checking
+every applicable invariant for every type and object in a visible state,
+is obviously impractical.
+</p>
+<p>Therefore, assuming or ignoring the problems with object ownership and
+alias control, one obtains a simple and more modular way to check
+invariants.  This is as follows.
+</p><ul>
+<li>
+Each non-helper constructor declared in a class <i>C</i>, must preserve
+the static invariant of <i>C</i>, if <i>C</i> is finished with its static
+initialization, and must establish the instance invariant of the
+object being constructed.
+
+</li><li>
+Each non-helper non-static non-finalizer method declared in a type <i>T</i>, must
+preserve the static invariant of <i>T</i>, if <i>T</i> is finished with its
+static initialization, and must preserve the instance invariant of the
+receiver object.
+
+</li><li>
+Each non-helper static method declared in a type <i>T</i>, must preserve
+the static invariant of <i>T</i>, if <i>T</i> is finished with its static
+initialization.
+</li></ul>
+<p>When doing such proofs, one may assume the static invariant of any
+type (that is finished with its static initialization), and one may
+also assume the instance invariant of any other object.
+</p>
+<p>In this, more modular, style of checking invariants, one can think of
+all the static invariants in a class as being implicitly conjoined to
+the pre- and postconditions of all non-helper constructors and
+methods, and the instance invariants in a class as being implicitly
+conjoined to the postcondition of all non-helper constructors, and to
+the pre- and postconditions of all non-helper methods.
+</p>
+<a name="IDX1266"></a>
+<p>As noted above, <code>helper</code> methods and constructors are exempt from
+the normal rules for checking invariants.  That is because the
+beginning and end of invocations of these <code>helper</code> methods and
+constructors are not visible states, and therefore they do not have to
+preserve or establish invariants.  Note that only <code>private</code>
+methods and constructors can be declared as <code>helper</code>.
+See section <a href="jmlrefman_7.html#SEC58">Helper Methods and Constructors</a>.
+</p>
+<p>The following subsections discuss other points about the semantics of
+invariants:
+</p><ul>
+<li>
+Invariants can be declared <code>static</code>; 
+see <a href="#SEC66">Static vs. instance invariants</a>.
+
+</li><li>
+Invariants can be declared with the access modifiers <code>public</code>,
+<code>protected</code>, and <code>private</code>, or be left with default access;
+see <a href="#SEC68">Access Modifiers for Invariants</a>.
+
+</li><li>
+Invariants should also hold in case a constructor or method terminates
+abruptly, by throwing an exception; 
+see <a href="#SEC67">Invariants and Exceptions</a>.
+
+</li><li> 
+A class inherits all visible invariants specified in its superclasses
+and superinterfaces; see <a href="#SEC69">Invariants and Inheritance</a>.
+
+</li><li>
+Although some aspects of invariants are discussed in isolation here,
+the full explanation of their semantics can only be given considered
+together with that of method specifications.  After all, a method only
+has to preserve invariants when one of the preconditions (i.e.,
+<code>requires</code> clauses) specified for that method holds.  So
+invariants are an integral part of the explanation of method
+specifications in <a href="jmlrefman_9.html#SEC80">Method Specifications</a>.
+
+</li><li>
+When considering an individual method body, remember that invariants
+should not just hold in the beginning and the end of it, but also at
+any program point halfway where another (non-<code>helper</code>) method or
+constructor is invoked.  After all, these program points are also
+visible states, and, as stated above, invariants should hold at all
+visible states.
+
+</li><li>
+<a name="IDX1267"></a>
+A method invocation on an object should not just preserve the instance
+invariants of that object and the static invariants of the class, but
+it should preserve the invariants of all other (reachable) objects as
+well [Poetzsch-Heffter97].
+</li></ul>
+
+<p>It should be noted that the last two points above are not specific to
+Java or JML, but these are tricky issues that have to be considered
+for any notion of invariant in an object-oriented languages. Indeed,
+these two issues make the familiar notion of invariant a lot more
+complicated than one might guess at first sight!
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC66">8.2.1 Static vs. instance invariants</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC67">8.2.2 Invariants and Exceptions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">   
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC68">8.2.3 Access Modifiers for Invariants</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC69">8.2.4 Invariants and Inheritance</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Static-vs_002e-instance-invariants"></a>
+<a name="SEC66"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC65" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC67" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC65" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 8.2.1 Static vs. instance invariants </h3>
+
+<p>As discussed above (see section <a href="#SEC65">Invariants</a>),
+invariants can be declared <code>static</code> or <code>instance</code>.
+Just like a static method, a static invariant cannot refer to the 
+current object <code>this</code> and thus cannot refer to instance fields of
+<code>this</code> or non-static methods of the type.
+</p>
+<p>Instance invariants must be established by the constructors of an object,
+and must be preserved by all non-helper instance methods.
+If an object has fields that can be changed without calling methods
+(usually a bad idea), then any such changes must also preserve the
+invariants.  For example, if an object has a public field, each
+assignment to that field must establish all invariants that
+might be affected.
+</p>
+<p>Static methods do not have a receiver object for which they need to
+assume or establish an instance invariant, since they have no receiver
+object.  However, a static method may assume instance invariants of
+other objects, such as argument objects passed to the
+method.<a name="DOCF7" href="jmlrefman_fot.html#FOOT7">(7)</a>
+</p>
+<p>Static invariants must be established by the static initialization
+of a class, and must be preserved by all non-helper constructors and methods, 
+i.e., by both static and instance methods.
+</p>
+<p>The table below summarizes this:
+</p><table><tr><td>&nbsp;</td><td><pre class="display"><tt>          | static          non-helper     non-helper    non-helper</tt>
+<tt>          | initialization  static method  constructor   instance method</tt>
+<tt>--------------------------------------------------------------------</tt>
+<tt>static    | establish       preserve       preserve      preserve   </tt>
+<tt>invariant |                                                         </tt>
+<tt>          |                                                         </tt>
+<tt>instance  | (irrelevant)    (irrelevant)   establish     preserve,   </tt>
+<tt>invariant |                                              if not a   </tt>
+<tt>                                                         finalizer</tt>
+</pre></td></tr></table>
+
+<a name="IDX1268"></a>
+<a name="IDX1269"></a>
+<a name="IDX1270"></a>
+<a name="IDX1271"></a>
+<a name="IDX1272"></a>
+<p>A word of warning about terminology.  As stated above, we call an
+invariant about static properties &ldquo;static invariants&rdquo; and we call an
+invariant about the dynamic properties of objects an &ldquo;instance
+invariant&rdquo; or, equivalently, an &ldquo;object invariant.&rdquo;  This terminology
+is contrary to the literature but it is more accurate with respect to
+the nomenclature of Java.
+</p>
+<hr size="6">
+<a name="Invariants-and-Exceptions"></a>
+<a name="SEC67"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC66" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC68" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC65" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 8.2.2 Invariants and Exceptions </h3>
+
+<p>Methods and constructors should preserve and establish invariants both
+in the case of normal termination and in the case of abrupt
+termination (i.e., when an exception is thrown).  In other words,
+invariants are implicitly included in both normal postconditions,
+i.e., <code>ensures</code> clauses, and in exceptional postconditions, i.e.,
+<code>signals</code> clauses, of methods and constructors.
+</p>
+<p>The requirement that invariants hold after abrupt termination of a
+method or constructor may seen excessively strong.  However, it is the
+only sound option in the long run.  After all, once an object's
+invariant is broken, no guarantees whatsoever can be made about
+subsequent method invocations on that object.  When faced with a method
+or constructor that may violate an invariant in case it throws an
+exception, one will typically try to strengthen the precondition of the
+method to rule out this exceptional behavior or try to weaken the
+invariant.  Note that a method that does not have any side effects when
+it throws an exception automatically preserves all invariants.
+</p>
+<hr size="6">
+<a name="Access-Modifiers-for-Invariants"></a>
+<a name="SEC68"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC67" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC69" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC65" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 8.2.3 Access Modifiers for Invariants </h3>
+
+<p>Invariants can be declared with any one of the Java access modifiers
+ <code>private</code>, <code>protected</code>, and <code>public</code>.  Like class
+members, invariants declared in a class have <code>package</code> visibility
+if they do not have one of these keywords as modifier.  Similarly,
+invariants declared in an interface implicitly have <code>public</code>
+visibility if they do not have one of these keywords as modifier.
+</p>
+<p>The access modifier of an invariant affects which members, i.e. which
+fields and which (pure) methods, may be used in it, according to JML's
+usual visibility rules.  See section <a href="jmlrefman_2.html#SEC12">Privacy Modifiers and Visibility</a>, for
+the details and an example using invariants.
+</p>
+<p>The access modifiers of invariants do <em>not</em> affect the obligations
+of methods and constructors to maintain and establish them.  That is,
+<em>all</em> non-<code>helper</code> methods are expected to preserve
+invariants irrespective of the access modifiers of the invariants and
+the methods.  For example, a public method must preserve private
+invariants as well as public ones.
+</p>
+<p>[[[
+JML's visibility restrictions still allow some highly dubious
+invariants.  E.g., a private invariant can refer to a public field,
+which, if this public field is not final, means the invariant is not
+really enforceable.  Tools should warn about (or forbid??)  invariants
+which refer to non-final non-model fields that have a looser access
+control than the invariant itself has.
+]]]
+</p>
+<hr size="6">
+<a name="Invariants-and-Inheritance"></a>
+<a name="SEC69"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC68" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC70" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC65" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 8.2.4 Invariants and Inheritance </h3>
+
+<p>Each type inherits all the instance invariants specified
+in its superclasses and superinterfaces.
+[[[Erik wrote: &ldquo;Static invariants are not inherited&rdquo;, but there seems to
+be some kind of static field inheritance in Java...]]]
+[[[ DRCok- but all the static invariants of a superclass have to be 
+maintained by the subclass methods - isn't this equivalent to inheritance?]]]
+</p>
+<p>The fact that (instance) invariants are inherited is one of the
+reasons why the use of the keyword <code>super</code> is not allowed
+in invariants.  [[[ Is this true? - I don't understand this. DRCok ]]]
+</p>
+<hr size="6">
+<a name="Constraints"></a>
+<a name="SEC70"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC69" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC71" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 8.3 Constraints </h2>
+
+
+
+<p>History constraints [Liskov-Wing93b] [Liskov-Wing94], which we call
+<em>constraints</em> for short, are related to invariants.  But whereas
+invariants are predicates that should hold in all visible states,
+history constraints are relationships that should hold for the combination of
+each visible state
+and any visible state that occurs later in the program's execution.
+Constraints can therefore be used to constrain the way that values
+change over time.
+</p>
+<p>The syntax of history constraints in JML is as follows.
+</p>
+<a name="IDX1273"></a>
+<a name="IDX1274"></a>
+<a name="IDX1275"></a>
+<a name="IDX1276"></a>
+<a name="IDX1277"></a>
+<a name="IDX1278"></a>
+<a name="IDX1279"></a>
+<a name="IDX1280"></a>
+<a name="IDX1281"></a>
+<a name="IDX1282"></a>
+<a name="IDX1283"></a>
+<a name="IDX1284"></a>
+<a name="IDX1285"></a>
+<a name="IDX1286"></a>
+<a name="IDX1287"></a>
+<a name="IDX1288"></a>
+<a name="IDX1289"></a>
+<a name="IDX1290"></a>
+<a name="IDX1291"></a>
+<a name="IDX1292"></a>
+<a name="IDX1293"></a>
+<a name="IDX1294"></a>
+<a name="IDX1295"></a>
+<a name="IDX1296"></a>
+<a name="IDX1297"></a>
+<a name="IDX1298"></a>
+<a name="IDX1299"></a>
+<a name="IDX1300"></a>
+<a name="IDX1301"></a>
+<a name="IDX1302"></a>
+<a name="IDX1303"></a>
+<a name="IDX1304"></a>
+<a name="IDX1305"></a>
+<a name="IDX1306"></a>
+<a name="IDX1307"></a>
+<a name="IDX1308"></a>
+<a name="IDX1309"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>history-constraint</var> ::= <var>constraint-keyword</var> <var>predicate</var>
+              [ <code>for</code> <var>constrained-list</var> ] <code>;</code>
+<var>constraint-keyword</var> ::= <code>constraint</code> | <code>constraint_redundantly</code>
+<var>constrained-list</var> ::= <var>method-name-list</var> | <code>\everything</code>
+<var>method-name-list</var> ::= <var>method-name</var> [ <code>,</code> <var>method-name</var> ] &hellip;
+<var>method-name</var> ::= <var>method-ref</var> [ <code>(</code> [ <var>param-disambig-list</var> ] <code>)</code> ] | <var>method-ref-start</var> <code>.</code> <code>*</code> 
+<var>method-ref</var> ::= <var>method-ref-start</var> [ <code>.</code> <var>method-ref-rest</var> ] &hellip;
+        | <code>new</code> <var>reference-type</var>
+<var>method-ref-start</var> ::=  <code>super</code> | <code>this</code> | <var>ident</var>
+<var>method-ref-rest</var> ::=  <code>this</code> | <var>ident</var>
+<var>param-disambig-list</var> ::= <var>param-disambig</var> [ <code>,</code> <var>param-disambig</var> ] &hellip;
+<var>param-disambig</var> ::= <var>type-spec</var> [ <var>ident</var> [ <var>dims</var> ] ]
+</pre></td></tr></table>
+
+<p>Because methods will not necessarily change the values referred to in
+a constraint, a constraint will generally describe reflexive and transitive
+relations.
+</p>
+<p>For example, the constraints in the example below say that the
+value of field <code>a</code> and the length of the array <code>b</code> will 
+never change, and that the length of the array <code>c</code> will only ever 
+increase.
+<a name="IDX1310"></a>
+</p><table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;
+
+public abstract class Constraint {
+
+    int a;
+    //@ constraint a == \old(a);
+ 
+    boolean[] b; 
+
+    //@ invariant b != null;
+    //@ constraint b.length == \old(b.length) ;
+
+    boolean[] c;
+
+    //@ invariant c != null;
+    //@ constraint c.length &gt;= \old(c.length) ;
+
+    //@ requires bLength &gt;= 0 &amp;&amp; cLength &gt;= 0;
+    Constraint(int bLength, int cLength) {
+      b = new boolean[bLength];
+      c = new boolean[cLength];
+    }
+}
+
+</pre></td></tr></table>
+<p>Note that, unlike invariants, constraints can &ndash; and typically do &ndash; 
+use the JML keyword <code>\old</code>.
+</p>
+<p>A constraint declaration may optionally explicitly list one or more methods.  It is
+the listed methods that must <em>respect</em> the constraint.  If no methods are listed, then 
+all non-helper methods of the class (and any subclasses) must respect the constraint.
+A method respects a history constraint iff the
+pre-state and the post-state of a non-static method invocation are in
+the relation specified by the history constraint.
+So one can think of history constraints as being
+implicitly included in the postcondition of relevant methods.  However,
+history constraints do not apply to constructors and destructors,
+since constructors do not have a pre-state and destructors do not have
+a post-state.
+</p>
+<p>Private methods declared as <code>helper</code> methods do not have to 
+respect history constraints, just like these do not have to preserve 
+invariants.
+</p>
+<p>A few points to note about history constraints:
+</p><ul>
+<li>
+Constraints can be declared <code>static</code>;
+see <a href="#SEC71">Static vs. instance constraints</a>.
+
+</li><li>
+Constraints can be declared with the access modifiers <code>public</code>, 
+<code>protected</code>, and <code>private</code>;
+see <a href="#SEC72">Access Modifiers for Constraints</a>.
+
+</li><li>
+Constraints should also hold if a method terminates abruptly by
+throwing an exception.
+
+</li><li>
+A class inherits all constraints specified in its superclasses 
+and superinterfaces;
+see <a href="#SEC73">Constraints and Inheritance</a>. 
+
+</li><li>
+Although some aspects of constraints are discussed in isolation here,
+the full explanation of their semantics can only be given considered
+together with that of method specifications.  After all, a method only
+has to respect constraints when one of the preconditions
+(ie. <code>requires</code> clauses) specified for that method holds.  So
+constraints are an integral part of the explanation of method
+specifications in <a href="jmlrefman_9.html#SEC80">Method Specifications</a>.
+
+</li><li>
+When considering an individual method body, remember that constraints
+not only have to hold between the pre-state and the post-state, but
+between all visible state that arise during execution of the method.
+So, given that any program points in the method where
+(non-<code>helper</code>) methods or constructors are invoked are also
+visible states, constraints should also hold between the pre-state and
+any such program points, between these program points themselves, and
+between any such program points and the post-state.
+
+</li><li>
+A method invocation on an object <code>o</code> should not just respect the
+constraints of <code>o</code>, but should respect the constraints of all
+other (reachable) objects as well.
+</li></ul>
+
+<p>These aspects of constraints are discussed in more detail below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC71">8.3.1 Static vs. instance constraints</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC72">8.3.2 Access Modifiers for Constraints</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC73">8.3.3 Constraints and Inheritance</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Static-vs_002e-instance-constraints"></a>
+<a name="SEC71"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC70" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC72" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC70" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 8.3.1 Static vs. instance constraints </h3>
+
+<p>History constraints can be declared <code>static</code>.
+Non-<code>static</code> constraints are also called <em>instance</em> constraints.
+Like a static invariant, a static history constraint cannot refer to the 
+current object <code>this</code> or to its fields.
+</p>
+<p>Static constraints should be respected by all constructors and all methods, 
+i.e., both static and instance methods.
+</p>
+<p>Instance constraints must be respected by all instance methods.
+</p>
+<p>The table below summarizes this:
+</p><table><tr><td>&nbsp;</td><td><pre class="display"><tt>          | static          non-helper     non-helper    non-helper</tt>
+<tt>          | initialization  static method  constructor   instance method</tt>
+<tt>--------------------------------------------------------------------</tt>
+<tt>static    | (irrelevant)    respect        respect       respect   </tt>
+<tt>constraint|                                                         </tt>
+<tt>          |                                                         </tt>
+<tt>instance  | (irrelevant)    (irrelevant)   (irrelevant)  respect    </tt>
+<tt>constraint|                                                         </tt>
+</pre></td></tr></table>
+
+<p>Instance constraints are irrelevant for constructors,
+in that here there is no pre-state for a constructor that can be related 
+(or not) to the post-state.
+However, if a visible state arises during the execution of a constructor,
+then any instance constraints have to be respected.
+</p>
+<p>In the same way, and for the same reason, static constraints are irrelevant 
+for static initialization.
+</p>
+<hr size="6">
+<a name="Access-Modifiers-for-Constraints"></a>
+<a name="SEC72"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC71" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC73" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC70" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 8.3.2 Access Modifiers for Constraints </h3>
+
+<p>The access modifiers <code>public</code>, <code>private</code>, and <code>protected</code>
+pose exactly the same restrictions on constraints as they do on invariants,
+see <a href="#SEC68">Access Modifiers for Invariants</a>.
+</p>
+<hr size="6">
+<a name="Constraints-and-Inheritance"></a>
+<a name="SEC73"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC72" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC74" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC70" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 8.3.3 Constraints and Inheritance </h3>
+
+<p>Any class inherits all the instance constraints specified
+in its superclasses and superinterfaces.
+[[[Static constraints are not inherited.]]] [[[ But they still apply to subclasses, no ? and it says they are above - David]]]
+</p>
+<p>The fact that (instance) constraints are inherited is one of the
+reasons why the use of the keyword <code>super</code> is not allowed
+in constraints.  [[[ Needs explanation - David ]]]
+</p>
+<hr size="6">
+<a name="Represents-Clauses"></a>
+<a name="SEC74"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC73" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC75" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 8.4 Represents Clauses </h2>
+
+<p>The following is the syntax for <code>represents</code> clauses.
+</p>
+<a name="IDX1311"></a>
+<a name="IDX1312"></a>
+<a name="IDX1313"></a>
+<a name="IDX1314"></a>
+<a name="IDX1315"></a>
+<a name="IDX1316"></a>
+<a name="IDX1317"></a>
+<a name="IDX1318"></a>
+<a name="IDX1319"></a>
+<a name="IDX1320"></a>
+<a name="IDX1321"></a>
+<a name="IDX1322"></a>
+<a name="IDX1323"></a>
+<a name="IDX1324"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>represents-clause</var> ::= <var>represents-keyword</var> <var>store-ref-expression</var>
+                    <var>l-arrow-or-eq</var> <var>spec-expression</var> <code>;</code>
+        | <var>represents-keyword</var> <var>store-ref-expression</var> <code>\such_that</code>
+          <var>predicate</var> <code>;</code>
+<var>represents-keyword</var> ::= <code>represents</code> | <code>represents_redundantly</code>
+<var>l-arrow-or-eq</var> ::= <code>&lt;-</code> | <code>=</code>
+</pre></td></tr></table>
+
+<a name="IDX1325"></a>
+<a name="IDX1326"></a>
+<a name="IDX1327"></a>
+<p>The first form of <code>represents</code> clauses (with <code>&lt;-</code> or
+<code>=</code>) is called a <em>functional abstraction</em>.  This form
+defines the value of the <var>store-ref-expression</var> in a visible state
+as the value of the <var>spec-expression</var> that follows the 
+<var>l-arrow-or-eq</var>.
+</p>
+<a name="IDX1328"></a>
+<a name="IDX1329"></a>
+<p>The second form (with <code>\such_that</code>) is called a
+<em>relational abstraction</em>.
+This form constrains the value of the <var>store-ref-expression</var> in a
+visible state to satisfy the given <var>predicate</var>.
+</p>
+<ul>
+<li>
+The left-hand side of a <code>represents</code> clause must be a reference
+to a model field (See section <a href="jmlrefman_7.html#SEC52">Class and Interface Member Declarations</a>, for details of model fields).  Although it is a <var>store-ref-expression</var>,
+wild cards and array ranges are not permitted.
+
+</li><li>
+In the functional abstraction form, the type of right-hand side of a
+<code>represents clause</code> must be assignment-compatible to the type of
+left-hand side.
+
+</li><li>
+In the relational abstraction form, the type of right-hand side of a
+<code>represents clause</code> must be <code>boolean</code>.
+</li></ul>
+
+<p>A <code>represents</code> clause can be declared as <code>static</code>
+(See section <a href="jmlrefman_6.html#SEC35">Type Definitions</a>, for <code>static</code> declarations).  In a
+<code>static represents</code> clause, only static elements can be
+referenced both in the left-hand side and the right-hand side.  In
+addition, the following restriction is enforced:
+</p>
+<ul>
+<li>
+A <code>static</code> <code>represents</code> clause must be declared in the type
+where the model field on the left-hand side is declared.
+</li></ul>
+
+<p>Unless explicitly declared as <code>static</code>, a <code>represents</code>
+clause is non-<code>static</code>
+(for exceptions see see section <a href="jmlrefman_6.html#SEC35">Type Definitions</a>).  
+A non-<code>static represents</code> clause can refer to
+both <code>static</code> and non-<code>static</code> elements on the right-hand
+side.
+</p>
+<ul>
+<li>
+A non-<code>static represents</code> clause must not have a static model
+field in its left-hand side.
+
+</li><li>
+A non-<code>static represents</code> clause must be declared in a type
+descended from (or nested within) the type where the model field on
+the left-hand side is declared.
+</li></ul>
+
+<p>Note that represents clauses can be recursive.  That is, a represents
+clause may name a field on its right hand side that is the same as the
+field being represented (named on the left hand side).  It is the
+specifier's responsibility to make sure such definitions are
+well-defined.  But such recursive represents clauses can be useful when
+dealing with recursive datatypes [Mueller-Poetzsch-Heffter-Leavens03].
+</p>
+
+<hr size="6">
+<a name="Initially-Clauses"></a>
+<a name="SEC75"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC74" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC76" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 8.5 Initially Clauses </h2>
+
+<p>The <var>initially-clause</var> has the following syntax.
+</p>
+<a name="IDX1330"></a>
+<a name="IDX1331"></a>
+<a name="IDX1332"></a>
+<a name="IDX1333"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>initially-clause</var> ::= <code>initially</code> <var>predicate</var> <code>;</code>
+</pre></td></tr></table>
+
+<p>The meaning is that each non-helper (see section <a href="jmlrefman_6.html#SEC47">Helper</a>) constructor for
+each concrete subtype of the 
+enclosing type (including that type itself, if it is concrete) must
+establish the <var>predicate</var>.  Thus, the predicate can be thought of
+as implicitly conjoined to the postconditions of all non-helper constructors.
+</p>
+<hr size="6">
+<a name="Axioms"></a>
+<a name="SEC76"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC75" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC77" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 8.6 Axioms </h2>
+
+<p>An <var>axiom-clause</var> has the following syntax.
+</p>
+<a name="IDX1334"></a>
+<a name="IDX1335"></a>
+<a name="IDX1336"></a>
+<a name="IDX1337"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>axiom-clause</var> ::= <code>axiom</code> <var>predicate</var> <code>;</code>
+</pre></td></tr></table>
+
+<p>Such a clause specifies that a theorem prover should assume that the given
+predicate is true (whenever such an assumption is needed).
+</p>
+<p>[[[ example needed ]]]
+</p>
+<hr size="6">
+<a name="Readable-If-Clauses"></a>
+<a name="SEC77"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC76" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC78" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 8.7 Readable If Clauses </h2>
+
+<p>The syntax of the <var>readable-if-clause</var> is as follows.
+</p>
+<a name="IDX1338"></a>
+<a name="IDX1339"></a>
+<a name="IDX1340"></a>
+<a name="IDX1341"></a>
+<a name="IDX1342"></a>
+<a name="IDX1343"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>readable-if-clause</var> ::= <code>readable</code> <var>ident</var> <code>if</code> <var>predicate</var> <code>;</code>
+</pre></td></tr></table>
+
+<p>Such a clause gives a condition that must be true before the field
+named by <var>ident</var> can be read.  This field must be one
+declared in the type in which the declaration appears,
+or in a supertype of the class.
+</p>
+<hr size="6">
+<a name="Writable-If-Clauses"></a>
+<a name="SEC78"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC77" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC79" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 8.8 Writable If Clauses </h2>
+
+<p>The syntax of the <var>writeable-if-clause</var> is as follows.
+</p>
+<a name="IDX1344"></a>
+<a name="IDX1345"></a>
+<a name="IDX1346"></a>
+<a name="IDX1347"></a>
+<a name="IDX1348"></a>
+<a name="IDX1349"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>writable-if-clause</var> ::= <code>writable</code> <var>ident</var> <code>if</code> <var>predicate</var> <code>;</code>
+</pre></td></tr></table>
+
+<p>Such a clause gives a condition that must be true before the field
+named by <var>ident</var> can be written.  This field must be one
+declared in the type in which the declaration appears,
+or in a supertype of the class.
+</p>
+<hr size="6">
+<a name="Monitors-For-Clause"></a>
+<a name="SEC79"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC78" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC63" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 8.9 Monitors For Clause </h2>
+
+<p>The <var>monitors-for-clause</var> is adapted from ESC/Java
+[Leino-Nelson-Saxe00] [Rodriguez-etal05].  It has the
+following syntax.
+</p>
+<a name="IDX1350"></a>
+<a name="IDX1351"></a>
+<a name="IDX1352"></a>
+<a name="IDX1353"></a>
+<a name="IDX1354"></a>
+<a name="IDX1355"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>monitors-for-clause</var> ::= <code>monitors_for</code> <var>ident</var>
+                        <var>l-arrow-or-eq</var> <var>spec-expression-list</var> <code>;</code>
+</pre></td></tr></table>
+
+<p>A <var>monitors-for-clause</var> such as <code>monitors_for f &lt;- e1, e2;</code>
+specifies a relationship between the field, <code>f</code>
+and a set of objects, denoted by a specification expression list
+<code>e1, e2</code>.  The meaning of this declaration is
+that all of the (non-null) objects in the list, in this
+example, the objects denoted by <code>e1</code> and <code>e2</code>, must be
+locked to read the field (<code>f</code> in the example) in this object.
+</p>
+<p>Note that the righthand-side of the <var>monitors-for-clause</var> is not just a
+<var>store-ref-list</var>, but is in fact a <var>spec-expression-list</var>,
+where each <var>spec-expression</var> evaluates to a reference to an
+object.
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_9.html#SEC80" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

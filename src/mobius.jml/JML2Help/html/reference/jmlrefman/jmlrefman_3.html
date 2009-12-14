@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 3. Syntax Notation</title>
+
+<meta name="description" content="JML Reference Manual: 3. Syntax Notation">
+<meta name="keywords" content="JML Reference Manual: 3. Syntax Notation">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Syntax-Notation"></a>
+<a name="SEC24"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC23" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_4.html#SEC25" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_4.html#SEC25" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 3. Syntax Notation </h1>
+
+<p>We use an extended Backus-Naur Form (BNF) grammar
+to describe the syntax of JML.
+The extensions are as follows [Ledgard80].
+</p>
+<a name="IDX280"></a>
+<a name="IDX281"></a>
+<a name="IDX282"></a>
+<a name="IDX283"></a>
+<ul>
+<li>
+Nonterminal symbols are written as follows: <var>nonterminal</var>.
+
+</li><li>
+Terminal symbols are written as follows: <code>terminal</code>.
+
+</li><li>
+Square brackets ([ and ]) surround optional text. Note that <code>[</code>
+and <code>]</code> are terminals.
+
+</li><li>
+The notation &hellip; means that the preceding nonterminal
+or group of optional text can be repeated zero (0) or more times.
+</li></ul>
+
+<p>For example, the following gives a production for a non-empty list of
+<var>init-declarator</var>s, separated by commas.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>init-declarator-list</var> ::= <var>init-declarator</var> [ <code>,</code> <var>init-declarator</var> ] &hellip;
+</pre></td></tr></table>
+
+<p>To remind the reader that the notation `&hellip;' means zero or more
+repetitions, we try to use `&hellip;' only following optional text,
+although, in cases such as the following, the brackets could have been omitted.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>modifiers</var> ::= [ <var>modifier</var> ] &hellip;
+</pre></td></tr></table>
+
+<a name="IDX284"></a>
+<a name="IDX285"></a>
+<a name="IDX286"></a>
+<a name="IDX287"></a>
+<a name="IDX288"></a>
+<a name="IDX289"></a>
+<p>As in the above examples, we follow the C++ standard's conventions
+[ANSI95] in using nonterminal names of the form <var>X-list</var> to mean a
+comma-separated list, and nonterminal names of the form <var>X-seq</var> to
+mean a sequence not separated by commas.  An example of a sequence is
+the following
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>spec-case-seq</var> ::= <var>spec-case</var> [ <code>also</code> <var>spec-case</var> ] &hellip;
+</pre></td></tr></table>
+
+<a name="IDX290"></a>
+<p>We use &ldquo;<i>//</i>&rdquo; to start a comment (to you, the reader) in the grammar.
+</p>
+<p>A complete summary of the JML grammar appears in 
+an appendix (see section <a href="jmlrefman_21.html#SEC219">Grammar Summary</a>).  When reading the
+HTML version of this appendix, one can click on the names
+of nonterminals to bring that nonterminal's definition to the top of
+the browser's window.  This is helpful when dealing with such a large
+grammar.
+</p>
+<p>Another help in dealing with the grammar is to use the index
+(see section <a href="jmlrefman_28.html#SEC247">Index</a>).  Every
+nonterminal and terminal symbol in the grammar is found in the
+index, and each definition and use is noted.
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC8" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_4.html#SEC25" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

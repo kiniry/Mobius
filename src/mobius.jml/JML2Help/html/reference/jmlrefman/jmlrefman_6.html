@@ -1,0 +1,925 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 6. Type Definitions</title>
+
+<meta name="description" content="JML Reference Manual: 6. Type Definitions">
+<meta name="keywords" content="JML Reference Manual: 6. Type Definitions">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Type-Definitions"></a>
+<a name="SEC35"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_5.html#SEC34" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC36" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_5.html#SEC32" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 6. Type Definitions </h1>
+
+<p>The following is the syntax of type definitions.
+</p>
+<a name="IDX977"></a>
+<a name="IDX978"></a>
+<a name="IDX979"></a>
+<a name="IDX980"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>type-definition</var> ::= <var>class-definition</var>
+        | <var>interface-definition</var>
+        | <code>;</code>
+</pre></td></tr></table>
+
+<p>The specification of a <var>type-definition</var> is determined as follows.
+If the <var>type-definition</var> consists only of a semicolon (<code>;</code>),
+then the specification is empty.  Otherwise the specification is that
+of the class or interface definition.  Such a specification must be
+satisfied by the corresponding class or interface definition.
+</p>
+<p>The rest of this chapter discusses class and interface definitions,
+as well as the syntax of modifiers.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC36">6.1 Class and Interface Definitions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC39">6.2 Modifiers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                   
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Class-and-Interface-Definitions"></a>
+<a name="SEC36"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC35" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC37" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 6.1 Class and Interface Definitions </h2>
+
+<p>Class and interface definitions are quite similar, as interfaces may be
+seen as a special kind of class definition that only allows the
+declaration of abstract instance methods and final static fields (in
+the Java code [Gosling-etal00]).
+Their syntax is also similar.
+</p>
+<a name="IDX981"></a>
+<a name="IDX982"></a>
+<a name="IDX983"></a>
+<a name="IDX984"></a>
+<a name="IDX985"></a>
+<a name="IDX986"></a>
+<a name="IDX987"></a>
+<a name="IDX988"></a>
+<a name="IDX989"></a>
+<a name="IDX990"></a>
+<a name="IDX991"></a>
+<a name="IDX992"></a>
+<a name="IDX993"></a>
+<a name="IDX994"></a>
+<a name="IDX995"></a>
+<a name="IDX996"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>class-definition</var> ::= [ <var>doc-comment</var> ] <var>modifiers</var> <code>class</code> <var>ident</var>
+            [ <var>class-extends-clause</var> ] [ <var>implements-clause</var> ]
+            <var>class-block</var>
+<var>class-block</var> ::= <code>{</code> [ <var>field</var> ] &hellip; <code>}</code>
+
+<var>interface-definition</var> ::= [ <var>doc-comment</var> ] <var>modifiers</var> <code>interface</code> <var>ident</var>
+           [ <var>interface-extends</var> ]
+           <var>class-block</var>
+</pre></td></tr></table>
+
+<p>Documentation comments for classes and interfaces may not
+contain JML specification information.
+See section <a href="jmlrefman_4.html#SEC30">Documentation Comments</a>, for the syntax of documentation
+comments. 
+</p>
+<p>See section <a href="jmlrefman_7.html#SEC52">Class and Interface Member Declarations</a>, for the syntax and semantics of <var>field</var>s,
+which form the essence of classes and interfaces.
+</p>
+<p>The rest of this section discusses subtyping for classes and
+interfaces and also the particular modifiers used in classes and
+interfaces.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC37">6.1.1 Subtyping for Type Definitions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC38">6.1.2 Modifiers for Type Definitions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Subtyping-for-Type-Definitions"></a>
+<a name="SEC37"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC36" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC38" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC36" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.1.1 Subtyping for Type Definitions </h3>
+
+<p>Classes in Java can use single inheritance and may also implement any
+number of interfaces.  Interfaces may extend any number of other
+interfaces.
+</p>
+<a name="IDX997"></a>
+<a name="IDX998"></a>
+<a name="IDX999"></a>
+<a name="IDX1000"></a>
+<a name="IDX1001"></a>
+<a name="IDX1002"></a>
+<a name="IDX1003"></a>
+<a name="IDX1004"></a>
+<a name="IDX1005"></a>
+<a name="IDX1006"></a>
+<a name="IDX1007"></a>
+<a name="IDX1008"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>class-extends-clause</var> ::= [ <code>extends</code> <var>name</var> [ <code>weakly</code> ] ]
+<var>implements-clause</var> ::= <code>implements</code> <var>name-weakly-list</var>
+<var>name-weakly-list</var> ::= <var>name</var> [ <code>weakly</code> ] [ <code>,</code> <var>name</var> [ <code>weakly</code> ] ] &hellip;
+<var>interface-extends</var> ::= <code>extends</code> <var>name-weakly-list</var>
+</pre></td></tr></table>
+
+<a name="IDX1009"></a>
+<a name="IDX1010"></a>
+<a name="IDX1011"></a>
+<a name="IDX1012"></a>
+<a name="IDX1013"></a>
+<a name="IDX1014"></a>
+<p>The meaning of inheritance in JML is similar to that in Java.
+In Java, a when class <i>S</i> names a class <i>T</i> in <i>S</i>'s
+<var>class-extends-clause</var>, then 
+<i>S</i> is a <em>subclass</em> of <i>T</i> and <i>T</i> is a 
+<em>superclass</em> of <i>S</i>; we also say that <i>S</i> <em>inherits</em> from
+<i>T</i>.
+This relationship also makes <i>S</i> a <em>subtype</em> of <i>T</i>, meaning
+that variables 
+of type <i>T</i> can refer to objects of type <i>S</i>.
+In Java, when <i>S</i> is a subclass of <i>T</i>, then <i>S</i>
+inherits all the instance fields and methods from <i>T</i>.
+</p>
+<a name="IDX1015"></a>
+<a name="IDX1016"></a>
+<p>A class may also implement several interfaces, declared in its
+<var>implements-clause</var>; the class thus becomes a subtype of each of
+the interfaces that it implements.
+</p>
+<a name="IDX1017"></a>
+<a name="IDX1018"></a>
+<p>Similarly, an interface may extend several other interfaces.
+In Java, such an interface inherits all of the abstract methods and static
+final fields from the interfaces it extends.
+When interface <i>U</i> extends another interface <i>V</i>,
+then <i>U</i> is a subtype of <i>V</i>.
+</p>
+<a name="IDX1019"></a>
+<a name="IDX1020"></a>
+<a name="IDX1021"></a>
+<p>In JML, model and ghost features, as well as specifications are
+inherited.  A subtype inherits from its supertypes:
+</p><ul>
+<li>
+all instance fields, including model and ghost fields,
+
+</li><li>
+instance methods are also inherited and their specifications,
+
+</li><li>
+instance invariants and instance history constraints.
+</li></ul>
+
+<a name="IDX1022"></a>
+<a name="IDX1023"></a>
+<p>It is an error for a type to inherit a field <i>x</i> from two different
+supertypes if that field is declared with different types.
+</p>
+<a name="IDX1024"></a>
+<a name="IDX1025"></a>
+<a name="IDX1026"></a>
+<p>It is an error for a type to inherit a method with the same formal
+parameter types but with either different return types or with
+conflicting throws clauses [Gosling-etal00].
+(There are other restrictions on method inheritance that apply when
+MultiJava is used [Clifton-etal00].)
+</p>
+<a name="IDX1027"></a>
+<p>In Java one cannot inherit method implementations from interfaces, but
+this is possible in JML, where one can implement a model method in an
+interface.  It is illegal for a class or interface to inherit two
+different implementations of a model method.
+</p>
+
+<a name="IDX1028"></a>
+<a name="IDX1029"></a>
+<a name="IDX1030"></a>
+<a name="IDX1031"></a>
+<a name="IDX1032"></a>
+<a name="IDX1033"></a>
+<a name="IDX1034"></a>
+<a name="IDX1035"></a>
+<p>In JML, instance methods have to obey the specifications of all
+methods they override.  This, together with the inheritance of
+invariants and history constraints, forces subtypes to be behavioral subtypes
+[Dhara-Leavens96] [Leavens-Naumann06] [Leavens06b].
+However, history constraints are not inherited from supertypes whose
+names are marked with <code>weakly</code> in the relevant clause.
+Such subtypes are <em>weak behavioral subtypes</em>, and should only be
+used in ways that do not permit cross-type aliasing [Dhara-Leavens94b]
+[Dhara97]. 
+</p>
+<a name="IDX1036"></a>
+<a name="IDX1037"></a>
+<p>See the report, &ldquo;Desugaring JML Method Specifications&rdquo;
+[Raghavan-Leavens05] for more
+about the details of specification inheritance in JML.
+</p>
+
+<hr size="6">
+<a name="Modifiers-for-Type-Definitions"></a>
+<a name="SEC38"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC37" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC36" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.1.2 Modifiers for Type Definitions </h3>
+
+<p>In addition to the Java modifiers that can be legally attached to a
+class or interface definition [Gosling-etal00],
+in JML one can use the following modifiers.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  pure model
+  spec_java_math spec_safe_math spec_bigint_math
+  code_java_math code_safe_math code_bigint_math
+  nullable_by_default
+</pre></td></tr></table>
+<p>See section <a href="#SEC39">Modifiers</a>, for the syntax and semantics of modifiers in general.
+</p>
+<a name="IDX1038"></a>
+<a name="IDX1039"></a>
+<a name="IDX1040"></a>
+<p>A type definition may be modified with the JML modifier keyword <code>pure</code>.
+The effect of declaring a type <code>pure</code> is that all constructor and 
+instance method declarations within the type are automatically
+declared to be pure
+(see section <a href="jmlrefman_7.html#SEC57">Pure Methods and Constructors</a>, for more about pure methods).
+Hence, once an object of a class is created, it
+will be immutable, and furthermore, none of its instance methods will
+have any side effects.  However, its static methods may still have
+side effects, as the <code>pure</code> does not apply to the static methods
+declared in a type.  Furthermore, although an override of a pure
+method must be pure, instance methods declared in
+subtypes that do not override this supertype's methods
+need not be pure.  Hence, such a subtype does not necessarily have
+immutable objects.  So, in essence, declaring a class pure
+is merely a shorthand for declaring all of the constructors and
+instance methods pure.
+</p>
+<p>[[[ Pure does not make a class immutable either, since a method might
+return a reference to an internal representation which is then modified
+by some non-pure method in its class.  Is it sufficient if all fields are
+also fields of pure types (recursively)?  Then there are arrays. 
+And also all fields would need to be private to have immutability. - DRC ]]]
+</p>
+<a name="IDX1041"></a>
+<a name="IDX1042"></a>
+<a name="IDX1043"></a>
+<p>A type declaration that is declared with the modifier <code>model</code>
+is a specification-only type.
+Hence, such a type may not be used in Java code, and may only be used
+in annotations.  It follows that the
+entire type definition must be contained within an annotation comment,
+and consequently annotations within the type definition do not need to
+be separately enclosed in annotation comments, 
+as is demonstrated in the example below.
+The scope rules for a model type definition are the same as for Java type
+definitions, except that a model type definition is not in scope for any
+Java code, only for annotations.
+</p>
+<p>[[[Model types are seldom used in JML.  Since the runtime assertion
+checker doesn't work with them, I wonder if it would be best to get
+rid of them completely.  You could always just define a Java type,
+which would be useful for runtime assertion checking.]]]
+</p>
+<p>[[[ May a model type definition appear in more than one specification file
+of a refinement sequence, with any member declarations being combined 
+together?  I'd prefer that it only be allowed to appear once and be required
+to be completely defined in one spec file - easier for tools.  &ndash; DRCok ]]]
+</p>
+<p>[[[Need to explain the math modifiers.]]]
+</p>
+<hr size="6">
+<a name="Modifiers"></a>
+<a name="SEC39"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC38" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC40" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 6.2 Modifiers </h2>
+
+<p>The following is the syntax of modifiers.
+</p>
+<a name="IDX1044"></a>
+<a name="IDX1045"></a>
+<a name="IDX1046"></a>
+<a name="IDX1047"></a>
+<a name="IDX1048"></a>
+<a name="IDX1049"></a>
+<a name="IDX1050"></a>
+<a name="IDX1051"></a>
+<a name="IDX1052"></a>
+<a name="IDX1053"></a>
+<a name="IDX1054"></a>
+<a name="IDX1055"></a>
+<a name="IDX1056"></a>
+<a name="IDX1057"></a>
+<a name="IDX1058"></a>
+<a name="IDX1059"></a>
+<a name="IDX1060"></a>
+<a name="IDX1061"></a>
+<a name="IDX1062"></a>
+<a name="IDX1063"></a>
+<a name="IDX1064"></a>
+<a name="IDX1065"></a>
+<a name="IDX1066"></a>
+<a name="IDX1067"></a>
+<a name="IDX1068"></a>
+<a name="IDX1069"></a>
+<a name="IDX1070"></a>
+<a name="IDX1071"></a>
+<a name="IDX1072"></a>
+<a name="IDX1073"></a>
+<a name="IDX1074"></a>
+<a name="IDX1075"></a>
+<a name="IDX1076"></a>
+<a name="IDX1077"></a>
+<a name="IDX1078"></a>
+<a name="IDX1079"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>modifiers</var> ::= [ <var>modifier</var> ] &hellip;
+<var>modifier</var> ::= <code>public</code> | <code>protected</code> | <code>private</code>
+        | <code>abstract</code> | <code>static</code> |
+        | <code>final</code> | <code>synchronized</code>
+        | <code>transient</code> | <code>volatile</code>
+        | <code>native</code> | <code>strictfp</code>
+        | <code>const</code>             <i>// reserved but not used in Java</i>
+        | <var>jml-modifier</var>
+<var>jml-modifier</var> ::= <code>spec_public</code> | <code>spec_protected</code>
+        | <code>model</code> | <code>ghost</code> | <code>pure</code>
+        | <code>instance</code> | <code>helper</code>
+        | <code>uninitialized</code>
+        | <code>spec_java_math</code> | <code>spec_safe_math</code> | <code>spec_bigint_math</code>
+        | <code>code_java_math</code> | <code>code_safe_math</code> | <code>code_bigint_math</code>
+        | <code>non_null</code> | <code>nullable</code> | <code>nullable_by_default</code>
+        | <code>extract</code>
+</pre></td></tr></table>
+
+<p>The <var>jml-modifiers</var> are only recognized as keywords in
+annotation comments.  See section <a href="jmlrefman_4.html#SEC25">Lexical Conventions</a>, for more details.
+</p>
+<a name="IDX1080"></a>
+<a name="IDX1081"></a>
+<a name="IDX1082"></a>
+<p>The Java modifiers have the same meaning as in Java [Gosling-etal00].
+</p>
+<p>Note that although
+the <var>modifiers</var> grammar non-terminal is used in many places throughout
+the grammar, not all modifiers can be used
+with every grammar construct.  See the discussion regarding each grammar
+construct, which is summarized in <a href="jmlrefman_22.html#SEC237">Modifier Summary</a>.
+</p>
+<p>In the following we first discuss the suggested ordering of modifiers
+The rest of this section discusses the JML-specific modifiers in
+general terms.  Their use and meaning for each kind of grammatical
+construct should be consulted directly for more details.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC40">6.2.1 Suggested Modifier Ordering</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC41">6.2.2 Spec Public</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                 
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC42">6.2.3 Spec Protected</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">              
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC43">6.2.4 Pure</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                        
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC44">6.2.5 Model</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                       
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC45">6.2.6 Ghost</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                       
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC46">6.2.7 Instance</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                    
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC47">6.2.8 Helper</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                      
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC48">6.2.9 Monitored</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                   
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC49">6.2.10 Uninitialized</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">               
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC50">6.2.11 Math Modifiers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">              
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC51">6.2.12 Nullity Modifiers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">           
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Suggested-Modifier-Ordering"></a>
+<a name="SEC40"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC39" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC41" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.1 Suggested Modifier Ordering </h3>
+
+<p>There are various guidelines for ordering modifiers in Java [[[citations?]]].
+As JML has several extra modifiers, we also suggest an ordering;
+although this ordering is not enforced, various tools may give
+warnings if the suggestions are not followed, as following a standard
+ordering tends to make reading declarations easier.
+For use in JML, we suggest the following ordering groups, where the
+ones at the top should appear first (leftmost), and the ones at the
+bottom should appear last (rightmost).  In each line, the modifiers
+are either mutually exclusive, or their order does not matter (or both).
+</p>
+
+<table><tr><td>&nbsp;</td><td><pre class="example">  public private protected spec_public spec_protected
+  abstract static
+  model ghost pure
+  final synchronized
+  instance helper
+  transient volatile
+  native strictfp
+  monitored uninitialized
+  spec_java_math spec_safe_math spec_bigint_math
+  code_java_math code_safe_math code_bigint_math
+  non_null nullable nullable_by_default
+  code extract
+  peer rep readonly
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Spec-Public"></a>
+<a name="SEC41"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC40" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC42" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.2 Spec Public </h3>
+
+<p>The <code>spec_public</code> modifier allows one to declare a feature as public
+for specification purposes.  It can only be used when the feature has
+a more restrictive visibility in Java.  A <code>spec_public</code> field is
+also implicitly a data group.
+</p>
+<hr size="6">
+<a name="Spec-Protected"></a>
+<a name="SEC42"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC41" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC43" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.3 Spec Protected </h3>
+
+<p>The <code>spec_protected</code> modifier allows one to declare a feature as protected
+for specification purposes.  It can only be used when the feature has
+a more restrictive visibility in Java.  That is, it can only be used
+to change the visibility of a field or method that is, for Java,
+either declared <code>private</code> or default access (package visible).
+  A <code>spec_protected</code> field is
+also implicitly a data group.
+</p>
+<hr size="6">
+<a name="Pure"></a>
+<a name="SEC43"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC42" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC44" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.4 Pure </h3>
+
+<p>In general terms, a <em>pure</em> feature is one that has no side effects when
+executed.  In essence <code>pure</code> only applies to methods and
+constructors.  The use of <code>pure</code> for a type definition is
+shorthand for applying that modifier to all constructors and instance
+methods in the type (see section <a href="#SEC38">Modifiers for Type Definitions</a>).
+</p>
+<p>See section <a href="jmlrefman_7.html#SEC57">Pure Methods and Constructors</a>, for the exact semantics of pure
+methods and constructors.
+</p>
+<hr size="6">
+<a name="Model"></a>
+<a name="SEC44"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC43" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC45" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.5 Model </h3>
+
+<p>The <code>model</code> modifier introduces a specification-only feature.  For
+fields it also has a special meaning, which is that the field can be
+represented by concrete fields.  See section <a href="jmlrefman_2.html#SEC10">Model and Ghost</a>.
+</p>
+<a name="IDX1083"></a>
+<p>The modifiers <code>model</code> and <code>ghost</code> are mutually exclusive.
+</p>
+<a name="IDX1084"></a>
+<a name="IDX1085"></a>
+<p>A <code>model</code> field may not be declared to be <code>final</code>.  This is
+because model fields are abstractions of concrete fields,
+and thus it would complicate JML to allow final model fields.
+If you feel that you want a final model field, what you should use
+instead is a final ghost field. See section <a href="#SEC45">Ghost</a>. 
+</p>
+<a name="IDX1086"></a>
+<a name="IDX1087"></a>
+<a name="IDX1088"></a>
+<a name="IDX1089"></a>
+<p>Note that in an interface, a model field is implicitly declared
+to be <code>static</code>.  Thus if you want an instance field, you should use the
+modifier <code>instance</code>, so that the field will act as if it were a
+member of all objects whose type is a subtype of that interface.
+Conversely, in a class, a model field is implicitly declared to be
+<code>instance</code>.  Thus, if you want a static field, you should use the
+modifier <code>static</code>, so that the value of the model field is
+shared by all instances of the class and its subclasses.
+</p>
+<hr size="6">
+<a name="Ghost"></a>
+<a name="SEC45"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC44" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC46" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.6 Ghost </h3>
+
+<p>The <code>ghost</code> modifier introduces a specification-only field that
+is maintained by special set statements.  See section <a href="jmlrefman_2.html#SEC10">Model and Ghost</a>.
+</p>
+<a name="IDX1090"></a>
+<p>The modifiers <code>ghost</code> and <code>model</code> are mutually exclusive.
+</p>
+<p>A ghost field declared in an interface is not <code>final</code> by
+default.  If you want a final <code>ghost</code> field in an interface, you
+must declare it to be <code>final</code> explicitly.  Ghost fields in
+classes are also not final by default.
+</p>
+<a name="IDX1091"></a>
+<a name="IDX1092"></a>
+<a name="IDX1093"></a>
+<a name="IDX1094"></a>
+<p>In an interface, a ghost field is implicitly declared
+to be <code>static</code>.  Thus if you want an instance field, you should use the
+modifier <code>instance</code>, so that the field will act as if it were a
+member of all objects whose type is a subtype of that interface.
+Conversely, in a class, a ghost field is implicitly declared to be
+<code>instance</code>.  Thus, if you want a static field, you should use the
+modifier <code>static</code>, so that the value of the ghost field is
+shared by all instances of the class and its subclasses.
+</p>
+<hr size="6">
+<a name="Instance"></a>
+<a name="SEC46"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC45" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC47" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.7 Instance </h3>
+
+<p>The <code>instance</code> modifier says that a field is not static.
+See section <a href="jmlrefman_2.html#SEC13">Instance vs. Static</a>.
+</p>
+<hr size="6">
+<a name="Helper"></a>
+<a name="SEC47"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC46" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC48" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.8 Helper </h3>
+
+<p>The <code>helper</code> modifier may be used on a private method or
+constructor to say that its
+specification is not augmented by invariants and history constraints
+that would otherwise be relevant.  Normally, an invariant applies to
+all methods in a class or interface.  However, an exception is made
+for methods and constructors declared with the <code>helper</code> modifier.
+See section <a href="jmlrefman_8.html#SEC65">Invariants</a>.   [[[ Just on private? or just on non-overridable
+methods? or just on non-overridden methods? - DRC]]]
+</p>
+<hr size="6">
+<a name="Monitored"></a>
+<a name="SEC48"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC47" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC49" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.9 Monitored </h3>
+
+<p>The <code>monitored</code> modifier may be used on a non-model field
+declaration to say that a thread must hold the lock on the object that
+contains the field (i.e., the <code>this</code> object containing the field)
+before it may read or write the field [Leino-Nelson-Saxe00].
+</p>
+<hr size="6">
+<a name="Uninitialized"></a>
+<a name="SEC49"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC48" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC50" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.10 Uninitialized </h3>
+
+<p>The <code>uninitialized</code> modifier may be used on a field 
+declaration to say that despite the initializer, the location declared
+is to be considered uninitialized.  Thus, the field should
+be assigned in each path before it is read.
+[Leino-Nelson-Saxe00].
+</p>
+<hr size="6">
+<a name="Math-Modifiers"></a>
+<a name="SEC50"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC49" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC51" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.11 Math Modifiers </h3>
+
+<p>[[[Need explanation of these.]]]
+</p>
+<hr size="6">
+<a name="Nullity-Modifiers"></a>
+<a name="SEC51"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC50" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 6.2.12 Nullity Modifiers </h3>
+
+<p>Any declaration (other than that of a local variable)
+whose type is a reference type
+is implicitly declared <code>non_null</code> unless (explicitly or implicitly)
+declared <code>nullable</code>. Hence reference type declarations are
+assumed to be non-null by default (see section <a href="jmlrefman_2.html#SEC16">Null is Not the Default</a>).
+</p>
+<a name="IDX1095"></a>
+<a name="IDX1096"></a>
+<p>A declaration can be <em>explicitly</em> declared <code>nullable</code> by annotating
+it with the <code>nullable</code> modifier.
+<a name="IDX1097"></a>
+<a name="IDX1098"></a>
+A declaration is <em>implicitly</em> declared <code>nullable</code> when the (outer
+most) class or interface containing the declaration is adorned by the 
+class-level modifier <code>nullable_by_default</code>.
+</p>
+<p>Attempting to use both the <code>non_null</code> and <code>nullable</code>
+modifiers is a compile time error.
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_7.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

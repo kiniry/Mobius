@@ -1,0 +1,755 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 16. Refinement</title>
+
+<meta name="description" content="JML Reference Manual: 16. Refinement">
+<meta name="keywords" content="JML Reference Manual: 16. Refinement">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Refinement"></a>
+<a name="SEC193"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC192" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC194" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_17.html#SEC200" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 16. Refinement </h1>
+
+<p>This chapter explains JML's notion of refinement files, which uses the
+following syntax.
+</p>
+<a name="IDX2345"></a>
+<a name="IDX2346"></a>
+<a name="IDX2347"></a>
+<a name="IDX2348"></a>
+<a name="IDX2349"></a>
+<a name="IDX2350"></a>
+<a name="IDX2351"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>refine-prefix</var> ::= <var>refine-keyword</var> <var>string-literal</var> <code>;</code>
+<var>refine-keyword</var> ::= <code>refine</code> | <code>refines</code>
+</pre></td></tr></table>
+
+<p>The <var>refine-prefix</var> in a compilation unit says that the
+declarations in this compilation unit refine the corresponding
+declarations in the file named by the <var>string-literal</var>.  The
+<var>string-literal</var> should name a file, complete with a suffix, for
+example, <code>&quot;MyType.java-refined&quot;</code>.  The suffix of such a file is
+used by JML tools to find the file that is the base of a refinement
+chain, and all other files in the chain are found using the files
+named in the <var>refine-prefix</var> of a previous file in the chain.
+</p>
+<p>One can use either keyword, <code>refine</code> or <code>refines</code> in a
+<var>refine-prefix</var>, although for historical reasons most examples use
+<code>refine</code>.
+</p>
+<p>The following gives more details about the checks and meaning of this
+feature of JML.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC194">16.1 File Name Suffixes</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC195">16.2 Using Separate Files</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">        
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC196">16.3 Refinement Chains</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">           
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC197">16.4 Type Checking Refinements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">   
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC198">16.5 Refinement Viewpoints</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">       
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="File-Name-Suffixes"></a>
+<a name="SEC194"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC193" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC195" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC193" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC193" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_17.html#SEC200" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 16.1 File Name Suffixes </h2>
+
+<p>The JML tools recognize several filename suffixes.  The following are
+considered to be <em>active</em> suffixes: &lsquo;<tt>.refines-java</tt>&rsquo;,
+&lsquo;<tt>.refines-spec</tt>&rsquo;, &lsquo;<tt>.refines-jml</tt>&rsquo;, &lsquo;<tt>.java</tt>&rsquo;, &lsquo;<tt>.spec</tt>&rsquo;,
+and &lsquo;<tt>.jml</tt>&rsquo;; There are also three <em>passive</em> suffixes:
+&lsquo;<tt>.java-refined</tt>&rsquo;, &lsquo;<tt>.spec-refined</tt>&rsquo;, and &lsquo;<tt>.jml-refined</tt>&rsquo;.
+Files with passive suffixes can be used in refinements but should not
+normally be passed explicitly to the tools directly.
+These filename suffixes are ordered from most active to least active,
+in the order given above.
+Graphical user interface tools for JML should, by default,
+only present the active suffixes for selection.
+Among files in a directory with the same prefix,
+but with different active suffixes, the one whose suffix appears first
+in the list of active suffixes above should be considered primary
+by such a tool.
+</p>
+<p>See section <a href="#SEC195">Using Separate Files</a>, for guidelines on how to use these
+suffixes.
+See section <a href="#SEC196">Refinement Chains</a>, for details on the semantics of
+specifications written using separate files.
+</p>
+<hr size="6">
+<a name="Using-Separate-Files"></a>
+<a name="SEC195"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC194" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC196" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC193" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC193" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_17.html#SEC200" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 16.2 Using Separate Files </h2>
+
+<p>Typically, JML specifications are written into annotation comments in
+&lsquo;<tt>.java</tt>&rsquo; files, and this is certainly the simplest way to use JML
+and its tools. 
+</p>
+<p>However, there are some circumstances in which one may wish to
+separate the specification from the Java code.  An important example
+of this is when you do not own the sources for the Java code, but wish
+to specify it.  This might happen if you are specifying a class
+library or framework that you are using. When you do not have control
+of the code, it is best to put the specification in a different file.
+</p>
+<a name="IDX2352"></a>
+<a name="IDX2353"></a>
+<a name="IDX2354"></a>
+<p>To add specifications to such a library or framework,
+one would use a filename with an active suffix,
+such as &lsquo;<tt>.refines-java</tt>&rsquo; (or &lsquo;<tt>.refines-spec</tt>&rsquo; or
+&lsquo;<tt>.refines-jml</tt>&rsquo;). The file with such a name would hold
+the specifications of the corresponding
+Java compilation unit.  For example, if one wants to specify the type
+<code>LibraryType</code>, without touching the file &lsquo;<tt>LibraryType.java</tt>&rsquo;
+then one could write specifications in the file
+&lsquo;<tt>LibraryType.refines-java</tt>&rsquo;, and include in that file the following
+<var>refine-prefix</var>.
+</p>
+<a name="IDX2355"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">  refine &quot;LibraryType.java&quot;;
+</pre></td></tr></table>
+
+<a name="IDX2356"></a>
+<a name="IDX2357"></a>
+<p>If you are specifying code for which no sources are available (a
+class library in binary form), then you should use the &lsquo;<tt>.spec</tt>&rsquo; or
+&lsquo;<tt>.jml</tt>&rsquo; suffixes to write the specification.  Such specifications
+act much like those written in &lsquo;<tt>.refines-spec</tt>&rsquo; or
+&lsquo;<tt>.refines-jml</tt>&rsquo; files, but would not include a
+<var>refine-prefix</var>.
+They allow specifications to be written without having to write Java
+code for the bodies of methods (as do all non-&lsquo;<tt>.java</tt>&rsquo;) files.
+</p>
+<p>Another reason for writing specifications in different files is to
+prevent the specifications from &ldquo;cluttering up&rdquo; the code (making it
+hard to see all of the code at once). This is also possible by using
+separate files for the specification and the code.
+In such a case one has a choice of suffixes, depending on whether one
+considers the code to be primary or the specification.  If the code is
+primary, or has been written already, then one can treat the code as
+if it were written in an extra library, using the &lsquo;<tt>.refines-java</tt>&rsquo;
+(or &lsquo;<tt>.refines-spec</tt>&rsquo; or &lsquo;<tt>.refines-jml</tt>&rsquo;) suffixes to specify the
+Java files as above.
+</p>
+<a name="IDX2358"></a>
+<a name="IDX2359"></a>
+<a name="IDX2360"></a>
+<p>On the other hand, if the specification is primary, or is to be
+written first, one could instead use the &lsquo;<tt>.java-refined</tt>&rsquo;
+(or &lsquo;<tt>.spec-refined</tt>&rsquo; or &lsquo;<tt>.jml-refined</tt>&rsquo;) suffixes,
+and then write a <var>refine-prefix</var> in the &lsquo;<tt>.java</tt>&rsquo; file.
+For example, one might specify
+the class <code>MyType</code> in a file named &lsquo;<tt>MyType.java-refined</tt>&rsquo;.
+Then one could write the implementation of <code>MyType</code> in a file
+called &lsquo;<tt>MyType.java</tt>&rsquo;.  The file &lsquo;<tt>MyType.java</tt>&rsquo; would include
+the following <var>refine-prefix</var>:
+</p>
+<a name="IDX2361"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">  refine &quot;MyType.java-refined&quot;;
+</pre></td></tr></table>
+
+<p>In this case,
+the specification found in &lsquo;<tt>MyType.java-refined</tt>&rsquo;
+<em>is a refinement</em> of the implementation found in &lsquo;<tt>MyType.java</tt>&rsquo;.
+</p>
+<p>Combinations of these techniques can also be used, by using several
+files instead of just a code file and a specification file.
+See section <a href="#SEC196">Refinement Chains</a>, for the meaning of JML specifications in
+this general case.
+</p>
+<p>To summarize, aside from the standard &lsquo;<tt>.java</tt>&rsquo; suffix,
+one would use file name suffixes as follows.
+</p><ul>
+<li>
+If you are specifying before coding, but
+want to keep the specifications in a different file,
+but you want to have the &lsquo;<tt>.java</tt>&rsquo; file refer directly to the
+specification, then use one of the 
+suffixes: &lsquo;<tt>.java-refined</tt>&rsquo;, &lsquo;<tt>.spec-refined</tt>&rsquo;, or
+&lsquo;<tt>.jml-refined</tt>&rsquo;).  The &lsquo;<tt>.java</tt>&rsquo; file would name the file it
+refines (as would other files in the chain) in a <var>refine-prefix</var>.
+
+</li><li>
+If you have a &lsquo;<tt>.java</tt>&rsquo; file, but the <var>refine-prefix</var> cannot
+or should not appear in that &lsquo;<tt>.java</tt>&rsquo; file, then use one of the
+suffixes: &lsquo;<tt>.refines-java</tt>&rsquo;, &lsquo;<tt>.refines-spec</tt>&rsquo;, or
+&lsquo;<tt>.refines-jml</tt>&rsquo;.
+
+</li><li>
+If there is no &lsquo;<tt>.java</tt>&rsquo; source file that will be available to the
+tools, the specify the type using a &lsquo;<tt>.spec</tt>&rsquo; or &lsquo;<tt>.jml</tt>&rsquo; file,
+without using a <var>refine-prefix</var>.
+</li></ul>
+
+<hr size="6">
+<a name="Refinement-Chains"></a>
+<a name="SEC196"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC195" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC197" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC193" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC193" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_17.html#SEC200" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 16.3 Refinement Chains </h2>
+
+<p>Compilation Units that jointly give the specifications of a type form a
+refinement chain.  It begins at a base (or most-refined) compilation unit,
+proceeding by means of the <code>refine</code> annotation links, until a file
+is found that has no <code>refine</code> statement.  That file is the end of
+the refinement chain and is the least-refined compilation unit.
+</p>
+<p>For a given type in a given package, the base of the refinement chain is
+found as follows.  Each entry of the classpath is searched in order for a 
+directory whose name matches the package of the type and that contains a file
+whose name has a prefix matching the type name and a suffix that is an active
+suffix as defined above.  The first such file found is the base of the
+refinement chain.  If the first classpath entry to contain a candidate file
+contains more than one candidate file, then the file with the most active
+suffix is the base of the chain.
+</p>
+<p>The subsequent elements of the refinement chain are given by the filenames
+provided in the <code>refine</code> statements.  Each element of the chain is in
+the same package.  Thus the file corresponding to the <code>refine</code> 
+statement is the first file found by searching the classpath entries in
+order and that is in the directory corresponding to the package of the type
+and has the filename and suffix given in the <code>refine</code> statement.
+</p>
+<p>To help ensure that the base is correctly selected, the file with the
+most active suffix must be the base of a refinement sequence, otherwise
+the JML typechecker issues an error message.  Also, the prefix of the
+base file must be the same as the public type declared in that
+compilation unit or an error message is issued.  However, it is not
+necessary that the file being refined have the same prefix as the file
+at the base of the refinement chain (except that the .java file, if it is
+in the refinement sequence, must have a name given by the Java rules for
+naming compilation units).  Furthermore, a file with the same
+prefix as the base file may not be in a different refinement sequence.
+For example, &lsquo;<tt>SomeName.java-refined</tt>&rsquo; can be refined by
+&lsquo;<tt>MyType.java</tt>&rsquo; as long as there is no refinement sequence with
+&lsquo;<tt>SomeName</tt>&rsquo; as the prefix of the base of another refinement.
+</p>
+<p>The JML tools deal with all files in a refinement chain whenever one of
+them is selected for processing by the tool.  This allows all of the
+specifications that apply to be consistently dealt with at all times.
+For example, suppose that there are files named &lsquo;<tt>Foo.refines-java</tt>&rsquo;
+and &lsquo;<tt>Foo.java</tt>&rsquo;, then if a tool selects the &lsquo;<tt>Foo.java</tt>&rsquo;, e.g.,
+with the command:
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   jmlc *.java
+</pre></td></tr></table>
+
+<p>then it will see both the &lsquo;<tt>Foo.refines-java</tt>&rsquo; and the
+&lsquo;<tt>Foo.java</tt>&rsquo; file (as long as &lsquo;<tt>Foo.refines-java</tt>&rsquo; appears in
+a specification path directory before or with &lsquo;<tt>Foo.java</tt>&rsquo;).
+</p>
+<p>A given .java file (that is, compilation unit)
+may have more than one top-level class declaration
+within it.  Only one may be public, and Java requires that the name of that
+type match the name of the file, so that the definition of the type can be
+found in the file system.  The non-public types within that 
+compilation unit may be 
+referred to only within that compilation unit.  Consequently, all specifications
+of those non-public types must occur along with the specifications of the 
+public type in that compilation unit.  For example, suppose a file &lsquo;<tt>A.java</tt>&rsquo;
+contains the Java declaration of types <code>A</code> and <code>B</code>.  Then if the
+specifications of type <code>A</code> are in &lsquo;<tt>A.refines-java</tt>&rsquo;, the specifications of
+type <code>B</code> must also be in &lsquo;<tt>A.refines-java</tt>&rsquo;.  For simple one-file programs,
+the one compilation unit may contain only non-public types.  Then the specifications
+for those types are found in specification files with the same prefix as the filename
+of the Java file containing the type declarations.
+</p>
+<hr size="6">
+<a name="Type-Checking-Refinements"></a>
+<a name="SEC197"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC196" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC198" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC193" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC193" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_17.html#SEC200" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 16.4 Type Checking Refinements </h2>
+
+<p>There are some restrictions on what can appear in the different files
+involved in a particular refinement.  Since the Java compilers only
+see the &lsquo;<tt>.java</tt>&rsquo; files, executable code (that is not just for use
+in specifications) should only be placed in the &lsquo;<tt>.java</tt>&rsquo; files.
+In particular the following restrictions are enforced by JML.
+</p><ul>
+<li>
+<a name="IDX2362"></a>
+<a name="IDX2363"></a>
+<a name="IDX2364"></a>
+<a name="IDX2365"></a>
+<a name="IDX2366"></a>
+<a name="IDX2367"></a>
+<a name="IDX2368"></a>
+<a name="IDX2369"></a>
+When the same method is declared in more than one file in a refinement
+sequence, most parts of the method declaration must be identical in
+all the files.  (Two method declarations are considered to be
+declaring the <em>same method</em> if they have the same signature, i.e.,
+same name, same generic type parameters, and static formal parameter types.)  
+However, in addition to
+the signature of such a method, the return type, the names of the
+formal parameters, the declared exceptions the method may throw, and
+the non-JML modifiers <code>public</code>, <code>protected</code>, <code>private</code>,
+<code>static</code>, and <code>final</code>, must all match exactly in each such
+declaration in a refinement chain.
+
+</li><li>
+<a name="IDX2370"></a>
+The <code>model</code> modifier must appear in all declarations of a given
+method or it must appear in none of them.  It is not permitted to
+implement a model method with a non-model method or to refine a
+non-model method with a model method.  Use a <code>spec_public</code> or
+<code>spec_protected</code> method if you want to use a non-model method in a
+specification.  Also, there may be no nesting of model declarations: 
+model classes and model methods may not contain model or ghost declarations. 
+
+</li><li>
+<a name="IDX2371"></a>
+<a name="IDX2372"></a>
+<a name="IDX2373"></a>
+<a name="IDX2374"></a>
+<a name="IDX2375"></a>
+Some of the JML method modifiers do not always have to match in all
+declarations of the same method in a refinement chain.  One may add
+<code>pure</code>, <code>non_null</code>, <code>nullable</code>, <code>spec_public</code>, or
+<code>spec_protected</code> to any of the declarations for a method in any
+file.  However, if <code>pure</code> is added to a method specification,
+then all subsequent declarations of that method in a refinement
+sequence must also be declared <code>pure</code>.  Also, it is, of course,
+not permitted to add <code>spec_protected</code> to a method that has been
+declared <code>public</code> or <code>spec_public</code> in other declarations.
+One can add <code>non_null</code> or <code>nullable</code> to any formal parameter in any file,
+although good style suggests that all of these annotations appear on
+one declaration of that method.
+
+</li><li>
+<a name="IDX2376"></a>
+<a name="IDX2377"></a>
+<a name="IDX2378"></a>
+The specification of a refining method declaration must start with the
+JML keyword <code>also</code>; if it does not an error message is issued.  A
+<em>refining method declaration</em> is a declaration that overrides a
+superclass method or refines the specification of the same method in a
+refinement chain.  In JML, method specifications are inherited by
+subclasses and in refinement chains.  The <code>also</code> keyword
+indicates that the current specification is refining the specification
+inherited either from the superclass or from the previous declaration
+of the method in a refinement sequence.  Therefore, it is an error if
+the specification of a non-refining method begins with <code>also</code>
+(unless it overrides an inherited method).
+
+</li><li>
+<a name="IDX2379"></a>
+<a name="IDX2380"></a>
+<a name="IDX2381"></a>
+<a name="IDX2382"></a>
+If a non-model method has a body, then the body can only appear in a
+&lsquo;<tt>.java</tt>&rsquo; file; an error message is issued if the body of a
+non-model method appears in a file with any other suffix.
+Furthermore, the body of a model method may only appear in one file of
+a refinement sequence.  This means that each method of each class can
+have at most one method body.
+
+</li><li>
+<a name="IDX2383"></a>
+<a name="IDX2384"></a>
+<a name="IDX2385"></a>
+<a name="IDX2386"></a>
+<a name="IDX2387"></a>
+<a name="IDX2388"></a>
+<a name="IDX2389"></a>
+<a name="IDX2390"></a>
+When the same field is declared in more than one file in a refinement
+sequence, then the signature of each such declaration must be
+identical in all the files.  (Two field declarations are considered to
+be declaring the <em>same field</em> if they have the same name.)  The
+signature of such a field, including its type, the non-JML modifiers
+<code>public</code>, <code>protected</code>, <code>private</code>, <code>static</code>, and
+<code>final</code>, must all match exactly in each such declaration.
+
+</li><li>
+<a name="IDX2391"></a>
+<a name="IDX2392"></a>
+All declarations of a given field must either use the modifier
+<code>model</code> or not.  It is not permitted to implement a model field
+with a non-model field or vice versa.  Use a <code>spec_public</code> or
+<code>spec_protected</code> field if you want to use the same name.  The
+same comment holds for <code>ghost</code> fields as well.
+
+</li><li>
+<a name="IDX2393"></a>
+<a name="IDX2394"></a>
+<a name="IDX2395"></a>
+<a name="IDX2396"></a>
+Some of the JML field modifiers do not always have to match in all
+declarations of the same field in a refinement chain.  One may add
+<code>non_null</code>, <code>nullable</code>, <code>spec_public</code>, or <code>spec_protected</code> to any
+of the declarations for a field in any file.  However, it is of
+course not permitted to add <code>spec_protected</code> to a field that has
+been declared public in other declarations.
+
+
+</li><li>
+<a name="IDX2397"></a>
+<a name="IDX2398"></a>
+<a name="IDX2399"></a>
+Initializers are not allowed in all field declarations.  A non-model
+field can have an initializer expression but it can only appear in a
+&lsquo;<tt>.java</tt>&rsquo; file because this is where a compiler expects to find it.
+
+<a name="IDX2400"></a>
+<p>Fields declared using the <code>ghost</code> modifier can have an
+initializer expression in any file, but they may have at most one
+initializer expression in all the files.
+</p>
+<a name="IDX2401"></a>
+<p>Model fields cannot have an initializer expression because there is no
+storage associated with such fields.  Use the <code>initially</code> clause
+to specify the initial state of model fields (although the initial
+state is usually determined from the represents clause).
+</p>
+</li><li>
+<a name="IDX2402"></a>
+Any number of <var>jml-var-assertion</var>'s [[[ what is this? the name must have changed - DRC]]] can be declared for any field
+declaration and these are all conjoined.  For example, if a variable
+<code>int count</code> is declared and there are two <code>initially</code> clauses,
+in the same or different files, then these initially clause predicates
+are conjoined; that is, both must be satisfied initially.
+
+</li><li>
+<a name="IDX2403"></a>
+<a name="IDX2404"></a>
+<a name="IDX2405"></a>
+An initializer block or a static initializer block (with code) may
+only appear in a &lsquo;<tt>.java</tt>&rsquo; file.  One can write annotations to
+specify the effects of such initializers in JML annotations in other
+files, using the keywords <code>initializer</code> and
+<code>static_initializer</code>.
+</li></ul>
+
+<p>JML uses specification inheritance to impose the specifications of
+supertypes on their subtypes [Dhara-Leavens96] [Leavens-Naumann06] [Leavens06b]
+to support the concept of
+behavioral subtyping [America87] [Leavens90] [Leavens91]
+[Leavens-Weihl90] [Leavens-Weihl95] [Liskov-Wing94].  JML also supports
+a notion of weak behavioral subtyping [Dhara-Leavens94b] [Dhara97].
+</p>
+<hr size="6">
+<a name="Refinement-Viewpoints"></a>
+<a name="SEC198"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC197" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC199" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC193" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC193" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_17.html#SEC200" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 16.5 Refinement Viewpoints </h2>
+
+<p>In refinements, specification inheritance allows the specifier to
+separate the public, protected, and private specifications into
+different files.  Public specifications give the public behavior and are
+meant for clients of the class.  Protected specifications are meant for
+programmers creating subclasses and give the protected behavior of the
+type; they give the behavior of protected methods and fields that are
+not visible to clients.  Similarly, private specifications are meant for
+implementors of the class and provide the behavior related to private
+methods and fields of the class; implementors must satisfy the combined
+public, protected, and private specifications of a method.
+</p>
+<p>[[[Needs work]]]
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC199">16.5.1 Default Constructor Refinement</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Default-Constructor-Refinement"></a>
+<a name="SEC199"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC198" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_17.html#SEC200" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC193" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC198" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_17.html#SEC200" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 16.5.1 Default Constructor Refinement </h3>
+
+<p>In Java, a default constructor is automatically generated for a class 
+when no constructors are declared in a class. 
+However, in JML, a default constructor is not generated for a class unless 
+the file suffix is &lsquo;<tt>.java</tt>&rsquo; 
+(the same constructor is generated as in the Java language). 
+Consider, for example, the refinement sequence defined by the
+following three files, <code>RefineDemo.jml-refined</code>,
+<code>RefineDemo.jml</code>, and <code>RefineDemo.java</code>.
+</p>
+<a name="IDX2406"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">// ---- file RefineDemo.jml-refined ---
+package org.jmlspecs.samples.jmlrefman;
+
+public class RefineDemo {
+   //@ public model int x;
+
+   /*@ public normal_behavior
+     @    assignable x;
+     @    ensures x == 0; @*/
+   public RefineDemo();
+}
+
+</pre></td></tr></table>
+
+<a name="IDX2407"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">// ---- file RefineDemo.jml -----------
+package org.jmlspecs.samples.jmlrefman;
+
+//@ refine &quot;RefineDemo.jml-refined&quot;; 
+
+public class RefineDemo {
+   protected int x_; 
+   //@           in x;
+
+   //@ protected represents x &lt;- x_;
+}
+</pre></td></tr></table>
+
+<a name="IDX2408"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">// ---- file RefineDemo.java ---------
+package org.jmlspecs.samples.jmlrefman;
+
+//@ refine &quot;RefineDemo.jml&quot;; 
+
+public class RefineDemo {
+   protected int x_; 
+   public RefineDemo() { x_ = 0; }
+}
+</pre></td></tr></table>
+
+<p>In the protected specification declared in &lsquo;<tt>RefineDemo.jml</tt>&rsquo;, 
+no constructor is defined.  
+If JML were to generate a default constructor for this class declaration, 
+then the <code>public</code> constructor defined 
+earlier in the refinement chain, in &lsquo;<tt>RefineDemo.jml-refined</tt>&rsquo;, 
+could have a visibility modifier 
+that conflicts with the one automatically generated for the protected 
+specification. (The visibility modifier of an automatically generated 
+default constructor depends on other factors including the visibility 
+of the class.  See section <a href="jmlrefman_9.html#SEC84">Lightweight Specification Cases</a>, for more details.) 
+Recall that the signature, including the visibility modifier, must 
+match for every method and constructor declared in a refinement chain.  
+To avoid such conflicts, JML does not generate a default constructor unless 
+the file suffix is &lsquo;<tt>.java</tt>&rsquo; (as part of the standard 
+compilation process). 
+</p>
+<p>A similar problem can occur when the only constructor is protected or 
+private as in the refinement sequence defined by the
+following three files, <code>RefineDemo2.jml-refined</code>,
+<code>RefineDemo2.jml</code>, and <code>RefineDemo2.java</code>.
+</p>
+<a name="IDX2409"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">// ---- file RefineDemo2.jml-refined --
+package org.jmlspecs.samples.jmlrefman;
+
+public class RefineDemo2 {
+   //@ public model int x;
+   //@ public initially x == 0;
+}
+
+</pre></td></tr></table>
+
+<a name="IDX2410"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">// ---- file RefineDemo2.jml ----------
+package org.jmlspecs.samples.jmlrefman;
+
+//@ refine &quot;RefineDemo2.jml-refined&quot;; 
+public class RefineDemo2 {
+   protected int x_; 
+   //@           in x;
+
+   //@ protected represents x &lt;- x_;
+
+   /*@ protected normal_behavior
+     @    assignable x;
+     @    ensures x == 0; @*/
+   protected RefineDemo2();
+}
+
+</pre></td></tr></table>
+
+<a name="IDX2411"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">// ---- file RefineDemo2.java ---------
+package org.jmlspecs.samples.jmlrefman;
+
+//@ refine &quot;RefineDemo2.jml&quot;; 
+public class RefineDemo2 {
+   protected int x_; 
+   protected RefineDemo2() { x_ = 0; }
+}
+
+</pre></td></tr></table>
+
+<p>In this example, notice that 
+no constructor is defined for the public specification 
+in &lsquo;<tt>RefineDemo2.jml-refined</tt>&rsquo;.
+If a default constructor were generated for this class declaration, 
+then the <code>protected</code> constructor defined 
+later in the refinement chain, in &lsquo;<tt>RefineDemo2.jml</tt>&rsquo;, 
+would have a visibility modifier 
+that conflicts with the one automatically generated and 
+JML would emit an error. 
+Thus JML only generates the default constructor for the executable 
+declaration of a class in the &lsquo;<tt>.java</tt>&rsquo; file and only when required by the 
+Java language. 
+</p> 
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC193" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_17.html#SEC200" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

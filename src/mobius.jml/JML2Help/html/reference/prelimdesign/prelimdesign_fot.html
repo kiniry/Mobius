@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>Preliminary Design of JML: Footnotes</title>
+
+<meta name="description" content="Preliminary Design of JML: Footnotes">
+<meta name="keywords" content="Preliminary Design of JML: Footnotes">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="SEC_Foot"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1>Footnotes</h1>
+<h3><a name="FOOT1" href="prelimdesign_1.html#DOCF1">(1)</a></h3>
+
+<p>In JML method specifications must be placed either before the method's
+header, as shown above, or between the method's header and its body.
+In this document, we always place the specification before the method header.
+This convention is followed by many Java tools, in particular by Javadoc;
+It has the advantage of working in all cases, even when the method has no body.
+</p><h3><a name="FOOT2" href="prelimdesign_1.html#DOCF2">(2)</a></h3>
+
+<p>In a protected specification,
+both public and protected identifiers can be used.
+In a specification with default (i.e., no) visibility specified,
+which corresponds to Java's default visibility,
+public and protected identifiers can be used, as well as identifiers
+from the same package with default visibility.
+A private specification can use any identifiers that are available.
+The privacy level of a method specification
+cannot allow more access than the method being specified.
+Thus a public method may have a private specification,
+but a private method may not have a public specification.
+</p><h3><a name="FOOT3" href="prelimdesign_1.html#DOCF3">(3)</a></h3>
+
+<p>The keyword <code>pre</code> can also be used as a synonym for <code>requires</code>.
+</p><h3><a name="FOOT4" href="prelimdesign_1.html#DOCF4">(4)</a></h3>
+
+<p>The keyword <code>post</code> can also be used as a synonym for <code>ensures</code>.
+</p><h3><a name="FOOT5" href="prelimdesign_1.html#DOCF5">(5)</a></h3>
+
+<p>The result plus one squared will become negative if the result is
+larger than 46340, due to integer overflow.
+Patrice Chalin pointed out that in an earlier version of this
+specification there were overflow problems [Chalin02].
+In Java integer arithmetic, one plus the maximum integer is the
+minimum integer. 
+This specification deals with such problems by limiting the result to
+be a positive integer and by the implication on lines 8-9.
+See the specification of <code>IntMathOps2</code> below for another way to deal with
+these problems.
+</p><h3><a name="FOOT6" href="prelimdesign_1.html#DOCF6">(6)</a></h3>
+
+<p>Since HTML tags are not case sensitive, in this one place JML
+is also not case sensitive.
+That is, the syntax also permits the tags <code>&lt;JML&gt;</code>, <code>&lt;/JML&gt;</code>.
+For compatibility with ESC/Java, JML also supports the tags
+<code>&lt;esc&gt;</code>, <code>&lt;/esc&gt;</code>, <code>&lt;ESC&gt;</code>, and <code>&lt;/ESC&gt;</code>.
+</p><h3><a name="FOOT7" href="prelimdesign_1.html#DOCF7">(7)</a></h3>
+
+<a name="IDX73"></a>
+<p>Because the current ESC/Java2 tool does not
+understand <code>spec_bigint_math</code> mode,
+the specification uses uses annotation markers
+<code>/*+@</code> and <code>@+*/</code>.
+These markers are understood by the ISU JML tools, but are considered to
+be comments by ESC/Java2.
+</p><h3><a name="FOOT8" href="prelimdesign_1.html#DOCF8">(8)</a></h3>
+ 
+<p>The <code>jmldoc</code> tool is generously provided by David Cok; thanks David!.
+</p><h3><a name="FOOT9" href="prelimdesign_2.html#DOCF9">(9)</a></h3>
+
+<p>In JML invariants also apply to non-public methods as well.  The only
+exception is that a private method or constructor may 
+be marked with the <code>helper</code> modifier; such methods cannot assume
+and do not need to establish the invariant.
+</p><h3><a name="FOOT10" href="prelimdesign_2.html#DOCF10">(10)</a></h3>
+<p> For historical reasons, one
+can also use the keyword <code>modifiable</code> as a synonym for
+<code>assignable</code>.  Also, for compatibility with (older versions of)
+ESC/Java [Leino-etal00], in JML, one can also use the keyword
+<code>modifies</code> as a synonym for <code>assignable</code>.  In the
+literature, the most common keyword for such a clause is
+<code>modifies</code>, and what JML calls the &ldquo;assignable clause&rdquo; is
+usually referred to as a &ldquo;modifies clause&rdquo;.  However, in JML,
+&ldquo;assignable&rdquo; most closely corresponds to the technical meaning, so
+we use that throughout this document.  Users of JML may write
+whichever they prefer, and may mix them if they please.
+</p><h3><a name="FOOT11" href="prelimdesign_2.html#DOCF11">(11)</a></h3>
+<p>Assuming that <code>x</code> is not
+the same object as <code>this</code>!
+</p><h3><a name="FOOT12" href="prelimdesign_2.html#DOCF12">(12)</a></h3>
+
+<p>Thanks to Erik Poll for discussions on checking of assignable
+clauses.
+</p><h3><a name="FOOT13" href="prelimdesign_2.html#DOCF13">(13)</a></h3>
+
+<p>Furthermore, static model fields must have concrete implementations
+in the interfaces in which they are declared, if they are to have
+any representation at all.
+See section <a href="prelimdesign_2.html#SEC29">Data Groups and Represents Clauses</a>, for more on this subject.
+</p><h3><a name="FOOT14" href="prelimdesign_2.html#DOCF14">(14)</a></h3>
+
+<p>The keyword &ldquo;<code>exsures</code>&rdquo; can also be used in place of <code>signals</code>.
+</p><h3><a name="FOOT15" href="prelimdesign_2.html#DOCF15">(15)</a></h3>
+
+<p>Of course, one could specify <code>BoundedStackInterface</code> without
+separating out the interface <code>BoundedThing</code>,
+and in that case, these layers would be unnecessary.
+We have made this separation partly to demonstrate more advanced features
+of JML, and partly to make the parts of the example smaller.
+</p><h3><a name="FOOT16" href="prelimdesign_2.html#DOCF16">(16)</a></h3>
+
+<p>Note that the permission to assign a field goes from the more abstract
+field to the one in its group (which in this case is also abstract).
+M&uuml;ller points out that
+this direction is necessary for information hiding,
+because concrete fields are often hidden (e.g., they may
+be <code>private</code>), and as such cannot appear in public specifications,
+so the public specification has to mention the more abstract field,
+which give assignment rights to its members [Mueller02].
+</p><h3><a name="FOOT17" href="prelimdesign_2.html#DOCF17">(17)</a></h3>
+
+<p>Thanks to Erik Poll for pointing this out.
+</p><h3><a name="FOOT18" href="prelimdesign_2.html#DOCF18">(18)</a></h3>
+
+<p>Meyer's second specification and implementation of stacks
+(see page 349 of [Meyer97]) is no better in this respect,
+although, of course, the implementation does keep track of the elements
+properly.
+</p><h3><a name="FOOT19" href="prelimdesign_2.html#DOCF19">(19)</a></h3>
+
+<p>There is no use of <code>initially</code> in this interface,
+so data type induction cannot assume any particular starting value.
+But this is desirable, since if a particular starting value was
+specified, then by the history constraint, all objects would have
+that value.
+</p><h3><a name="FOOT20" href="prelimdesign_2.html#DOCF20">(20)</a></h3>
+
+<p>One may also give <code>exceptional_example</code> clauses,
+which are analogous to <code>exceptional_behavior</code> specifications,
+and <code>example</code> clauses, which are analogous to <code>behavior</code>
+specifications. 
+There is also a lightweight form of example, this is
+similar to the <code>example</code> form, except that the introductory keywords
+&ldquo;<code>public example</code>&rdquo; are omitted.
+</p><h3><a name="FOOT21" href="prelimdesign_2.html#DOCF21">(21)</a></h3>
+
+<p><em>Observable aliasing</em>
+is a sharing relation between objects that can be detected by a program.
+Such a program, might, for example modify one object and read a changed value
+from the shared object.
+Formalizing this in general is beyond the scope of this paper,
+and probably beyond what JML can describe.
+</p><h3><a name="FOOT22" href="prelimdesign_2.html#DOCF22">(22)</a></h3>
+
+<p>This <code>represents</code> clause is implicitly an instance, as opposed to
+a static, represents clause, because it appears in a class
+declaration.
+</p><h3><a name="FOOT23" href="prelimdesign_2.html#DOCF23">(23)</a></h3>
+
+<p>As of JDK 1.4, <code>assert</code> is also a reserved word in Java.
+One can thus write assert statements either in standard Java or in
+JML annotations.
+If one writes an assert statement as a JML annotation,
+all of the JML extensions to the Java expression syntax 
+see section <a href="prelimdesign_3.html#SEC50">Extensions to Java Expressions for Predicates</a>
+for the predicate can be used,
+but no side-effects are allowed in this predicate.
+Such a JML <var>assert-statement</var> may also refer to model and ghost variables.
+In a Java assert statement, i.e., in an <var>assert-statement</var> that
+is not in an annotation, one cannot use JML's extensions for assertions,
+because such assertions must compile with a Java compiler.
+</p><h3><a name="FOOT24" href="prelimdesign_2.html#DOCF24">(24)</a></h3>
+
+<p>When such private and default visibility specification cases are
+visible to callers, they may only be 
+used in verification of a method call if the call can be shown to be
+executing that method, as opposed to some override.
+</p><h3><a name="FOOT25" href="prelimdesign_2.html#DOCF25">(25)</a></h3>
+
+<p>However, textual copying shouldn't be taken literally;
+if a subclass declares a field that hides the fields of its superclass,
+renaming must be done to prevent name capture.
+</p><h3><a name="FOOT26" href="prelimdesign_3.html#DOCF26">(26)</a></h3>
+
+<p>Suppose <i>A</i> is the superclass of <i>B</i>, and <i>B</i> is the superclass of <i>C</i>.
+Suppose <i>B</i>'s specification used <code>super</code> to call a method of <i>A</i>.
+The problem is that when this specification is inherited by <i>C</i>,
+if we imagine copying <i>B</i>'s specification to <i>C</i>,
+then this use of <i>super</i> no longer refers to <i>A</i>, but to <i>B</i>.
+Thanks to Arnd Poetzsch-Heffter for pointing out this problem.
+</p><h3><a name="FOOT27" href="prelimdesign_3.html#DOCF27">(27)</a></h3>
+
+<p>Note that it is wrong to use <code>\fresh(this)</code> in the specification
+of a constructor, because Java's <code>new</code> operator allocates storage
+for the object; the constructor's job is just to initialize that
+storage.
+</p><hr size="1">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

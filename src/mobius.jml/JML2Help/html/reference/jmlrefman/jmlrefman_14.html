@@ -1,0 +1,632 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 14. Model Programs</title>
+
+<meta name="description" content="JML Reference Manual: 14. Model Programs">
+<meta name="keywords" content="JML Reference Manual: 14. Model Programs">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Model-Programs"></a>
+<a name="SEC180"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC179" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC181" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 14. Model Programs </h1>
+
+<p>This chapter discusses JML's model programs, which 
+are adapted from the refinement calculus
+[Back88] [Back-vonWright89a] [Buechi-Weck00] [Morgan94] [Morris87].
+Details of JML's design and semantics for model program specifications
+are described in a recent paper [Shaner-Leavens-Naumann07].
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC181">14.1 Ideas Behind Model Programs</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC182">14.2 Extracting Model Program Specifications</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC183">14.3 Details of Model Programs</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">   
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC184">14.4 Nondeterministic Choice Statement</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC185">14.5 Nondeterministic If Statement</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC186">14.6 Specification Statements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">    
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Ideas-Behind-Model-Programs"></a>
+<a name="SEC181"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC180" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC182" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 14.1 Ideas Behind Model Programs </h2>
+
+<p>The basic idea of a model program is that it is a specification that is
+written as an abstract algorithm.  Such an abstract algorithm 
+specifies a method in the sense that the method's execution should be
+a refinement of the model program.
+</p>
+<a name="IDX2257"></a>
+<a name="IDX2258"></a>
+<a name="IDX2259"></a>
+<a name="IDX2260"></a>
+<p>JML adopts ideas from B&uuml;chi and Weck's &quot;grey-box approach&quot; 
+to specification [Buechi-Weck00] [Buechi00].
+<a name="IDX2261"></a>
+However, JML structurally restricts the notion of 
+refinement by not permitting all implementations with
+behavior that refines the model program, but only allowing
+implementations that syntactically match the model program
+<a name="IDX2262"></a>
+<a name="IDX2263"></a>
+<a name="IDX2264"></a>
+[Shaner-Leavens-Naumann07].
+The current JML notion of matching uses <var>refining-statement</var>s
+(see section <a href="jmlrefman_12.html#SEC173">Refining Statements</a>), as explained below.
+This turns out to be a simple and easy to understand
+technique for specifying and verifying both 
+higher-order features and callbacks.
+</p>
+<a name="IDX2265"></a>
+<a name="IDX2266"></a>
+<p>Consider the following example (from a survey on behavioral subtyping by
+Leavens and Dhara [Leavens-Dhara00]).
+In this example, both the methods are specified using model programs,
+which are explained below.
+</p>
+<a name="IDX2267"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.dirobserver;
+
+//@ model import org.jmlspecs.models.JMLString;
+//@ model import org.jmlspecs.models.JMLObjectSetEnumerator;
+
+/** Directories that can be both read and written. */
+public interface Directory extends RODirectory {
+
+  /** Add a mapping from the given string 
+   *  to the given file to this directory.
+   */
+  /*@ public model_program {
+    @   normal_behavior
+    @     requires !in_notifier &amp;&amp; n != null &amp;&amp; n != &quot;&quot; &amp;&amp; f != null;
+    @     assignable entries;
+    @     ensures entries != null
+    @        &amp;&amp; entries.equals(\old(entries.extend(
+    @                                        new JMLString(n), f)));
+    @
+    @   maintaining !in_notifier &amp;&amp; n != null &amp;&amp; n != &quot;&quot; &amp;&amp; f != null
+    @               &amp;&amp; e != null;
+    @   decreasing e.uniteratedElems.size();
+    @   for (JMLObjectSetEnumerator e = listeners.elements();
+    @        e.hasMoreElements(); ) {
+    @     set in_notifier = true;
+    @     ((DirObserver)e.nextElement()).addNotification(this, n);
+    @     set in_notifier = false;
+    @   }
+    @ }
+    @*/
+  public void addEntry(String n, File f);
+
+  /** Remove the entry with the given name from this directory. */
+  /*@ public model_program {
+    @   normal_behavior
+    @     requires !in_notifier &amp;&amp; n != null &amp;&amp; n != &quot;&quot;;
+    @     assignable entries;
+    @     ensures entries != null
+    @        &amp;&amp; entries.equals
+    @               (\old(entries.removeDomainElement(
+    @                                             new JMLString(n))));
+    @
+    @   maintaining !in_notifier &amp;&amp; n != null &amp;&amp; n != &quot;&quot; &amp;&amp; e != null;
+    @   decreasing e.uniteratedElems.size();
+    @   for (JMLObjectSetEnumerator e = listeners.elements();
+    @        e.hasMoreElements(); ) {
+    @     set in_notifier = true;
+    @     ((DirObserver)e.nextElement()).removeNotification(this, n);
+    @     set in_notifier = false;
+    @   }
+    @ }
+    @*/
+  public void removeEntry(String n);
+}
+</pre></td></tr></table>
+
+<a name="IDX2268"></a>
+<a name="IDX2269"></a>
+<p>Both model programs in the above example are formed from a specification
+statement, which begins with the keyword <code>normal_behavior</code> in these
+examples, and a for-loop.  The key event in the for loop bodies is a
+method call to a method (<code>addNotification</code>
+or <code>removeNotification</code>).  These calls must occur in a state
+equivalent to the one reached in the model program for the
+implementation to be legal.
+</p>
+<p>The specification statements abstract away part of a correct implementation.
+The <code>normal_behavior</code> statements in these examples both have a
+precondition, a frame axiom, and a postcondition.  These mean that the
+statements that they abstract away from must be able to, in any state
+satisfying the precondition, finish in a state satisfying the
+postcondition, while only assigning to the locations (and their
+dependees) named in the frame axiom.
+For example, the first specification statement says that whenever
+<code>in_notifier</code> is false, <code>n</code> is not null and not empty, and
+<code>f</code> is not null, then this part of the method can assign to
+<code>entries</code> something that isn't null and that is equal to the old
+value of <code>entries</code> extended with a pair consisting of the string
+<code>n</code> and the file <code>f</code>.
+</p>
+<p>The model field <code>entries</code>, of type <code>JMLValueToObjectMap</code>,
+is declared in the supertype <code>RODirectory</code> [Leavens-Dhara00].
+</p>
+<a name="IDX2270"></a>
+<a name="IDX2271"></a>
+<a name="IDX2272"></a>
+<p>Implementations of model programs must match each specification
+statement in a model program with a corresponding refining statement.
+In the matching refining statement, 
+the specification part must be textually equal to the specification statement.
+The body of the refining statement must thus implement the given
+specification for that statement
+(see section <a href="jmlrefman_12.html#SEC173">Refining Statements</a>).
+</p>
+<hr size="6">
+<a name="Extracting-Model-Program-Specifications"></a>
+<a name="SEC182"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC181" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC183" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 14.2 Extracting Model Program Specifications </h2>
+
+<p>Since refining statements contain both specifications and
+implementations, it is possible to extract a model program
+specification from an implementation with (zero or more) refining
+statements. This is done by using the modifier <code>extract</code> on the
+method [Shaner-Leavens-Naumann07].
+[[[Give example.]]]
+</p>
+<hr size="6">
+<a name="Details-of-Model-Programs"></a>
+<a name="SEC183"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC182" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC184" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 14.3 Details of Model Programs </h2>
+
+<p>The following gives the syntax of model programs.
+See section <a href="jmlrefman_12.html#SEC163">Statements and Annotation Statements</a>, for the parts of the
+syntax of statements that are unchanged from Java.  The
+<var>jml-compound-statement</var> and 
+<var>jml-statement</var> syntax is the same as the <var>compound-statement</var>
+and <var>statement</var> syntax, except that <var>model-prog-statement</var>s
+are not flagged as errors within the <var>jml-compound-statement</var> and
+<var>jml-statement</var>s.
+</p>
+<a name="IDX2273"></a>
+<a name="IDX2274"></a>
+<a name="IDX2275"></a>
+<a name="IDX2276"></a>
+<a name="IDX2277"></a>
+<a name="IDX2278"></a>
+<a name="IDX2279"></a>
+<a name="IDX2280"></a>
+<a name="IDX2281"></a>
+<a name="IDX2282"></a>
+<a name="IDX2283"></a>
+<a name="IDX2284"></a>
+<a name="IDX2285"></a>
+<a name="IDX2286"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>model-program</var> ::= [ <var>privacy</var> ] [ <code>code</code> ] <code>model_program</code> 
+                  <var>jml-compound-statement</var>
+<var>jml-compound-statement</var> ::= <var>compound-statement</var>
+<var>jml-statement</var> ::= <var>statement</var>
+<var>model-prog-statement</var> ::= <var>nondeterministic-choice</var>
+        | <var>nondeterministic-if</var>
+        | <var>spec-statement</var>
+        | <var>invariant</var>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Nondeterministic-Choice-Statement"></a>
+<a name="SEC184"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC183" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC185" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 14.4 Nondeterministic Choice Statement </h2>
+
+<p>The syntax of the <var>nondeterministic-choice</var> statement is as
+follows.
+</p>
+<a name="IDX2287"></a>
+<a name="IDX2288"></a>
+<a name="IDX2289"></a>
+<a name="IDX2290"></a>
+<a name="IDX2291"></a>
+<a name="IDX2292"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>nondeterministic-choice</var> ::= <code>choose</code> <var>alternative-statements</var>
+<var>alternative-statements</var> ::= <var>jml-compound-statement</var>
+             [ <code>or</code> <var>jml-compound-statement</var> ] &hellip;
+</pre></td></tr></table>
+
+<p>The meaning is that a correct implementation can dynamically execute
+(e.g., with an <code>if</code> or <code>switch</code> statement), one of the alternatives.
+Code may also make a static choice of one of the alternatives.
+</p>
+<hr size="6">
+<a name="Nondeterministic-If-Statement"></a>
+<a name="SEC185"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC184" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC186" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 14.5 Nondeterministic If Statement </h2>
+
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>nondeterministic-if</var> ::= <code>choose_if</code> <var>guarded-statements</var>
+             [ <code>else</code> <var>jml-compound-statement</var> ]
+<var>guarded-statements</var> ::= <var>guarded-statement</var>
+             [ <code>or</code> <var>guarded-statement</var> ] &hellip;
+<var>guarded-statement</var> ::= <code>{</code>
+             <var>assume-statement</var>
+             <var>jml-statement</var> [ <var>jml-statement</var>] &hellip; <code>}</code>
+</pre></td></tr></table>
+
+<p>The meaning of a nondeterministic if statement is that a correct
+implementation may dynamically choose any of the guarded-statements
+for which the guard (the first <var>assume-statement</var> in the 
+<var>guarded-statement</var>) is true.  If none of these are true, then it
+must execute the <var>jml-compound-statement</var> given following
+<code>else</code>, but it may not do that if one of the guards in the
+guarded statements is true.
+</p>
+<hr size="6">
+<a name="Specification-Statements"></a>
+<a name="SEC186"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC185" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC187" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 14.6 Specification Statements </h2>
+
+<p>The grammar for specification statements appears below.  It is
+unusual, compared to specification statements in refinement calculus,
+in that it allows one to specify statements that can signal
+exceptions, or terminate abruptly.  The reasons for this are based on
+verification logics for Java [Huisman01] [Jacobs-Poll01] [Ruby06], which have
+these possibilities.  The meaning of an <var>abrupt-spec-case</var> is that
+the normal termination and signaling an exception are forbidden; that
+is, the equivalent <var>spec-statement</var> using <code>behavior</code> would
+have <code>ensures false;</code> and <code>signals (Exception) false;</code>
+clauses.  Hence in an <var>abrupt-spec-case</var>, JML does not allow use
+of an <var>ensures-clause</var>, <var>signals-only-clause</var>, or
+<var>signals-clause</var>. 
+</p>
+<a name="IDX2293"></a>
+<a name="IDX2294"></a>
+<a name="IDX2295"></a>
+<a name="IDX2296"></a>
+<a name="IDX2297"></a>
+<a name="IDX2298"></a>
+<a name="IDX2299"></a>
+<a name="IDX2300"></a>
+<a name="IDX2301"></a>
+<a name="IDX2302"></a>
+<a name="IDX2303"></a>
+<a name="IDX2304"></a>
+<a name="IDX2305"></a>
+<a name="IDX2306"></a>
+<a name="IDX2307"></a>
+<a name="IDX2308"></a>
+<a name="IDX2309"></a>
+<a name="IDX2310"></a>
+<a name="IDX2311"></a>
+<a name="IDX2312"></a>
+<a name="IDX2313"></a>
+<a name="IDX2314"></a>
+<a name="IDX2315"></a>
+<a name="IDX2316"></a>
+<a name="IDX2317"></a>
+<a name="IDX2318"></a>
+<a name="IDX2319"></a>
+<a name="IDX2320"></a>
+<a name="IDX2321"></a>
+<a name="IDX2322"></a>
+<a name="IDX2323"></a>
+<a name="IDX2324"></a>
+<a name="IDX2325"></a>
+<a name="IDX2326"></a>
+<a name="IDX2327"></a>
+<a name="IDX2328"></a>
+<a name="IDX2329"></a>
+<a name="IDX2330"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>spec-statement</var> ::= [ <var>privacy</var> ] <var>behavior-keyword</var>
+                   <var>generic-spec-statement-case</var>
+        | [ <var>privacy</var> ] <var>exceptional-behavior-keyword</var>
+          <var>exceptional-spec-case</var>
+        | [ <var>privacy</var> ] <var>normal-behavior-keyword</var>
+          <var>normal-spec-case</var>
+        | [ <var>privacy</var> ] <var>abrupt-behavior-keyword</var>
+          <var>abrupt-spec-case</var>
+<var>generic-spec-statement-case</var> ::= [ <var>spec-var-decls</var> ]
+                                <var>generic-spec-statement-body</var>
+        | [ <var>spec-var-decls</var> ]
+          <var>spec-header</var>
+          [ <var>generic-spec-statement-body</var> ]
+<var>generic-spec-statement-body</var> ::= <var>simple-spec-statement-body</var>
+        | <code>{|</code> <var>generic-spec-statement-case-seq</var> <code>|}</code>
+<var>generic-spec-statement-body-seq</var> ::= <var>generic-spec-statement-case</var>
+             [ <code>also</code> <var>generic-spec-statement-case</var> ] &hellip;
+<var>simple-spec-statement-body</var> ::= <var>simple-spec-statement-clause</var>
+                               [ <var>simple-spec-statement-clause</var> ] &hellip; 
+<var>simple-spec-statement-clause</var> ::= <var>diverges-clause</var>
+        | <var>assignable-clause</var>
+        | <var>when-clause</var> | <var>working-space-clause</var> | <var>duration-clause</var>
+        | <var>ensures-clause</var> | <var>signals-only-clause</var> | <var>signals-clause</var>
+        | <var>continues-clause</var> | <var>breaks-clause</var> | <var>returns-clause</var>
+<var>abrupt-behavior-keyword</var> ::= <code>abrupt_behavior</code> | <code>abrupt_behaviour</code>
+<var>abrupt-spec-case</var> ::= <var>generic-spec-statement-case</var>
+</pre></td></tr></table>
+
+<p>The meaning of a <var>spec-statement</var> is that the code in a correct
+implementation must refine the given specification.
+One way to ensure this is to use a <var>refining-statement</var> in the
+implementation that contains the <var>spec-statement</var>
+in its specification part (see section <a href="jmlrefman_12.html#SEC173">Refining Statements</a>).
+</p>
+<p>The following subsections describe details of each of the new clauses
+that may appear in an <var>abrupt-spec-case</var> or a
+<var>generic-spec-statement-case</var>. 
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC187">14.6.1 Continues Clause</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC188">14.6.2 Breaks Clause</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">               
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC189">14.6.3 Returns Clause</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">              
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Continues-Clause"></a>
+<a name="SEC187"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC186" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC188" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC186" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 14.6.1 Continues Clause </h3>
+
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>continues-clause</var> ::= <var>continues-keyword</var> [ <var>target-label</var> ]
+                     [ <var>pred-or-not</var> ] <code>;</code>
+<var>continues-keyword</var> ::= <code>continues</code> | <code>continues_redundantly</code>
+<var>target-label</var> ::= <code>-&gt;</code> <code>(</code> <var>ident</var> <code>)</code>
+</pre></td></tr></table>
+
+<p>The meaning of the <var>continues-clause</var> is that if the statement that
+implements the specification statement executes a <code>continue</code>,
+then it must continue to the given <var>target-label</var> (if any),
+and the given predicate (if any) must hold in the state just before
+the <code>continue</code> is executed.
+</p>
+<hr size="6">
+<a name="Breaks-Clause"></a>
+<a name="SEC188"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC187" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC189" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC186" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 14.6.2 Breaks Clause </h3>
+
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>breaks-clause</var> ::= <var>breaks-keyword</var> [ <var>target-label</var> ]
+                  [ <var>pred-or-not</var> ] <code>;</code>
+<var>breaks-keyword</var> ::= <code>breaks</code> | <code>breaks_redundantly</code>
+</pre></td></tr></table>
+
+<p>The meaning of the <var>breaks-clause</var> is that if the statement that
+implements the specification statement executes a <code>break</code>,
+then it must break to the given <var>target-label</var> (if any),
+and the given predicate (if any) must hold in the state just before
+the <code>break</code> is executed.
+</p>
+<hr size="6">
+<a name="Returns-Clause"></a>
+<a name="SEC189"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC188" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC180" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC186" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 14.6.3 Returns Clause </h3>
+
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>returns-clause</var> ::= <var>returns-keyword</var> [ <var>pred-or-not</var> ] <code>;</code>
+<var>returns-keyword</var> ::= <code>returns</code> | <code>returns_redundantly</code>
+</pre></td></tr></table>
+
+<p>The meaning of the <var>returns-clause</var> is that if the statement that
+implements the specification statement executes a <code>return</code>,
+then the given predicate (if any) must hold in the state following
+evaluation of the return value, but just before
+the <code>return</code> is executed.  
+The predicate (if any) in a returns clause may use <code>\result</code>
+to name the computed return value.
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC180" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_15.html#SEC190" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

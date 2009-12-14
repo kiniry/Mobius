@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>Preliminary Design of JML: 4. Conclusions</title>
+
+<meta name="description" content="Preliminary Design of JML: 4. Conclusions">
+<meta name="keywords" content="Preliminary Design of JML: 4. Conclusions">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Conclusions"></a>
+<a name="SEC52"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC51" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_5.html#SEC54" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_5.html#SEC54" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 4. Conclusions </h1>
+
+<p>One area of future work for JML is concurrency.
+Some recent work by Rodriguez <em>et al.</em> [Rodriguez-etal05]
+has investigated the use of atomicity for specifying multi-threaded
+Java programs.
+However, these ideas are not yet implemented in most of the JML tools,
+and their use has not been fully explored.
+</p>
+<a name="IDX539"></a>
+<a name="IDX540"></a>
+<a name="IDX541"></a>
+<p>JML has also been used as
+a research vehicle in a wide variety of other studies various papers
+on these ideas can be found through the JML web page 
+&lsquo;<tt>http://www.jmlspecs.org/</tt>&rsquo;.
+</p>
+<a name="IDX542"></a>
+<p>JML is an expressive behavioral interface specification language for Java.
+It combines the best features of the Eiffel and Larch approaches to
+specification.  It allows one to write specifications that are quite precise
+and detailed, but also allows one to write lightweight specifications.
+It has examples and other forms of redundancy to allow for debugging
+specifications and for making rhetorical points.
+It supports behavioral subtyping by specification inheritance.
+</p>
+<a name="IDX543"></a>
+<a name="IDX544"></a>
+<a name="IDX545"></a>
+<a name="IDX546"></a>
+<a name="IDX547"></a>
+<p>More information on JML, including software to aid in working with JML
+specifications,
+can be obtained from &lsquo;<tt>http://www.jmlspecs.org/</tt>&rsquo;.
+The JML web site also includes an up-to-date version of this document
+with a table of contents and an index.
+</p>
+<a name="SEC53"></a>
+<h2 class="heading"> Acknowledgments </h2>
+
+<p>The work of Leavens and Ruby was supported in part by
+a grant from Rockwell International Corporation
+and by NSF grant CCR-9503168.
+Work on JML by Leavens, Baker, and Ruby was also supported in part by
+NSF grant CCR-9803843.
+Work on JML by Leavens, Ruby, and others is supported in part by 
+NSF grants CCR-0097907,CCR-0113181, CCF-0428078, and CCF-0429567.
+</p>
+<p>Many people have helped with the semantics and design of JML,
+and on this document.
+<a name="IDX548"></a>
+<a name="IDX549"></a>
+<a name="IDX550"></a>
+<a name="IDX551"></a>
+<a name="IDX552"></a>
+<a name="IDX553"></a>
+<a name="IDX554"></a>
+<a name="IDX555"></a>
+<a name="IDX556"></a>
+<a name="IDX557"></a>
+<a name="IDX558"></a>
+<a name="IDX559"></a>
+<a name="IDX560"></a>
+Thanks to Yoonsik Cheon, David Cok, Bart Jacobs, Rustan Leino, Peter
+M&uuml;ller, Erik Poll, Arnd Poetzsch-Heffter,
+and Joachim van den Berg,
+for many discussions about the semantics of JML specifications.
+Thanks to Raymie Stata for
+spear-heading an effort at Compaq SRC to unify JML and ESC/Java, and to
+Rustan and Raymie for many interesting ideas and discussions that have
+profoundly influenced JML.
+<a name="IDX561"></a>
+<a name="IDX562"></a>
+For comments on earlier drafts and
+discussions about JML thanks to Yoonsik, Bart, Rustan, Peter, Eric, Joachim,
+Raymie, Abhay Bhorkar, Patrice Chalin, Curtis Clifton, John Boyland,
+Martin B&uuml;chi, Peter Chan, David Cok, 
+<a name="IDX563"></a>
+<a name="IDX564"></a>
+<a name="IDX565"></a>
+<a name="IDX566"></a>
+<a name="IDX567"></a>
+<a name="IDX568"></a>
+<a name="IDX569"></a>
+<a name="IDX570"></a>
+<a name="IDX571"></a>
+<a name="IDX572"></a>
+<a name="IDX573"></a>
+<a name="IDX574"></a>
+<a name="IDX575"></a>
+<a name="IDX576"></a>
+<a name="IDX577"></a>
+<a name="IDX578"></a>
+<a name="IDX579"></a>
+<a name="IDX580"></a>
+<a name="IDX581"></a>
+<a name="IDX582"></a>
+Gary Daugherty, Jan Docxx, Marko van Dooren, Stephen Edwards, Michael Ernst,
+Arthur Fleck, Karl Hoech,
+Marieke Huisman, 
+Anand Ganapathy, Doug Lea, Claude Marche, Kristof Mertens,
+Yogy Namara, Sevtap Oltes,
+Arnd Poetzsch-Heffter,
+Jim Potts, Arun Raghavan,
+Alexandru D. Salcianu,
+Jim Saxe, Tammy Scherbring,
+<a name="IDX583"></a>
+<a name="IDX584"></a>
+<a name="IDX585"></a>
+Tim Wahls, Wolfgang Weck, and others we may have forgotten.
+<a name="IDX586"></a>
+<a name="IDX587"></a>
+<a name="IDX588"></a>
+<a name="IDX589"></a>
+<a name="IDX590"></a>
+<a name="IDX591"></a>
+<a name="IDX592"></a>
+<a name="IDX593"></a>
+<a name="IDX594"></a>
+<a name="IDX595"></a>
+<a name="IDX596"></a>
+<a name="IDX597"></a>
+<a name="IDX598"></a>
+<a name="IDX599"></a>
+<a name="IDX600"></a>
+Thanks to David Cok, Yoonsik Cheon, Curtis Clifton, Patrice Chalin,
+Abhay Bhorkar, Kristina Boysen, Tongjie Chen, Kui Dai, Werner Dietl,
+Marko van Dooren, Anand Ganapathy, Yogy Namara, Todd Millstein,
+Arun Raghavan, Frederic Rioux, Roy Tan, and Hao Xi
+for their work on the
+JML checker and tools used to check and manipulate
+the specifications in this document.
+<a name="IDX601"></a>
+<a name="IDX602"></a>
+<a name="IDX603"></a>
+<a name="IDX604"></a>
+Thanks to Katie Becker, Kristina Boysen, Brandon Shilling, Elizabeth Seagren,
+Ajani Thomas, and Arthur Thomas for help 
+with case studies and specifications in JML.
+<a name="IDX605"></a>
+<a name="IDX606"></a>
+<a name="IDX607"></a>
+<a name="IDX608"></a>
+<a name="IDX609"></a>
+<a name="IDX610"></a>
+<a name="IDX611"></a>
+<a name="IDX612"></a>
+<a name="IDX613"></a>
+<a name="IDX614"></a>
+<a name="IDX615"></a>
+<a name="IDX616"></a>
+Thanks to David Cok, Joe Kiniry, Yoonsik Cheon, Kristina Boysen,
+Curtis Clifton, Judy Chan Wai Ting, Peter Chan, Marko
+van Dooren, Kui Dai, Fermin da Costa Gomez, Joseph Kiniry, Roy Patrick Tan,
+and Julien Vermillard
+for bug reports about JML tools.
+<a name="IDX617"></a>
+<a name="IDX618"></a>
+<a name="IDX619"></a>
+Thanks to the students in 22C:181 at the University of Iowa in Spring
+2001, and in Com S 362 at Iowa State University
+for suggestions and comments about JML.
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_5.html#SEC54" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

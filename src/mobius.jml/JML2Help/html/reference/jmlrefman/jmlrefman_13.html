@@ -1,0 +1,435 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 13. Redundancy</title>
+
+<meta name="description" content="JML Reference Manual: 13. Redundancy">
+<meta name="keywords" content="JML Reference Manual: 13. Redundancy">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Redundancy"></a>
+<a name="SEC177"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC176" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC178" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_14.html#SEC180" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 13. Redundancy </h1>
+
+<p>JML has several features that allow the specification of implications [Tan95]
+and examples [Leavens97c] [Leavens-Baker99].  
+They are redundant in the sense that they do not constrain an
+implementation directly.
+Instead, they are useful for pointing out consequences to the specification's
+readers, for example to draw attention to some consequences of the
+specification of a method, or to illustrate it by an example.
+</p>
+<p>In addition to clauses of the form <i>X</i><code>_redundantly</code>, such as
+<code>requires_redundantly</code>, <code>ensures_redundantly</code>, etc., there
+are two sections of a method specification that are devoted to such
+redundant specifications.
+These sections of a method specification are described by the
+following grammar. 
+</p>
+<a name="IDX2214"></a>
+<a name="IDX2215"></a>
+<a name="IDX2216"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>redundant-spec</var> ::= <var>implications</var> [ <var>examples</var> ] | <var>examples</var>
+</pre></td></tr></table>
+
+<p>The two subsections below explain these features.  The description of 
+clauses of the form <i>X</i><code>_redundantly</code> is contained in the first
+section.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC178">13.1 Redundant Implications and Redundantly Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC179">13.2 Redundant Examples</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+</table>
+
+
+<hr size="6">
+<a name="Redundant-Implications-and-Redundantly-Clauses"></a>
+<a name="SEC178"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC177" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC179" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC177" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC177" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_14.html#SEC180" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 13.1 Redundant Implications and Redundantly Clauses </h2>
+
+<p>A <em>redudant implication</em> is a way of stating a claim about a
+specification.
+By itself it does not constrain an implication, but can be thought of
+a stating a theorem to be proven about a specification.
+Such redundant implications are useful for drawing the reader's
+attention to some point that might otherwise be overlooked, or that is
+important for rhetorical purposes [Leavens-Baker99].
+</p>
+<p>Redundant implications can be specified in two ways in JML.
+The first is by using clauses of the form 
+<i>X</i><code>_redundantly</code>.
+The second is by use of the <var>implications</var> section of a method
+specification, which starts with the keyword <code>implies_that</code>.
+(See section <a href="jmlrefman_9.html#SEC82">Organization of Method Specifications</a>, for the syntax of 
+<var>spec-case-seq</var>.)
+</p>
+<a name="IDX2217"></a>
+<a name="IDX2218"></a>
+<a name="IDX2219"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>implications</var> ::= <code>implies_that</code> <var>spec-case-seq</var>
+</pre></td></tr></table>
+
+<p>The <var>implications</var> section of a method
+specification says that for each visibility level <i>V</i>,
+and for each <var>spec-case</var> of visibility <i>V</i> in its 
+<var>spec-case-seq</var>, that <var>spec-case</var>
+is refined by the entire non-redundant specification of the method that
+applies at visibility level <i>V</i>.
+Thus every correct implementation of the non-redundant specification 
+must satisfy each of the <var>spec-case</var>s in the
+<var>implications</var> section.
+</p>
+<p>For example, suppose that the (desugared) meaning of the non-redundant
+part of a method's specification has the form:
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example"><i>V</i> behavior        // non-redundant
+   requires <i>Pre</i>;
+   assignable <i>x1</i>, <i>x2</i>;
+   ensures <i>NormPost</i>;
+   signals_only <i>Ex1</i>;
+   signals (Exception e) <i>ExPost</i>;
+</pre></td></tr></table>
+
+<p>and suppose that one of the <var>spec-case</var>s in its <var>implications</var>
+section has the following (desugared) meaning:
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example"><i>V</i> behavior        // redundant
+   requires <i>RedPre</i>;
+   assignable <i>x1</i>, <i>x2</i>;
+   ensures <i>RedNormPost</i>;
+   signals_only <i>Ex1</i>;
+   signals (Exception e) <i>RedExPost</i>;
+</pre></td></tr></table>
+
+<p>Then it must be the case that
+(by definition of refinement for method specifications [Leavens-Naumann06])
+the following implications hold:
+</p>
+<ul>
+<li> 
+<code>\old(<i>RedPre</i>) ==&gt; <i>Pre</i></code>,
+
+</li><li>
+<code>(\old(<i>RedPre</i>) &amp;&amp; <i>NormPost</i>) ==&gt; <i>RedNormPost</i></code>, and
+
+</li><li>
+<code>(\old(<i>RedPre</i>) &amp;&amp; <i>ExPost</i>) ==&gt; <i>RedExPost</i></code>.
+</li></ul>
+
+<p>These implications are only sensible if the
+specifications have the same visibility (<code><i>V</i></code>), 
+the same <code>assignable</code> clauses,
+and the same <code>signals_only</code> clauses.
+<a name="IDX2220"></a>
+<a name="IDX2221"></a>
+If the <code>assignable</code> clauses differ, one can adjust by adding elements to
+the non-redundant parts of the assignable clause, to widen it,
+but preserve its meaning by adding restrictions 
+(e.g., using the <code>\only_assigned</code> predicate), to the postconditions.
+Similar adjustments can be made to the non-redundant
+<code>signals_only</code> clause, by adding exceptions (or supertypes of
+exceptions) to the non-redundant <code>signals_only</code>,
+preserving its meaning by adding restrictions in the <code>signals</code> clause.
+</p>
+<a name="IDX2222"></a>
+<a name="IDX2223"></a>
+<a name="IDX2224"></a>
+<a name="IDX2225"></a>
+<a name="IDX2226"></a>
+<p>Redundant clauses are a syntactic variant of Tan's procedure claims
+[Tan95].
+The meaning of a redundant clause,
+of the form <i>X</i><code>_redundantly</code> is also defined as making a claim
+about implications, but in this case only one simple implication.
+The claim is that the predicate in the redundant clause follows from
+the meaning of the non-redundant <i>X</i> clauses.
+</p>
+<p>As an example, consider the following requires clauses.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   requires <i>Pre</i>;
+   requires_redundantly <i>RedPre</i>;
+</pre></td></tr></table>
+
+<p>These state the claim that <code><i>Pre</i> ==&gt; <i>RedPre</i></code>.
+That is, in all pre-states, whenever <code><i>Pre</i></code> is true, then
+<code><i>RedPre</i></code> must be true.
+The same pattern holds for all other clauses and their redundant
+counterparts, including ensures clauses, signals clauses (which must
+first be standardized to have the same exception
+[Raghavan-Leavens05]), invariants, etc.
+</p>
+<p>For example, recall that multiple clauses are conjoined, and thus
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   ensures <i>Q1</i>;
+   ensures <i>Q2</i>;
+   ensures_redundantly <i>RedQ1</i>;
+   ensures_redundantly <i>RedQ2</i>;
+</pre></td></tr></table>
+
+<p>is equivalent to
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   ensures <i>Q1</i> &amp;&amp; <i>Q2</i>;
+   ensures_redundantly <i>RedQ1</i> &amp;&amp; <i>RedQ2</i>;
+</pre></td></tr></table>
+
+<p>In this example, the claim stated is that:
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  (<i>Q1</i> &amp;&amp; <i>Q2</i>) ==&gt; (<i>RedQ1</i> &amp;&amp; <i>RedQ2</i>).
+</pre></td></tr></table>
+
+<p>If one is using a theorem prover, then these implications can be
+thought of as theorems to prove (in the context of the overall class
+or interface specification).
+</p>
+<p>A runtime assertion checker is free to check the specifications in
+the <var>implications</var> section,
+since they must all hold, as they should be refined by the
+non-redundant specification.
+If a redundant specification case in a method's <var>implications</var>
+section is violated, this could indicate that either:
+(a) the implications
+described above do not hold, or that 
+(b) there is a violation of the
+specification by the caller (e.g., if the precondition does not hold)
+or by the implementation of the method (e.g., if the normal
+postcondition does not hold).
+</p>
+<p>[[[Needs concrete examples.]]]
+</p>
+<hr size="6">
+<a name="Redundant-Examples"></a>
+<a name="SEC179"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC178" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_14.html#SEC180" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC177" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC177" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_14.html#SEC180" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 13.2 Redundant Examples </h2>
+
+<p>Examples are, used to point out, to readers or testing tools,
+particular cases of a method specification [Leavens97c]
+[Leavens-Baker99] [Leavens-Baker-Ruby06].
+The following gives the syntax of the <var>examples</var> section of a
+method specification.
+This section starts with the <code>for_example</code> keyword, and includes
+one or more <var>example</var>s.
+Each <var>example</var> is much like a <var>spec-case</var>
+(see section <a href="jmlrefman_9.html#SEC82">Organization of Method Specifications</a>),
+but uses various <code>example</code> keywords instead of <code>behavior</code>
+keywords, and does not permit <var>model-program</var> cases.
+</p>
+<a name="IDX2227"></a>
+<a name="IDX2228"></a>
+<a name="IDX2229"></a>
+<a name="IDX2230"></a>
+<a name="IDX2231"></a>
+<a name="IDX2232"></a>
+<a name="IDX2233"></a>
+<a name="IDX2234"></a>
+<a name="IDX2235"></a>
+<a name="IDX2236"></a>
+<a name="IDX2237"></a>
+<a name="IDX2238"></a>
+<a name="IDX2239"></a>
+<a name="IDX2240"></a>
+<a name="IDX2241"></a>
+<a name="IDX2242"></a>
+<a name="IDX2243"></a>
+<a name="IDX2244"></a>
+<a name="IDX2245"></a>
+<a name="IDX2246"></a>
+<a name="IDX2247"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>examples</var> ::= <code>for_example</code> <var>example</var> [ <code>also</code> <var>example</var> ] &hellip;
+<var>example</var> ::= [ [ <var>privacy</var> ] <code>example</code> ]
+            [ <var>spec-var-decls</var> ]
+            [ <var>spec-header</var> ]
+            <var>simple-spec-body</var>
+        | [ <var>privacy</var> ] <code>exceptional_example</code>
+          [ <var>spec-var-decls</var> ]
+          <var>spec-header</var>
+          [ <var>exceptional-example-body</var> ]
+        | [ <var>privacy</var> ] <code>exceptional_example</code>
+          [ <var>spec-var-decls</var> ]
+          <var>exceptional-example-body</var>
+        | [ <var>privacy</var> ] <code>normal_example</code>
+          [ <var>spec-var-decls</var> ]
+          <var>spec-header</var>
+          [ <var>normal-example-body</var> ]
+        | [ <var>privacy</var> ] <code>normal_example</code>
+          [ <var>spec-var-decls</var> ]
+          <var>normal-example-body</var>
+<var>exceptional-example-body</var> ::= <var>exceptional-spec-clause</var>
+                             [ <var>exceptional-spec-clause</var> ] &hellip;
+<var>normal-example-body</var> ::= <var>normal-spec-clause</var>
+                        [ <var>normal-spec-clause</var> ] &hellip;
+</pre></td></tr></table>
+
+<p>As in method <var>spec-case</var>s
+(see section <a href="jmlrefman_9.html#SEC82">Organization of Method Specifications</a>)
+there are both heavyweight and lightweight examples.
+<a name="IDX2248"></a>
+<a name="IDX2249"></a>
+A <em>lightweight</em> example does not use one of the <code>example</code>
+keywords.
+<a name="IDX2250"></a>
+<a name="IDX2251"></a>
+A <em>heavyweight</em> example uses one of the example keywords.
+As with <var>spec-case</var>s, only heavyweight examples can have a
+specified visibility; lightweight examples all have the same
+visibility as the method (or constructor) being specified.
+</p>
+<a name="IDX2252"></a>
+<p>The defaults for omitted clauses in lightweight <var>example</var>s are the
+same as those for omitted clauses in lightweight <var>spec-case</var>s.
+Similarly, heavyweight <var>example</var>s have the same defaults as heavyweight
+<var>spec-case</var>s. 
+(See section <a href="jmlrefman_9.html#SEC92">Semantics of flat behavior specification cases</a>, for the
+defaults for a lightweight and heavyweight specification cases.)
+</p>
+<a name="IDX2253"></a>
+<a name="IDX2254"></a>
+<a name="IDX2255"></a>
+<a name="IDX2256"></a>
+<p>As described in the &ldquo;Preliminary Design of JML&rdquo;
+[Leavens-Baker-Ruby06] (section 2.3.2.1)
+&ldquo;the specification in each example should be such that:
+</p><ul>
+<li>
+the example's precondition implies
+the precondition of the expanded meaning of the specified behaviors,
+
+</li><li>
+the example's assignable clause
+specifies a subset of the locations that are assignable
+according to the expanded meaning of the specified behaviors, and
+
+</li><li>
+assuming the example's assignable clause,
+the conjunction of:
+<ul>
+<li>
+the example's precondition (wrapped by <code>\old()</code>),
+
+</li><li>
+the precondition of the expanded meaning of the specified behaviors
+(also wrapped by <code>\old()</code>),
+and
+
+</li><li>
+the postcondition of the expanded meaning of the specified behaviors
+</li></ul>
+<p>should be equivalent to the example's postcondition.
+</p></li></ul>
+<p>Requiring equivalence to the example's postcondition
+means that it can serve as a test oracle for the
+inputs described by the example's precondition.
+If there is only one specified <code>public normal_behavior</code>&rdquo;
+specification case
+&ldquo;and if there are no preconditions and assignable clauses,
+then the example's postcondition should the equivalent to
+the conjunction of the example's precondition
+and the postcondition of the <code>public normal_behavior</code> specification.&rdquo;
+</p>
+<p>[[[(Needs concrete examples :-)]]]
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC177" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_14.html#SEC180" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

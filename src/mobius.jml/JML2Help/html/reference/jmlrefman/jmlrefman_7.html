@@ -1,0 +1,847 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 7. Class and Interface Member Declarations</title>
+
+<meta name="description" content="JML Reference Manual: 7. Class and Interface Member Declarations">
+<meta name="keywords" content="JML Reference Manual: 7. Class and Interface Member Declarations">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Class-and-Interface-Member-Declarations"></a>
+<a name="SEC52"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_6.html#SEC51" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC53" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_6.html#SEC35" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 7. Class and Interface Member Declarations </h1>
+
+<p>The nonterminal <var>field</var> describes all the members of classes and
+interfaces (see section <a href="jmlrefman_6.html#SEC36">Class and Interface Definitions</a>).
+</p>
+
+<a name="IDX1099"></a>
+<a name="IDX1100"></a>
+<a name="IDX1101"></a>
+<a name="IDX1102"></a>
+<a name="IDX1103"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>field</var> ::= <var>member-decl</var>
+        | <var>jml-declaration</var>
+        | <var>class-initializer-decl</var>
+        | <code>;</code>
+</pre></td></tr></table>
+
+<p>Also see section <a href="jmlrefman_25.html#SEC244">Non-null by Default</a>.
+In the rest of this chapter we describe mostly the syntax and Java
+details of member declarations and class initializers.
+See section <a href="jmlrefman_8.html#SEC63">Type Specifications</a>, for the syntax and semantics of
+<var>jml-declaration</var>, and, more generally, how to use JML to specify
+the behavior of types.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC53">7.1 Java Member Declarations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">    
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC62">7.2 Class Initializer Declarations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Java-Member-Declarations"></a>
+<a name="SEC53"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC52" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC54" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 7.1 Java Member Declarations </h2>
+
+<p>The following gives the syntax of Java member declarations.
+</p>
+<a name="IDX1104"></a>
+<a name="IDX1105"></a>
+<a name="IDX1106"></a>
+<a name="IDX1107"></a>
+<a name="IDX1108"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>member-decl</var> ::= <var>method-decl</var>
+        | <var>variable-definition</var>
+        | <var>class-definition</var>
+        | <var>interface-definition</var>
+</pre></td></tr></table>
+
+<p>See section <a href="jmlrefman_6.html#SEC36">Class and Interface Definitions</a>, for details of <var>class-definition</var>
+and <var>interface-definition</var>.  We discuss method and variable
+declarations below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC54">7.1.1 Method and Constructor Declarations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC59">7.1.2 Field and Variable Declarations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Method-and-Constructor-Declarations"></a>
+<a name="SEC54"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC53" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC55" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC53" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 7.1.1 Method and Constructor Declarations </h3>
+
+<p>The following is the syntax of a method declaration.
+</p>
+<a name="IDX1109"></a>
+<a name="IDX1110"></a>
+<a name="IDX1111"></a>
+<a name="IDX1112"></a>
+<a name="IDX1113"></a>
+<a name="IDX1114"></a>
+<a name="IDX1115"></a>
+<a name="IDX1116"></a>
+<a name="IDX1117"></a>
+<a name="IDX1118"></a>
+<a name="IDX1119"></a>
+<a name="IDX1120"></a>
+<a name="IDX1121"></a>
+<a name="IDX1122"></a>
+<a name="IDX1123"></a>
+<a name="IDX1124"></a>
+<a name="IDX1125"></a>
+<a name="IDX1126"></a>
+<a name="IDX1127"></a>
+<a name="IDX1128"></a>
+<a name="IDX1129"></a>
+<a name="IDX1130"></a>
+<a name="IDX1131"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>method-decl</var> ::= [ <var>doc-comment</var> ] &hellip;
+                <var>method-specification</var>
+                <var>modifiers</var> [ <var>method-or-constructor-keyword</var> ]
+                [ <var>type-spec</var> ] <var>method-head</var>
+                <var>method-body</var>
+        | [ <var>doc-comment</var> ] &hellip;
+          <var>modifiers</var> <var>method-or-constructor-keyword</var>
+          [ <var>type-spec</var> ] <var>method-head</var>
+          [ <var>method-specification</var> ]
+          <var>method-body</var>
+<var>method-or-constructor-keyword</var> ::= <code>method</code> | <code>constructor</code>
+<var>method-head</var> ::= <var>ident</var> <var>formals</var> [ <var>dims</var> ] [ <var>throws-clause</var> ]
+<var>method-body</var> ::= <var>compound-statement</var> | <code>;</code>
+<var>throws-clause</var> ::= <code>throws</code> <var>name</var> [ <code>,</code> <var>name</var> ] &hellip;
+</pre></td></tr></table>
+
+<p>Notice that the specification of a method
+(see section <a href="jmlrefman_9.html#SEC80">Method Specifications</a>) may appear either before or after the
+<var>method-head</var>. 
+</p>
+<a name="IDX1132"></a>
+<a name="IDX1133"></a>
+<p>The use of <code>non_null</code> as a <var>modifier</var> in a <var>method-decl</var>
+really is shorthand for a postcondition describing the normal result
+of a method, indicating that it must not be null.   It can also be seen as a
+modifier on the method's result type, saying that the type
+returned does not contain null.
+</p>
+<a name="IDX1134"></a>
+<a name="IDX1135"></a>
+<p>The use of <code>extract</code> as a <var>modifier</var> in a <var>method-decl</var>
+is shorthand for writing a model program specification.
+See section <a href="jmlrefman_14.html#SEC182">Extracting Model Program Specifications</a>, for an explanation of
+this modifier.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC55">7.1.1.1 Formal Parameters</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">           
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC56">7.1.1.2 Model Methods and Constructors</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC57">7.1.1.3 Pure Methods and Constructors</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC58">7.1.1.4 Helper Methods and Constructors</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Formal-Parameters"></a>
+<a name="SEC55"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC54" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC56" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC54" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 7.1.1.1 Formal Parameters </h4>
+
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>formals</var> ::= <code>(</code> [ <var>param-declaration-list</var> ] <code>)</code>
+<var>param-declaration-list</var> ::= <var>param-declaration</var>
+                           [ <code>,</code> <var>param-declaration</var> ] &hellip;
+<var>param-declaration</var> ::= [ <var>param-modifier</var> ] &hellip; <var>type-spec</var> <var>ident</var> [ <var>dims</var> ]
+        | <var>multijava-param-declaration</var>   <i>// When MultiJava parsing is on</i>
+<var>param-modifier</var> ::= <code>final</code> | <code>non_null</code> | <code>nullable</code>
+</pre></td></tr></table>
+
+<p>See section <a href="#SEC61">Type-Specs</a>, for more about the nonterminals <var>type-spec</var> and
+<var>dims</var>. 
+See section <a href="jmlrefman_17.html#SEC202">MultiMethods</a>, for details of <var>multijava-param-declaration</var>.
+</p>
+<a name="IDX1136"></a>
+<p>The modifier <code>non_null</code> when attached to a formal parameter is
+shorthand for a precondition that says that the corresponding actual
+parameter may not be null.  The type of a parameter that has the
+<code>non_null</code> modifier must be a reference type
+[Raghavan-Leavens05].
+</p>
+<p>The <code>non_null</code> modifier on a parameter is inherited in the same
+way as the equivalent precondition would be, so it need not be
+declared on every declaration of the same method in a subtype or refinement.
+The <code>non_null</code> modifier may be added to a method in a refinement
+file (see section <a href="jmlrefman_16.html#SEC193">Refinement</a>), and thus does not have to appear in any
+particular file in a refinement sequence.  It can be added to a method
+override in a subtype, but that will generally make the method
+non-implementable, as the method must also satisfy an inherited
+specification without the corresponding precondition.
+</p>
+
+<hr size="6">
+<a name="Model-Methods-and-Constructors"></a>
+<a name="SEC56"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC55" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC57" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC54" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 7.1.1.2 Model Methods and Constructors </h4>
+
+<p>A method or constructor that uses the modifier <code>model</code> is called
+a <em>model method or constructor</em>. 
+Since a model method is not visible to Java code, the entire method,
+including its body, should be written in an annotation.
+</p>
+<p>As usual in JML (see section <a href="jmlrefman_2.html#SEC10">Model and Ghost</a>), a model method or
+constructor is a specification-only feature.
+A model method or constructor may have either a body or a
+specification, or both.  The specification may be used in various
+verification tools, while the body allows it to be executed
+during runtime assertion checking.  Model methods may also be
+abstract, and both model methods and constructors may be final.
+</p>
+<p>[[[ Can constructors be final?  Why? - DRC ]]]
+</p>
+<a name="IDX1137"></a>
+<a name="IDX1138"></a>
+<a name="IDX1139"></a>
+<a name="IDX1140"></a>
+<p>It is usual in JML to declare model methods and constructors as
+<code>pure</code>.  However, it is possible to have a model method or
+constructor that is not pure; such methods are useful in model
+programs (see section <a href="jmlrefman_14.html#SEC180">Model Programs</a>).
+On the other hand, aside from their use in model programs, most model
+methods only exist to be called in assertions, and since only
+pure methods can be called in assertions, they should usually be
+declared as <code>pure</code>.
+</p>
+
+<hr size="6">
+<a name="Pure-Methods-and-Constructors"></a>
+<a name="SEC57"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC56" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC58" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC54" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 7.1.1.3 Pure Methods and Constructors </h4>
+
+<p>This subsubsection, which describes the effect of the <code>pure</code> modifier
+on methods and constructor declarations, is quoted from the preliminary design
+document [Leavens-Baker-Ruby06].
+</p>
+<p>We say a method
+is <em>pure</em> if it is either specified with
+the modifier <code>pure</code> or is a method that
+appears in the specification of a <code>pure</code> interface or class.
+Similarly, a constructor is pure if it is either specified with
+the modifier <code>pure</code> or appears in the specification of a <code>pure</code>
+class.
+</p>
+<p>A <em>pure method</em> that is not a constructor
+implicitly has a specification that does not allow any side-effects.
+That is, its specification
+has the clauses
+</p><table><tr><td>&nbsp;</td><td><pre class="example">           diverges false;
+           assignable \nothing;
+</pre></td></tr></table>
+<p>added to each specification case; if the method has no specification
+given explicitly, then these clauses are added as a lightweight specification.
+For this reason, if one is writing a pure method, it is not necessary
+to otherwise specify an assignable clause
+(see section <a href="jmlrefman_9.html#SEC111">Assignable Clauses</a>), although doing so may improve the
+specification's clarity.
+</p>
+<a name="IDX1141"></a>
+<a name="IDX1142"></a>
+<p>A <em>pure constructor</em> has the clauses
+</p><table><tr><td>&nbsp;</td><td><pre class="example">           diverges false;
+           assignable this.*;
+</pre></td></tr></table>
+<p>added to each specification case; if the constructor has no specification
+given explicitly, then these clauses are added as a lightweight specification.
+This specification allows the constructor to assign to the non-static
+fields of the class in which it appears (including those inherited
+from its superclasses and ghost model instance fields from the interfaces
+that it implements).
+</p>
+<a name="IDX1143"></a>
+<a name="IDX1144"></a>
+<p>Implementations of pure methods and constructors
+will be checked to see that they meet these conditions on what
+locations they can assign to.
+To make such checking modular, some JML tools prohibit a pure method
+or constructor implementation from calling methods or constructors
+that are not pure.  However, more sophisticated tools could more
+directly check the intended semantics [Salcianu-Rinard05].
+</p>
+<a name="IDX1145"></a>
+<p>A pure method or constructor must also be provably terminating.
+Although JML does not force users to make such proofs of termination,
+users writing pure methods and constructors are supposed to make pure
+methods total in the sense that whenever, a pure method is called it either
+returns normally or throws some exception.
+This is supposed to lessen the possibility that assertion evaluation
+could loop forever, aids the runtime assertion checker, which turns
+exceptions into arbitrary values of the appropriate result type, and
+helps make pure methods more like mathematical functions for
+verification purposes.  [[[ I think this has changed - exceptions in a pure
+method make the result undefined, not arbitrary - DRC]]]
+</p>
+<a name="IDX1146"></a>
+<p>Furthermore, a pure method is supposed to always either terminate
+normally or throw an exception, even for calls that do not satisfy its
+precondition.  Static verification
+tools for JML should enforce this condition, by requiring a proof
+that a pure method implementation satisfies the following
+specification
+</p><table><tr><td>&nbsp;</td><td><pre class="example">   private behavior
+     requires true;
+     diverges false;
+     assignable \nothing;
+</pre></td></tr></table>
+<p>(and similarly for constructors, except that the assignable clause
+becomes <code>assignable this.*;</code> for constructors).
+</p>
+<p>However, this implicit verification condition is a
+specification, and thus cannot be used in reasoning about
+calls to the method, even calls from within the class itself and recursive
+calls from within the implementation.
+For this reason we recommend writing the method or constructor
+specification in such a way that the effective precondition of the
+method is &ldquo;true,&rdquo; making the proof of the above implicit verification
+condition trivial, and allowing the
+termination behavior of the implementation to be relied upon by all clients.
+</p>
+<a name="IDX1147"></a>
+<p>Recursion is permitted, both in the implementation of pure methods
+and the data structures they manipulate, and in the specifications of
+pure methods.
+When recursion is used in a specification,
+the proof of well-formedness for the specification
+involves the use of JML's <code>measured_by</code> clause.
+</p>
+<p>Since a pure method may not go into an infinite loop,
+if it has a non-trivial precondition, it should throw an exception
+when its normal precondition is not met.
+This exceptional behavior does not have to be specified or programmed
+explicitly, but technically there is an obligation to meet the specification
+that the method never loops forever.
+</p>
+<a name="IDX1148"></a>
+<a name="IDX1149"></a>
+<p>Furthermore, a pure method must be deterministic, in
+the sense that when called in a given state, it must always return the
+same value.  Similarly a pure constructor should be deterministic in
+the sense that when called in a given state, it always initializes the
+object in the same way.
+</p>
+<p>A pure method can be declared in any class or interface,
+and a pure constructor can be declared in any class.
+JML will specify the pure methods and constructors
+in the standard Java libraries as pure.
+</p>
+<a name="IDX1150"></a>
+<p>As a convenience, instead of writing <code>pure</code> on each
+method declared in a class and interface,
+one can use the modifier <code>pure</code> on classes and
+interfaces and classes.
+This simply means that each non-static method and each constructor
+declared in such a class or interface is <code>pure</code>.
+Note that this does not mean that all methods inherited (but not
+declared in and hence not overridden in) the class or interface are
+pure.
+For example, every class inherits ultimately from
+<code>java.lang.Object</code>,
+which has some methods, such as <code>notify</code> and <code>notifyAll</code>
+that are manifestly not pure.
+Thus each class will have some methods that are not pure.
+Despite this, it is convenient to refer to classes and interfaces declared
+with the <code>pure</code> modifier as <em>pure</em>.
+</p>
+<a name="IDX1151"></a>
+<a name="IDX1152"></a>
+<p>In JML the modifiers <code>model</code> and <code>pure</code>
+are orthogonal.  (Recall something declared with
+the modifier <code>model</code> does not have to be
+implemented, and is used purely for specification purposes.)
+Therefore, one can have a model method
+that is not pure (these might be useful in JML's model programs)
+and a pure method that is not a model method.
+Nevertheless, usually a model method (or constructor) should be pure,
+since there is no way to use non-pure methods in an assertion,
+and model methods cannot be used in normal Java code.
+</p>
+<a name="IDX1153"></a>
+<a name="IDX1154"></a>
+<p>By the same reasoning, model classes should, in
+general, also be pure.
+Model classes cannot be used in normal Java code, and hence their
+methods are only useful in assertions (and JML's model programs).
+Hence it is typical, although not required, that a model class also be
+a pure class.
+</p>
+<a name="IDX1155"></a>
+<a name="IDX1156"></a>
+<p>As can be seen from the semantics,
+if a pure method has a return type of <code>void</code>, then it can
+essentially only do nothing.  So, while pure methods
+with <code>void</code> as their return type are not illegal, they are
+useless.
+</p>
+<hr size="6">
+<a name="Helper-Methods-and-Constructors"></a>
+<a name="SEC58"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC57" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC59" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC54" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 7.1.1.4 Helper Methods and Constructors </h4>
+
+<p>The <code>helper</code> modifier may only be used on a private method or
+constructor.  [[[ This restriction needs to be clarified - ESC/Java limits
+helper to non-overridable methods. ]]] Such a helper method or constructor has a
+specification that is not augmented by invariants and history constraints
+that would otherwise apply to it.  It can thus be thought of as not
+really a method or constructor, but merely an abbreviation device.
+However, whatever specifications are given explicitly for such a
+method or constructor still apply.
+See section <a href="jmlrefman_8.html#SEC65">Invariants</a>, for more details.
+</p>
+<hr size="6">
+<a name="Field-and-Variable-Declarations"></a>
+<a name="SEC59"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC58" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC60" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC53" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 7.1.2 Field and Variable Declarations </h3>
+
+<p>The following is the syntax of field and variable declarations.
+</p>
+<a name="IDX1157"></a>
+<a name="IDX1158"></a>
+<a name="IDX1159"></a>
+<a name="IDX1160"></a>
+<a name="IDX1161"></a>
+<a name="IDX1162"></a>
+<a name="IDX1163"></a>
+<a name="IDX1164"></a>
+<a name="IDX1165"></a>
+<a name="IDX1166"></a>
+<a name="IDX1167"></a>
+<a name="IDX1168"></a>
+<a name="IDX1169"></a>
+<a name="IDX1170"></a>
+<a name="IDX1171"></a>
+<a name="IDX1172"></a>
+<a name="IDX1173"></a>
+<a name="IDX1174"></a>
+<a name="IDX1175"></a>
+<a name="IDX1176"></a>
+<a name="IDX1177"></a>
+<a name="IDX1178"></a>
+<a name="IDX1179"></a>
+<a name="IDX1180"></a>
+<a name="IDX1181"></a>
+<a name="IDX1182"></a>
+<a name="IDX1183"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>variable-definition</var> ::= [ <var>doc-comment</var> ] &hellip; <var>modifiers</var> <var>variable-decls</var>
+<var>variable-decls</var> ::= [ <code>field</code> ] <var>type-spec</var> <var>variable-declarators</var> <code>;</code>
+                   [ <var>jml-data-group-clause</var> ] &hellip;
+<var>variable-declarators</var> ::= <var>variable-declarator</var>
+                         [ <code>,</code> <var>variable-declarator</var> ] &hellip;
+<var>variable-declarator</var> ::= <var>ident</var> [ <var>dims</var> ] [ <code>=</code> <var>initializer</var> ]
+<var>initializer</var> ::= <var>expression</var> | <var>array-initializer</var>
+<var>array-initializer</var> ::= <code>{</code> [ <var>initializer-list</var> ] <code>}</code> 
+<var>initializer-list</var> ::= <var>initializer</var> [ <code>,</code> <var>initializer</var> ] &hellip; [ <code>,</code> ]
+</pre></td></tr></table>
+
+<a name="IDX1184"></a>
+<p>The <code>field</code> keyword is not normally needed, but can be used to
+change JML's parsing mode.  Within an annotation, such as within a
+declaration of a model method, it is sometimes necessary to switch
+from JML annotation mode to JML spec-expression mode, in order to
+parse words that are JML keywords but should be recognized as Java
+identifiers.  This can be accomplished in a field declaration by using
+the keyword <code>field</code>, which changes parsing to spec-expression
+mode.  [[[ When does the mode revert back?  e.g. in a method declaration - DRC]]]
+</p>
+<p>[[[Needs example, move elsewhere?]]]
+</p>
+<p>In a non-Java file, such as a file with suffix &lsquo;<tt>.refines-java</tt>&rsquo;
+(see section <a href="jmlrefman_16.html#SEC193">Refinement</a>), one
+may omit the initializer of a <var>variable-declarator</var>, even one
+declared to be <code>final</code>.  In such a file, one may also omit the body
+of a <var>method-decl</var>.  Of course, in a &lsquo;<tt>.java</tt>&rsquo; file, one must
+obey all the rules of Java for declarations that are not in annotations.
+</p>
+<p>See section <a href="jmlrefman_10.html#SEC118">Data Groups</a>, for more about <var>jml-data-group-clause</var>s.
+See section <a href="jmlrefman_11.html#SEC123">Specification Expressions</a>, for the syntax of <var>expression</var>.
+In the following we discuss the modifiers for field and variable
+declarations and <var>type-spec</var>s.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC60">7.1.2.1 JML Modifiers for Fields</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC61">7.1.2.2 Type-Specs</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="JML-Modifiers-for-Fields"></a>
+<a name="SEC60"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC59" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC61" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC59" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 7.1.2.1 JML Modifiers for Fields </h4>
+
+<p>The <code>ghost</code> and <code>model</code> modifiers for fields both say that
+the field is a specification-only field; it thus cannot be accessed by
+the Java code.  The difference is that a ghost field is explicitly
+manipulated by initializations and set statements
+(see section <a href="jmlrefman_12.html#SEC163">Statements and Annotation Statements</a>),
+whereas a model field cannot be explicitly manipulated.  Instead a
+model field is indirectly given a value by a represents clause
+(see section <a href="jmlrefman_8.html#SEC74">Represents Clauses</a>).
+See section <a href="jmlrefman_2.html#SEC10">Model and Ghost</a>, for a general discussion of this distinction in
+JML.
+</p>
+<p>While fields can be declared as either model or ghost fields, a field
+cannot be both.  Furthermore, local variables cannot be declared with
+the <code>model</code> modifier.
+</p>
+<a name="IDX1185"></a>
+<p>The <code>non_null</code> modifier in a variable declaration is shorthand
+for an invariant saying that each variable declared in the
+<var>variable-decls</var> may not be null.  This invariant has the same
+visibility as the visibility declaration of the
+<var>variable-definition</var> itself. See section <a href="jmlrefman_8.html#SEC65">Invariants</a>, for more about
+invariants.
+</p>
+<a name="IDX1186"></a>
+<a name="IDX1187"></a>
+<a name="IDX1188"></a>
+<a name="IDX1189"></a>
+<p>The <code>monitored</code> modifier says that each variable declared in the
+<var>variable-decls</var> can only be accessed by a thread that holds the lock
+on the object that contains the field
+[Leino-Nelson-Saxe00].
+It may not be used with model fields.
+</p>
+<a name="IDX1190"></a>
+<a name="IDX1191"></a>
+<a name="IDX1192"></a>
+<p>The <code>instance</code> modifier says that the field is to be found in
+instances instead of in class objects; it is the opposite of
+<code>static</code>.  It is typically only needed for model or ghost fields
+declared in interfaces.  When used in an interface, it makes the field
+both non-static and non-final (unless the <code>final</code> modifier is
+used explicitly). 
+See section <a href="jmlrefman_2.html#SEC13">Instance vs. Static</a>.
+[[[ So how does one declare a static non-final field in an interface? - DRC ]]]
+</p>
+<hr size="6">
+<a name="Type_002dSpecs"></a>
+<a name="SEC61"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC60" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC62" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC59" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 7.1.2.2 Type-Specs </h4>
+
+<p>The syntax of a <var>type-spec</var> is as in Java [Gosling-etal00],
+except for the addition of the type <code>\TYPE</code> and the possibility
+of using <var>ownership-modifiers</var>.
+The <var>ownership-modifiers</var> are only available when the Universe
+type system is turned on.  See section <a href="jmlrefman_18.html#SEC203">Universe Type System</a>, for how to do
+that, and for the syntax and semantics of <var>ownership-modifiers</var>.
+</p>
+<a name="IDX1193"></a>
+<a name="IDX1194"></a>
+<a name="IDX1195"></a>
+<a name="IDX1196"></a>
+<a name="IDX1197"></a>
+<a name="IDX1198"></a>
+<a name="IDX1199"></a>
+<a name="IDX1200"></a>
+<a name="IDX1201"></a>
+<a name="IDX1202"></a>
+<a name="IDX1203"></a>
+<a name="IDX1204"></a>
+<a name="IDX1205"></a>
+<a name="IDX1206"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>type-spec</var> ::= [ <var>ownership-modifiers</var> ] <var>type</var> [ <var>dims</var> ]
+         | <code>\TYPE</code> [ <var>dims</var> ]
+<var>type</var> ::= <var>reference-type</var> | <var>built-in-type</var>
+<var>reference-type</var> ::= <var>name</var>
+<var>dims</var> ::= `<code>[</code>' `<code>]</code>' [ `<code>[</code>' `<code>]</code>' ] &hellip;
+</pre></td></tr></table>
+
+<a name="IDX1207"></a>
+<a name="IDX1208"></a>
+<p>The type <code>\TYPE</code> represents the kind of all Java types.  It can
+only be used in annotations.  It is equivalent to
+<code>java.lang.Class</code>.
+</p>
+<hr size="6">
+<a name="Class-Initializer-Declarations"></a>
+<a name="SEC62"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC61" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC52" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 7.2 Class Initializer Declarations </h2>
+
+<p>The following is the syntax of class initializers.
+</p>
+<a name="IDX1209"></a>
+<a name="IDX1210"></a>
+<a name="IDX1211"></a>
+<a name="IDX1212"></a>
+<a name="IDX1213"></a>
+<a name="IDX1214"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>class-initializer-decl</var> ::= [ <var>method-specification</var> ]
+                           [ <code>static</code> ] <var>compound-statement</var>
+        | <var>method-specification</var> <code>static_initializer</code> 
+        | <var>method-specification</var> <code>initializer</code> 
+</pre></td></tr></table>
+
+<p>The first form above is the form of Java class instance and static
+initializers.  The initializer is static, and thus run when the class
+is loaded, if it is labeled <code>static</code>. The effect of the
+initializer can be specified by a JML method specification
+(see section <a href="jmlrefman_9.html#SEC80">Method Specifications</a>), which
+treats the initializer as a private helper method with return type
+<code>void</code>, whose body is given by the <var>compound-statement</var>
+(see section <a href="jmlrefman_12.html#SEC163">Statements and Annotation Statements</a>).
+</p>
+<p>The last two forms are used in JML to specify static and
+instance initializers without giving the body of the initializer.
+They would be used in annotations in non-Java files
+(see section <a href="jmlrefman_16.html#SEC193">Refinement</a>).  At most one of each of these may appear in a type
+specification file.  Such a specification is satisfied if there is at
+least one corresponding initializer in the implementation, and if
+the sequential composition of the bodies of the corresponding
+initializer(s), when considered as the body of a private helper method
+with return type <code>void</code>, satisfy the specification given
+(see section <a href="jmlrefman_9.html#SEC80">Method Specifications</a>).
+</p>
+<p>Note that, due to this semantics, the <var>method-specification</var>s for
+an initializer can only have private specification cases.
+</p>
+<p>[[[ But initializers can be interspersed between field initializations,
+which will affect their meaning.  Thus I think the composition has to 
+include the field initializations.  The effect is that the post-condition
+of the JML initializer refers to the state before a constructor begins
+executing; a static_initializer refers to the state after class loading,
+I think. &ndash; DRCok ]]] [[[ Is the restriction to private true for static
+initialization as well - don't think it should be. - DRCOk ]]]
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

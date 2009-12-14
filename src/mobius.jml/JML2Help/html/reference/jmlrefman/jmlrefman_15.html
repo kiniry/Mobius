@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 15. Specification for Subtypes</title>
+
+<meta name="description" content="JML Reference Manual: 15. Specification for Subtypes">
+<meta name="keywords" content="JML Reference Manual: 15. Specification for Subtypes">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Specification-for-Subtypes"></a>
+<a name="SEC190"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_14.html#SEC189" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC191" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_14.html#SEC180" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_16.html#SEC193" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 15. Specification for Subtypes </h1>
+
+<p>This chapter describes how JML specifies a type so that one can
+program subtypes from the specification, without the need to see the
+code of the supertypes that have been specified.
+</p>
+<a name="IDX2331"></a>
+<a name="IDX2332"></a>
+<a name="IDX2333"></a>
+<p>The problem of specifying enough about superclasses has been discussed
+by Kiczales and Lamping [Kiczales-Lamping92]
+and by Steyaert, et al. [Steyaert-etal96].  This problem is difficult
+because of the many ways that subclasses can depend on coding details
+of a superclass.  For example, a subclass can depend on the calling
+pattern among a superclass's method and the fields that a superclass
+can access [Kiczales-Lamping92] [Steyaert-etal96].
+</p>
+<a name="IDX2334"></a>
+<a name="IDX2335"></a>
+<p>JML builds on the work of Ruby and Leavens to solve this problem
+[Ruby-Leavens00] [Ruby06], which builds on the earlier works described above.
+The idea is to write specifications for subclasses in three parts.
+The first is the usual, public specification, which is primarily for
+clients but also useful to subclasses, who need to know what public
+interface they must meet.  The second is a protected specification,
+which specifies fields and methods that are usable by the subclass.
+The third is the code contract.  The code contract has a different
+syntax in JML than it did in [Ruby-Leavens00].
+<a name="IDX2336"></a>
+<a name="IDX2337"></a>
+In the current JML
+a <em>code contract</em>
+is a heavyweight behavior specification case
+(see section <a href="jmlrefman_9.html#SEC87">Heavyweight Specification Cases</a>)
+or as a model program (see section <a href="jmlrefman_14.html#SEC180">Model Programs</a>)
+that uses the keyword &ldquo;<code>code</code>.&rdquo;
+The <code>code</code> keyword is used just before one of the behavior
+keywords or just before the keyword <code>model_program</code>.
+</p>
+<a name="IDX2338"></a>
+<a name="IDX2339"></a>
+<p>While code contracts can be generated automatically by a tool, as
+imagined by Ruby and Leavens [Ruby-Leavens00] [Ruby06], they can also be
+written by users directly.  This is sometimes useful for documenting
+the implementation of a method. The code contract is intended to be
+created automatically, by a tool (which does not, as of this writing, exist).
+It has the following syntax.
+</p>
+<p>In code contracts as described in the work of Ruby and Leavens,
+the main clauses used are the <var>accessible-clause</var> and the
+<var>callable-clause</var>. 
+See section <a href="jmlrefman_9.html#SEC112">Accessible Clauses</a>, for the syntax and semantics of the
+<var>accessible-clause</var>. 
+See section <a href="jmlrefman_9.html#SEC113">Callable Clauses</a>, for the syntax and semantics of the
+<var>callable-clause</var>. 
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC191">15.1 Method of Specifying for Subclasses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC192">15.2 Code Contracts</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">              
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Method-of-Specifying-for-Subclasses"></a>
+<a name="SEC191"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC190" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC192" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC190" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC190" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_16.html#SEC193" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 15.1 Method of Specifying for Subclasses </h2>
+
+<p>[[[This should be a synopsis of Clyde Ruby's dissertation, with an example.]]]
+</p>
+<hr size="6">
+<a name="Code-Contracts"></a>
+<a name="SEC192"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC191" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_16.html#SEC193" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC190" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC190" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_16.html#SEC193" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 15.2 Code Contracts </h2>
+
+<p>This section discusses the semantics of 
+&ldquo;code contracts,&rdquo; which are specification cases that use the
+&ldquo;<code>code</code>&rdquo; keyword.
+(See section <a href="jmlrefman_9.html#SEC88">Behavior Specification Cases</a>, for the detailed syntax of such
+specification cases.)
+</p>
+<a name="IDX2340"></a>
+<a name="IDX2341"></a>
+<a name="IDX2342"></a>
+<p>This feature was inspired by &ldquo;does&rdquo; clause of the Alloy Annotation Language
+[Khurshid-Marinov-Jackson02].
+</p>
+<p>The modifier <code>code</code> may not be used on an abstract method.
+It follows that the <code>code</code> modifier cannot be used to document
+normal Java methods in interfaces.
+(In an interface,
+<code>code</code> could only be used in the specification of a model method that
+has a body.)
+</p>
+<p>Tools for JML should warn the user
+if <code>code</code> is used in a specification case for a constructor, or
+for a final, static, or private method.  It does no harm there, but is
+not needed. 
+</p>
+<p>The meaning of the <code>code</code> modifier is just that specification cases or
+model programs containing them are not inherited.  That is, whenever
+the method is overridden, it does not inherit code contracts from its
+supertypes. 
+</p>
+<a name="IDX2343"></a>
+<a name="IDX2344"></a>
+<p>In verification of a method call, you can use all non-code
+specification cases, that are visible at a call site, for the
+statically-determined method being called.  Such specifications are
+inherited by each subtype's method overrides to preserve behavioral
+subtyping [Dhara-Leavens96] [Leavens-Naumann06] [Leavens06b].
+</p>
+<p>In verification of a method call, you can use a code specification
+case for a method <i>m</i> given in a class <i>C</i> only if you can prove that the
+method being called is method <i>m</i> in class <i>C</i>.  This applies in
+particular to super calls, which is the main use for such code
+contracts.  (It would also apply to calls to final methods,
+calls to methods in final classes, and calls to private or static
+methods.)
+</p>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC190" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_16.html#SEC193" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

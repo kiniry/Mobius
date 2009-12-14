@@ -1,0 +1,1091 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 12. Statements and Annotation Statements</title>
+
+<meta name="description" content="JML Reference Manual: 12. Statements and Annotation Statements">
+<meta name="keywords" content="JML Reference Manual: 12. Statements and Annotation Statements">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Statements-and-Annotation-Statements"></a>
+<a name="SEC163"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_11.html#SEC162" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC164" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_11.html#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 12. Statements and Annotation Statements </h1>
+
+<p>JML also defines a number of annotation statements that may be interspersed
+with Java statements in the body of a method, constructor, or initialization
+block.
+</p>
+<p>The following gives the syntax of statements.
+These are the standard Java statements, with the addition of annotations,
+the <var>hence-by-statement</var>, <var>assert-redundantly-statement</var>,
+<var>assume-statement</var>, <var>set-statement</var>, <var>unreachable-statement</var>,
+<var>debug-statement</var>,
+and the various forms of <var>model-prog-statement</var>.
+See section <a href="jmlrefman_14.html#SEC180">Model Programs</a>, for the syntax of <var>model-prog-statement</var>,
+which is only allowed in model programs.
+[[[ Does this include local class declarations?]]]
+</p>
+<a name="IDX2065"></a>
+<a name="IDX2066"></a>
+<a name="IDX2067"></a>
+<a name="IDX2068"></a>
+<a name="IDX2069"></a>
+<a name="IDX2070"></a>
+<a name="IDX2071"></a>
+<a name="IDX2072"></a>
+<a name="IDX2073"></a>
+<a name="IDX2074"></a>
+<a name="IDX2075"></a>
+<a name="IDX2076"></a>
+<a name="IDX2077"></a>
+<a name="IDX2078"></a>
+<a name="IDX2079"></a>
+<a name="IDX2080"></a>
+<a name="IDX2081"></a>
+<a name="IDX2082"></a>
+<a name="IDX2083"></a>
+<a name="IDX2084"></a>
+<a name="IDX2085"></a>
+<a name="IDX2086"></a>
+<a name="IDX2087"></a>
+<a name="IDX2088"></a>
+<a name="IDX2089"></a>
+<a name="IDX2090"></a>
+<a name="IDX2091"></a>
+<a name="IDX2092"></a>
+<a name="IDX2093"></a>
+<a name="IDX2094"></a>
+<a name="IDX2095"></a>
+<a name="IDX2096"></a>
+<a name="IDX2097"></a>
+<a name="IDX2098"></a>
+<a name="IDX2099"></a>
+<a name="IDX2100"></a>
+<a name="IDX2101"></a>
+<a name="IDX2102"></a>
+<a name="IDX2103"></a>
+<a name="IDX2104"></a>
+<a name="IDX2105"></a>
+<a name="IDX2106"></a>
+<a name="IDX2107"></a>
+<a name="IDX2108"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>compound-statement</var> ::= <code>{</code> <var>statement</var> [ <var>statement</var> ] &hellip; <code>}</code>
+<var>statement</var> ::= <var>compound-statement</var>
+        | <var>local-declaration</var> <code>;</code>
+        | <var>ident</var> <code>:</code> <var>statement</var>
+        | <var>expression</var> <code>;</code>
+        | <code>if</code> <code>(</code> <var>expression</var> <code>)</code>
+          <var>statement</var> [ <code>else</code> <var>statement</var> ]
+        | <var>possibly-annotated-loop</var>
+        | <code>break</code> [ <var>ident</var> ] <code>;</code>
+        | <code>continue</code> [ <var>ident</var> ] <code>;</code>
+        | <code>return</code> [ <var>expression</var> ] <code>;</code>
+        | <var>switch-statement</var>
+        | <var>try-block</var> 
+        | <code>throw</code> <var>expression</var> <code>;</code>
+        | <code>synchronized</code> <code>(</code> <var>expression</var> <code>)</code> <var>statement</var>
+        | <code>;</code>
+        | <var>jml-annotation-statement</var>
+        | <var>assert-statement</var>
+        | <var>jml-annotation-statement</var>
+        | <var>model-prog-statement</var> <i>// only allowed in model programs</i>
+<var>switch-statement</var> ::= <code>switch</code> <code>(</code> <var>expression</var> <code>)</code> <code>{</code>
+                     [ <var>switch-body</var> ] &hellip; <code>}</code>
+<var>switch-body</var> ::= <var>switch-label-seq</var> [ <var>statement</var> ] &hellip;
+<var>switch-label-seq</var> ::= <var>switch-label</var> [ <var>switch-label</var> ] &hellip;
+<var>switch-label</var> ::= <code>case</code> <var>expression</var> <code>:</code> | <code>default</code> <code>:</code>
+<var>try-block</var> ::= <code>try</code> <var>compound-statement</var>
+              [ <var>handler</var> ] &hellip;
+              [ <code>finally</code> <var>compound-statement</var> ]
+<var>handler</var> ::= <code>catch</code> <code>(</code> <var>param-declaration</var> <code>)</code> <var>compound-statement</var>
+</pre></td></tr></table>
+
+<p>The semantics of the Java statements are as in Java 
+[Arnold-Gosling-Holmes00] [Gosling-etal00].
+More details on the JML-specific features related to statements are
+described below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC164">12.1 Local Declaration Statements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC166">12.2 Loop Statements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC169">12.3 Assert Statements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">           
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC170">12.4 JML Annotation Statements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">   
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Local-Declaration-Statements"></a>
+<a name="SEC164"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC163" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC165" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 12.1 Local Declaration Statements </h2>
+
+<p>The following is the syntax of local declaration statements.
+See section <a href="jmlrefman_7.html#SEC59">Field and Variable Declarations</a>, for the syntax of <var>variable-decls</var>.
+</p>
+<a name="IDX2109"></a>
+<a name="IDX2110"></a>
+<a name="IDX2111"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>local-declaration</var> ::= <var>local-modifiers</var> <var>variable-decls</var>
+</pre></td></tr></table>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC165">12.1.1 Modifiers for Local Declarations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Modifiers-for-Local-Declarations"></a>
+<a name="SEC165"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC164" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC166" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC164" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 12.1.1 Modifiers for Local Declarations </h3>
+
+<p>JML allows the modifiers <code>ghost</code>, <code>uninitialized</code>, <code>non_null</code> and <code>nullable</code>
+in addition 
+to Java's <code>final</code> modifier on local variable declarations.
+See section <a href="jmlrefman_18.html#SEC203">Universe Type System</a>, for the grammar of <var>ownership-modifier</var>.
+</p>
+<a name="IDX2112"></a>
+<a name="IDX2113"></a>
+<a name="IDX2114"></a>
+<a name="IDX2115"></a>
+<a name="IDX2116"></a>
+<a name="IDX2117"></a>
+<a name="IDX2118"></a>
+<a name="IDX2119"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>local-modifiers</var> ::= [ <var>local-modifier</var> ] &hellip;
+<var>local-modifier</var> ::= <code>ghost</code> | <code>final</code>  <code>uninitialized</code> | <code>non_null</code> | <code>nullable</code>
+         | <var>ownership-modifier</var>  <i>// when the Universe type system is on</i>
+</pre></td></tr></table>
+
+<p>The JML modifiers are discussed to some extent below.
+See section <a href="jmlrefman_7.html#SEC60">JML Modifiers for Fields</a>, for more about these modifiers.
+</p>
+<p>When used as a local variable modifier, <code>uninitialized</code> means that
+the variable should be considered by the tools to be uninitialized, even
+if it has an initialization.  This allows the tools to check for uses
+before a &ldquo;real&rdquo; initialization.
+</p>
+<p>A <em>local ghost declaration</em> is a variable declaration with a <code>ghost</code>
+modifier, entirely contained in an annotation.  It introduces a new variable
+that may be used in subsequent annotations within the remainder of the 
+block in which the declaration appears.  A ghost variable is not used in
+program execution as Java variables are, but is used by 
+runtime assertion checkers or a static checker to
+reason about the execution of the routine body in which the ghost variable
+is used.
+</p><ul>
+<li>
+The variable name may not be already declared as a local variable or
+local ghost variable or
+as a formal parameter of the routine in which the declaration appears.
+</li><li>
+Each variable declared may have an initializer; the initializer is in
+the scope of the newly declared variable.
+</li><li>
+The modifiers <code>final</code>, <code>uninitialized</code>, <code>non_null</code> and
+<code>nullable</code> may be used on the ghost declaration.
+</li></ul>
+
+<p>In the following, the body of the method <code>ghostLocalExample</code>
+contains several examples of local ghost declarations.
+<a name="IDX2120"></a>
+</p><table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;
+
+public abstract class GhostLocals {
+    void ghostLocalExample() {
+        //@ ghost int i = 0;
+        //@ ghost int zero = 0, j, k = i+3;
+        //@ ghost float[] a = {1, 2, 3};
+        //@ ghost Object o;
+        //@ final ghost non_null Object nno = new Object();
+    }
+}
+
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Loop-Statements"></a>
+<a name="SEC166"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC165" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC167" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 12.2 Loop Statements </h2>
+
+<p>The following is the syntax of loop statements.
+</p>
+<a name="IDX2121"></a>
+<a name="IDX2122"></a>
+<a name="IDX2123"></a>
+<a name="IDX2124"></a>
+<a name="IDX2125"></a>
+<a name="IDX2126"></a>
+<a name="IDX2127"></a>
+<a name="IDX2128"></a>
+<a name="IDX2129"></a>
+<a name="IDX2130"></a>
+<a name="IDX2131"></a>
+<a name="IDX2132"></a>
+<a name="IDX2133"></a>
+<a name="IDX2134"></a>
+<a name="IDX2135"></a>
+<a name="IDX2136"></a>
+<a name="IDX2137"></a>
+<a name="IDX2138"></a>
+<a name="IDX2139"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>possibly-annotated-loop</var> ::=
+          [ <var>loop-invariant</var> ] &hellip;
+          [ <var>variant-function</var> ] &hellip;
+          [ <var>ident</var> <code>:</code> ] <var>loop-stmt</var>
+<var>loop-stmt</var> ::= <code>while</code> <code>(</code> <var>expression</var> <code>)</code> <var>statement</var>
+        | <code>do</code> <var>statement</var> <code>while</code> <code>(</code> <var>expression</var> <code>)</code> <code>;</code>
+        | <code>for</code> <code>(</code> [ <var>for-init</var> ] <code>;</code> [ <var>expression</var> ] <code>;</code> [ <var>expression-list</var> ] <code>)</code>
+             <var>statement</var>
+<var>for-init</var> ::= <var>local-declaration</var> | <var>expression-list</var>
+</pre></td></tr></table>
+
+<p>In JML a loop statement can be annotated with one or more loop
+invariants, and one or more variant functions.  The following class
+contains an example in the middle of the method <code>sumArray</code>.
+This example has a <code>while</code> loop with two loop invariants, which
+follow the keyword <code>maintaining</code>, and a single variant function,
+which follows the keyword <code>decreasing</code>.  The invariants and
+variant function are written above the loop itself.
+The first loop invariant describes the range that the variable
+<code>i</code> can take, and the second relates <code>i</code> and the value in
+<code>sum</code>. 
+</p>
+<a name="IDX2140"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;
+
+/** An example of some simple loops with loop invariants
+ *  and variant functions specified.
+ */
+public abstract class SumArrayLoop {
+
+    /** Return the sum of the argument array. */
+    /*@   old \bigint sum = 
+      @		(\sum int j; 0 &lt;= j &amp;&amp; j &lt; a.length; (\bigint)a[j]);
+      @   requires Long.MIN_VALUE &lt;= sum &amp;&amp; sum &lt;= Long.MAX_VALUE;
+      @   assignable \nothing;
+      @   ensures \result == sum;
+      @*/
+    public static long sumArray(int [] a) {
+        long sum = 0;
+        int i = a.length;
+
+        /*@ maintaining -1 &lt;= i &amp;&amp; i &lt;= a.length;
+          @ maintaining sum
+          @            == (\sum int j; 
+          @                   i &lt;= j &amp;&amp; 0 &lt;= j &amp;&amp; j &lt; a.length; 
+          @                   (\bigint)a[j]);
+          @ decreasing i; @*/
+        while (--i &gt;= 0) {
+            sum += a[i];
+        }
+
+        //@ assert i &lt; 0 &amp;&amp; -1 &lt;= i &amp;&amp; i &lt;= a.length;
+        //@ hence_by (i &lt; 0 &amp;&amp; -1 &lt;= i) ==&gt; i == -1;
+        //@ assert i == -1 &amp;&amp; i &lt;= a.length;
+        //@ assert sum == (\sum int j; 0 &lt;= j &amp;&amp; j &lt; a.length; (\bigint)a[j]);
+        return sum;
+    }
+
+}
+</pre></td></tr></table>
+
+<p>At the end of the loop, the negation of the loop's test expression and
+the loop invariants hold.  This is shown by the assertions after the loop.
+</p>
+<p>Loop invariants and variant functions are discussed in more detail below.
+(Thanks to K. Rustan M. Leino, Claude Marche, and Steve M. Shaner
+for discussions on this topic, including details of the semantics.)
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC167">12.2.1 Loop Invariants</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC168">12.2.2 Loop Variant Functions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">      
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Loop-Invariants"></a>
+<a name="SEC167"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC166" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC168" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC166" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 12.2.1 Loop Invariants </h3>
+
+<p>A loop can specify one or more loop invariants, using the following syntax.
+</p>
+<a name="IDX2141"></a>
+<a name="IDX2142"></a>
+<a name="IDX2143"></a>
+<a name="IDX2144"></a>
+<a name="IDX2145"></a>
+<a name="IDX2146"></a>
+<a name="IDX2147"></a>
+<a name="IDX2148"></a>
+<a name="IDX2149"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>loop-invariant</var> ::= <var>maintaining-keyword</var> <var>predicate</var> <code>;</code>
+<var>maintaining-keyword</var> ::= <code>maintaining</code> | <code>maintaining_redundantly</code>
+        | <code>loop_invariant</code> | <code>loop_invariant_redundantly</code>
+</pre></td></tr></table>
+
+<p>A <var>loop-invariant</var> is used to help prove partial correctness of a
+loop statement. 
+</p>
+<p>The meaning of a loop, which does not contain a use of <code>break</code> that
+exits the loop itself (as opposed to some inner loop), such as
+</p><table><tr><td>&nbsp;</td><td><pre class="display">  //@ maintaining <i>J</i>;
+  while (<i>B</i>) { <i>S</i> }
+</pre></td></tr></table>
+<p>is as follows.
+</p><table><tr><td>&nbsp;</td><td><pre class="display">  while (true) {
+    //@ assert <i>J</i>;
+    if (!(<i>B</i>)) { break; }
+    <i>S</i>
+  }
+</pre></td></tr></table>
+<p>So that the loop invariant holds at the beginning of each iteration of
+the loop.
+</p>
+<p>The rule for deducing what is true after the loop can be stated simply
+if the loop does not contain any <code>break</code> statements that exit the loop,
+and if the loop test, <code><i>B</i></code>, is both a Java <var>expression</var> and a JML
+<var>specification-expression</var>
+(see section <a href="jmlrefman_11.html#SEC123">Specification Expressions</a>).  (This means that <code><i>B</i></code> is
+side-effect free.)
+For such loops, the rule is that, after a loop with condition
+<code><i>B</i></code> and invariant <code><i>J</i></code> 
+the negation of the condition, <code>(!<i>B</i>)</code>, conjoined with the invariant,
+<code><i>J</i></code>, holds.
+This is summarized in the following program schema.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="display">   //@ maintaining <i>J</i>;
+   while (<i>B</i>) {  // <i>assuming B has no side effects</i>
+     <i>S</i>
+   }
+   //&nbsp;assert !(<i>B</i>) &amp;&amp; <i>J</i>;
+</pre></td></tr></table>
+
+<a name="IDX2150"></a>
+<a name="IDX2151"></a>
+<p>If the loop contains a <code>break</code> statement that exits the loop
+itself, then more detailed reasoning is necessary to establish what
+will be true after the loop.  The intended condition that should be
+true after the loop when it is exited via a <code>break</code> statement can
+be recorded in the code using an <code>assert</code> statement.
+For example, if the loop has the form:
+</p><table><tr><td>&nbsp;</td><td><pre class="display"> //@ maintaining <i>J</i>;
+ while (true) {
+   <i>S1</i>
+   if (<i>C</i>) {
+      <i>S2</i>
+      //@ assert <i>Q</i>;
+      break;
+   }
+   <i>S3</i>
+ }
+</pre></td></tr></table>
+<p>then after the loop the asserted condition, <code><i>Q</i></code>, should hold,
+assuming there are no other <code>break</code> statements that exit the loop.
+</p>
+
+<hr size="6">
+<a name="Loop-Variant-Functions"></a>
+<a name="SEC168"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC167" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC169" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC166" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 12.2.2 Loop Variant Functions </h3>
+
+<p>A loop can also specify one or more variant functions, using the
+following syntax.
+</p>
+<a name="IDX2152"></a>
+<a name="IDX2153"></a>
+<a name="IDX2154"></a>
+<a name="IDX2155"></a>
+<a name="IDX2156"></a>
+<a name="IDX2157"></a>
+<a name="IDX2158"></a>
+<a name="IDX2159"></a>
+<a name="IDX2160"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>variant-function</var> ::= <var>decreasing-keyword</var> <var>spec-expression</var> <code>;</code>
+<var>decreasing-keyword</var> ::= <code>decreasing</code> | <code>decreasing_redundantly</code>
+        | <code>decreases</code> | <code>decreases_redundantly</code>
+</pre></td></tr></table>
+
+<p>A <var>variant-function</var> is used to help prove termination of a loop statement.
+It specifies an expression of type <code>long</code> or <code>int</code> that must
+be no less than 0 when the loop is executing, and must decrease by at
+least one (1) each time around the loop.
+</p>
+<p>The meaning of a loop such as
+</p><table><tr><td>&nbsp;</td><td><pre class="display"> //@ decreasing <i>E</i>;
+ while (<i>B</i>) { <i>S</i> }
+</pre></td></tr></table>
+<p>in which <i>S</i> does not use <code>continue</code>, is as follows.
+</p><table><tr><td>&nbsp;</td><td><pre class="display">  while (true) {
+    long vf = <i>E</i>;      // assuming vf is a fresh variable name
+    if (!(<i>B</i>)) { break; }
+    <i>S</i>
+    //@ assert 0 &lt;= vf;
+    //@ assert <i>E</i> &lt; vf;
+  }
+</pre></td></tr></table>
+
+<a name="IDX2161"></a>
+<p>If the loop contains a <code>continue</code> statement,
+then the loop variant is checked just before each use of
+<code>continue</code>.
+For example, if the loop has the form:
+</p><table><tr><td>&nbsp;</td><td><pre class="display"> //@ decreasing <i>E</i>;
+ while (<i>B</i>) { <i>S1</i> if (<i>C</i>) { <i>S2</i> continue; } <i>S3</i> }
+</pre></td></tr></table>
+<p>then the meaning is as follows.
+</p><table><tr><td>&nbsp;</td><td><pre class="display">  while (true) {
+    long vf = <i>E</i>;      // assuming vf is a fresh variable name
+    if (!(<i>B</i>)) { break; }
+    <i>S1</i>
+    if (<i>C</i>) {
+       <i>S2</i>
+       //@ assert 0 &lt;= vf;
+       //@ assert <i>E</i> &lt; vf;
+       continue;
+    }
+    <i>S3</i>
+    //@ assert 0 &lt;= vf;
+    //@ assert <i>E</i> &lt; vf;
+  }
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Assert-Statements"></a>
+<a name="SEC169"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC168" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC170" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 12.3 Assert Statements </h2>
+
+<p>The syntax of assert and redundant assert statements is as follows.
+</p>
+<a name="IDX2162"></a>
+<a name="IDX2163"></a>
+<a name="IDX2164"></a>
+<a name="IDX2165"></a>
+<a name="IDX2166"></a>
+<a name="IDX2167"></a>
+<a name="IDX2168"></a>
+<a name="IDX2169"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>assert-statement</var> ::= <code>assert</code> <var>expression</var> [ <code>:</code> <var>expression</var> ] <code>;</code>
+        | <code>assert</code> <var>predicate</var> [ <code>:</code> <var>expression</var> ] <code>;</code>
+<var>assert-redundantly-statement</var> ::= <code>assert_redundantly</code> <var>predicate</var>
+                                 [ <code>:</code> <var>expression</var> ] <code>;</code>
+</pre></td></tr></table>
+
+<a name="IDX2170"></a>
+<a name="IDX2171"></a>
+<p>Note that Java (as of J2SDK 1.4) also has its own <code>assert</code>
+statement.  For this reason JML distinguishes between assert
+statements that occur inside and outside annotations.
+</p>
+<p>Outside an annotation, an assert statement is a Java
+assert statement, whose syntax follows the first
+<var>assert-statement</var> production above.
+Thus in such an assert statement, the first <var>expression</var> can have side
+effects (potentially, although it shouldn't).  The second expression
+is supposed to have type <code>String</code>, and will be used in a message
+should the assertion fail.
+</p>
+<p>Inside an annotation, an assert statement is a JML assert statement,
+and the second syntax is used for <var>assert-statement</var>.  Thus instead of an <var>expression</var>
+before the optional colon, there is a JML <var>predicate</var>.
+This predicate cannot have side effects, but can use the various JML
+extensions to the Java expression syntax
+(see section <a href="jmlrefman_11.html#SEC123">Specification Expressions</a>, for details.)
+As in a Java assert statement, the optional expression that follows
+the colon must be a <code>String</code>, which is printed if the assertion
+fails.
+</p>
+<p>An assert statements tells JML to check that the specified
+<var>predicate</var> is true at the given point in the program.  The
+runtime assertion checker checks such assertions during execution of
+the program, when control reaches the assert statement.  Other tools,
+such as verification tools, will try to prove that the assertion
+always holds at that program point, for every possible execution.
+</p>
+<p>The <var>assert-redundantly-statement</var> must appear in an annotation.
+It has the same semantics as the JML form of an assert statement, but
+is marked as redundant.  Thus it would be used to call attention to
+some property, but need not be checked.
+</p>
+<hr size="6">
+<a name="JML-Annotation-Statements"></a>
+<a name="SEC170"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC169" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC171" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 12.4 JML Annotation Statements </h2>
+
+<p>The following gives the syntax of JML annotation statements.  These
+can appear anywhere in normal Java code, but must be enclosed in
+annotations.
+See section <a href="#SEC169">Assert Statements</a>, for the syntax of the
+<var>assert-redundantly-statement</var>.
+See section <a href="jmlrefman_14.html#SEC180">Model Programs</a>, for the syntax of additional statements
+that can only be used in model programs.
+</p>
+<a name="IDX2172"></a>
+<a name="IDX2173"></a>
+<a name="IDX2174"></a>
+<a name="IDX2175"></a>
+<a name="IDX2176"></a>
+<a name="IDX2177"></a>
+<a name="IDX2178"></a>
+<a name="IDX2179"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>jml-annotation-statement</var> ::= <var>assert-redundantly-statement</var>
+        | <var>assume-statement</var>
+        | <var>hence-by-statement</var>
+        | <var>set-statement</var>
+        | <var>refining-statement</var>
+        | <var>unreachable-statement</var>
+        | <var>debug-statement</var>
+</pre></td></tr></table>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC171">12.4.1 Assume Statements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">           
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC172">12.4.2 Set Statements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">              
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC173">12.4.3 Refining Statements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC174">12.4.4 Unreachable Statements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">      
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC175">12.4.5 Debug Statements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC176">12.4.6 Hence By Statements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Assume-Statements"></a>
+<a name="SEC171"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC170" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC172" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC170" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 12.4.1 Assume Statements </h3>
+
+<p>The syntax of an assume statement is as follows.
+As in a Java assert statement, the optional expression that follows
+the colon must be a <code>String</code>, which is printed if the assumption fails.
+</p>
+<a name="IDX2180"></a>
+<a name="IDX2181"></a>
+<a name="IDX2182"></a>
+<a name="IDX2183"></a>
+<a name="IDX2184"></a>
+<a name="IDX2185"></a>
+<a name="IDX2186"></a>
+<a name="IDX2187"></a>
+<a name="IDX2188"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>assume-statement</var> ::= <var>assume-keyword</var> <var>predicate</var>
+                     [ <code>:</code> <var>expression</var> ] <code>;</code>
+<var>assume-keyword</var> ::= <code>assume</code> | <code>assume_redundantly</code>
+</pre></td></tr></table>
+
+<p>In runtime assertion checking, assumptions are checked in the same way
+that assert statements are checked (see section <a href="#SEC169">Assert Statements</a>).
+</p>
+<p>However, in static analysis tools, the assume statement is used to
+tell the tool that the given predicate is assumed to be true, and thus
+need not be checked.  
+</p>
+<hr size="6">
+<a name="Set-Statements"></a>
+<a name="SEC172"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC171" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC173" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC170" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 12.4.2 Set Statements </h3>
+
+<p>The syntax of a set statement is as follows.
+See section <a href="jmlrefman_11.html#SEC124">Expressions</a>, for the syntax of <var>assignment-expr</var>.
+</p>
+<a name="IDX2189"></a>
+<a name="IDX2190"></a>
+<a name="IDX2191"></a>
+<a name="IDX2192"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>set-statement</var> ::= <code>set</code> <var>assignment-expr</var> <code>;</code>
+</pre></td></tr></table>
+
+<p>A set statement is the equivalent of an assignment statement but is within
+an annotation.  It is used to assign a value to a ghost variable or to a
+ghost field.  A set statement serves to assist the static checker in 
+reasoning about the execution of the routine body in which it appears.
+</p><ul>
+<li> the target of the set statement must be a ghost variable or a ghost field
+</li><li> the right-hand-side of the set statement must be pure (not have side effects)
+</li></ul>
+<br><p><strong>Examples:</strong>
+</p><table><tr><td>&nbsp;</td><td><pre class="example">        //@ set i = 0;
+        //@ set collection.elementType = \type(int);
+</pre></td></tr></table>
+
+<p>[[[ Questions: must the rhs be pure?  Should we allow an arbitrary statement, not just an assignment? such as set ++i; or set i += 5; ]]]
+</p>
+<hr size="6">
+<a name="Refining-Statements"></a>
+<a name="SEC173"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC172" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC174" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC170" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 12.4.3 Refining Statements </h3>
+
+<p>The syntax of a refining statement is as follows.
+See section <a href="jmlrefman_14.html#SEC186">Specification Statements</a>,
+for the syntax of <var>spec-statement</var> and <var>generic-spec-statement-case</var>.
+See section <a href="#SEC163">Statements and Annotation Statements</a>, 
+for the syntax of <var>statement</var>.
+</p>
+<a name="IDX2193"></a>
+<a name="IDX2194"></a>
+<a name="IDX2195"></a>
+<a name="IDX2196"></a>
+<a name="IDX2197"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>refining-statement</var> ::= <code>refining</code> <var>spec-statement</var> <var>statement</var>
+        | <code>refining</code> <var>generic-spec-statement-case</var> <var>statement</var>
+</pre></td></tr></table>
+
+<a name="IDX2198"></a>
+<a name="IDX2199"></a>
+<p>A refining statement allows one to annotate a specification with
+a specification.  It has two parts, a <em>specification</em> and a <em>body</em>.
+The specification part can be either a
+<var>spec-statement</var> (see section <a href="jmlrefman_14.html#SEC186">Specification Statements</a>), 
+which includes the grammar for a heavyweight specification case, 
+or a <var>generic-spec-statement-case</var> (see section <a href="jmlrefman_14.html#SEC186">Specification Statements</a>),
+which includes the grammar for a lightweight specification case.
+The body is simply a statement.  In particular, the body can be a
+<var>compound-statement</var> or a <var>jml-annotation-statement</var>,
+including a nested <var>refining-statement</var>.
+</p>
+<p>Annotating the body with a specification is a way of collecting all
+the specification information about the statement in one place.
+Giving such an annotation is especially useful for framing, 
+e.g., writing <var>assignable-clause</var>s.
+For example, by using a refining statement, one can
+write an assignable clause for a loop statement 
+or for the statement in the body of a loop.
+</p>
+<p>Refining statements are also used in connection with model program
+specification cases (see section <a href="jmlrefman_14.html#SEC180">Model Programs</a>).
+Within the implementation of a method with such a model program
+specification, a refining statement indicates exactly what
+<var>spec-statement</var> is implemented by its body,
+since its specification part would be exactly that <var>spec-statement</var>.
+This is helpful for &ldquo;matching&rdquo; the implementation against the model
+program specification [Shaner-Leavens-Naumann07].
+</p>
+<p>Note that the scope of any declarations made 
+in the specification part of a refining statement are limited to the
+specification part, and do not extend into the body.
+Thus a refining statement is type correct if each of its subparts is
+type correct, using the surrounding context 
+for separately type checking the specification and body.
+</p>
+<p>The meaning of a refining statement of the form 
+<code>refining</code> <i>S</i> <i>B</i>
+is that the body <i>B</i> must refine the specification given in <i>S</i>.
+This means that <i>B</i> has to obey all the specifications given in <i>S</i>.
+For example, <i>B</i> may not assume a stronger precondition than that
+given by <i>S</i>.
+(Standard defaults are used for omitted clauses in the specification
+part of a refining statement; thus, if there is no requires clause in
+a <var>spec-statement</var>, then the precondition defaults to true.)
+Similarly, <i>B</i> may not assign to locations that are not permitted to
+be assigned to by <i>S</i>, and, assuming <i>S</i>'s precondition held, then
+when <i>B</i> terminates normally it must establish <i>S</i>'s normal
+postcondition.
+See section <a href="jmlrefman_9.html#SEC80">Method Specifications</a>, for more about what it means to satisfy
+such a specification.
+</p>
+<p>When <code>\old()</code> or <code>\pre()</code> are used in the specification part
+of a refining statement, they have the same meaning as in a
+specification statement (see section <a href="jmlrefman_14.html#SEC186">Specification Statements</a>).
+</p>
+<p>In execution, a refining statement of the form 
+<code>refining</code> <i>S</i> <i>B</i> just executes its body <i>B</i>.
+For this reason, typically the 
+<code>refining</code> keyword and the specification <i>S</i>
+would be in JML annotations, 
+but the body <i>B</i> would be normal Java code (outside of any annotation).
+</p>
+<p>See section <a href="jmlrefman_14.html#SEC180">Model Programs</a>, for more examples.
+</p>
+<hr size="6">
+<a name="Unreachable-Statements"></a>
+<a name="SEC174"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC173" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC175" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC170" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 12.4.4 Unreachable Statements </h3>
+
+<p>The syntax of the <code>unreachable</code> statement is as follows.
+</p>
+<a name="IDX2200"></a>
+<a name="IDX2201"></a>
+<a name="IDX2202"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>unreachable-statement</var> ::= <code>unreachable</code> <code>;</code>
+</pre></td></tr></table>
+
+<p>The <code>unreachable</code> statement is an annotation that asserts that the
+control flow of a routine will never reach that point in the program.  It is
+equivalent to the annotation <code>assert false</code>.  If control flow does reach an
+<code>unreachable</code> statement, a tool that checks (by reasoning or at runtime)
+the behavior of the routine should issue an error of some kind.
+The following is an example:
+</p><table><tr><td>&nbsp;</td><td><pre class="example">        if (true) {
+                ...
+        } else {
+                //@ unreachable;
+        }
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Debug-Statements"></a>
+<a name="SEC175"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC174" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC176" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC170" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 12.4.5 Debug Statements </h3>
+
+<p>The syntax of the <code>debug</code> statement is as follows.
+See section <a href="jmlrefman_11.html#SEC124">Expressions</a>, for the syntax of <var>expression</var>.
+</p>
+<a name="IDX2203"></a>
+<a name="IDX2204"></a>
+<a name="IDX2205"></a>
+<a name="IDX2206"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>debug-statement</var> ::= <code>debug</code> <var>expression</var> <code>;</code>
+</pre></td></tr></table>
+
+<p>A <code>debug</code> statement is the equivalent of an expression statement
+but is within an annotation. Thus, features visible only in the JML
+scope can also appear in the <code>debug</code> statement. Examples of such
+features include ghost variables, model methods, <code>spec_public</code>
+fields, and JML-specific expression constructs, to name a few.
+</p>
+<p>The main use of the <code>debug</code> statement is to help debugging
+specifications, e.g., by printing the value of a JML expression, as
+shown below.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">        //@ debug System.err.println(x);
+</pre></td></tr></table>
+
+<p>In the above example, the variable <code>x</code> may be a ghost variable.
+Note that using <code>System.err</code> automatically flushes output, unlike
+<code>System.out</code>.  This flushing of output is helpful for debugging.
+</p>
+<p>As shown in the above example, expressions with side-effects are
+allowed in the <code>debug</code> statement. These include not only methods
+with side-effects but also increment (<code>++</code>) and decrement
+(<code>--</code>) operators and various forms of assignment expressions
+(e.g., <code>=</code>, <code>+=</code>, etc.). Thus, the <code>debug</code> statement
+can also be used to assign a value to a variable, or mutate the state
+of an object.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">        //@ debug x = x + 1;
+        //@ debug aList.add(y);
+</pre></td></tr></table>
+
+<p>However, a model variable cannot be assigned to, nor can its state be
+mutated by using the <code>debug</code> statement, as its value is given by
+a <code>represents</code> clause (see section <a href="jmlrefman_8.html#SEC74">Represents Clauses</a>).
+</p>
+<p>There is no restriction on the type of expression allowed in the
+<code>debug</code> statement.
+</p>
+<p>Tools should allow debug statements to be turned on or off easily.
+Thus programmers should not count on debug statements being executed.
+For example, if one needs to assign to a ghost variable, the proper way to
+do it is to use a <var>set-statement</var> (see section <a href="#SEC172">Set Statements</a>),
+which would execute even if debug statements are not being executed.
+</p>
+<hr size="6">
+<a name="Hence-By-Statements"></a>
+<a name="SEC176"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC175" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC170" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 12.4.6 Hence By Statements </h3>
+
+<p>The syntax of the <code>hence_by</code> statement is as follows.
+</p>
+<a name="IDX2207"></a>
+<a name="IDX2208"></a>
+<a name="IDX2209"></a>
+<a name="IDX2210"></a>
+<a name="IDX2211"></a>
+<a name="IDX2212"></a>
+<a name="IDX2213"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>hence-by-statement</var> ::= <var>hence-by-keyword</var> <var>predicate</var> <code>;</code>
+<var>hence-by-keyword</var> ::= <code>hence_by</code> | <code>hence_by_redundantly</code>
+</pre></td></tr></table>
+
+<p>The <code>hence_by</code> statement is used to record reasoning when writing
+a proof by intermittent assertions.  It would normally be used between
+two assert statements (see section <a href="#SEC169">Assert Statements</a>) or between two
+assume statements (see section <a href="#SEC171">Assume Statements</a>).
+</p>
+<p>[[[Needs example.]]]
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC163" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_13.html#SEC177" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

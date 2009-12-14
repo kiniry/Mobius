@@ -1,0 +1,1246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: A. Grammar Summary</title>
+
+<meta name="description" content="JML Reference Manual: A. Grammar Summary">
+<meta name="keywords" content="JML Reference Manual: A. Grammar Summary">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Grammar-Summary"></a>
+<a name="SEC219"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_20.html#SEC218" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC220" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_20.html#SEC216" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="appendix"> A. Grammar Summary </h1>
+
+<p>The following is a summary of the context-free grammar for JML.
+See section <a href="jmlrefman_3.html#SEC24">Syntax Notation</a>, for the notation used.
+In the first section below,
+grammatical productions are to be understood lexically.
+That is, no white space (see section <a href="jmlrefman_4.html#SEC26">White Space</a>) may intervene between the
+characters of a token.
+</p>
+<hr size="6">
+<a name="SEC220"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC219" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC221" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.1 Lexical Conventions </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="microsyntax"><var>microsyntax</var></a> ::= <a href="#lexeme"><var>lexeme</var></a> [ <a href="#lexeme"><var>lexeme</var></a> ] &hellip;
+<a name="lexeme"><var>lexeme</var></a> ::= <a href="#white-space"><var>white-space</var></a> | <a href="#lexical-pragma"><var>lexical-pragma</var></a> | <a href="#comment"><var>comment</var></a>
+        | <a href="#annotation-marker"><var>annotation-marker</var></a> | <a href="#doc-comment"><var>doc-comment</var></a> | <a href="#token"><var>token</var></a> 
+<a name="token"><var>token</var></a> ::= <a href="#ident"><var>ident</var></a> | <a href="#keyword"><var>keyword</var></a> | <a href="#special-symbol"><var>special-symbol</var></a>
+        | <a href="#java-literal"><var>java-literal</var></a> | <a href="#informal-description"><var>informal-description</var></a>
+<a name="white-space"><var>white-space</var></a> ::= <a href="#non-nl-white-space"><var>non-nl-white-space</var></a> | <a href="#end-of-line"><var>end-of-line</var></a>
+<a name="non-nl-white-space"><var>non-nl-white-space</var></a> ::= a blank, tab, or formfeed character
+<a name="end-of-line"><var>end-of-line</var></a> ::= <a href="#newline"><var>newline</var></a> | <a href="#carriage-return"><var>carriage-return</var></a>
+        | <a href="#carriage-return"><var>carriage-return</var></a> <a href="#newline"><var>newline</var></a>
+<a name="newline"><var>newline</var></a> ::= a newline character
+<a name="carriage-return"><var>carriage-return</var></a> ::= a carriage return character
+<a name="lexical-pragma"><var>lexical-pragma</var></a> ::= <a href="#nowarn-pragma"><var>nowarn-pragma</var></a>
+<a name="nowarn-pragma"><var>nowarn-pragma</var></a> ::= <code>nowarn</code> [ <a href="#spaces"><var>spaces</var></a> ] [ <a href="#nowarn-label-list"><var>nowarn-label-list</var></a> ] <code>;</code>
+<a name="spaces"><var>spaces</var></a> ::= <a href="#non-nl-white-space"><var>non-nl-white-space</var></a> [ <a href="#non-nl-white-space"><var>non-nl-white-space</var></a> ] &hellip;
+<a name="nowarn-label-list"><var>nowarn-label-list</var></a> ::= <a href="#nowarn-label"><var>nowarn-label</var></a> [ <a href="#spaces"><var>spaces</var></a> ]
+             [ <code>,</code> [ <a href="#spaces"><var>spaces</var></a> ] <a href="#nowarn-label"><var>nowarn-label</var></a> [ <a href="#spaces"><var>spaces</var></a> ] ] &hellip;
+<a name="nowarn-label"><var>nowarn-label</var></a> ::= <a href="#letter"><var>letter</var></a> [ <a href="#letter"><var>letter</var></a> ] &hellip;
+<a name="comment"><var>comment</var></a> ::= <a href="#C-style-comment"><var>C-style-comment</var></a> | <a href="#C++-style-comment"><var>C++-style-comment</var></a>
+<a name="C-style-comment"><var>C-style-comment</var></a> ::= <code>/*</code> [ <a href="#C-style-body"><var>C-style-body</var></a> ] <a href="#C-style-end"><var>C-style-end</var></a>
+<a name="C-style-body"><var>C-style-body</var></a> ::= <a href="#non-at-plus-star"><var>non-at-plus-star</var></a> [ <a href="#non-stars-slash"><var>non-stars-slash</var></a> ] &hellip;
+        | <code>+</code> <a href="#non-at"><var>non-at</var></a> [ <a href="#non-stars-slash"><var>non-stars-slash</var></a> ] &hellip;
+        | <a href="#stars-non-slash"><var>stars-non-slash</var></a> [ <a href="#non-stars-slash"><var>non-stars-slash</var></a> ] &hellip;
+<a name="non-stars-slash"><var>non-stars-slash</var></a> ::= <a href="#non-star"><var>non-star</var></a>
+        | <a href="#stars-non-slash"><var>stars-non-slash</var></a>
+<a name="stars-non-slash"><var>stars-non-slash</var></a> ::= <code>*</code> [ <code>*</code> ] &hellip; <a href="#non-star-slash"><var>non-star-slash</var></a>
+<a name="non-at-plus-star"><var>non-at-plus-star</var></a> ::= any character except <code>@</code>, <code>+</code>, or <code>*</code>
+<a name="non-at"><var>non-at</var></a> ::= any character except <code>@</code>
+<a name="non-star"><var>non-star</var></a> ::= any character except <code>*</code>
+<a name="non-slash"><var>non-slash</var></a> ::= any character except <code>/</code>
+<a name="non-star-slash"><var>non-star-slash</var></a> ::= any character except <code>*</code> or <code>/</code>
+<a name="C-style-end"><var>C-style-end</var></a> ::= [ <code>*</code> ] &hellip; <code>*/</code>
+<a name="C++-style-comment"><var>C++-style-comment</var></a> ::= <code>//</code> [ <code>+</code> ] <a href="#end-of-line"><var>end-of-line</var></a>
+        | <code>//</code> <a href="#non-at-plus-end-of-line"><var>non-at-plus-end-of-line</var></a> [ <a href="#non-end-of-line"><var>non-end-of-line</var></a> ] &hellip; <a href="#end-of-line"><var>end-of-line</var></a>
+        | <code>//+</code> <a href="#non-at-end-of-line"><var>non-at-end-of-line</var></a> [ <a href="#non-end-of-line"><var>non-end-of-line</var></a> ] &hellip; <a href="#end-of-line"><var>end-of-line</var></a>
+<a name="non-end-of-line"><var>non-end-of-line</var></a> ::= any character except a newline or carriage return
+<a name="non-at-plus-end-of-line"><var>non-at-plus-end-of-line</var></a> ::= any character except <code>@</code>, <code>+</code>, newline, or carriage return
+<a name="non-at-end-of-line"><var>non-at-end-of-line</var></a> ::= any character except <code>@</code>, newline, or carriage return
+<a name="annotation-marker"><var>annotation-marker</var></a> ::= <code>//@</code> [ <code>@</code> ] &hellip; | <code>//+@</code> [ <code>@</code> ] &hellip;
+        | <code>/*@</code> [ <code>@</code> ] &hellip; | <code>/*+@</code> [ <code>@</code> ] &hellip; | [ <code>@</code> ] &hellip; <code>@+*/</code> | [ <code>@</code> ] &hellip; <code>*/</code>
+<a name="ignored-at-in-annotation"><var>ignored-at-in-annotation</var></a> ::= <code>@</code>
+<a name="doc-comment"><var>doc-comment</var></a> ::= <code>/**</code> [ <code>*</code> ] &hellip; <a href="#doc-comment-body"><var>doc-comment-body</var></a> <code>*/</code>
+<a name="doc-comment-ignored"><var>doc-comment-ignored</var></a> ::= <a href="#doc-comment"><var>doc-comment</var></a>
+<a name="doc-comment-body"><var>doc-comment-body</var></a> ::= [ <a href="#description"><var>description</var></a> ] &hellip;
+                     [ <a href="#tagged-paragraph"><var>tagged-paragraph</var></a> ] &hellip; 
+                     [ <a href="#jml-specs"><var>jml-specs</var></a> ] [ <a href="#description"><var>description</var></a> ]
+<a name="description"><var>description</var></a> ::= <a href="#doc-non-empty-textline"><var>doc-non-empty-textline</var></a>
+<a name="tagged-paragraph"><var>tagged-paragraph</var></a> ::= <a href="#paragraph-tag"><var>paragraph-tag</var></a> [ <a href="#doc-non-nl-ws"><var>doc-non-nl-ws</var></a> ] &hellip;
+             [ <a href="#doc-atsign"><var>doc-atsign</var></a> ] &hellip; [ <a href="#description"><var>description</var></a> ] &hellip;
+<a name="jml-specs"><var>jml-specs</var></a> ::= <a href="#jml-tag"><var>jml-tag</var></a> [ <a href="#method-specification"><var>method-specification</var></a> ] <a href="#end-jml-tag"><var>end-jml-tag</var></a>
+             [ <a href="#jml-tag"><var>jml-tag</var></a> [ <a href="#method-specification"><var>method-specification</var></a> ] <a href="#end-jml-tag"><var>end-jml-tag</var></a> ] &hellip;
+<a name="paragraph-tag"><var>paragraph-tag</var></a> ::= <code>@author</code> | <code>@deprecated</code> | <code>@exception</code> 
+        | <code>@param</code> | <code>@return</code> | <code>@see</code>
+        | <code>@serial</code> | <code>@serialdata</code> | <code>@serialfield</code>
+        | <code>@since</code> | <code>@throws</code> | <code>@version</code>
+        | <code>@</code> <a href="#letter"><var>letter</var></a> [ <a href="#letter"><var>letter</var></a> ] &hellip;
+<a name="doc-atsign"><var>doc-atsign</var></a> ::= <code>@</code>
+<a name="doc-nl-ws"><var>doc-nl-ws</var></a> ::= <a href="#end-of-line"><var>end-of-line</var></a>
+          [ <a href="#doc-non-nl-ws"><var>doc-non-nl-ws</var></a> ] &hellip; [ <code>*</code> [ <code>*</code> ] &hellip; [ <a href="#doc-non-nl-ws"><var>doc-non-nl-ws</var></a> ] &hellip; ]
+<a name="doc-non-nl-ws"><var>doc-non-nl-ws</var></a> ::= <a href="#non-nl-white-space"><var>non-nl-white-space</var></a>
+<a name="doc-non-empty-textline"><var>doc-non-empty-textline</var></a> ::= <a href="#non-at-end-of-line"><var>non-at-end-of-line</var></a> [ <a href="#non-end-of-line"><var>non-end-of-line</var></a> ] &hellip;
+<a name="jml-tag"><var>jml-tag</var></a> ::= <code>&lt;jml&gt;</code> | <code>&lt;JML&gt;</code> | <code>&lt;esc&gt;</code> | <code>&lt;ESC&gt;</code>
+<a name="end-jml-tag"><var>end-jml-tag</var></a> ::= <code>&lt;/jml&gt;</code> | <code>&lt;/JML&gt;</code> | <code>&lt;/esc&gt;</code> | <code>&lt;/ESC&gt;</code>
+<a name="ident"><var>ident</var></a> ::= <a href="#letter"><var>letter</var></a> [ <a href="#letter-or-digit"><var>letter-or-digit</var></a> ] &hellip;
+<a name="letter"><var>letter</var></a> ::= <code>_</code>, <code>$</code>, <code>a</code> through <code>z</code>, or <code>A</code> through <code>Z</code>
+<a name="digit"><var>digit</var></a> ::= <code>0</code> | <code>1</code> | <code>2</code> | <code>3</code> | <code>4</code> | <code>5</code> | <code>6</code> | <code>7</code> | <code>8</code> | <code>9</code>
+<a name="letter-or-digit"><var>letter-or-digit</var></a> ::= <a href="#letter"><var>letter</var></a> | <a href="#digit"><var>digit</var></a>
+<a name="keyword"><var>keyword</var></a> ::= <a href="#java-reserved-word"><var>java-reserved-word</var></a>
+        | <a href="#jml-predicate-keyword"><var>jml-predicate-keyword</var></a> | <a href="#jml-keyword"><var>jml-keyword</var></a>
+<a name="java-reserved-word"><var>java-reserved-word</var></a> ::= <code>abstract</code> | <code>assert</code>
+        | <code>boolean</code> | <code>break</code> | <code>byte</code>
+        | <code>case</code> | <code>catch</code> | <code>char</code>
+        | <code>class</code> | <code>const</code> | <code>continue</code>
+        | <code>default</code> | <code>do</code> | <code>double</code>
+        | <code>else</code> | <code>extends</code> | <code>false</code>
+        | <code>final</code> | <code>finally</code> | <code>float</code>
+        | <code>for</code> | <code>goto</code> | <code>if</code>
+        | <code>implements</code> | <code>import</code> | <code>instanceof</code>
+        | <code>int</code> | <code>interface</code> | <code>long</code>
+        | <code>native</code> | <code>new</code> | <code>null</code>
+        | <code>package</code> | <code>private</code> | <code>protected</code>
+        | <code>public</code> | <code>return</code> | <code>short</code>
+        | <code>static</code> | <code>strictfp</code> | <code>super</code>
+        | <code>switch</code> | <code>synchronized</code> | <code>this</code>
+        | <code>throw</code> | <code>throws</code> | <code>transient</code>
+        | <code>true</code> | <code>try</code> | <code>void</code>
+        | <code>volatile</code> | <code>while</code>
+        | <a href="#multijava-reserved"><var>multijava-reserved</var></a>      <i>// When the MultiJava option is on</i>
+        | <a href="#java-universe-reserved"><var>java-universe-reserved</var></a>  <i>// When the Universe option is on</i>
+<a name="multijava-reserved"><var>multijava-reserved</var></a> ::= <code>resend</code>
+<a name="java-universe-reserved"><var>java-universe-reserved</var></a> ::= <code>peer</code> | <code>pure</code>
+        | <code>readonly</code> | <code>rep</code>
+<a name="jml-predicate-keyword"><var>jml-predicate-keyword</var></a> ::= <code>\TYPE</code>
+        | <code>\bigint</code> | <code>\bigint_math</code> | <code>\duration</code>
+        | <code>\elemtype</code> | <code>\everything</code> | <code>\exists</code>
+        | <code>\forall</code> | <code>\fresh</code>
+        | <code>\into</code> | <code>\invariant_for</code> | <code>\is_initialized</code>
+        | <code>\java_math</code> | <code>\lblneg</code> | <code>\lblpos</code>
+        | <code>\lockset</code> | <code>\max</code> | <code>\min</code>
+        | <code>\nonnullelements</code> | <code>\not_assigned</code>
+        | <code>\not_modified</code> | <code>\not_specified</code>
+        | <code>\nothing</code> | <code>\nowarn</code> | <code>\nowarn_op</code>
+        | <code>\num_of</code> | <code>\old</code> | <code>\only_accessed</code> 
+        | <code>\only_assigned</code> | <code>\only_called</code>
+        | <code>\only_captured</code> | <code>\pre</code>
+        | <code>\product</code> | <code>\reach</code> | <code>\real</code>
+        | <code>\result</code> | <code>\same</code> | <code>\safe_math</code>
+        | <code>\space</code> | <code>\such_that</code> | <code>\sum</code>
+        | <code>\typeof</code> | <code>\type</code> | <code>\warn_op</code>
+        | <code>\warn</code> | <code>\working_space</code> 
+        | <a href="#jml-universe-pkeyword"><var>jml-universe-pkeyword</var></a>
+<a name="jml-universe-pkeyword"><var>jml-universe-pkeyword</var></a> ::= <code>\peer</code> | <code>\readonly</code> | <code>\rep</code>
+<a name="jml-keyword"><var>jml-keyword</var></a> ::= <code>abrupt_behavior</code> | <code>abrupt_behaviour</code>
+        | <code>accessible</code> | <code>accessible_redundantly</code>
+        | <code>also</code> | <code>assert_redundantly</code>
+        | <code>assignable</code> | <code>assignable_redundantly</code>
+        | <code>assume</code> | <code>assume_redundantly</code> | <code>axiom</code>
+        | <code>behavior</code> | <code>behaviour</code>
+        | <code>breaks</code> | <code>breaks_redundantly</code>
+        | <code>callable</code> | <code>callable_redundantly</code>
+        | <code>captures</code> | <code>captures_redundantly</code>
+        | <code>choose</code> | <code>choose_if</code> 
+        | <code>code</code> | <code>code_bigint_math</code> | 
+        | <code>code_java_math</code> | <code>code_safe_math</code>
+        | <code>constraint</code> | <code>constraint_redundantly</code>
+        | <code>constructor</code> | <code>continues</code> | <code>continues_redundantly</code>
+        | <code>decreases</code> | <code>decreases_redundantly</code> 
+        | <code>decreasing</code> | <code>decreasing_redundantly</code> 
+        | <code>diverges</code> | <code>diverges_redundantly</code>
+        | <code>duration</code> | <code>duration_redundantly</code>
+        | <code>ensures</code> | <code>ensures_redundantly</code> | <code>example</code>
+        | <code>exceptional_behavior</code> | <code>exceptional_behaviour</code>
+        | <code>exceptional_example</code>
+        | <code>exsures</code> | <code>exsures_redundantly</code> | <code>extract</code>
+        | <code>field</code> | <code>forall</code>
+        | <code>for_example</code> | <code>ghost</code>
+        | <code>helper</code> | <code>hence_by</code> | <code>hence_by_redundantly</code>
+        | <code>implies_that</code> | <code>in</code> | <code>in_redundantly</code>
+        | <code>initializer</code> | <code>initially</code> | <code>instance</code>
+        | <code>invariant</code> | <code>invariant_redundantly</code>
+        | <code>loop_invariant</code> | <code>loop_invariant_redundantly</code>
+        | <code>maintaining</code> | <code>maintaining_redundantly</code>
+        | <code>maps</code> | <code>maps_redundantly</code>
+        | <code>measured_by</code> | <code>measured_by_redundantly</code>
+        | <code>method</code> | <code>model</code> | <code>model_program</code>
+        | <code>modifiable</code> | <code>modifiable_redundantly</code>
+        | <code>modifies</code> | <code>modifies_redundantly</code>
+        | <code>monitored</code> | <code>monitors_for</code> | <code>non_null</code>
+        | <code>normal_behavior</code> | <code>normal_behaviour</code>
+        | <code>normal_example</code> | <code>nowarn</code>
+        | <code>nullable</code> | <code>nullable_by_default</code>
+        | <code>old</code> | <code>or</code>
+        | <code>post</code> | <code>post_redundantly</code>
+        | <code>pre</code> | <code>pre_redundantly</code>
+        | <code>pure</code> | <code>readable</code> 
+        | <code>refine</code> | <code>refines</code> | <code>refining</code>
+        | <code>represents</code> | <code>represents_redundantly</code>
+        | <code>requires</code> | <code>requires_redundantly</code>
+        | <code>returns</code> | <code>returns_redundantly</code>
+        | <code>set</code> | <code>signals</code> | <code>signals_only</code>
+        | <code>signals_only_redundantly</code> | <code>signals_redundantly</code>
+        | <code>spec_bigint_math</code> | <code>spec_java_math</code>
+        | <code>spec_protected</code> | <code>spec_public</code> | <code>spec_safe_math</code>
+        | <code>static_initializer</code> | <code>uninitialized</code>
+        | <code>unreachable</code> | <code>weakly</code>
+        | <code>when</code> | <code>when_redundantly</code>
+        | <code>working_space</code> | <code>working_space_redundantly</code>
+        | <code>writable</code>
+        | <a href="#jml-universe-keyword"><var>jml-universe-keyword</var></a>
+<a name="jml-universe-keyword"><var>jml-universe-keyword</var></a> ::= <code>peer</code> | <code>readonly</code> | <code>rep</code>
+<a name="special-symbol"><var>special-symbol</var></a> ::= <a href="#java-special-symbol"><var>java-special-symbol</var></a> | <a href="#jml-special-symbol"><var>jml-special-symbol</var></a>
+<a name="java-special-symbol"><var>java-special-symbol</var></a> ::= <a href="#java-separator"><var>java-separator</var></a> | <a href="#java-operator"><var>java-operator</var></a>
+<a name="java-separator"><var>java-separator</var></a> ::= <code>(</code> | <code>)</code> | <code>{</code> | <code>}</code> | `<code>[</code>' | `<code>]</code>' | <code>;</code> | <code>,</code> | <code>.</code>
+        | <a href="#multijava-separator"><var>multijava-separator</var></a>   <i>// When the MultiJava option is on</i>
+<a name="multijava-separator"><var>multijava-separator</var></a> ::= <code>@</code> | <code>@@</code>
+<a name="java-operator"><var>java-operator</var></a> ::= <code>=</code> | <code>&lt;</code> | <code>&gt;</code> | <code>!</code> | <code>~</code> | <code>?</code> | <code>:</code>
+        | <code>==</code> | <code>&lt;=</code> | <code>&gt;=</code> | <code>!=</code> | <code>&amp;&amp;</code> | `<code>||</code>' | <code>++</code> | <code>--</code>
+        | <code>+</code> | <code>-</code> | <code>*</code> | <code>/</code> | <code>&amp;</code> | `<code>|</code>' | <code>^</code> | <code>%</code> | <code>&lt;&lt;</code> | <code>&gt;&gt;</code> | <code>&gt;&gt;&gt;</code>
+        | <code>+=</code> | <code>-=</code> | <code>*=</code> | <code>/=</code> | <code>&amp;=</code> | `<code>|=</code>' | <code>^=</code> | <code>%=</code>
+        | <code>&lt;&lt;=</code> | <code>&gt;&gt;=</code> | <code>&gt;&gt;&gt;=</code>
+<a name="jml-special-symbol"><var>jml-special-symbol</var></a> ::= <code>==&gt;</code> | <code>&lt;==</code> | <code>&lt;==&gt;</code> | <code>&lt;=!=&gt;</code>
+        | <code>-&gt;</code> | <code>&lt;-</code> | <code>&lt;:</code> | <code>..</code> | `<code>{|</code>' | `<code>|}</code>'
+<a name="java-literal"><var>java-literal</var></a> ::= <a href="#integer-literal"><var>integer-literal</var></a>
+        | <a href="#floating-point-literal"><var>floating-point-literal</var></a> | <a href="#boolean-literal"><var>boolean-literal</var></a>
+        | <a href="#character-literal"><var>character-literal</var></a> | <a href="#string-literal"><var>string-literal</var></a> | <a href="#null-literal"><var>null-literal</var></a>
+<a name="integer-literal"><var>integer-literal</var></a> ::= <a href="#decimal-integer-literal"><var>decimal-integer-literal</var></a>
+        | <a href="#hex-integer-literal"><var>hex-integer-literal</var></a> | <a href="#octal-integer-literal"><var>octal-integer-literal</var></a>
+<a name="decimal-integer-literal"><var>decimal-integer-literal</var></a> ::= <a href="#decimal-numeral"><var>decimal-numeral</var></a> [ <a href="#integer-type-suffix"><var>integer-type-suffix</var></a> ]
+<a name="decimal-numeral"><var>decimal-numeral</var></a> ::= <code>0</code> | <a href="#non-zero-digit"><var>non-zero-digit</var></a> [ <a href="#digits"><var>digits</var></a> ]
+<a name="digits"><var>digits</var></a> ::= <a href="#digit"><var>digit</var></a> [ <a href="#digit"><var>digit</var></a> ] &hellip;
+<a name="digit"><var>digit</var></a> ::= <code>0</code> | <a href="#non-zero-digit"><var>non-zero-digit</var></a>
+<a name="non-zero-digit"><var>non-zero-digit</var></a> ::= <code>1</code> | <code>2</code> | <code>3</code> | <code>4</code> | <code>5</code> | <code>6</code> | <code>7</code> | <code>8</code> | <code>9</code>
+<a name="integer-type-suffix"><var>integer-type-suffix</var></a> ::= <code>l</code> | <code>L</code>
+<a name="hex-integer-literal"><var>hex-integer-literal</var></a> ::= <a href="#hex-numeral"><var>hex-numeral</var></a>  [ <a href="#integer-type-suffix"><var>integer-type-suffix</var></a> ]
+<a name="hex-numeral"><var>hex-numeral</var></a> ::= <code>0x</code> <a href="#hex-digit"><var>hex-digit</var></a> [ <a href="#hex-digit"><var>hex-digit</var></a> ] &hellip;
+        | <code>0X</code> <a href="#hex-digit"><var>hex-digit</var></a>  [ <a href="#hex-digit"><var>hex-digit</var></a> ] &hellip;
+<a name="hex-digit"><var>hex-digit</var></a> ::= <a href="#digit"><var>digit</var></a> | <code>a</code> | <code>b</code> | <code>c</code> | <code>d</code> | <code>e</code> | <code>f</code>
+        | <code>A</code> | <code>B</code> | <code>C</code> | <code>D</code> | <code>E</code> | <code>F</code>
+<a name="octal-integer-literal"><var>octal-integer-literal</var></a> ::= <a href="#octal-numeral"><var>octal-numeral</var></a>  [ <a href="#integer-type-suffix"><var>integer-type-suffix</var></a> ]
+<a name="octal-numeral"><var>octal-numeral</var></a> ::= <code>0</code> <a href="#octal-digit"><var>octal-digit</var></a> [ <a href="#octal-digit"><var>octal-digit</var></a> ] &hellip; 
+<a name="octal-digit"><var>octal-digit</var></a> ::= <code>0</code> | <code>1</code> | <code>2</code> | <code>3</code> | <code>4</code> | <code>5</code> | <code>6</code> | <code>7</code>
+<a name="floating-point-literal"><var>floating-point-literal</var></a> ::= <a href="#digits"><var>digits</var></a> <code>.</code> [ <a href="#digits"><var>digits</var></a> ]
+          [ <a href="#exponent-part"><var>exponent-part</var></a> ] [ <a href="#float-type-suffix"><var>float-type-suffix</var></a> ]
+        | <code>.</code> <a href="#digits"><var>digits</var></a> [ <a href="#exponent-part"><var>exponent-part</var></a> ] [ <a href="#float-type-suffix"><var>float-type-suffix</var></a> ]
+        | <a href="#digits"><var>digits</var></a> <a href="#exponent-part"><var>exponent-part</var></a> [ <a href="#float-type-suffix"><var>float-type-suffix</var></a> ]
+        | <a href="#digits"><var>digits</var></a> [ <a href="#exponent-part"><var>exponent-part</var></a> ] <a href="#float-type-suffix"><var>float-type-suffix</var></a>
+<a name="exponent-part"><var>exponent-part</var></a> ::= <a href="#exponent-indicator"><var>exponent-indicator</var></a> <a href="#signed-integer"><var>signed-integer</var></a>
+<a name="exponent-indicator"><var>exponent-indicator</var></a> ::= <code>e</code> | <code>E</code>
+<a name="signed-integer"><var>signed-integer</var></a> ::= [ <a href="#sign"><var>sign</var></a> ] <a href="#digits"><var>digits</var></a>
+<a name="sign"><var>sign</var></a> ::= <code>+</code> | <code>-</code>
+<a name="float-type-suffix"><var>float-type-suffix</var></a> ::= <code>f</code> | <code>F</code> | <code>d</code> | <code>D</code>
+<a name="boolean-literal"><var>boolean-literal</var></a> ::= <code>true</code> | <code>false</code>
+<a name="character-literal"><var>character-literal</var></a> ::= <code>'</code> <a href="#single-character"><var>single-character</var></a> <code>'</code> | <code>'</code> <a href="#escape-sequence"><var>escape-sequence</var></a> <code>'</code>
+<a name="single-character"><var>single-character</var></a> ::= any character except <code>'</code>, <code>\</code>, carriage return, or newline
+<a name="escape-sequence"><var>escape-sequence</var></a> ::= <code>\b</code>    <i>// backspace</i>
+         | <code>\t</code>                   <i>// tab</i>
+         | <code>\n</code>                   <i>// newline</i>
+         | <code>\r</code>                   <i>// carriage return</i>
+         | <code>\'</code>                   <i>// single quote</i>
+         | <code>\&quot;</code>                   <i>// double quote</i>
+         | <code>\\</code>                   <i>// backslash</i>
+         | <a href="#octal-escape"><var>octal-escape</var></a>
+         | <a href="#unicode-escape"><var>unicode-escape</var></a>
+<a name="octal-escape"><var>octal-escape</var></a> ::= <code>\</code> <a href="#octal-digit"><var>octal-digit</var></a> [ <a href="#octal-digit"><var>octal-digit</var></a> ]
+         | <code>\</code> <a href="#zero-to-three"><var>zero-to-three</var></a> <a href="#octal-digit"><var>octal-digit</var></a> <a href="#octal-digit"><var>octal-digit</var></a>
+<a name="zero-to-three"><var>zero-to-three</var></a> ::= <code>0</code> | <code>1</code> | <code>2</code> | <code>3</code>
+<a name="unicode-escape"><var>unicode-escape</var></a> ::= <code>\u</code> <a href="#hex-digit"><var>hex-digit</var></a> <a href="#hex-digit"><var>hex-digit</var></a> <a href="#hex-digit"><var>hex-digit</var></a> <a href="#hex-digit"><var>hex-digit</var></a>
+<a name="string-literal"><var>string-literal</var></a> ::= <code>&quot;</code> [ <a href="#string-character"><var>string-character</var></a> ] &hellip; <code>&quot;</code>
+<a name="string-character"><var>string-character</var></a> ::= <a href="#escape-sequence"><var>escape-sequence</var></a>
+         | any character except <code>&quot;</code>, <code>\</code>, carriage return, or newline
+<a name="null-literal"><var>null-literal</var></a> ::= <code>null</code>
+<a name="informal-description"><var>informal-description</var></a> ::= <code>(*</code> <a href="#non-stars-close"><var>non-stars-close</var></a> [ <a href="#non-stars-close"><var>non-stars-close</var></a> ] &hellip; <code>*)</code>
+<a name="non-stars-close"><var>non-stars-close</var></a> ::= <a href="#non-star"><var>non-star</var></a>
+        | <a href="#stars-non-close"><var>stars-non-close</var></a>
+<a name="stars-non-close"><var>stars-non-close</var></a> ::= <code>*</code> [ <code>*</code> ] &hellip; <a href="#non-star-close"><var>non-star-close</var></a>
+<a name="non-star-close"><var>non-star-close</var></a> ::= any character except <code>)</code> or <code>*</code>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC221"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC220" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC222" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.2 Compilation Units </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="compilation-unit"><var>compilation-unit</var></a> ::= [ <a href="#package-definition"><var>package-definition</var></a> ]
+              [ <a href="#refine-prefix"><var>refine-prefix</var></a> ] 
+              [ <a href="#import-definition"><var>import-definition</var></a> ] &hellip;
+              [ <a href="#top-level-definition"><var>top-level-definition</var></a> ] &hellip;
+<a name="top-level-definition"><var>top-level-definition</var></a> ::= <a href="#type-definition"><var>type-definition</var></a>
+        | <a href="#multijava-top-level-declaration"><var>multijava-top-level-declaration</var></a>  <i>// When parsing MultiJava</i>
+<a name="package-definition"><var>package-definition</var></a> ::= <code>package</code> <a href="#name"><var>name</var></a> <code>;</code>
+<a name="name"><var>name</var></a> ::= <a href="#ident"><var>ident</var></a>  [ <code>.</code> <a href="#ident"><var>ident</var></a> ] &hellip;
+<a name="import-definition"><var>import-definition</var></a> ::= [ <code>model</code> ] <code>import</code> <a href="#name-star"><var>name-star</var></a> <code>;</code>
+<a name="name-star"><var>name-star</var></a> ::= <a href="#ident"><var>ident</var></a> [ <code>.</code> <a href="#ident"><var>ident</var></a> ] &hellip; [ <code>.</code> <code>*</code> ]
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC222"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC221" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC223" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.3 Type Definitions </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="type-definition"><var>type-definition</var></a> ::= <a href="#class-definition"><var>class-definition</var></a>
+        | <a href="#interface-definition"><var>interface-definition</var></a>
+        | <code>;</code>
+<a name="class-definition"><var>class-definition</var></a> ::= [ <a href="#doc-comment"><var>doc-comment</var></a> ] <a href="#modifiers"><var>modifiers</var></a> <code>class</code> <a href="#ident"><var>ident</var></a>
+            [ <a href="#class-extends-clause"><var>class-extends-clause</var></a> ] [ <a href="#implements-clause"><var>implements-clause</var></a> ]
+            <a href="#class-block"><var>class-block</var></a>
+<a name="class-block"><var>class-block</var></a> ::= <code>{</code> [ <a href="#field"><var>field</var></a> ] &hellip; <code>}</code>
+<a name="interface-definition"><var>interface-definition</var></a> ::= [ <a href="#doc-comment"><var>doc-comment</var></a> ] <a href="#modifiers"><var>modifiers</var></a> <code>interface</code> <a href="#ident"><var>ident</var></a>
+           [ <a href="#interface-extends"><var>interface-extends</var></a> ]
+           <a href="#class-block"><var>class-block</var></a>
+<a name="class-extends-clause"><var>class-extends-clause</var></a> ::= [ <code>extends</code> <a href="#name"><var>name</var></a> [ <code>weakly</code> ] ]
+<a name="implements-clause"><var>implements-clause</var></a> ::= <code>implements</code> <a href="#name-weakly-list"><var>name-weakly-list</var></a>
+<a name="name-weakly-list"><var>name-weakly-list</var></a> ::= <a href="#name"><var>name</var></a> [ <code>weakly</code> ] [ <code>,</code> <a href="#name"><var>name</var></a> [ <code>weakly</code> ] ] &hellip;
+<a name="interface-extends"><var>interface-extends</var></a> ::= <code>extends</code> <a href="#name-weakly-list"><var>name-weakly-list</var></a>
+<a name="modifiers"><var>modifiers</var></a> ::= [ <a href="#modifier"><var>modifier</var></a> ] &hellip;
+<a name="modifier"><var>modifier</var></a> ::= <code>public</code> | <code>protected</code> | <code>private</code>
+        | <code>abstract</code> | <code>static</code> |
+        | <code>final</code> | <code>synchronized</code>
+        | <code>transient</code> | <code>volatile</code>
+        | <code>native</code> | <code>strictfp</code>
+        | <code>const</code>             <i>// reserved but not used in Java</i>
+        | <a href="#jml-modifier"><var>jml-modifier</var></a>
+<a name="jml-modifier"><var>jml-modifier</var></a> ::= <code>spec_public</code> | <code>spec_protected</code>
+        | <code>model</code> | <code>ghost</code> | <code>pure</code>
+        | <code>instance</code> | <code>helper</code>
+        | <code>uninitialized</code>
+        | <code>spec_java_math</code> | <code>spec_safe_math</code> | <code>spec_bigint_math</code>
+        | <code>code_java_math</code> | <code>code_safe_math</code> | <code>code_bigint_math</code>
+        | <code>non_null</code> | <code>nullable</code> | <code>nullable_by_default</code>
+        | <code>extract</code>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC223"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC222" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC224" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.4 Class and Interface Member Declarations </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="field"><var>field</var></a> ::= <a href="#member-decl"><var>member-decl</var></a>
+        | <a href="#jml-declaration"><var>jml-declaration</var></a>
+        | <a href="#class-initializer-decl"><var>class-initializer-decl</var></a>
+        | <code>;</code>
+<a name="member-decl"><var>member-decl</var></a> ::= <a href="#method-decl"><var>method-decl</var></a>
+        | <a href="#variable-definition"><var>variable-definition</var></a>
+        | <a href="#class-definition"><var>class-definition</var></a>
+        | <a href="#interface-definition"><var>interface-definition</var></a>
+<a name="method-decl"><var>method-decl</var></a> ::= [ <a href="#doc-comment"><var>doc-comment</var></a> ] &hellip;
+                <a href="#method-specification"><var>method-specification</var></a>
+                <a href="#modifiers"><var>modifiers</var></a> [ <a href="#method-or-constructor-keyword"><var>method-or-constructor-keyword</var></a> ]
+                [ <a href="#type-spec"><var>type-spec</var></a> ] <a href="#method-head"><var>method-head</var></a>
+                <a href="#method-body"><var>method-body</var></a>
+        | [ <a href="#doc-comment"><var>doc-comment</var></a> ] &hellip;
+          <a href="#modifiers"><var>modifiers</var></a> <a href="#method-or-constructor-keyword"><var>method-or-constructor-keyword</var></a>
+          [ <a href="#type-spec"><var>type-spec</var></a> ] <a href="#method-head"><var>method-head</var></a>
+          [ <a href="#method-specification"><var>method-specification</var></a> ]
+          <a href="#method-body"><var>method-body</var></a>
+<a name="method-or-constructor-keyword"><var>method-or-constructor-keyword</var></a> ::= <code>method</code> | <code>constructor</code>
+<a name="method-head"><var>method-head</var></a> ::= <a href="#ident"><var>ident</var></a> <a href="#formals"><var>formals</var></a> [ <a href="#dims"><var>dims</var></a> ] [ <a href="#throws-clause"><var>throws-clause</var></a> ]
+<a name="method-body"><var>method-body</var></a> ::= <a href="#compound-statement"><var>compound-statement</var></a> | <code>;</code>
+<a name="throws-clause"><var>throws-clause</var></a> ::= <code>throws</code> <a href="#name"><var>name</var></a> [ <code>,</code> <a href="#name"><var>name</var></a> ] &hellip;
+<a name="formals"><var>formals</var></a> ::= <code>(</code> [ <a href="#param-declaration-list"><var>param-declaration-list</var></a> ] <code>)</code>
+<a name="param-declaration-list"><var>param-declaration-list</var></a> ::= <a href="#param-declaration"><var>param-declaration</var></a>
+                           [ <code>,</code> <a href="#param-declaration"><var>param-declaration</var></a> ] &hellip;
+<a name="param-declaration"><var>param-declaration</var></a> ::= [ <a href="#param-modifier"><var>param-modifier</var></a> ] &hellip; <a href="#type-spec"><var>type-spec</var></a> <a href="#ident"><var>ident</var></a> [ <a href="#dims"><var>dims</var></a> ]
+        | <a href="#multijava-param-declaration"><var>multijava-param-declaration</var></a>   <i>// When MultiJava parsing is on</i>
+<a name="param-modifier"><var>param-modifier</var></a> ::= <code>final</code> | <code>non_null</code> | <code>nullable</code>
+<a name="variable-definition"><var>variable-definition</var></a> ::= [ <a href="#doc-comment"><var>doc-comment</var></a> ] &hellip; <a href="#modifiers"><var>modifiers</var></a> <a href="#variable-decls"><var>variable-decls</var></a>
+<a name="variable-decls"><var>variable-decls</var></a> ::= [ <code>field</code> ] <a href="#type-spec"><var>type-spec</var></a> <a href="#variable-declarators"><var>variable-declarators</var></a> <code>;</code>
+                   [ <a href="#jml-data-group-clause"><var>jml-data-group-clause</var></a> ] &hellip;
+<a name="variable-declarators"><var>variable-declarators</var></a> ::= <a href="#variable-declarator"><var>variable-declarator</var></a>
+                         [ <code>,</code> <a href="#variable-declarator"><var>variable-declarator</var></a> ] &hellip;
+<a name="variable-declarator"><var>variable-declarator</var></a> ::= <a href="#ident"><var>ident</var></a> [ <a href="#dims"><var>dims</var></a> ] [ <code>=</code> <a href="#initializer"><var>initializer</var></a> ]
+<a name="initializer"><var>initializer</var></a> ::= <a href="#expression"><var>expression</var></a> | <a href="#array-initializer"><var>array-initializer</var></a>
+<a name="array-initializer"><var>array-initializer</var></a> ::= <code>{</code> [ <a href="#initializer-list"><var>initializer-list</var></a> ] <code>}</code> 
+<a name="initializer-list"><var>initializer-list</var></a> ::= <a href="#initializer"><var>initializer</var></a> [ <code>,</code> <a href="#initializer"><var>initializer</var></a> ] &hellip; [ <code>,</code> ]
+<a name="type-spec"><var>type-spec</var></a> ::= [ <a href="#ownership-modifiers"><var>ownership-modifiers</var></a> ] <a href="#type"><var>type</var></a> [ <a href="#dims"><var>dims</var></a> ]
+         | <code>\TYPE</code> [ <a href="#dims"><var>dims</var></a> ]
+<a name="type"><var>type</var></a> ::= <a href="#reference-type"><var>reference-type</var></a> | <a href="#built-in-type"><var>built-in-type</var></a>
+<a name="reference-type"><var>reference-type</var></a> ::= <a href="#name"><var>name</var></a>
+<a name="dims"><var>dims</var></a> ::= `<code>[</code>' `<code>]</code>' [ `<code>[</code>' `<code>]</code>' ] &hellip;
+<a name="class-initializer-decl"><var>class-initializer-decl</var></a> ::= [ <a href="#method-specification"><var>method-specification</var></a> ]
+                           [ <code>static</code> ] <a href="#compound-statement"><var>compound-statement</var></a>
+        | <a href="#method-specification"><var>method-specification</var></a> <code>static_initializer</code> 
+        | <a href="#method-specification"><var>method-specification</var></a> <code>initializer</code> 
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC224"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC223" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC225" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.5 Type Specifications </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="jml-declaration"><var>jml-declaration</var></a> ::= <a href="#modifiers"><var>modifiers</var></a> <a href="#invariant"><var>invariant</var></a>
+        | <a href="#modifiers"><var>modifiers</var></a> <a href="#history-constraint"><var>history-constraint</var></a>
+        | <a href="#modifiers"><var>modifiers</var></a> <a href="#represents-clause"><var>represents-clause</var></a>
+        | <a href="#modifiers"><var>modifiers</var></a> <a href="#initially-clause"><var>initially-clause</var></a> 
+        | <a href="#modifiers"><var>modifiers</var></a> <a href="#monitors-for-clause"><var>monitors-for-clause</var></a>
+        | <a href="#modifiers"><var>modifiers</var></a> <a href="#readable-if-clause"><var>readable-if-clause</var></a>
+        | <a href="#modifiers"><var>modifiers</var></a> <a href="#writable-if-clause"><var>writable-if-clause</var></a>
+        | <a href="#axiom-clause"><var>axiom-clause</var></a>
+<a name="invariant"><var>invariant</var></a> ::= <a href="#invariant-keyword"><var>invariant-keyword</var></a> <a href="#predicate"><var>predicate</var></a> <code>;</code>
+<a name="invariant-keyword"><var>invariant-keyword</var></a> ::= <code>invariant</code> | <code>invariant_redundantly</code>
+<a name="history-constraint"><var>history-constraint</var></a> ::= <a href="#constraint-keyword"><var>constraint-keyword</var></a> <a href="#predicate"><var>predicate</var></a>
+              [ <code>for</code> <a href="#constrained-list"><var>constrained-list</var></a> ] <code>;</code>
+<a name="constraint-keyword"><var>constraint-keyword</var></a> ::= <code>constraint</code> | <code>constraint_redundantly</code>
+<a name="constrained-list"><var>constrained-list</var></a> ::= <a href="#method-name-list"><var>method-name-list</var></a> | <code>\everything</code>
+<a name="method-name-list"><var>method-name-list</var></a> ::= <a href="#method-name"><var>method-name</var></a> [ <code>,</code> <a href="#method-name"><var>method-name</var></a> ] &hellip;
+<a name="method-name"><var>method-name</var></a> ::= <a href="#method-ref"><var>method-ref</var></a> [ <code>(</code> [ <a href="#param-disambig-list"><var>param-disambig-list</var></a> ] <code>)</code> ] | <a href="#method-ref-start"><var>method-ref-start</var></a> <code>.</code> <code>*</code> 
+<a name="method-ref"><var>method-ref</var></a> ::= <a href="#method-ref-start"><var>method-ref-start</var></a> [ <code>.</code> <a href="#method-ref-rest"><var>method-ref-rest</var></a> ] &hellip;
+        | <code>new</code> <a href="#reference-type"><var>reference-type</var></a>
+<a name="method-ref-start"><var>method-ref-start</var></a> ::=  <code>super</code> | <code>this</code> | <a href="#ident"><var>ident</var></a>
+<a name="method-ref-rest"><var>method-ref-rest</var></a> ::=  <code>this</code> | <a href="#ident"><var>ident</var></a>
+<a name="param-disambig-list"><var>param-disambig-list</var></a> ::= <a href="#param-disambig"><var>param-disambig</var></a> [ <code>,</code> <a href="#param-disambig"><var>param-disambig</var></a> ] &hellip;
+<a name="param-disambig"><var>param-disambig</var></a> ::= <a href="#type-spec"><var>type-spec</var></a> [ <a href="#ident"><var>ident</var></a> [ <a href="#dims"><var>dims</var></a> ] ]
+<a name="represents-clause"><var>represents-clause</var></a> ::= <a href="#represents-keyword"><var>represents-keyword</var></a> <a href="#store-ref-expression"><var>store-ref-expression</var></a>
+                    <a href="#l-arrow-or-eq"><var>l-arrow-or-eq</var></a> <a href="#spec-expression"><var>spec-expression</var></a> <code>;</code>
+        | <a href="#represents-keyword"><var>represents-keyword</var></a> <a href="#store-ref-expression"><var>store-ref-expression</var></a> <code>\such_that</code>
+          <a href="#predicate"><var>predicate</var></a> <code>;</code>
+<a name="represents-keyword"><var>represents-keyword</var></a> ::= <code>represents</code> | <code>represents_redundantly</code>
+<a name="l-arrow-or-eq"><var>l-arrow-or-eq</var></a> ::= <code>&lt;-</code> | <code>=</code>
+<a name="initially-clause"><var>initially-clause</var></a> ::= <code>initially</code> <a href="#predicate"><var>predicate</var></a> <code>;</code>
+<a name="axiom-clause"><var>axiom-clause</var></a> ::= <code>axiom</code> <a href="#predicate"><var>predicate</var></a> <code>;</code>
+<a name="readable-if-clause"><var>readable-if-clause</var></a> ::= <code>readable</code> <a href="#ident"><var>ident</var></a> <code>if</code> <a href="#predicate"><var>predicate</var></a> <code>;</code>
+<a name="writable-if-clause"><var>writable-if-clause</var></a> ::= <code>writable</code> <a href="#ident"><var>ident</var></a> <code>if</code> <a href="#predicate"><var>predicate</var></a> <code>;</code>
+<a name="monitors-for-clause"><var>monitors-for-clause</var></a> ::= <code>monitors_for</code> <a href="#ident"><var>ident</var></a>
+                        <a href="#l-arrow-or-eq"><var>l-arrow-or-eq</var></a> <a href="#spec-expression-list"><var>spec-expression-list</var></a> <code>;</code>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC225"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC224" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC226" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.6 Method Specifications </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="method-specification"><var>method-specification</var></a> ::= <a href="#specification"><var>specification</var></a> | <a href="#extending-specification"><var>extending-specification</var></a>
+<a name="extending-specification"><var>extending-specification</var></a> ::= <code>also</code> <a href="#specification"><var>specification</var></a>
+<a name="specification"><var>specification</var></a> ::= <a href="#spec-case-seq"><var>spec-case-seq</var></a> [ <a href="#redundant-spec"><var>redundant-spec</var></a> ]
+              | <a href="#redundant-spec"><var>redundant-spec</var></a>
+<a name="spec-case-seq"><var>spec-case-seq</var></a> ::= <a href="#spec-case"><var>spec-case</var></a> [ <code>also</code> <a href="#spec-case"><var>spec-case</var></a> ] &hellip;
+<a name="spec-case"><var>spec-case</var></a> ::= <a href="#lightweight-spec-case"><var>lightweight-spec-case</var></a> | <a href="#heavyweight-spec-case"><var>heavyweight-spec-case</var></a>
+        | <a href="#model-program"><var>model-program</var></a>
+<a name="privacy"><var>privacy</var></a> ::= <code>public</code> | <code>protected</code> | <code>private</code>
+<a name="lightweight-spec-case"><var>lightweight-spec-case</var></a> ::= <a href="#generic-spec-case"><var>generic-spec-case</var></a>
+<a name="generic-spec-case"><var>generic-spec-case</var></a> ::= [ <a href="#spec-var-decls"><var>spec-var-decls</var></a> ]
+                      <a href="#spec-header"><var>spec-header</var></a>
+                      [ <a href="#generic-spec-body"><var>generic-spec-body</var></a> ]
+        | [ <a href="#spec-var-decls"><var>spec-var-decls</var></a> ]
+          <a href="#generic-spec-body"><var>generic-spec-body</var></a>
+<a name="generic-spec-body"><var>generic-spec-body</var></a> ::= <a href="#simple-spec-body"><var>simple-spec-body</var></a>
+        | <code>{|</code> <a href="#generic-spec-case-seq"><var>generic-spec-case-seq</var></a> <code>|}</code>
+<a name="generic-spec-case-seq"><var>generic-spec-case-seq</var></a> ::= <a href="#generic-spec-case"><var>generic-spec-case</var></a>
+                          [ <code>also</code> <a href="#generic-spec-case"><var>generic-spec-case</var></a> ] &hellip;
+<a name="spec-header"><var>spec-header</var></a> ::= <a href="#requires-clause"><var>requires-clause</var></a> [ <a href="#requires-clause"><var>requires-clause</var></a> ] &hellip;
+<a name="simple-spec-body"><var>simple-spec-body</var></a> ::= <a href="#simple-spec-body-clause"><var>simple-spec-body-clause</var></a>
+                     [ <a href="#simple-spec-body-clause"><var>simple-spec-body-clause</var></a> ] &hellip; 
+<a name="simple-spec-body-clause"><var>simple-spec-body-clause</var></a> ::= <a href="#diverges-clause"><var>diverges-clause</var></a>
+        | <a href="#assignable-clause"><var>assignable-clause</var></a> | <a href="#captures-clause"><var>captures-clause</var></a> 
+        | <a href="#when-clause"><var>when-clause</var></a> | <a href="#working-space-clause"><var>working-space-clause</var></a>
+        | <a href="#duration-clause"><var>duration-clause</var></a> | <a href="#ensures-clause"><var>ensures-clause</var></a>
+        | <a href="#signals-only-clause"><var>signals-only-clause</var></a> | <a href="#signals-clause"><var>signals-clause</var></a>
+<a name="heavyweight-spec-case"><var>heavyweight-spec-case</var></a> ::= <a href="#behavior-spec-case"><var>behavior-spec-case</var></a>
+        | <a href="#exceptional-behavior-spec-case"><var>exceptional-behavior-spec-case</var></a>
+        | <a href="#normal-behavior-spec-case"><var>normal-behavior-spec-case</var></a>
+<a name="behavior-spec-case"><var>behavior-spec-case</var></a> ::= [ <a href="#privacy"><var>privacy</var></a> ] [ <code>code</code> ] <a href="#behavior-keyword"><var>behavior-keyword</var></a>
+                       <a href="#generic-spec-case"><var>generic-spec-case</var></a>
+<a name="behavior-keyword"><var>behavior-keyword</var></a> ::= <code>behavior</code> | <code>behaviour</code>
+<a name="normal-behavior-spec-case"><var>normal-behavior-spec-case</var></a> ::= [ <a href="#privacy"><var>privacy</var></a> ] [ <code>code</code> ] <a href="#normal-behavior-keyword"><var>normal-behavior-keyword</var></a>
+                              <a href="#normal-spec-case"><var>normal-spec-case</var></a>
+<a name="normal-behavior-keyword"><var>normal-behavior-keyword</var></a> ::= <code>normal_behavior</code> | <code>normal_behaviour</code>
+<a name="normal-spec-case"><var>normal-spec-case</var></a> ::= <a href="#generic-spec-case"><var>generic-spec-case</var></a>
+<a name="exceptional-behavior-spec-case"><var>exceptional-behavior-spec-case</var></a> ::= [ <a href="#privacy"><var>privacy</var></a> ] [ <code>code</code> ] <code>exceptional-behavior-keyword</code>
+                                   <a href="#exceptional-spec-case"><var>exceptional-spec-case</var></a>
+<a name="exceptional-behavior-keyword"><var>exceptional-behavior-keyword</var></a> ::= <code>exceptional_behavior</code> | <code>exceptional_behaviour</code>
+<a name="exceptional-spec-case"><var>exceptional-spec-case</var></a> ::= <a href="#generic-spec-case"><var>generic-spec-case</var></a>
+<a name="spec-var-decls"><var>spec-var-decls</var></a> ::= <a href="#forall-var-decls"><var>forall-var-decls</var></a> [ <a href="#old-var-decls"><var>old-var-decls</var></a> ]
+        | <a href="#old-var-decls"><var>old-var-decls</var></a>
+<a name="forall-var-decls"><var>forall-var-decls</var></a> ::= <a href="#forall-var-declarator"><var>forall-var-declarator</var></a> [ <a href="#forall-var-declarator"><var>forall-var-declarator</var></a> ] &hellip; 
+<a name="forall-var-declarator"><var>forall-var-declarator</var></a> ::= <code>forall</code> [ <a href="#bound-var-modifiers"><var>bound-var-modifiers</var></a> ] <a href="#quantified-var-declarator"><var>quantified-var-declarator</var></a> <code>;</code>
+<a name="old-var-decls"><var>old-var-decls</var></a> ::= <a href="#old-var-declarator"><var>old-var-declarator</var></a> [ <a href="#old-var-declarator"><var>old-var-declarator</var></a> ] &hellip;
+<a name="old-var-declarator"><var>old-var-declarator</var></a> ::= <code>old</code> [ <a href="#bound-var-modifiers"><var>bound-var-modifiers</var></a> ] <a href="#type-spec"><var>type-spec</var></a> <a href="#spec-variable-declarators"><var>spec-variable-declarators</var></a> <code>;</code>
+<a name="requires-clause"><var>requires-clause</var></a> ::= <a href="#requires-keyword"><var>requires-keyword</var></a> <a href="#pred-or-not"><var>pred-or-not</var></a> <code>;</code>
+        | <a href="#requires-keyword"><var>requires-keyword</var></a> <code>\same</code> <code>;</code>
+<a name="requires-keyword"><var>requires-keyword</var></a> ::= <code>requires</code> | <code>pre</code> 
+        | <code>requires_redundantly</code> | <code>pre_redundantly</code>
+<a name="pred-or-not"><var>pred-or-not</var></a> ::= <a href="#predicate"><var>predicate</var></a> | <code>\not_specified</code>
+<a name="ensures-clause"><var>ensures-clause</var></a> ::= <a href="#ensures-keyword"><var>ensures-keyword</var></a> <a href="#pred-or-not"><var>pred-or-not</var></a> <code>;</code>
+<a name="ensures-keyword"><var>ensures-keyword</var></a> ::= <code>ensures</code> | <code>post</code>
+        | <code>ensures_redundantly</code> | <code>post_redundantly</code>
+<a name="signals-clause"><var>signals-clause</var></a> ::= <a href="#signals-keyword"><var>signals-keyword</var></a> <code>(</code> <a href="#reference-type"><var>reference-type</var></a> [ <a href="#ident"><var>ident</var></a> ] <code>)</code>
+                   [ <a href="#pred-or-not"><var>pred-or-not</var></a> ] <code>;</code>
+<a name="signals-keyword"><var>signals-keyword</var></a> ::= <code>signals</code> | <code>signals_redundantly</code>
+        | <code>exsures</code> | <code>exsures_redundantly</code>
+<a name="signals-only-clause"><var>signals-only-clause</var></a> ::= <a href="#signals-only-keyword"><var>signals-only-keyword</var></a> <a href="#reference-type"><var>reference-type</var></a> [ <code>,</code> <a href="#reference-type"><var>reference-type</var></a> ] &hellip; <code>;</code>
+        | <a href="#signals-only-keyword"><var>signals-only-keyword</var></a> <code>\nothing</code> <code>;</code>
+<a name="signals-only-keyword"><var>signals-only-keyword</var></a> ::= <code>signals_only</code> | <code>signals_only_redundantly</code>
+<a name="diverges-clause"><var>diverges-clause</var></a> ::= <a href="#diverges-keyword"><var>diverges-keyword</var></a> <a href="#pred-or-not"><var>pred-or-not</var></a> <code>;</code>
+<a name="diverges-keyword"><var>diverges-keyword</var></a> ::= <code>diverges</code> | <code>diverges_redundantly</code>
+<a name="when-clause"><var>when-clause</var></a> ::= <a href="#when-keyword"><var>when-keyword</var></a> <a href="#pred-or-not"><var>pred-or-not</var></a> <code>;</code>
+<a name="when-keyword"><var>when-keyword</var></a> ::= <code>when</code> | <code>when_redundantly</code>
+<a name="assignable-clause"><var>assignable-clause</var></a> ::= <a href="#assignable-keyword"><var>assignable-keyword</var></a> <a href="#store-ref-list"><var>store-ref-list</var></a> <code>;</code>
+<a name="assignable-keyword"><var>assignable-keyword</var></a> ::= <code>assignable</code> | <code>assignable_redundantly</code>
+        | <code>modifiable</code> | <code>modifiable_redundantly</code>
+        | <code>modifies</code> | <code>modifies_redundantly</code>
+<a name="accessible-clause"><var>accessible-clause</var></a> ::= <a href="#accessible-keyword"><var>accessible-keyword</var></a> <a href="#store-ref-list"><var>store-ref-list</var></a> <code>;</code>
+<a name="accessible-keyword"><var>accessible-keyword</var></a> ::= <code>accessible</code> | <code>accessible_redundantly</code>
+<a name="callable-clause"><var>callable-clause</var></a> ::= <a href="#callable-keyword"><var>callable-keyword</var></a> <a href="#callable-methods-list"><var>callable-methods-list</var></a> <code>;</code>
+<a name="callable-keyword"><var>callable-keyword</var></a> ::= <code>callable</code> | <code>callable_redundantly</code>
+<a name="callable-methods-list"><var>callable-methods-list</var></a> ::= <a href="#method-name-list"><var>method-name-list</var></a> | <a href="#store-ref-keyword"><var>store-ref-keyword</var></a>
+<a name="measured-clause"><var>measured-clause</var></a> ::= <a href="#measured-by-keyword"><var>measured-by-keyword</var></a> <code>\not_specified</code> <code>;</code>
+        | <a href="#measured-by-keyword"><var>measured-by-keyword</var></a> <a href="#spec-expression"><var>spec-expression</var></a> [ <code>if</code> <a href="#predicate"><var>predicate</var></a> ] <code>;</code>
+<a name="measured-by-keyword"><var>measured-by-keyword</var></a> ::= <code>measured_by</code> | <code>measured_by_redundantly</code>
+<a name="captures-clause"><var>captures-clause</var></a> ::= <a href="#captures-keyword"><var>captures-keyword</var></a> <a href="#store-ref-list"><var>store-ref-list</var></a> <code>;</code>
+<a name="captures-keyword"><var>captures-keyword</var></a> ::= <code>captures</code> | <code>captures_redundantly</code>
+<a name="working-space-clause"><var>working-space-clause</var></a> ::= <a href="#working-space-keyword"><var>working-space-keyword</var></a> <code>\not_specified</code> <code>;</code>
+        | <a href="#working-space-keyword"><var>working-space-keyword</var></a> <a href="#spec-expression"><var>spec-expression</var></a> [ <code>if</code> <a href="#predicate"><var>predicate</var></a> ] <code>;</code>
+<a name="working-space-keyword"><var>working-space-keyword</var></a> ::= <code>working_space</code> | <code>working_space_redundantly</code>
+<a name="duration-clause"><var>duration-clause</var></a> ::= <a href="#duration-keyword"><var>duration-keyword</var></a> <code>\not_specified</code> <code>;</code>
+        | <a href="#duration-keyword"><var>duration-keyword</var></a> <a href="#spec-expression"><var>spec-expression</var></a> [ <code>if</code> <a href="#predicate"><var>predicate</var></a> ] <code>;</code>
+<a name="duration-keyword"><var>duration-keyword</var></a> ::= <code>duration</code> | <code>duration_redundantly</code>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC226"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC225" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC227" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.7 Data Groups </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="jml-data-group-clause"><var>jml-data-group-clause</var></a> ::= <a href="#in-group-clause"><var>in-group-clause</var></a> | <a href="#maps-into-clause"><var>maps-into-clause</var></a>
+<a name="in-group-clause"><var>in-group-clause</var></a> ::= <a href="#in-keyword"><var>in-keyword</var></a> <a href="#group-list"><var>group-list</var></a> <code>;</code> 
+<a name="in-keyword"><var>in-keyword</var></a> ::= <code>in</code> | <code>in_redundantly</code>
+<a name="group-list"><var>group-list</var></a> ::= <a href="#group-name"><var>group-name</var></a> [ <code>,</code> <a href="#group-name"><var>group-name</var></a> ] &hellip;
+<a name="group-name"><var>group-name</var></a> ::= [ <a href="#group-name-prefix"><var>group-name-prefix</var></a> ] <a href="#ident"><var>ident</var></a> 
+<a name="group-name-prefix"><var>group-name-prefix</var></a> ::= <code>super</code> <code>.</code> | <code>this</code> <code>.</code> 
+<a name="maps-into-clause"><var>maps-into-clause</var></a> ::= <a href="#maps-keyword"><var>maps-keyword</var></a> <a href="#member-field-ref"><var>member-field-ref</var></a> <code>\into</code> <a href="#group-list"><var>group-list</var></a> <code>;</code> 
+<a name="maps-keyword"><var>maps-keyword</var></a> ::= <code>maps</code> | <code>maps_redundantly</code>
+<a name="member-field-ref"><var>member-field-ref</var></a> ::= <a href="#ident"><var>ident</var></a> <code>.</code> <a href="#maps-member-ref-expr"><var>maps-member-ref-expr</var></a>
+          | <a href="#maps-array-ref-expr"><var>maps-array-ref-expr</var></a> [ <code>.</code> <a href="#maps-member-ref-expr"><var>maps-member-ref-expr</var></a> ]
+<a name="maps-member-ref-expr"><var>maps-member-ref-expr</var></a> ::= <a href="#ident"><var>ident</var></a> | <code>*</code> 
+<a name="maps-array-ref-expr"><var>maps-array-ref-expr</var></a> ::= <a href="#ident"><var>ident</var></a> <a href="#maps-spec-array-dim"><var>maps-spec-array-dim</var></a>
+                        [ <a href="#maps-spec-array-dim"><var>maps-spec-array-dim</var></a> ] &hellip; 
+<a name="maps-spec-array-dim"><var>maps-spec-array-dim</var></a> ::= `<code>[</code>' <a href="#spec-array-ref-expr"><var>spec-array-ref-expr</var></a> `<code>]</code>'
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC227"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC226" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC228" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.8 Predicates and Specification Expressions </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="predicate"><var>predicate</var></a> ::= <a href="#spec-expression"><var>spec-expression</var></a>
+<a name="spec-expression-list"><var>spec-expression-list</var></a> ::= <a href="#spec-expression"><var>spec-expression</var></a>
+                         [ <code>,</code> <a href="#spec-expression"><var>spec-expression</var></a> ] &hellip;
+<a name="spec-expression"><var>spec-expression</var></a> ::= <a href="#expression"><var>expression</var></a> 
+<a name="expression-list"><var>expression-list</var></a> ::= <a href="#expression"><var>expression</var></a> [ <code>,</code> <a href="#expression"><var>expression</var></a> ] &hellip;
+<a name="expression"><var>expression</var></a> ::= <a href="#assignment-expr"><var>assignment-expr</var></a> 
+<a name="assignment-expr"><var>assignment-expr</var></a> ::= <a href="#conditional-expr"><var>conditional-expr</var></a>
+                    [ <a href="#assignment-op"><var>assignment-op</var></a> <a href="#assignment-expr"><var>assignment-expr</var></a> ]
+<a name="assignment-op"><var>assignment-op</var></a> ::=  <code>=</code> | <code>+=</code> | <code>-=</code> | <code>*=</code> | <code>/=</code> | <code>%=</code> | <code>&gt;&gt;=</code>  
+        | <code>&gt;&gt;&gt;=</code> | <code>&lt;&lt;=</code> | <code>&amp;=</code> | `<code>|=</code>' | <code>^=</code>
+<a name="conditional-expr"><var>conditional-expr</var></a> ::= <a href="#equivalence-expr"><var>equivalence-expr</var></a>
+                   [ <code>?</code> <a href="#conditional-expr"><var>conditional-expr</var></a> <code>:</code> <a href="#conditional-expr"><var>conditional-expr</var></a> ]
+<a name="equivalence-expr"><var>equivalence-expr</var></a> ::= <a href="#implies-expr"><var>implies-expr</var></a>
+                     [ <a href="#equivalence-op"><var>equivalence-op</var></a> <a href="#implies-expr"><var>implies-expr</var></a> ] &hellip;
+<a name="equivalence-op"><var>equivalence-op</var></a> ::= <code>&lt;==&gt;</code> | <code>&lt;=!=&gt;</code>
+<a name="implies-expr"><var>implies-expr</var></a> ::= <a href="#logical-or-expr"><var>logical-or-expr</var></a>
+             [ <code>==&gt;</code> <a href="#implies-non-backward-expr"><var>implies-non-backward-expr</var></a> ]
+        | <a href="#logical-or-expr"><var>logical-or-expr</var></a> <code>&lt;==</code> <a href="#logical-or-expr"><var>logical-or-expr</var></a>
+             [ <code>&lt;==</code> <a href="#logical-or-expr"><var>logical-or-expr</var></a> ] &hellip;
+<a name="implies-non-backward-expr"><var>implies-non-backward-expr</var></a> ::= <a href="#logical-or-expr"><var>logical-or-expr</var></a>
+             [ <code>==&gt;</code> <a href="#implies-non-backward-expr"><var>implies-non-backward-expr</var></a> ]
+<a name="logical-or-expr"><var>logical-or-expr</var></a> ::= <a href="#logical-and-expr"><var>logical-and-expr</var></a> [ `<code>||</code>' <a href="#logical-and-expr"><var>logical-and-expr</var></a> ] &hellip;
+<a name="logical-and-expr"><var>logical-and-expr</var></a> ::= <a href="#inclusive-or-expr"><var>inclusive-or-expr</var></a> [ <code>&amp;&amp;</code> <a href="#inclusive-or-expr"><var>inclusive-or-expr</var></a> ] &hellip;
+<a name="inclusive-or-expr"><var>inclusive-or-expr</var></a> ::= <a href="#exclusive-or-expr"><var>exclusive-or-expr</var></a> [ `<code>|</code>' <a href="#exclusive-or-expr"><var>exclusive-or-expr</var></a> ] &hellip;
+<a name="exclusive-or-expr"><var>exclusive-or-expr</var></a> ::= <a href="#and-expr"><var>and-expr</var></a> [ <code>^</code> <a href="#and-expr"><var>and-expr</var></a> ] &hellip;
+<a name="and-expr"><var>and-expr</var></a> ::= <a href="#equality-expr"><var>equality-expr</var></a> [ <code>&amp;</code> <a href="#equality-expr"><var>equality-expr</var></a> ] &hellip;
+<a name="equality-expr"><var>equality-expr</var></a> ::= <a href="#relational-expr"><var>relational-expr</var></a> [ <code>==</code> <a href="#relational-expr"><var>relational-expr</var></a>] &hellip;
+        | <a href="#relational-expr"><var>relational-expr</var></a> [ <code>!=</code> <a href="#relational-expr"><var>relational-expr</var></a>] &hellip;
+<a name="relational-expr"><var>relational-expr</var></a> ::= <a href="#shift-expr"><var>shift-expr</var></a> <code>&lt;</code> <a href="#shift-expr"><var>shift-expr</var></a>
+        | <a href="#shift-expr"><var>shift-expr</var></a> <code>&gt;</code> <a href="#shift-expr"><var>shift-expr</var></a>
+        | <a href="#shift-expr"><var>shift-expr</var></a> <code>&lt;=</code> <a href="#shift-expr"><var>shift-expr</var></a>
+        | <a href="#shift-expr"><var>shift-expr</var></a> <code>&gt;=</code> <a href="#shift-expr"><var>shift-expr</var></a>
+        | <a href="#shift-expr"><var>shift-expr</var></a> <code>&lt;:</code> <a href="#shift-expr"><var>shift-expr</var></a>
+        | <a href="#shift-expr"><var>shift-expr</var></a> [ <code>instanceof</code> <a href="#type-spec"><var>type-spec</var></a> ]
+<a name="shift-expr"><var>shift-expr</var></a> ::= <a href="#additive-expr"><var>additive-expr</var></a> [ <a href="#shift-op"><var>shift-op</var></a> <a href="#additive-expr"><var>additive-expr</var></a> ] &hellip;
+<a name="shift-op"><var>shift-op</var></a> ::= <code>&lt;&lt;</code> | <code>&gt;&gt;</code> | <code>&gt;&gt;&gt;</code>
+<a name="additive-expr"><var>additive-expr</var></a> ::= <a href="#mult-expr"><var>mult-expr</var></a> [ <a href="#additive-op"><var>additive-op</var></a> <a href="#mult-expr"><var>mult-expr</var></a> ] &hellip;
+<a name="additive-op"><var>additive-op</var></a> ::= <code>+</code> | <code>-</code>
+<a name="mult-expr"><var>mult-expr</var></a> ::= <a href="#unary-expr"><var>unary-expr</var></a> [ <a href="#mult-op"><var>mult-op</var></a> <a href="#unary-expr"><var>unary-expr</var></a> ] &hellip;
+<a name="mult-op"><var>mult-op</var></a> ::= <code>*</code> | <code>/</code> | <code>%</code>
+<a name="unary-expr"><var>unary-expr</var></a> ::= <code>(</code> <a href="#type-spec"><var>type-spec</var></a> <code>)</code> <a href="#unary-expr"><var>unary-expr</var></a>
+        | <code>++</code> <a href="#unary-expr"><var>unary-expr</var></a>
+        | <code>--</code> <a href="#unary-expr"><var>unary-expr</var></a>
+        | <code>+</code> <a href="#unary-expr"><var>unary-expr</var></a>
+        | <code>-</code> <a href="#unary-expr"><var>unary-expr</var></a>
+        | <a href="#unary-expr-not-plus-minus"><var>unary-expr-not-plus-minus</var></a>
+<a name="unary-expr-not-plus-minus"><var>unary-expr-not-plus-minus</var></a> ::= <code>~</code> <a href="#unary-expr"><var>unary-expr</var></a>
+        | <code>!</code> <a href="#unary-expr"><var>unary-expr</var></a>
+        | <code>(</code> <a href="#built-in-type"><var>built-in-type</var></a> <code>)</code> <a href="#unary-expr"><var>unary-expr</var></a>
+        | <code>(</code> <a href="#reference-type"><var>reference-type</var></a> <code>)</code> <a href="#unary-expr-not-plus-minus"><var>unary-expr-not-plus-minus</var></a>
+        | <a href="#postfix-expr"><var>postfix-expr</var></a>
+<a name="postfix-expr"><var>postfix-expr</var></a> ::= <a href="#primary-expr"><var>primary-expr</var></a> [ <a href="#primary-suffix"><var>primary-suffix</var></a> ] &hellip; [ <code>++</code> ]
+        | <a href="#primary-expr"><var>primary-expr</var></a> [ <a href="#primary-suffix"><var>primary-suffix</var></a> ] &hellip; [ <code>--</code> ]
+        | <a href="#built-in-type"><var>built-in-type</var></a> [ `<code>[</code>' `<code>]</code>' ] &hellip; <code>.</code> <code>class</code>
+<a name="primary-suffix"><var>primary-suffix</var></a> ::= <code>.</code> <a href="#ident"><var>ident</var></a>
+        | <code>.</code> <code>this</code>
+        | <code>.</code> <code>class</code>
+        | <code>.</code> <a href="#new-expr"><var>new-expr</var></a>
+        | <code>.</code> <code>super</code> <code>(</code> [ <a href="#expression-list"><var>expression-list</var></a> ] <code>)</code>
+        | <code>(</code> [ <a href="#expression-list"><var>expression-list</var></a> ] <code>)</code>
+        | `<code>[</code>' <a href="#expression"><var>expression</var></a> `<code>]</code>'
+        | [ `<code>[</code>' `<code>]</code>' ] &hellip; <code>.</code> <code>class</code>
+<a name="primary-expr"><var>primary-expr</var></a> ::= <a href="#ident"><var>ident</var></a> | <a href="#new-expr"><var>new-expr</var></a> 
+        | <a href="#constant"><var>constant</var></a> | <code>super</code> | <code>true</code>
+        | <code>false</code> | <code>this</code> | <code>null</code>
+        | <code>(</code> <a href="#expression"><var>expression</var></a> <code>)</code>
+        | <a href="#jml-primary"><var>jml-primary</var></a>
+<a name="built-in-type"><var>built-in-type</var></a> ::= <code>void</code> | <code>boolean</code> | <code>byte</code>
+        | <code>char</code> | <code>short</code> | <code>int</code>
+        | <code>long</code> | <code>float</code> | <code>double</code>
+<a name="constant"><var>constant</var></a> ::= <a href="#java-literal"><var>java-literal</var></a>
+<a name="new-expr"><var>new-expr</var></a> ::= <code>new</code> <a href="#type"><var>type</var></a> <a href="#new-suffix"><var>new-suffix</var></a>
+<a name="new-suffix"><var>new-suffix</var></a> ::= <code>(</code> [ <a href="#expression-list"><var>expression-list</var></a> ] <code>)</code> [ <a href="#class-block"><var>class-block</var></a> ]
+        | <a href="#array-decl"><var>array-decl</var></a> [ <a href="#array-initializer"><var>array-initializer</var></a> ]
+        | <a href="#set-comprehension"><var>set-comprehension</var></a>
+<a name="array-decl"><var>array-decl</var></a> ::= <a href="#dim-exprs"><var>dim-exprs</var></a> [ <a href="#dims"><var>dims</var></a> ]
+<a name="dim-exprs"><var>dim-exprs</var></a> ::= `<code>[</code>' <a href="#expression"><var>expression</var></a> `<code>]</code>' [ `<code>[</code>' <a href="#expression"><var>expression</var></a> `<code>]</code>' ] &hellip;
+<a name="array-initializer"><var>array-initializer</var></a> ::= <code>{</code> [ <a href="#initializer"><var>initializer</var></a> [ <code>,</code> <a href="#initializer"><var>initializer</var></a> ] &hellip; [ <code>,</code> ] ] <code>}</code>
+<a name="initializer"><var>initializer</var></a> ::= <a href="#expression"><var>expression</var></a>
+        | <a href="#array-initializer"><var>array-initializer</var></a>
+<a name="jml-primary"><var>jml-primary</var></a> ::= <a href="#result-expression"><var>result-expression</var></a>
+        | <a href="#old-expression"><var>old-expression</var></a>
+        | <a href="#not-assigned-expression"><var>not-assigned-expression</var></a>
+        | <a href="#not-modified-expression"><var>not-modified-expression</var></a>
+        | <a href="#only-accessed-expression"><var>only-accessed-expression</var></a>
+        | <a href="#only-assigned-expression"><var>only-assigned-expression</var></a>
+        | <a href="#only-called-expression"><var>only-called-expression</var></a>
+        | <a href="#only-captured-expression"><var>only-captured-expression</var></a>
+        | <a href="#fresh-expression"><var>fresh-expression</var></a>
+        | <a href="#reach-expression"><var>reach-expression</var></a>
+        | <a href="#duration-expression"><var>duration-expression</var></a>
+        | <a href="#space-expression"><var>space-expression</var></a>
+        | <a href="#working-space-expression"><var>working-space-expression</var></a>
+        | <a href="#nonnullelements-expression"><var>nonnullelements-expression</var></a>
+        | <a href="#informal-description"><var>informal-description</var></a>
+        | <a href="#typeof-expression"><var>typeof-expression</var></a>
+        | <a href="#elemtype-expression"><var>elemtype-expression</var></a>
+        | <a href="#type-expression"><var>type-expression</var></a>
+        | <a href="#lockset-expression"><var>lockset-expression</var></a>
+        | <a href="#max-expression"><var>max-expression</var></a>
+        | <a href="#is-initialized-expression"><var>is-initialized-expression</var></a>
+        | <a href="#invariant-for-expression"><var>invariant-for-expression</var></a>
+        | <a href="#lblneg-expression"><var>lblneg-expression</var></a>
+        | <a href="#lblpos-expression"><var>lblpos-expression</var></a>
+        | <a href="#spec-quantified-expr"><var>spec-quantified-expr</var></a>
+<a name="result-expression"><var>result-expression</var></a> ::= <code>\result</code>
+<a name="old-expression"><var>old-expression</var></a> ::= <code>\old</code> <code>(</code> <a href="#spec-expression"><var>spec-expression</var></a> [ <code>,</code> <a href="#ident"><var>ident</var></a> ] <code>)</code>
+        | <code>\pre</code> <code>(</code> <a href="#spec-expression"><var>spec-expression</var></a> <code>)</code>
+<a name="not-assigned-expression"><var>not-assigned-expression</var></a> ::= <code>\not_assigned</code> <code>(</code> <a href="#store-ref-list"><var>store-ref-list</var></a> <code>)</code>
+<a name="not-modified-expression"><var>not-modified-expression</var></a> ::= <code>\not_modified</code> <code>(</code> <a href="#store-ref-list"><var>store-ref-list</var></a> <code>)</code>
+<a name="only-accessed-expression"><var>only-accessed-expression</var></a> ::= <code>\only_accessed</code> <code>(</code> <a href="#store-ref-list"><var>store-ref-list</var></a> <code>)</code>
+<a name="only-assigned-expression"><var>only-assigned-expression</var></a> ::= <code>\only_assigned</code> <code>(</code> <a href="#store-ref-list"><var>store-ref-list</var></a> <code>)</code>
+<a name="only-called-expression"><var>only-called-expression</var></a> ::= <code>\only_called</code> <code>(</code> <a href="#method-name-list"><var>method-name-list</var></a> <code>)</code>
+<a name="only-captured-expression"><var>only-captured-expression</var></a> ::= <code>\only_captured</code> <code>(</code> <a href="#store-ref-list"><var>store-ref-list</var></a> <code>)</code>
+<a name="fresh-expression"><var>fresh-expression</var></a> ::= <code>\fresh</code> <code>(</code> <a href="#spec-expression-list"><var>spec-expression-list</var></a> <code>)</code>
+<a name="reach-expression"><var>reach-expression</var></a> ::= <code>\reach</code> <code>(</code> <a href="#spec-expression"><var>spec-expression</var></a> <code>)</code>
+<a name="duration-expression"><var>duration-expression</var></a> ::= <code>\duration</code> <code>(</code> <a href="#expression"><var>expression</var></a> <code>)</code>
+<a name="space-expression"><var>space-expression</var></a> ::= <code>\space</code> <code>(</code> <a href="#spec-expression"><var>spec-expression</var></a> <code>)</code>
+<a name="working-space-expression"><var>working-space-expression</var></a> ::= <code>\working_space</code> <code>(</code> <a href="#expression"><var>expression</var></a> <code>)</code>
+<a name="nonnullelements-expression"><var>nonnullelements-expression</var></a> ::= <code>\nonnullelements</code> <code>(</code> <a href="#spec-expression"><var>spec-expression</var></a> <code>)</code>
+<a name="typeof-expression"><var>typeof-expression</var></a> ::= <code>\typeof</code> <code>(</code> <a href="#spec-expression"><var>spec-expression</var></a> <code>)</code>
+<a name="elemtype-expression"><var>elemtype-expression</var></a> ::= <code>\elemtype</code> <code>(</code> <a href="#spec-expression"><var>spec-expression</var></a> <code>)</code>
+<a name="type-expression"><var>type-expression</var></a> ::= <code>\type</code> <code>(</code> <a href="#type"><var>type</var></a> <code>)</code>
+<a name="lockset-expression"><var>lockset-expression</var></a> ::= <code>\lockset</code>
+<a name="max-expression"><var>max-expression</var></a> ::= <code>\max</code> <code>(</code> <a href="#spec-expression"><var>spec-expression</var></a> <code>)</code>
+<a name="is-initialized-expression"><var>is-initialized-expression</var></a> ::= <code>\is_initialized</code> <code>(</code> <a href="#reference-type"><var>reference-type</var></a> <code>)</code>
+<a name="invariant-for-expression"><var>invariant-for-expression</var></a> ::= <code>\invariant_for</code> <code>(</code> <a href="#spec-expression"><var>spec-expression</var></a> <code>)</code>
+<a name="lblneg-expression"><var>lblneg-expression</var></a> ::= <code>(</code> <code>\lblneg</code> <a href="#ident"><var>ident</var></a> <a href="#spec-expression"><var>spec-expression</var></a> <code>)</code>
+<a name="lblpos-expression"><var>lblpos-expression</var></a> ::= <code>(</code> <code>\lblpos</code> <a href="#ident"><var>ident</var></a> <a href="#spec-expression"><var>spec-expression</var></a> <code>)</code>
+<a name="spec-quantified-expr"><var>spec-quantified-expr</var></a> ::= <code>(</code> <a href="#quantifier"><var>quantifier</var></a> <a href="#quantified-var-decls"><var>quantified-var-decls</var></a> <code>;</code>
+                           [ [ <a href="#predicate"><var>predicate</var></a> ] <code>;</code> ]
+                           <a href="#spec-expression"><var>spec-expression</var></a> <code>)</code>
+<a name="quantifier"><var>quantifier</var></a> ::= <code>\forall</code> | <code>\exists</code>
+        | <code>\max</code> | <code>\min</code>
+        | <code>\num_of</code> | <code>\product</code> | <code>\sum</code>
+<a name="quantified-var-decls"><var>quantified-var-decls</var></a> ::= [ <a href="#bound-var-modifiers"><var>bound-var-modifiers</var></a> ] <a href="#type-spec"><var>type-spec</var></a> <a href="#quantified-var-declarator"><var>quantified-var-declarator</var></a>
+                         [ <code>,</code> <a href="#quantified-var-declarator"><var>quantified-var-declarator</var></a> ] &hellip;
+<a name="quantified-var-declarator"><var>quantified-var-declarator</var></a> ::= <a href="#ident"><var>ident</var></a> [ <a href="#dims"><var>dims</var></a> ]
+<a name="spec-variable-declarators"><var>spec-variable-declarators</var></a> ::= <a href="#spec-variable-declarator"><var>spec-variable-declarator</var></a>
+                          [ <code>,</code> <a href="#spec-variable-declarator"><var>spec-variable-declarator</var></a> ] &hellip;
+<a name="spec-variable-declarator"><var>spec-variable-declarator</var></a> ::= <a href="#ident"><var>ident</var></a> [ <a href="#dims"><var>dims</var></a> ]
+                             [ <code>=</code> <a href="#spec-initializer"><var>spec-initializer</var></a> ]
+<a name="spec-array-initializer"><var>spec-array-initializer</var></a> ::= <code>{</code> [ <a href="#spec-initializer"><var>spec-initializer</var></a>
+             [ <code>,</code> <a href="#spec-initializer"><var>spec-initializer</var></a> ] &hellip; [ <code>,</code> ] ] <code>}</code>
+<a name="spec-initializer"><var>spec-initializer</var></a> ::= <a href="#spec-expression"><var>spec-expression</var></a>
+        | <a href="#spec-array-initializer"><var>spec-array-initializer</var></a>
+<a name="bound-var-modifiers"><var>bound-var-modifiers</var></a> ::= <code>non_null</code> | <code>nullable</code>
+<a name="set-comprehension"><var>set-comprehension</var></a> ::= <code>{</code> [ <a href="#bound-var-modifiers"><var>bound-var-modifiers</var></a> ] <a href="#type-spec"><var>type-spec</var></a>
+            <a href="#quantified-var-declarator"><var>quantified-var-declarator</var></a> `<code>|</code>'
+            <a href="#postfix-expr"><var>postfix-expr</var></a> <code>&amp;&amp;</code> <a href="#predicate"><var>predicate</var></a> <code>}</code>
+<a name="store-ref-list"><var>store-ref-list</var></a> ::= <a href="#store-ref-keyword"><var>store-ref-keyword</var></a> | <a href="#store-ref"><var>store-ref</var></a> [ <code>,</code> <a href="#store-ref"><var>store-ref</var></a> ] &hellip;
+<a name="store-ref"><var>store-ref</var></a> ::= <a href="#store-ref-expression"><var>store-ref-expression</var></a>
+        | <a href="#informal-description"><var>informal-description</var></a> 
+<a name="store-ref-expression"><var>store-ref-expression</var></a> ::= <a href="#store-ref-name"><var>store-ref-name</var></a> [ <a href="#store-ref-name-suffix"><var>store-ref-name-suffix</var></a> ] &hellip;
+<a name="store-ref-name"><var>store-ref-name</var></a> ::= <a href="#ident"><var>ident</var></a> | <code>super</code> | <code>this</code>
+<a name="store-ref-name-suffix"><var>store-ref-name-suffix</var></a> ::= <code>.</code> <a href="#ident"><var>ident</var></a> | <code>.</code> <code>this</code> | `<code>[</code>' <a href="#spec-array-ref-expr"><var>spec-array-ref-expr</var></a> `<code>]</code>' | <code>.</code> <code>*</code> 
+<a name="spec-array-ref-expr"><var>spec-array-ref-expr</var></a> ::= <a href="#spec-expression"><var>spec-expression</var></a>
+        | <a href="#spec-expression"><var>spec-expression</var></a> <code>..</code> <a href="#spec-expression"><var>spec-expression</var></a>
+        | <code>*</code>
+<a name="store-ref-keyword"><var>store-ref-keyword</var></a> ::= <code>\nothing</code> | <code>\everything</code> | <code>\not_specified</code>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC228"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC227" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC229" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.9 Statements and Annotation Statements </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="compound-statement"><var>compound-statement</var></a> ::= <code>{</code> <a href="#statement"><var>statement</var></a> [ <a href="#statement"><var>statement</var></a> ] &hellip; <code>}</code>
+<a name="statement"><var>statement</var></a> ::= <a href="#compound-statement"><var>compound-statement</var></a>
+        | <a href="#local-declaration"><var>local-declaration</var></a> <code>;</code>
+        | <a href="#ident"><var>ident</var></a> <code>:</code> <a href="#statement"><var>statement</var></a>
+        | <a href="#expression"><var>expression</var></a> <code>;</code>
+        | <code>if</code> <code>(</code> <a href="#expression"><var>expression</var></a> <code>)</code>
+          <a href="#statement"><var>statement</var></a> [ <code>else</code> <a href="#statement"><var>statement</var></a> ]
+        | <a href="#possibly-annotated-loop"><var>possibly-annotated-loop</var></a>
+        | <code>break</code> [ <a href="#ident"><var>ident</var></a> ] <code>;</code>
+        | <code>continue</code> [ <a href="#ident"><var>ident</var></a> ] <code>;</code>
+        | <code>return</code> [ <a href="#expression"><var>expression</var></a> ] <code>;</code>
+        | <a href="#switch-statement"><var>switch-statement</var></a>
+        | <a href="#try-block"><var>try-block</var></a> 
+        | <code>throw</code> <a href="#expression"><var>expression</var></a> <code>;</code>
+        | <code>synchronized</code> <code>(</code> <a href="#expression"><var>expression</var></a> <code>)</code> <a href="#statement"><var>statement</var></a>
+        | <code>;</code>
+        | <a href="#jml-annotation-statement"><var>jml-annotation-statement</var></a>
+        | <a href="#assert-statement"><var>assert-statement</var></a>
+        | <a href="#jml-annotation-statement"><var>jml-annotation-statement</var></a>
+        | <a href="#model-prog-statement"><var>model-prog-statement</var></a> <i>// only allowed in model programs</i>
+<a name="switch-statement"><var>switch-statement</var></a> ::= <code>switch</code> <code>(</code> <a href="#expression"><var>expression</var></a> <code>)</code> <code>{</code>
+                     [ <a href="#switch-body"><var>switch-body</var></a> ] &hellip; <code>}</code>
+<a name="switch-body"><var>switch-body</var></a> ::= <a href="#switch-label-seq"><var>switch-label-seq</var></a> [ <a href="#statement"><var>statement</var></a> ] &hellip;
+<a name="switch-label-seq"><var>switch-label-seq</var></a> ::= <a href="#switch-label"><var>switch-label</var></a> [ <a href="#switch-label"><var>switch-label</var></a> ] &hellip;
+<a name="switch-label"><var>switch-label</var></a> ::= <code>case</code> <a href="#expression"><var>expression</var></a> <code>:</code> | <code>default</code> <code>:</code>
+<a name="try-block"><var>try-block</var></a> ::= <code>try</code> <a href="#compound-statement"><var>compound-statement</var></a>
+              [ <a href="#handler"><var>handler</var></a> ] &hellip;
+              [ <code>finally</code> <a href="#compound-statement"><var>compound-statement</var></a> ]
+<a name="handler"><var>handler</var></a> ::= <code>catch</code> <code>(</code> <a href="#param-declaration"><var>param-declaration</var></a> <code>)</code> <a href="#compound-statement"><var>compound-statement</var></a>
+<a name="local-declaration"><var>local-declaration</var></a> ::= <a href="#local-modifiers"><var>local-modifiers</var></a> <a href="#variable-decls"><var>variable-decls</var></a>
+<a name="local-modifiers"><var>local-modifiers</var></a> ::= [ <a href="#local-modifier"><var>local-modifier</var></a> ] &hellip;
+<a name="local-modifier"><var>local-modifier</var></a> ::= <code>ghost</code> | <code>final</code>  <code>uninitialized</code> | <code>non_null</code> | <code>nullable</code>
+         | <a href="#ownership-modifier"><var>ownership-modifier</var></a>  <i>// when the Universe type system is on</i>
+<a name="possibly-annotated-loop"><var>possibly-annotated-loop</var></a> ::=
+          [ <a href="#loop-invariant"><var>loop-invariant</var></a> ] &hellip;
+          [ <a href="#variant-function"><var>variant-function</var></a> ] &hellip;
+          [ <a href="#ident"><var>ident</var></a> <code>:</code> ] <a href="#loop-stmt"><var>loop-stmt</var></a>
+<a name="loop-stmt"><var>loop-stmt</var></a> ::= <code>while</code> <code>(</code> <a href="#expression"><var>expression</var></a> <code>)</code> <a href="#statement"><var>statement</var></a>
+        | <code>do</code> <a href="#statement"><var>statement</var></a> <code>while</code> <code>(</code> <a href="#expression"><var>expression</var></a> <code>)</code> <code>;</code>
+        | <code>for</code> <code>(</code> [ <a href="#for-init"><var>for-init</var></a> ] <code>;</code> [ <a href="#expression"><var>expression</var></a> ] <code>;</code> [ <a href="#expression-list"><var>expression-list</var></a> ] <code>)</code>
+             <a href="#statement"><var>statement</var></a>
+<a name="for-init"><var>for-init</var></a> ::= <a href="#local-declaration"><var>local-declaration</var></a> | <a href="#expression-list"><var>expression-list</var></a>
+<a name="loop-invariant"><var>loop-invariant</var></a> ::= <a href="#maintaining-keyword"><var>maintaining-keyword</var></a> <a href="#predicate"><var>predicate</var></a> <code>;</code>
+<a name="maintaining-keyword"><var>maintaining-keyword</var></a> ::= <code>maintaining</code> | <code>maintaining_redundantly</code>
+        | <code>loop_invariant</code> | <code>loop_invariant_redundantly</code>
+<a name="variant-function"><var>variant-function</var></a> ::= <a href="#decreasing-keyword"><var>decreasing-keyword</var></a> <a href="#spec-expression"><var>spec-expression</var></a> <code>;</code>
+<a name="decreasing-keyword"><var>decreasing-keyword</var></a> ::= <code>decreasing</code> | <code>decreasing_redundantly</code>
+        | <code>decreases</code> | <code>decreases_redundantly</code>
+<a name="assert-statement"><var>assert-statement</var></a> ::= <code>assert</code> <a href="#expression"><var>expression</var></a> [ <code>:</code> <a href="#expression"><var>expression</var></a> ] <code>;</code>
+        | <code>assert</code> <a href="#predicate"><var>predicate</var></a> [ <code>:</code> <a href="#expression"><var>expression</var></a> ] <code>;</code>
+<a name="assert-redundantly-statement"><var>assert-redundantly-statement</var></a> ::= <code>assert_redundantly</code> <a href="#predicate"><var>predicate</var></a>
+                                 [ <code>:</code> <a href="#expression"><var>expression</var></a> ] <code>;</code>
+<a name="jml-annotation-statement"><var>jml-annotation-statement</var></a> ::= <a href="#assert-redundantly-statement"><var>assert-redundantly-statement</var></a>
+        | <a href="#assume-statement"><var>assume-statement</var></a>
+        | <a href="#hence-by-statement"><var>hence-by-statement</var></a>
+        | <a href="#set-statement"><var>set-statement</var></a>
+        | <a href="#refining-statement"><var>refining-statement</var></a>
+        | <a href="#unreachable-statement"><var>unreachable-statement</var></a>
+        | <a href="#debug-statement"><var>debug-statement</var></a>
+<a name="assume-statement"><var>assume-statement</var></a> ::= <a href="#assume-keyword"><var>assume-keyword</var></a> <a href="#predicate"><var>predicate</var></a>
+                     [ <code>:</code> <a href="#expression"><var>expression</var></a> ] <code>;</code>
+<a name="assume-keyword"><var>assume-keyword</var></a> ::= <code>assume</code> | <code>assume_redundantly</code>
+<a name="set-statement"><var>set-statement</var></a> ::= <code>set</code> <a href="#assignment-expr"><var>assignment-expr</var></a> <code>;</code>
+<a name="refining-statement"><var>refining-statement</var></a> ::= <code>refining</code> <a href="#spec-statement"><var>spec-statement</var></a> <a href="#statement"><var>statement</var></a>
+        | <code>refining</code> <a href="#generic-spec-statement-case"><var>generic-spec-statement-case</var></a> <a href="#statement"><var>statement</var></a>
+<a name="unreachable-statement"><var>unreachable-statement</var></a> ::= <code>unreachable</code> <code>;</code>
+<a name="debug-statement"><var>debug-statement</var></a> ::= <code>debug</code> <a href="#expression"><var>expression</var></a> <code>;</code>
+<a name="hence-by-statement"><var>hence-by-statement</var></a> ::= <a href="#hence-by-keyword"><var>hence-by-keyword</var></a> <a href="#predicate"><var>predicate</var></a> <code>;</code>
+<a name="hence-by-keyword"><var>hence-by-keyword</var></a> ::= <code>hence_by</code> | <code>hence_by_redundantly</code>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC229"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC228" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC230" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.10 Redundancy </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="redundant-spec"><var>redundant-spec</var></a> ::= <a href="#implications"><var>implications</var></a> [ <a href="#examples"><var>examples</var></a> ] | <a href="#examples"><var>examples</var></a>
+<a name="implications"><var>implications</var></a> ::= <code>implies_that</code> <a href="#spec-case-seq"><var>spec-case-seq</var></a>
+<a name="examples"><var>examples</var></a> ::= <code>for_example</code> <a href="#example"><var>example</var></a> [ <code>also</code> <a href="#example"><var>example</var></a> ] &hellip;
+<a name="example"><var>example</var></a> ::= [ [ <a href="#privacy"><var>privacy</var></a> ] <code>example</code> ]
+            [ <a href="#spec-var-decls"><var>spec-var-decls</var></a> ]
+            [ <a href="#spec-header"><var>spec-header</var></a> ]
+            <a href="#simple-spec-body"><var>simple-spec-body</var></a>
+        | [ <a href="#privacy"><var>privacy</var></a> ] <code>exceptional_example</code>
+          [ <a href="#spec-var-decls"><var>spec-var-decls</var></a> ]
+          <a href="#spec-header"><var>spec-header</var></a>
+          [ <a href="#exceptional-example-body"><var>exceptional-example-body</var></a> ]
+        | [ <a href="#privacy"><var>privacy</var></a> ] <code>exceptional_example</code>
+          [ <a href="#spec-var-decls"><var>spec-var-decls</var></a> ]
+          <a href="#exceptional-example-body"><var>exceptional-example-body</var></a>
+        | [ <a href="#privacy"><var>privacy</var></a> ] <code>normal_example</code>
+          [ <a href="#spec-var-decls"><var>spec-var-decls</var></a> ]
+          <a href="#spec-header"><var>spec-header</var></a>
+          [ <a href="#normal-example-body"><var>normal-example-body</var></a> ]
+        | [ <a href="#privacy"><var>privacy</var></a> ] <code>normal_example</code>
+          [ <a href="#spec-var-decls"><var>spec-var-decls</var></a> ]
+          <a href="#normal-example-body"><var>normal-example-body</var></a>
+<a name="exceptional-example-body"><var>exceptional-example-body</var></a> ::= <a href="#exceptional-spec-clause"><var>exceptional-spec-clause</var></a>
+                             [ <a href="#exceptional-spec-clause"><var>exceptional-spec-clause</var></a> ] &hellip;
+<a name="normal-example-body"><var>normal-example-body</var></a> ::= <a href="#normal-spec-clause"><var>normal-spec-clause</var></a>
+                        [ <a href="#normal-spec-clause"><var>normal-spec-clause</var></a> ] &hellip;
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC230"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC229" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC231" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.11 Model Programs </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="model-program"><var>model-program</var></a> ::= [ <a href="#privacy"><var>privacy</var></a> ] [ <code>code</code> ] <code>model_program</code> 
+                  <a href="#jml-compound-statement"><var>jml-compound-statement</var></a>
+<a name="jml-compound-statement"><var>jml-compound-statement</var></a> ::= <a href="#compound-statement"><var>compound-statement</var></a>
+<a name="jml-statement"><var>jml-statement</var></a> ::= <a href="#statement"><var>statement</var></a>
+<a name="model-prog-statement"><var>model-prog-statement</var></a> ::= <a href="#nondeterministic-choice"><var>nondeterministic-choice</var></a>
+        | <a href="#nondeterministic-if"><var>nondeterministic-if</var></a>
+        | <a href="#spec-statement"><var>spec-statement</var></a>
+        | <a href="#invariant"><var>invariant</var></a>
+<a name="nondeterministic-choice"><var>nondeterministic-choice</var></a> ::= <code>choose</code> <a href="#alternative-statements"><var>alternative-statements</var></a>
+<a name="alternative-statements"><var>alternative-statements</var></a> ::= <a href="#jml-compound-statement"><var>jml-compound-statement</var></a>
+             [ <code>or</code> <a href="#jml-compound-statement"><var>jml-compound-statement</var></a> ] &hellip;
+<a name="nondeterministic-if"><var>nondeterministic-if</var></a> ::= <code>choose_if</code> <a href="#guarded-statements"><var>guarded-statements</var></a>
+             [ <code>else</code> <a href="#jml-compound-statement"><var>jml-compound-statement</var></a> ]
+<a name="guarded-statements"><var>guarded-statements</var></a> ::= <a href="#guarded-statement"><var>guarded-statement</var></a>
+             [ <code>or</code> <a href="#guarded-statement"><var>guarded-statement</var></a> ] &hellip;
+<a name="guarded-statement"><var>guarded-statement</var></a> ::= <code>{</code>
+             <a href="#assume-statement"><var>assume-statement</var></a>
+             <a href="#jml-statement"><var>jml-statement</var></a> [ <a href="#jml-statement"><var>jml-statement</var></a>] &hellip; <code>}</code>
+<a name="spec-statement"><var>spec-statement</var></a> ::= [ <a href="#privacy"><var>privacy</var></a> ] <a href="#behavior-keyword"><var>behavior-keyword</var></a>
+                   <a href="#generic-spec-statement-case"><var>generic-spec-statement-case</var></a>
+        | [ <a href="#privacy"><var>privacy</var></a> ] <a href="#exceptional-behavior-keyword"><var>exceptional-behavior-keyword</var></a>
+          <a href="#exceptional-spec-case"><var>exceptional-spec-case</var></a>
+        | [ <a href="#privacy"><var>privacy</var></a> ] <a href="#normal-behavior-keyword"><var>normal-behavior-keyword</var></a>
+          <a href="#normal-spec-case"><var>normal-spec-case</var></a>
+        | [ <a href="#privacy"><var>privacy</var></a> ] <a href="#abrupt-behavior-keyword"><var>abrupt-behavior-keyword</var></a>
+          <a href="#abrupt-spec-case"><var>abrupt-spec-case</var></a>
+<a name="generic-spec-statement-case"><var>generic-spec-statement-case</var></a> ::= [ <a href="#spec-var-decls"><var>spec-var-decls</var></a> ]
+                                <a href="#generic-spec-statement-body"><var>generic-spec-statement-body</var></a>
+        | [ <a href="#spec-var-decls"><var>spec-var-decls</var></a> ]
+          <a href="#spec-header"><var>spec-header</var></a>
+          [ <a href="#generic-spec-statement-body"><var>generic-spec-statement-body</var></a> ]
+<a name="generic-spec-statement-body"><var>generic-spec-statement-body</var></a> ::= <a href="#simple-spec-statement-body"><var>simple-spec-statement-body</var></a>
+        | <code>{|</code> <a href="#generic-spec-statement-case-seq"><var>generic-spec-statement-case-seq</var></a> <code>|}</code>
+<a name="generic-spec-statement-body-seq"><var>generic-spec-statement-body-seq</var></a> ::= <a href="#generic-spec-statement-case"><var>generic-spec-statement-case</var></a>
+             [ <code>also</code> <a href="#generic-spec-statement-case"><var>generic-spec-statement-case</var></a> ] &hellip;
+<a name="simple-spec-statement-body"><var>simple-spec-statement-body</var></a> ::= <a href="#simple-spec-statement-clause"><var>simple-spec-statement-clause</var></a>
+                               [ <a href="#simple-spec-statement-clause"><var>simple-spec-statement-clause</var></a> ] &hellip; 
+<a name="simple-spec-statement-clause"><var>simple-spec-statement-clause</var></a> ::= <a href="#diverges-clause"><var>diverges-clause</var></a>
+        | <a href="#assignable-clause"><var>assignable-clause</var></a>
+        | <a href="#when-clause"><var>when-clause</var></a> | <a href="#working-space-clause"><var>working-space-clause</var></a> | <a href="#duration-clause"><var>duration-clause</var></a>
+        | <a href="#ensures-clause"><var>ensures-clause</var></a> | <a href="#signals-only-clause"><var>signals-only-clause</var></a> | <a href="#signals-clause"><var>signals-clause</var></a>
+        | <a href="#continues-clause"><var>continues-clause</var></a> | <a href="#breaks-clause"><var>breaks-clause</var></a> | <a href="#returns-clause"><var>returns-clause</var></a>
+<a name="abrupt-behavior-keyword"><var>abrupt-behavior-keyword</var></a> ::= <code>abrupt_behavior</code> | <code>abrupt_behaviour</code>
+<a name="abrupt-spec-case"><var>abrupt-spec-case</var></a> ::= <a href="#generic-spec-statement-case"><var>generic-spec-statement-case</var></a>
+<a name="continues-clause"><var>continues-clause</var></a> ::= <a href="#continues-keyword"><var>continues-keyword</var></a> [ <a href="#target-label"><var>target-label</var></a> ]
+                     [ <a href="#pred-or-not"><var>pred-or-not</var></a> ] <code>;</code>
+<a name="continues-keyword"><var>continues-keyword</var></a> ::= <code>continues</code> | <code>continues_redundantly</code>
+<a name="target-label"><var>target-label</var></a> ::= <code>-&gt;</code> <code>(</code> <a href="#ident"><var>ident</var></a> <code>)</code>
+<a name="breaks-clause"><var>breaks-clause</var></a> ::= <a href="#breaks-keyword"><var>breaks-keyword</var></a> [ <a href="#target-label"><var>target-label</var></a> ]
+                  [ <a href="#pred-or-not"><var>pred-or-not</var></a> ] <code>;</code>
+<a name="breaks-keyword"><var>breaks-keyword</var></a> ::= <code>breaks</code> | <code>breaks_redundantly</code>
+<a name="returns-clause"><var>returns-clause</var></a> ::= <a href="#returns-keyword"><var>returns-keyword</var></a> [ <a href="#pred-or-not"><var>pred-or-not</var></a> ] <code>;</code>
+<a name="returns-keyword"><var>returns-keyword</var></a> ::= <code>returns</code> | <code>returns_redundantly</code>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC231"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC230" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC232" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.12 Specification for Subtypes </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC232"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC231" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC233" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.13 Refinement </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="refine-prefix"><var>refine-prefix</var></a> ::= <a href="#refine-keyword"><var>refine-keyword</var></a> <a href="#string-literal"><var>string-literal</var></a> <code>;</code>
+<a name="refine-keyword"><var>refine-keyword</var></a> ::= <code>refine</code> | <code>refines</code>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC233"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC232" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC234" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.14 MultiJava Extensions to JML </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="multijava-top-level-declaration"><var>multijava-top-level-declaration</var></a> ::= <a href="#multijava-top-level-method"><var>multijava-top-level-method</var></a>
+<a name="multijava-top-level-method"><var>multijava-top-level-method</var></a> ::= [ <a href="#method-specification"><var>method-specification</var></a> ]
+              <a href="#modifiers"><var>modifiers</var></a> [ <code>method</code> ]
+              [ <a href="#type-spec"><var>type-spec</var></a> ] <a href="#extending-method-head"><var>extending-method-head</var></a> <a href="#method-body"><var>method-body</var></a>
+<a name="extending-method-head"><var>extending-method-head</var></a> ::= <a href="#name"><var>name</var></a> <code>.</code> <code>ident</code> <a href="#formals"><var>formals</var></a> [<var>dims</var> ]
+                          [ <a href="#throws-clause"><var>throws-clause</var></a> ]
+<a name="multijava-param-declaration"><var>multijava-param-declaration</var></a> ::= [ <a href="#param-modifier"><var>param-modifier</var></a> ] &hellip;
+                 <a href="#type-spec"><var>type-spec</var></a> <a href="#specializer"><var>specializer</var></a> <a href="#ident"><var>ident</var></a> [ <a href="#dims"><var>dims</var></a> ]
+<a name="specializer"><var>specializer</var></a> ::= <code>@</code> <a href="#type-spec"><var>type-spec</var></a>
+        | <code>@@</code> <a href="#value-specializer"><var>value-specializer</var></a>
+<a name="value-specializer"><var>value-specializer</var></a> ::= <a href="#expression"><var>expression</var></a>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC234"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC233" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC235" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.15 Universe Type System </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+<a name="ownership-modifiers"><var>ownership-modifiers</var></a> ::= <a href="#ownership-modifier"><var>ownership-modifier</var></a> [ <a href="#ownership-modifier"><var>ownership-modifier</var></a> ]
+<a name="ownership-modifier"><var>ownership-modifier</var></a> ::= <code>\rep</code> | <code>\peer</code> | <code>\readonly</code>
+         | <a href="#reserved-ownership-modifier"><var>reserved-ownership-modifier</var></a> <i>// with --universesx parse or --universesx full</i>
+<a name="reserved-ownership-modifier"><var>reserved-ownership-modifier</var></a> ::= <code>rep</code> | <code>peer</code> | <code>readonly</code>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC235"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC234" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC236" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.16 Safe Math Extensions </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="SEC236"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC235" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC219" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> A.17 Deprecated and Replaced Syntax </h2>
+<table><tr><td>&nbsp;</td><td><pre class="display">
+</pre></td></tr></table>
+
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_22.html#SEC237" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

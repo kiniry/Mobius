@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 17. MultiJava Extensions to JML</title>
+
+<meta name="description" content="JML Reference Manual: 17. MultiJava Extensions to JML">
+<meta name="keywords" content="JML Reference Manual: 17. MultiJava Extensions to JML">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="MultiJava-Extensions-to-JML"></a>
+<a name="SEC200"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_16.html#SEC199" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC201" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_16.html#SEC193" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_18.html#SEC203" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 17. MultiJava Extensions to JML </h1>
+
+<p>This section describes extensions to JML to support the MultiJava
+[Clifton-etal00] language.  All of these extensions are optional and
+are only used when an option (or special tool) is used to parse this syntax.
+</p>
+<p>The sections below explain the extensions that MultiJava makes to JML.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC201">17.1 Augmenting Method Declarations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC202">17.2 MultiMethods</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Augmenting-Method-Declarations"></a>
+<a name="SEC201"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC200" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC202" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC200" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC200" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_18.html#SEC203" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 17.1 Augmenting Method Declarations </h2>
+
+<p>MultiJava has a feature, called &ldquo;open classes&rdquo;
+[Clifton-etal00] or &ldquo;augmenting methods&rdquo; that allows methods to be
+added to an existing class.
+It has the following syntax, which, in JML, permits method specifications.
+</p>
+<a name="IDX2412"></a>
+<a name="IDX2413"></a>
+<a name="IDX2414"></a>
+<a name="IDX2415"></a>
+<a name="IDX2416"></a>
+<a name="IDX2417"></a>
+<a name="IDX2418"></a>
+<a name="IDX2419"></a>
+<a name="IDX2420"></a>
+<a name="IDX2421"></a>
+<a name="IDX2422"></a>
+<a name="IDX2423"></a>
+<a name="IDX2424"></a>
+<a name="IDX2425"></a>
+<a name="IDX2426"></a>
+<a name="IDX2427"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>multijava-top-level-declaration</var> ::= <var>multijava-top-level-method</var>
+<var>multijava-top-level-method</var> ::= [ <var>method-specification</var> ]
+              <var>modifiers</var> [ <code>method</code> ]
+              [ <var>type-spec</var> ] <var>extending-method-head</var> <var>method-body</var>
+<var>extending-method-head</var> ::= <var>name</var> <code>.</code> <code>ident</code> <var>formals</var> [<var>dims</var> ]
+                          [ <var>throws-clause</var> ]
+</pre></td></tr></table>
+
+<p>This syntax adds a method to the class named by the <var>name</var> in the
+<var>extending-method-head</var>.
+</p>
+<p>The method must satisfy the given <var>method-specification</var>, if there
+is one.
+</p>
+<hr size="6">
+<a name="MultiMethods"></a>
+<a name="SEC202"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC201" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_18.html#SEC203" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC200" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC200" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_18.html#SEC203" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 17.2 MultiMethods </h2>
+
+<p>The other feature in MultiJava is multiple dispatch, which is used to
+define multimethods.  Multiple dispatch is defined using the following syntax.
+</p>
+<a name="IDX2428"></a>
+<a name="IDX2429"></a>
+<a name="IDX2430"></a>
+<a name="IDX2431"></a>
+<a name="IDX2432"></a>
+<a name="IDX2433"></a>
+<a name="IDX2434"></a>
+<a name="IDX2435"></a>
+<a name="IDX2436"></a>
+<a name="IDX2437"></a>
+<a name="IDX2438"></a>
+<a name="IDX2439"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>multijava-param-declaration</var> ::= [ <var>param-modifier</var> ] &hellip;
+                 <var>type-spec</var> <var>specializer</var> <var>ident</var> [ <var>dims</var> ]
+<var>specializer</var> ::= <code>@</code> <var>type-spec</var>
+        | <code>@@</code> <var>value-specializer</var>
+<var>value-specializer</var> ::= <var>expression</var>
+</pre></td></tr></table>
+
+<p>See the MultiJava paper [Clifton-etal00] for how the use of a
+<var>specializer</var> affects the meaning of method calls.
+</p>
+
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC200" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_18.html#SEC203" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

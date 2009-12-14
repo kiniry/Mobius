@@ -1,0 +1,2483 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 11. Predicates and Specification Expressions</title>
+
+<meta name="description" content="JML Reference Manual: 11. Predicates and Specification Expressions">
+<meta name="keywords" content="JML Reference Manual: 11. Predicates and Specification Expressions">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Predicates-and-Specification-Expressions"></a>
+<a name="SEC121"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC120" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC122" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 11. Predicates and Specification Expressions </h1>
+
+<p>This chapter describes predicates in JML and JML's extensions to
+Java's expressions.  It also describes store references, which are
+similar to specification expressions, but are used to describe
+locations instead of values.  Details are found in the sections below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC122">11.1 Predicates</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC123">11.2 Specification Expressions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">   
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC124">11.3 Expressions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                 
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC125">11.4 JML Primary Expressions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC156">11.5 Set Comprehensions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC157">11.6 JML Operators</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">               
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC162">11.7 Store Refs</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Predicates"></a>
+<a name="SEC122"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC121" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC123" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 11.1 Predicates </h2>
+
+<p>A <em>predicate</em>
+The following gives the syntax of predicates, which are simply
+<var>spec-expression</var>s that must have a boolean value.
+See section <a href="#SEC123">Specification Expressions</a>, for the syntax of specification
+expressions. 
+</p>
+<a name="IDX1690"></a>
+<a name="IDX1691"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>predicate</var> ::= <var>spec-expression</var>
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Specification-Expressions"></a>
+<a name="SEC123"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC122" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC124" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 11.2 Specification Expressions </h2>
+
+<p>The following gives the syntax of specification expressions in JML.
+See section <a href="#SEC124">Expressions</a>, for the syntax of <var>expression</var>.
+</p>
+<a name="IDX1692"></a>
+<a name="IDX1693"></a>
+<a name="IDX1694"></a>
+<a name="IDX1695"></a>
+<a name="IDX1696"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>spec-expression-list</var> ::= <var>spec-expression</var>
+                         [ <code>,</code> <var>spec-expression</var> ] &hellip;
+<var>spec-expression</var> ::= <var>expression</var> 
+</pre></td></tr></table>
+
+<p>Within a <var>spec-expression</var>, one cannot use any of the operators
+(such as <code>++</code>, <code>--</code>, and the assignment operators) that
+would necessarily cause side effects.  In addition, one can use
+extensions that are specific to JML, in particular the JML primary
+expressions.
+</p>
+<hr size="6">
+<a name="Expressions"></a>
+<a name="SEC124"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC123" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 11.3 Expressions </h2>
+
+<p>The JML syntax for expressions extends the Java syntax
+with several operators and primitives.
+</p>
+<a name="IDX1697"></a>
+<a name="IDX1698"></a>
+<a name="IDX1699"></a>
+<a name="IDX1700"></a>
+<p>The precedence of operators in JML expressions is similar to that in Java
+The precedence levels are given in the following table,
+where the parentheses, quantified expressions, 
+<code>[]</code>, <code>.</code>, and method calls 
+on the first three lines all have the highest precedence,
+and for the rest, only the operators on the same line have the same precedence.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="display">  highest   <code>new ()</code> <code>\forall</code> <code>\exists</code> <code>\max</code> <code>\min</code>
+                <code>\num_of</code> <code>\product</code> <code>\sum</code> <var>informal-description</var> 
+                <code>[] .</code> and method calls 
+            unary <code>+</code> and <code>-</code> <code>~</code> <code>!</code> <code>(</code>typecast<code>)</code>
+            <code>* / %</code> 
+            <code>+</code> (binary) <code>-</code> (binary) 
+            <code>&lt;&lt; &gt;&gt; &gt;&gt;&gt;</code> 
+            <code>&lt; &lt;= &gt; &gt;= &lt;: instanceof</code> 
+            <code>== !=</code> 
+            <code>&amp;</code> 
+            <code>^</code> 
+            <code>|</code> 
+            <code>&amp;&amp;</code> 
+            <code>||</code> 
+            <code>==&gt;</code> <code>&lt;==</code> 
+            <code>&lt;==&gt;</code> <code>&lt;=!=&gt;</code>
+            <code>?:</code>
+  lowest    <code>= *= /= %= += -= &lt;&lt;= &gt;&gt;= &gt;&gt;&gt;= &amp;= ^= |=</code>
+</pre></td></tr></table>
+
+<p>The following is the syntax of Java expressions, with JML additions.
+The additions are
+the operators <code>==&gt;</code>, <code>&lt;==</code>, <code>&lt;==&gt;</code>, <code>&lt;=!=&gt;</code>,
+and <code>&lt;:</code>, and the syntax found under the
+nonterminals <var>jml-primary</var>
+(see section <a href="#SEC125">JML Primary Expressions</a>) and
+<var>set-comprehension</var> (see section <a href="#SEC156">Set Comprehensions</a>).
+The JML additions to the Java syntax can only be used
+in assertions and other annotations.
+Furthermore, within assertions, one cannot use any of the operators
+(such as <code>++</code>, <code>--</code>, and the assignment operators) that
+would necessarily cause side effects.
+</p>
+<a name="IDX1701"></a>
+<a name="IDX1702"></a>
+<a name="IDX1703"></a>
+<a name="IDX1704"></a>
+<a name="IDX1705"></a>
+<a name="IDX1706"></a>
+<a name="IDX1707"></a>
+<a name="IDX1708"></a>
+<a name="IDX1709"></a>
+<a name="IDX1710"></a>
+<a name="IDX1711"></a>
+<a name="IDX1712"></a>
+<a name="IDX1713"></a>
+<a name="IDX1714"></a>
+<a name="IDX1715"></a>
+<a name="IDX1716"></a>
+<a name="IDX1717"></a>
+<a name="IDX1718"></a>
+<a name="IDX1719"></a>
+<a name="IDX1720"></a>
+<a name="IDX1721"></a>
+<a name="IDX1722"></a>
+<a name="IDX1723"></a>
+<a name="IDX1724"></a>
+<a name="IDX1725"></a>
+<a name="IDX1726"></a>
+<a name="IDX1727"></a>
+<a name="IDX1728"></a>
+<a name="IDX1729"></a>
+<a name="IDX1730"></a>
+<a name="IDX1731"></a>
+<a name="IDX1732"></a>
+<a name="IDX1733"></a>
+<a name="IDX1734"></a>
+<a name="IDX1735"></a>
+<a name="IDX1736"></a>
+<a name="IDX1737"></a>
+<a name="IDX1738"></a>
+<a name="IDX1739"></a>
+<a name="IDX1740"></a>
+<a name="IDX1741"></a>
+<a name="IDX1742"></a>
+<a name="IDX1743"></a>
+<a name="IDX1744"></a>
+<a name="IDX1745"></a>
+<a name="IDX1746"></a>
+<a name="IDX1747"></a>
+<a name="IDX1748"></a>
+<a name="IDX1749"></a>
+<a name="IDX1750"></a>
+<a name="IDX1751"></a>
+<a name="IDX1752"></a>
+<a name="IDX1753"></a>
+<a name="IDX1754"></a>
+<a name="IDX1755"></a>
+<a name="IDX1756"></a>
+<a name="IDX1757"></a>
+<a name="IDX1758"></a>
+<a name="IDX1759"></a>
+<a name="IDX1760"></a>
+<a name="IDX1761"></a>
+<a name="IDX1762"></a>
+<a name="IDX1763"></a>
+<a name="IDX1764"></a>
+<a name="IDX1765"></a>
+<a name="IDX1766"></a>
+<a name="IDX1767"></a>
+<a name="IDX1768"></a>
+<a name="IDX1769"></a>
+<a name="IDX1770"></a>
+<a name="IDX1771"></a>
+<a name="IDX1772"></a>
+<a name="IDX1773"></a>
+<a name="IDX1774"></a>
+<a name="IDX1775"></a>
+<a name="IDX1776"></a>
+<a name="IDX1777"></a>
+<a name="IDX1778"></a>
+<a name="IDX1779"></a>
+<a name="IDX1780"></a>
+<a name="IDX1781"></a>
+<a name="IDX1782"></a>
+<a name="IDX1783"></a>
+<a name="IDX1784"></a>
+<a name="IDX1785"></a>
+<a name="IDX1786"></a>
+<a name="IDX1787"></a>
+<a name="IDX1788"></a>
+<a name="IDX1789"></a>
+<a name="IDX1790"></a>
+<a name="IDX1791"></a>
+<a name="IDX1792"></a>
+<a name="IDX1793"></a>
+<a name="IDX1794"></a>
+<a name="IDX1795"></a>
+<a name="IDX1796"></a>
+<a name="IDX1797"></a>
+<a name="IDX1798"></a>
+<a name="IDX1799"></a>
+<a name="IDX1800"></a>
+<a name="IDX1801"></a>
+<a name="IDX1802"></a>
+<a name="IDX1803"></a>
+<a name="IDX1804"></a>
+<a name="IDX1805"></a>
+<a name="IDX1806"></a>
+<a name="IDX1807"></a>
+<a name="IDX1808"></a>
+<a name="IDX1809"></a>
+<a name="IDX1810"></a>
+<a name="IDX1811"></a>
+<a name="IDX1812"></a>
+<a name="IDX1813"></a>
+<a name="IDX1814"></a>
+<a name="IDX1815"></a>
+<a name="IDX1816"></a>
+<a name="IDX1817"></a>
+<a name="IDX1818"></a>
+<a name="IDX1819"></a>
+<a name="IDX1820"></a>
+<a name="IDX1821"></a>
+<a name="IDX1822"></a>
+<a name="IDX1823"></a>
+<a name="IDX1824"></a>
+<a name="IDX1825"></a>
+<a name="IDX1826"></a>
+<a name="IDX1827"></a>
+<a name="IDX1828"></a>
+<a name="IDX1829"></a>
+<a name="IDX1830"></a>
+<a name="IDX1831"></a>
+<a name="IDX1832"></a>
+<a name="IDX1833"></a>
+<a name="IDX1834"></a>
+<a name="IDX1835"></a>
+<a name="IDX1836"></a>
+<a name="IDX1837"></a>
+<a name="IDX1838"></a>
+<a name="IDX1839"></a>
+<a name="IDX1840"></a>
+<a name="IDX1841"></a>
+<a name="IDX1842"></a>
+<a name="IDX1843"></a>
+<a name="IDX1844"></a>
+<a name="IDX1845"></a>
+<a name="IDX1846"></a>
+<a name="IDX1847"></a>
+<a name="IDX1848"></a>
+<a name="IDX1849"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>expression-list</var> ::= <var>expression</var> [ <code>,</code> <var>expression</var> ] &hellip;
+<var>expression</var> ::= <var>assignment-expr</var> 
+<var>assignment-expr</var> ::= <var>conditional-expr</var>
+                    [ <var>assignment-op</var> <var>assignment-expr</var> ]
+<var>assignment-op</var> ::=  <code>=</code> | <code>+=</code> | <code>-=</code> | <code>*=</code> | <code>/=</code> | <code>%=</code> | <code>&gt;&gt;=</code>  
+        | <code>&gt;&gt;&gt;=</code> | <code>&lt;&lt;=</code> | <code>&amp;=</code> | `<code>|=</code>' | <code>^=</code>
+<var>conditional-expr</var> ::= <var>equivalence-expr</var>
+                   [ <code>?</code> <var>conditional-expr</var> <code>:</code> <var>conditional-expr</var> ]
+<var>equivalence-expr</var> ::= <var>implies-expr</var>
+                     [ <var>equivalence-op</var> <var>implies-expr</var> ] &hellip;
+<var>equivalence-op</var> ::= <code>&lt;==&gt;</code> | <code>&lt;=!=&gt;</code>
+<var>implies-expr</var> ::= <var>logical-or-expr</var>
+             [ <code>==&gt;</code> <var>implies-non-backward-expr</var> ]
+        | <var>logical-or-expr</var> <code>&lt;==</code> <var>logical-or-expr</var>
+             [ <code>&lt;==</code> <var>logical-or-expr</var> ] &hellip;
+<var>implies-non-backward-expr</var> ::= <var>logical-or-expr</var>
+             [ <code>==&gt;</code> <var>implies-non-backward-expr</var> ]
+<var>logical-or-expr</var> ::= <var>logical-and-expr</var> [ `<code>||</code>' <var>logical-and-expr</var> ] &hellip;
+<var>logical-and-expr</var> ::= <var>inclusive-or-expr</var> [ <code>&amp;&amp;</code> <var>inclusive-or-expr</var> ] &hellip;
+<var>inclusive-or-expr</var> ::= <var>exclusive-or-expr</var> [ `<code>|</code>' <var>exclusive-or-expr</var> ] &hellip;
+<var>exclusive-or-expr</var> ::= <var>and-expr</var> [ <code>^</code> <var>and-expr</var> ] &hellip;
+<var>and-expr</var> ::= <var>equality-expr</var> [ <code>&amp;</code> <var>equality-expr</var> ] &hellip;
+<var>equality-expr</var> ::= <var>relational-expr</var> [ <code>==</code> <var>relational-expr</var>] &hellip;
+        | <var>relational-expr</var> [ <code>!=</code> <var>relational-expr</var>] &hellip;
+<var>relational-expr</var> ::= <var>shift-expr</var> <code>&lt;</code> <var>shift-expr</var>
+        | <var>shift-expr</var> <code>&gt;</code> <var>shift-expr</var>
+        | <var>shift-expr</var> <code>&lt;=</code> <var>shift-expr</var>
+        | <var>shift-expr</var> <code>&gt;=</code> <var>shift-expr</var>
+        | <var>shift-expr</var> <code>&lt;:</code> <var>shift-expr</var>
+        | <var>shift-expr</var> [ <code>instanceof</code> <var>type-spec</var> ]
+<var>shift-expr</var> ::= <var>additive-expr</var> [ <var>shift-op</var> <var>additive-expr</var> ] &hellip;
+<var>shift-op</var> ::= <code>&lt;&lt;</code> | <code>&gt;&gt;</code> | <code>&gt;&gt;&gt;</code>
+<var>additive-expr</var> ::= <var>mult-expr</var> [ <var>additive-op</var> <var>mult-expr</var> ] &hellip;
+<var>additive-op</var> ::= <code>+</code> | <code>-</code>
+<var>mult-expr</var> ::= <var>unary-expr</var> [ <var>mult-op</var> <var>unary-expr</var> ] &hellip;
+<var>mult-op</var> ::= <code>*</code> | <code>/</code> | <code>%</code>
+<var>unary-expr</var> ::= <code>(</code> <var>type-spec</var> <code>)</code> <var>unary-expr</var>
+        | <code>++</code> <var>unary-expr</var>
+        | <code>--</code> <var>unary-expr</var>
+        | <code>+</code> <var>unary-expr</var>
+        | <code>-</code> <var>unary-expr</var>
+        | <var>unary-expr-not-plus-minus</var>
+<var>unary-expr-not-plus-minus</var> ::= <code>~</code> <var>unary-expr</var>
+        | <code>!</code> <var>unary-expr</var>
+        | <code>(</code> <var>built-in-type</var> <code>)</code> <var>unary-expr</var>
+        | <code>(</code> <var>reference-type</var> <code>)</code> <var>unary-expr-not-plus-minus</var>
+        | <var>postfix-expr</var>
+<var>postfix-expr</var> ::= <var>primary-expr</var> [ <var>primary-suffix</var> ] &hellip; [ <code>++</code> ]
+        | <var>primary-expr</var> [ <var>primary-suffix</var> ] &hellip; [ <code>--</code> ]
+        | <var>built-in-type</var> [ `<code>[</code>' `<code>]</code>' ] &hellip; <code>.</code> <code>class</code>
+<var>primary-suffix</var> ::= <code>.</code> <var>ident</var>
+        | <code>.</code> <code>this</code>
+        | <code>.</code> <code>class</code>
+        | <code>.</code> <var>new-expr</var>
+        | <code>.</code> <code>super</code> <code>(</code> [ <var>expression-list</var> ] <code>)</code>
+        | <code>(</code> [ <var>expression-list</var> ] <code>)</code>
+        | `<code>[</code>' <var>expression</var> `<code>]</code>'
+        | [ `<code>[</code>' `<code>]</code>' ] &hellip; <code>.</code> <code>class</code>
+<var>primary-expr</var> ::= <var>ident</var> | <var>new-expr</var> 
+        | <var>constant</var> | <code>super</code> | <code>true</code>
+        | <code>false</code> | <code>this</code> | <code>null</code>
+        | <code>(</code> <var>expression</var> <code>)</code>
+        | <var>jml-primary</var>
+<var>built-in-type</var> ::= <code>void</code> | <code>boolean</code> | <code>byte</code>
+        | <code>char</code> | <code>short</code> | <code>int</code>
+        | <code>long</code> | <code>float</code> | <code>double</code>
+<var>constant</var> ::= <var>java-literal</var>
+<var>new-expr</var> ::= <code>new</code> <var>type</var> <var>new-suffix</var>
+<var>new-suffix</var> ::= <code>(</code> [ <var>expression-list</var> ] <code>)</code> [ <var>class-block</var> ]
+        | <var>array-decl</var> [ <var>array-initializer</var> ]
+        | <var>set-comprehension</var>
+<var>array-decl</var> ::= <var>dim-exprs</var> [ <var>dims</var> ]
+<var>dim-exprs</var> ::= `<code>[</code>' <var>expression</var> `<code>]</code>' [ `<code>[</code>' <var>expression</var> `<code>]</code>' ] &hellip;
+<var>array-initializer</var> ::= <code>{</code> [ <var>initializer</var> [ <code>,</code> <var>initializer</var> ] &hellip; [ <code>,</code> ] ] <code>}</code>
+<var>initializer</var> ::= <var>expression</var>
+        | <var>array-initializer</var>
+</pre></td></tr></table>
+
+<p>[[[Need to have semantics of the new things explained here.]]]
+</p>
+<hr size="6">
+<a name="JML-Primary-Expressions"></a>
+<a name="SEC125"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC124" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC126" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 11.4 JML Primary Expressions </h2>
+
+<p>The following is the syntax of <var>jml-primary</var>.
+</p>
+<a name="IDX1850"></a>
+<a name="IDX1851"></a>
+<a name="IDX1852"></a>
+<a name="IDX1853"></a>
+<a name="IDX1854"></a>
+<a name="IDX1855"></a>
+<a name="IDX1856"></a>
+<a name="IDX1857"></a>
+<a name="IDX1858"></a>
+<a name="IDX1859"></a>
+<a name="IDX1860"></a>
+<a name="IDX1861"></a>
+<a name="IDX1862"></a>
+<a name="IDX1863"></a>
+<a name="IDX1864"></a>
+<a name="IDX1865"></a>
+<a name="IDX1866"></a>
+<a name="IDX1867"></a>
+<a name="IDX1868"></a>
+<a name="IDX1869"></a>
+<a name="IDX1870"></a>
+<a name="IDX1871"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>jml-primary</var> ::= <var>result-expression</var>
+        | <var>old-expression</var>
+        | <var>not-assigned-expression</var>
+        | <var>not-modified-expression</var>
+        | <var>only-accessed-expression</var>
+        | <var>only-assigned-expression</var>
+        | <var>only-called-expression</var>
+        | <var>only-captured-expression</var>
+        | <var>fresh-expression</var>
+        | <var>reach-expression</var>
+        | <var>duration-expression</var>
+        | <var>space-expression</var>
+        | <var>working-space-expression</var>
+        | <var>nonnullelements-expression</var>
+        | <var>informal-description</var>
+        | <var>typeof-expression</var>
+        | <var>elemtype-expression</var>
+        | <var>type-expression</var>
+        | <var>lockset-expression</var>
+        | <var>max-expression</var>
+        | <var>is-initialized-expression</var>
+        | <var>invariant-for-expression</var>
+        | <var>lblneg-expression</var>
+        | <var>lblpos-expression</var>
+        | <var>spec-quantified-expr</var>
+</pre></td></tr></table>
+
+<p>All of the JML keywords that can be used in expressions which would
+otherwise start with an alphabetic character
+start with a backslash (<code>\</code>),
+so that they cannot clash with the program's variable names.
+</p>
+<p>The new expressions that JML introduces are described below.
+Several of the descriptions below quote, without attribution,
+descriptions from [Leavens-Baker-Ruby06].
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC126">11.4.1 <code>\result</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC127">11.4.2 <code>\old</code> and <code>\pre</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC128">11.4.3 <code>\not_assigned</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">      
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC129">11.4.4 <code>\not_modified</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">      
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC130">11.4.5 <code>\only_accessed</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC131">11.4.6 <code>\only_assigned</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC132">11.4.7 <code>\only_called</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">       
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC133">11.4.8 <code>\only_captured</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC134">11.4.9 <code>\fresh</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC135">11.4.10 <code>\reach</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC136">11.4.11 <code>\duration</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC137">11.4.12 <code>\space</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC138">11.4.13 <code>\working_space</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC139">11.4.14 <code>\nonnullelements</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">   
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC140">11.4.15 Informal Predicates</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC141">11.4.16 <code>\typeof</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC142">11.4.17 <code>\elemtype</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC143">11.4.18 <code>\type</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">              
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC144">11.4.19 <code>\lockset</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">           
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC145">11.4.20 <code>\max</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">               
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC146">11.4.21 <code>\is_initialized</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">    
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC147">11.4.22 <code>\invariant_for</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC148">11.4.23 <code>\lblneg</code> and <code>\lblpos</code></a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC149">11.4.24 Quantified Expressions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">      
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Backslash-result"></a>
+<a name="SEC126"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC125" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC127" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.1 <code>\result</code> </h3>
+
+<p>The syntax of a <var>result-expression</var> is as follows.
+</p>
+<a name="IDX1872"></a>
+<a name="IDX1873"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>result-expression</var> ::= <code>\result</code>
+</pre></td></tr></table>
+
+<p>The primary <code>\result</code> can only be used in <code>ensures</code>,
+<code>duration</code>, and <code>workingspace</code>
+clauses of a non-void method.  Its value is the value returned by the
+method.  Its type is the return type of the method; hence it is a type
+error to use <code>\result</code> in a void method or in a constructor.
+</p>
+<hr size="6">
+<a name="Backslash-old-and-Backslash-pre"></a>
+<a name="SEC127"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC126" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC128" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.2 <code>\old</code> and <code>\pre</code> </h3>
+
+<p>An <var>old-expression</var> has the following syntax.
+See section <a href="#SEC123">Specification Expressions</a>, for the syntax of <var>spec-expression</var>.
+</p>
+<a name="IDX1874"></a>
+<a name="IDX1875"></a>
+<a name="IDX1876"></a>
+<a name="IDX1877"></a>
+<a name="IDX1878"></a>
+<a name="IDX1879"></a>
+<a name="IDX1880"></a>
+<a name="IDX1881"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>old-expression</var> ::= <code>\old</code> <code>(</code> <var>spec-expression</var> [ <code>,</code> <var>ident</var> ] <code>)</code>
+        | <code>\pre</code> <code>(</code> <var>spec-expression</var> <code>)</code>
+</pre></td></tr></table>
+
+<p>An expression of the form
+<code>\old(</code><i>Expr</i><code>)</code> refers to the value that the expression
+<i>Expr</i> had in the pre-state of a method.
+</p>
+<a name="IDX1882"></a>
+<p>JML uses Java's reference semantics, hence the pre-state value of an
+expression whose type is a reference type is simply the reference;
+it is <em>not</em> a clone of the object the reference points to.
+For example, suppose in the pre-state that
+<code>v</code> is field that holds a reference to a <code>HashMap</code>;
+concretely, suppose that the location stored in <code>v</code> is
+0x952ab340.  Then the expression <code>\old(v)</code> denotes the pre-state value
+of <code>v</code>, which is the same reference, i.e.,
+it is the address 0x952ab340.  Note that <code>\old(v)</code> is not a
+reference to a copy of the <code>HashMap</code> stored at that location, but
+simply a copy of the location's address (the reference), which is the
+value of <code>v</code>.  If the fields of the object
+at that location have changed in the post-state, then changes to those
+fields will be visible through <code>\old(v)</code>; for example,
+<code>\old(v).size()</code> will be the same as <code>v.size()</code>.
+To write a post-condition that refers to <code>v</code>'s size in the pre-state,
+one should instead write <code>\old(v.size())</code>.
+Indeed as a general rule, it is always safest to use <code>\old()</code> only around
+expressions whose type is a value type or a type with immutable
+values, such as <code>String</code>. 
+</p>
+<p>Expressions of this form may be used in both normal and exceptional
+postconditions (see section <a href="jmlrefman_9.html#SEC80">Method Specifications</a>,
+for more about such <code>ensures</code> and <code>signals</code> clauses), 
+in history constraints, in duration and working space clauses, 
+and also in assertions that appear in the bodies of methods
+(see section <a href="jmlrefman_12.html#SEC163">Statements and Annotation Statements</a>, for more about
+<code>assert</code> and <code>assume</code> statements, loop
+invariants, and variant functions).
+</p>
+<p>However, we recommend that inside the bodies of methods, one of the
+two other forms of <var>old-expression</var> (see below) be used instead.
+The reason for this is that the reader 
+may wonder whether <code>\old(<i>Expr</i>)</code> in the body of a method means
+the pre-state value of <i>Expr</i> (which it does) or the value of
+<i>Expr</i> before some previous statement (which it does not).
+</p>
+<a name="IDX1883"></a>
+<p>An expression of the form
+<code>\pre(</code><i>Expr</i><code>)</code> also refers to the value that the expression
+<i>Expr</i> had in the pre-state of a method.
+Expressions of this form may only be used in assertions that appear in
+the bodies of methods 
+(i.e., in <code>assert</code> and <code>assume</code> statements, and in loop
+invariants and variant functions).
+That is, such expressions may not be used in specification cases, and
+hence may not appear in normal or exceptional
+postconditions, in history constraints, or in duration and working
+space clauses.
+</p>
+<p>An expression of the form
+<code>\old(</code><i>Expr</i><code>,</code> <i>Label</i><code>)</code>
+refers to the value that the expression
+<i>Expr</i> had when control last reached the statement label <i>Label</i>.
+That is, it refers to the value of the expression just before control
+reached the statement the label is attached to.
+Expressions of this form may only be used in assertions that appear in
+the bodies of methods (i.e., in <code>assert</code> and <code>assume</code>
+statements, and in loop invariants and variant functions).
+That is, such expressions may not be used in specification cases, and
+hence may not appear in normal or exceptional
+postconditions, in history constraints, or in duration and working
+space clauses.
+</p>
+<p>In an expression of the form
+<code>\old(</code><i>Expr</i><code>,</code> <i>Label</i><code>)</code>,
+<i>Label</i> must be a label defined in the current method.
+The type of 
+<code>\old(</code><i>Expr</i><code>)</code>,
+<code>\old(</code><i>Expr</i><code>,</code> <i>Label</i><code>)</code>,
+or <code>\pre(</code><i>Expr</i><code>)</code>,
+is simply the type of <i>Expr</i>.
+</p>
+<p>It is a type error if <code>\old()</code> or <code>\pre()</code>
+encloses a free occurrence of a
+quantified variable.  For example, in the following,
+<code>\old()</code> encloses a free occurrence of the quantified variable
+<code>i</code>, which is declared in the surrounding quantifier, and thus
+the example is illegal.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">    (\forall int i; 0 &lt;= i &amp;&amp; i &lt; 7; \old(i &lt; y))  // illegal
+</pre></td></tr></table>
+<p>The problem with the above example is that there is no easy way to
+evaluate <code>\old(i &lt; y)</code> in the pre-state.
+</p>
+
+<p>However, constructions like the following are legal, as in the first
+the use of <code>\old()</code> does not enclose the quantified variable,
+<code>i</code>, and in the second use of <code>\old()</code> does not enclose a
+free occurrence of the quantified variable (the variable is bound by
+the declaration which is inside of <code>\old()</code>.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">     (\forall int i; 0 &lt;= i &amp;&amp; i &lt; 7; i &lt; \old(y))  // ok
+     \old((\forall int i; 0 &lt;= i &amp;&amp; i &lt; 7; i &lt; y))  // ok
+</pre></td></tr></table>
+
+
+<hr size="6">
+<a name="Backslash-not_005fassigned"></a>
+<a name="SEC128"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC127" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC129" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.3 <code>\not_assigned</code> </h3>
+
+<p>The syntax of a <var>not-assigned-expression</var> is as follows.
+See section <a href="#SEC162">Store Refs</a>, for the syntax of <var>store-ref-list</var>. 
+</p>
+<a name="IDX1884"></a>
+<a name="IDX1885"></a>
+<a name="IDX1886"></a>
+<a name="IDX1887"></a>
+<a name="IDX1888"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>not-assigned-expression</var> ::= <code>\not_assigned</code> <code>(</code> <var>store-ref-list</var> <code>)</code>
+</pre></td></tr></table>
+
+<p>The JML operator <code>\not_assigned</code> can be used in both normal and
+exceptional preconditions (i.e., in <code>ensures</code> and <code>signals</code>
+clauses), and in history constraints.  It asserts that the locations
+in the data group (see section <a href="jmlrefman_10.html#SEC118">Data Groups</a>) named by the argument were not
+assigned to during 
+the execution of the method being specified (or all methods to which a
+history constraint applies).
+For example, <code>\not_assigned(xval,yval)</code> says that the locations
+in the data groups named by <code>xval</code> and <code>yval</code> were not
+assigned during the method's execution.
+</p>
+<p>A predicate such as <code>\not_assigned(x.f)</code> refers to the entire
+data group named by <code>x.f</code> not just to the location <code>x.f</code>
+itself.  This allows one to specify absence of even temporary
+side-effects in various cases of a method.
+See section <a href="#SEC129"><code>\not_modified</code></a>, for ways to specify that just the value
+of a given field was not changed, which allows temporary side effects.
+</p>
+<p>The <code>\not_assigned</code> operator can be applied to both concrete and
+model or ghost fields.  When applied to a model field, the meaning is
+that all (concrete) locations in that model field's data group were
+not assigned. 
+[[[A real example would help here.]]]
+</p>
+<p>The type of a <code>\not_assigned</code> expression is <code>boolean</code>.
+</p>
+<hr size="6">
+<a name="Backslash-not_005fmodified"></a>
+<a name="SEC129"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC128" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC130" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.4 <code>\not_modified</code> </h3>
+
+<p>The syntax of a <var>not-modified-expression</var> is as follows.
+See section <a href="#SEC162">Store Refs</a>, for the syntax of <var>store-ref-list</var>. 
+</p>
+<a name="IDX1889"></a>
+<a name="IDX1890"></a>
+<a name="IDX1891"></a>
+<a name="IDX1892"></a>
+<a name="IDX1893"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>not-modified-expression</var> ::= <code>\not_modified</code> <code>(</code> <var>store-ref-list</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1894"></a>
+<p>The JML operator <code>\not_modified</code> can be used in both normal and
+exceptional preconditions (i.e., in <code>ensures</code> and <code>signals</code>
+clauses), and in history constraints.  It asserts that the values of
+the named fields are the same in the post-state as in the pre-state;
+for example, <code>\not_modified(xval,yval)</code> says that the fields
+<code>xval</code> and <code>yval</code> 
+have the same value in the pre- and post-states
+(in the sense of the <code>equals</code> method for their types).
+</p>
+<p>A predicate such as <code>\not_modified(x.f)</code> refers to the location
+named by <code>x.f</code>, not to the entire data group of <code>x.f</code>.  This
+allows one to specify benevolent side-effects, as one can name
+<code>x.f</code> (or a data group in which it participates) in an assignable
+clause, but use <code>\not_modified(x.f)</code> in the postcondition.
+See section <a href="#SEC128"><code>\not_assigned</code></a>, for ways to specify that no assignments
+were made to any location in a data group, disallowing temporary side effects.
+</p>
+<p>The <code>\not_modified</code> operator can be applied to both concrete and
+model or ghost fields.  When applied to a model field, the meaning is
+that only the value of the model field is unchanged (in the sense of
+its type's equals operation); concrete fields involved in its
+representation may have changed.
+[[[A real example would help here.]]]
+</p>
+<p>The type of a <code>\not_modified</code> expression is <code>boolean</code>.
+</p>
+<hr size="6">
+<a name="Backslash-only_005faccessed"></a>
+<a name="SEC130"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC129" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC131" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.5 <code>\only_accessed</code> </h3>
+
+<p>The syntax of an <var>only-accessed-expression</var> is as follows.
+See section <a href="#SEC162">Store Refs</a>, for the syntax of <var>store-ref-list</var>. 
+</p>
+<a name="IDX1895"></a>
+<a name="IDX1896"></a>
+<a name="IDX1897"></a>
+<a name="IDX1898"></a>
+<a name="IDX1899"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>only-accessed-expression</var> ::= <code>\only_accessed</code> <code>(</code> <var>store-ref-list</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1900"></a>
+<p>The JML operator <code>\only_accessed</code> can be used in both normal and
+exceptional preconditions (i.e., in <code>ensures</code> and <code>signals</code>
+clauses), and in history constraints.  Used in a method's
+postcondition (perhaps implicitly in a history constraint), it asserts
+that the method's execution only reads from a subset of the data groups
+named by the given fields.
+For example, <code>\only_accessed(xval,yval)</code> says that no fields,
+outside of the data groups of <code>xval</code> and <code>yval</code> were read by
+the method. This includes both direct reads in the body of the
+method, and reads during calls that were made by the method (and
+methods those methods called, etc.).
+</p>
+<p>A predicate such as <code>\only_accessed(x.f)</code> refers to the entire
+data group named by <code>x.f</code> not just to the location <code>x.f</code>
+itself. 
+</p>
+<p>The <code>\only_accessed</code> operator can be applied to both concrete and
+model or ghost fields.  When applied to a model field, the meaning is
+that the (concrete) locations in that model field's data group are
+permitted to be accessed during the method's execution.
+</p>
+<p>The type of an <code>\only_accessed</code> expression is <code>boolean</code>.
+</p>
+<hr size="6">
+<a name="Backslash-only_005fassigned"></a>
+<a name="SEC131"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC130" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC132" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.6 <code>\only_assigned</code> </h3>
+
+<p>The syntax of an <var>only-assigned-expression</var> is as follows.
+See section <a href="#SEC162">Store Refs</a>, for the syntax of <var>store-ref-list</var>. 
+</p>
+<a name="IDX1901"></a>
+<a name="IDX1902"></a>
+<a name="IDX1903"></a>
+<a name="IDX1904"></a>
+<a name="IDX1905"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>only-assigned-expression</var> ::= <code>\only_assigned</code> <code>(</code> <var>store-ref-list</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1906"></a>
+<p>The JML operator <code>\only_assigned</code> can be used in both normal and
+exceptional preconditions (i.e., in <code>ensures</code> and <code>signals</code>
+clauses), and in history constraints.  Used in a method's
+postcondition (perhaps implicitly in a history constraint), it asserts
+that the method's execution only assigned to a subset of the data groups
+named by the given fields.
+For example, <code>\only_assigned(xval,yval)</code> says that no fields,
+outside of the data groups of <code>xval</code> and <code>yval</code> were assigned by
+the method.  This includes both direct assignments in the body of the
+method, and assignments during calls that were made by the method (and
+methods those methods called, etc.).
+</p>
+<p>A predicate such as <code>\only_assigned(x.f)</code> refers to the entire
+data group named by <code>x.f</code> not just to the location <code>x.f</code>
+itself. 
+</p>
+<p>The <code>\only_assigned</code> operator can be applied to both concrete and
+model or ghost fields.  When applied to a model field, the meaning is
+that the (concrete) locations in that model field's data group are
+permitted to be assigned during the method's execution.
+</p>
+<p>The type of an <code>\only_assigned</code> expression is <code>boolean</code>.
+</p>
+<hr size="6">
+<a name="Backslash-only_005fcalled"></a>
+<a name="SEC132"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC131" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC133" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.7 <code>\only_called</code> </h3>
+
+<p>The syntax of an <var>only-called-expression</var> is as follows.
+See section <a href="jmlrefman_8.html#SEC70">Constraints</a>, for the syntax of <var>method-name-list</var>. 
+</p>
+<a name="IDX1907"></a>
+<a name="IDX1908"></a>
+<a name="IDX1909"></a>
+<a name="IDX1910"></a>
+<a name="IDX1911"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>only-called-expression</var> ::= <code>\only_called</code> <code>(</code> <var>method-name-list</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1912"></a>
+<p>The JML operator <code>\only_called</code> can be used in both normal and
+exceptional preconditions (i.e., in <code>ensures</code> and <code>signals</code>
+clauses), and in history constraints.  Used in a method's
+postcondition (perhaps implicitly in a history constraint), it asserts
+that the method's execution only called from a subset of methods given
+in the <var>method-name-list</var>.
+For example, <code>\only_called(p,q)</code> says that methods, apart from
+<code>p</code> and <code>q</code>, were called during this method's execution.
+</p>
+
+<p>The type of an <code>\only_called</code> expression is <code>boolean</code>.
+</p>
+<hr size="6">
+<a name="Backslash-only_005fcaptured"></a>
+<a name="SEC133"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC132" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC134" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.8 <code>\only_captured</code> </h3>
+
+<p>The syntax of an <var>only-captured-expression</var> is as follows.
+See section <a href="#SEC162">Store Refs</a>, for the syntax of <var>store-ref-list</var>. 
+</p>
+<a name="IDX1913"></a>
+<a name="IDX1914"></a>
+<a name="IDX1915"></a>
+<a name="IDX1916"></a>
+<a name="IDX1917"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>only-captured-expression</var> ::= <code>\only_captured</code> <code>(</code> <var>store-ref-list</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1918"></a>
+<p>The JML operator <code>\only_captured</code> can be used in both normal and
+exceptional preconditions (i.e., in <code>ensures</code> and <code>signals</code>
+clauses), and in history constraints.  Used in a method's
+postcondition (perhaps implicitly in a history constraint), it asserts
+that the method's execution only captured references from a subset of
+the data groups named by the given fields.
+For example, <code>\only_captured(xv,yv)</code> says that no references,
+outside of the data groups of <code>xv</code> and <code>yv</code> were captured by
+the method.
+</p>
+<a name="IDX1919"></a>
+<p>A reference is <em>captured</em> when it is stored into a field (as
+opposed to a local variable).  Typically a method captures a formal
+parameter (or a reference stored in a static field) by assigning it to
+a field in the method's receiver (the <code>this</code> object), a field in
+some object (or to an array element), or to a static field.
+</p>
+<p>A predicate such as <code>\only_captured(x.f)</code> refers to the
+references stored in the entire data group named by <code>x.f</code> in the
+pre-state, not just to those stored in the location <code>x.f</code> itself. 
+However, since the references being captured are usually found in
+formal parameters, the complications of data groups can usually be ignored.
+</p>
+<p>The <code>\only_captured</code> operator can be applied to both concrete and
+model or ghost fields.  When applied to a model field, the meaning is
+that the (concrete) locations in that model field's data group are
+permitted to be captured during the method's execution.
+</p>
+<p>The type of an <code>\only_captured</code> expression is <code>boolean</code>.
+</p>
+<hr size="6">
+<a name="Backslash-fresh"></a>
+<a name="SEC134"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC133" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC135" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.9 <code>\fresh</code> </h3>
+
+<p>The syntax of a <var>fresh-expression</var> is as follows.
+See section <a href="#SEC123">Specification Expressions</a>, for the syntax of <var>spec-expression-list</var>.
+</p>
+<a name="IDX1920"></a>
+<a name="IDX1921"></a>
+<a name="IDX1922"></a>
+<a name="IDX1923"></a>
+<a name="IDX1924"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>fresh-expression</var> ::= <code>\fresh</code> <code>(</code> <var>spec-expression-list</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1925"></a>
+<p>The operator <code>\fresh</code> asserts that objects were freshly allocated;
+for example, <code>\fresh(x,y)</code> asserts that
+<code>x</code> and <code>y</code> are not null
+and that the objects bound to these identifiers
+were not allocated in the pre-state.
+The arguments to <code>\fresh</code> can have any reference type,
+and the type of the overall expression is <code>boolean</code>.
+</p>
+<a name="IDX1926"></a>
+<a name="IDX1927"></a>
+<a name="IDX1928"></a>
+<p>Note that it is wrong to use <code>\fresh(this)</code> in the specification
+of a constructor, because Java's <code>new</code> operator allocates storage
+for the object; the constructor's job is just to initialize that
+storage.
+</p>
+<hr size="6">
+<a name="Backslash-reach"></a>
+<a name="SEC135"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC134" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC136" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.10 <code>\reach</code> </h3>
+
+<p>The syntax of a <var>reach-expression</var> is as follows.
+See section <a href="#SEC123">Specification Expressions</a>, for the syntax of <var>spec-expression</var>.
+</p>
+<a name="IDX1929"></a>
+<a name="IDX1930"></a>
+<a name="IDX1931"></a>
+<a name="IDX1932"></a>
+<a name="IDX1933"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>reach-expression</var> ::= <code>\reach</code> <code>(</code> <var>spec-expression</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1934"></a>
+<p>The <code>\reach</code> expression 
+allows one to refer to the set of objects reachable from some particular object.
+The syntax <code>\reach(</code><i>x</i><code>)</code>
+denotes the smallest <code>JMLObjectSet</code> containing the object denoted by
+<i>x</i>, if any,
+and all objects accessible through all fields of objects in this set.
+That is, if <i>x</i> is <code>null</code>, then this set is empty
+otherwise it contains <i>x</i>,
+all objects accessible through all fields of <i>x</i>,
+all objects accessible through all fields of these objects,
+and so on, recursively.
+If <i>x</i> denotes a model field (or data group), then 
+<code>\reach(</code><i>x</i><code>)</code>
+denotes the smallest <code>JMLObjectSet</code> containing the objects
+reachable from <i>x</i> or reachable from the objects referenced by 
+fields in that data group.
+</p>
+<hr size="6">
+<a name="Backslash-duration"></a>
+<a name="SEC136"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC135" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC137" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.11 <code>\duration</code> </h3>
+
+<p>The syntax of a <var>duration-expression</var> is as follows.
+See section <a href="#SEC124">Expressions</a>, for the syntax of <var>expression</var>.
+</p>
+<a name="IDX1935"></a>
+<a name="IDX1936"></a>
+<a name="IDX1937"></a>
+<a name="IDX1938"></a>
+<a name="IDX1939"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>duration-expression</var> ::= <code>\duration</code> <code>(</code> <var>expression</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1940"></a>
+<a name="IDX1941"></a>
+<a name="IDX1942"></a>
+<p><code>\duration</code>, which describes the specified maximum number of
+virtual machine cycle times needed to execute the method call or
+explicit constructor invocation expression that is its argument; e.g.,
+<code>\duration(myStack.push(o))</code> is the maximum number of virtual
+machine cycles needed to execute the call <code>myStack.push(o)</code>,
+according to the contract of the static type of <code>myStack</code>'s
+type's <code>push</code> method, when passed argument <code>o</code>.  Note that
+the expression used as an argument to <code>\duration</code> should be
+thought of as quoted, in the sense that it is not to be executed; thus
+the method or constructor called need not be free of side effects.
+Note that the argument to <code>\duration</code> is an
+<var>expression</var> instead of just the name of a method,
+because different method calls, i.e., those with different parameters,
+can take different amounts of time [Krone-Ogden-Sitaraman03]. 
+</p>
+<p>The argument expression passed to <code>\duration</code>
+must be a method call or explicit constructor
+invocation expression; the type of a <code>\duration</code> expression is
+<code>long</code>.
+</p>
+
+<a name="IDX1943"></a>
+<a name="IDX1944"></a>
+<a name="IDX1945"></a>
+<p>For a given Java Virtual Machine, a <em>virtual machine cycle</em> is
+defined to be the minimum of the maximum over all Java Virtual Machine
+instructions, <i>i</i>, of the length of time needed to execute
+instruction <i>i</i>.
+</p>
+
+<hr size="6">
+<a name="Backslash-space"></a>
+<a name="SEC137"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC136" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC138" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.12 <code>\space</code> </h3>
+
+<p>The syntax of a <var>space-expression</var> is as follows.
+See section <a href="#SEC123">Specification Expressions</a>, for the syntax of <var>spec-expression</var>.
+[[[ Shouldn't this take an expression instead of a spec-expression? - DRC]]]
+<a name="IDX1946"></a>
+<a name="IDX1947"></a>
+<a name="IDX1948"></a>
+<a name="IDX1949"></a>
+<a name="IDX1950"></a>
+</p><table><tr><td>&nbsp;</td><td><pre class="display"><var>space-expression</var> ::= <code>\space</code> <code>(</code> <var>spec-expression</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1951"></a>
+<a name="IDX1952"></a>
+<a name="IDX1953"></a>
+<p><code>\space</code>, which describes the amount of heap space, in bytes,
+allocated to the object referred to by its argument [Krone-Ogden-Sitaraman03];
+e.g., <code>\space(myStack)</code> is number of bytes in the heap used by
+<code>myStack</code>, not including the objects it contains.  The type of
+the <var>spec-expression</var> that is the argument must be a reference
+type, and the result type of a <code>\space</code> expression is
+<code>long</code>.  
+</p>
+
+<hr size="6">
+<a name="Backslash-working-space"></a>
+<a name="SEC138"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC137" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC139" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.13 <code>\working_space</code> </h3>
+
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>working-space-expression</var> ::= <code>\working_space</code> <code>(</code> <var>expression</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1954"></a>
+<a name="IDX1955"></a>
+<a name="IDX1956"></a>
+<p><code>\working_space</code>, which describes the maximum specified amount of
+heap space, in bytes, used by the method call or explicit constructor
+invocation expression that is its argument; e.g.,
+<code>\working_space(myStack.push(o))</code> is the maximum number of bytes
+needed on the heap to execute the call <code>myStack.push(o)</code>,
+according to the contract of the static type of <code>myStack</code>'s
+type's <code>push</code> method, when passed argument <code>o</code>.  
+Note that
+the expression used as an argument to <code>\working_space</code> should be
+thought of as quoted, in the sense that it is not to be executed; thus
+the method or constructor called need not be free of side effects.
+The detailed arguments are needed in the specification of the call
+because different method calls, i.e., those with different parameters,
+can use take different amounts of space [Krone-Ogden-Sitaraman03]. 
+The argument expression must be a method call or explicit constructor
+invocation expression; the result type of a <code>\working_space</code>
+expression is <code>long</code>.
+</p>
+<hr size="6">
+<a name="Backslash-nonnullelements"></a>
+<a name="SEC139"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC138" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC140" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.14 <code>\nonnullelements</code> </h3>
+
+<p>The syntax of a <var>nonnullelements-expression</var> is as follows.
+See section <a href="#SEC123">Specification Expressions</a>, for the syntax of <var>spec-expression</var>.
+</p>
+<a name="IDX1957"></a>
+<a name="IDX1958"></a>
+<a name="IDX1959"></a>
+<a name="IDX1960"></a>
+<a name="IDX1961"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>nonnullelements-expression</var> ::= <code>\nonnullelements</code> <code>(</code> <var>spec-expression</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1962"></a>
+<a name="IDX1963"></a>
+<p>The operator <code>\nonnullelements</code>
+can be used to assert that an array and its elements are all non-null.
+For example, <code>\nonnullelements(myArray)</code>, is equivalent to
+[Leino-Nelson-Saxe00]
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">  myArray != null &amp;&amp;
+  (\forall int i; 0 &lt;= i &amp;&amp; i &lt; myArray.length;
+                  myArray[i] != null)
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Informal-Predicates"></a>
+<a name="SEC140"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC139" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC141" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.15 Informal Predicates </h3>
+
+<p>An <var>informal-description</var> is some text enclosed in <code>(*</code> and
+<code>*)</code>.
+See section <a href="jmlrefman_4.html#SEC31">Tokens</a>, for details of its syntax.
+It is used as an escape form formality.
+</p>
+<p>An informal description used as a predicate has type boolean.
+Hence the text in an informal description should describe a condition,
+for example <code>(* the value of x is displayed *)</code>.
+</p>
+<p>The value of an informal description is only known to the user, not to
+any JML tools, so it is never executable.  Informal descriptions
+should thus be avoided when possible, but can be used to avoid
+formalizing everything when doing so would be too expensive.
+</p>
+<hr size="6">
+<a name="Backslash-typeof"></a>
+<a name="SEC141"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC140" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC142" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.16 <code>\typeof</code> </h3>
+
+<p>The syntax of a <var>typeof-expression</var> is as follows.
+See section <a href="#SEC123">Specification Expressions</a>, for the syntax of <var>spec-expression</var>.
+</p>
+<a name="IDX1964"></a>
+<a name="IDX1965"></a>
+<a name="IDX1966"></a>
+<a name="IDX1967"></a>
+<a name="IDX1968"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>typeof-expression</var> ::= <code>\typeof</code> <code>(</code> <var>spec-expression</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1969"></a>
+<a name="IDX1970"></a>
+<p>The operator <code>\typeof</code> returns the most-specific dynamic type of an
+expression's value [Leino-Nelson-Saxe00].  The meaning of
+<code>\typeof(</code><i>E</i><code>)</code> is unspecified if <i>E</i> is null.  If <i>E</i>
+has a static type that is a reference type, then
+<code>\typeof(</code><i>E</i><code>)</code> means the same thing as
+<i>E</i><code>.getClass()</code>.  For example, if <code>c</code> is a variable of
+static type <code>Collection</code> that holds an object of class
+<code>HashSet</code>, then <code>\typeof(c)</code> is <code>HashSet.class</code>, which is
+the same thing as <code>\type(HashSet)</code>.  If <i>E</i> has a static type
+that is not a reference type, then <code>\typeof(</code><i>E</i><code>)</code> means
+the instance of <code>java.lang.Class</code> that represents its static type.
+For example, <code>\typeof(true)</code> is <code>Boolean.TYPE</code>, which is the
+same as <code>\type(boolean)</code>.  Thus an expression of the form
+<code>\typeof(</code><i>E</i><code>)</code> has type <code>\TYPE</code>, which JML considers
+to be the same as <code>java.lang.Class</code>.
+</p>
+<hr size="6">
+<a name="Backslash-elemtype"></a>
+<a name="SEC142"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC141" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC143" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.17 <code>\elemtype</code> </h3>
+
+<p>The syntax of a <var>elemtype-expression</var> is as follows.
+</p>
+<a name="IDX1971"></a>
+<a name="IDX1972"></a>
+<a name="IDX1973"></a>
+<a name="IDX1974"></a>
+<a name="IDX1975"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>elemtype-expression</var> ::= <code>\elemtype</code> <code>(</code> <var>spec-expression</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX1976"></a>
+<a name="IDX1977"></a>
+<p>The <code>\elemtype</code> operator returns the most-specific static type
+shared by all elements of its array argument [Leino-Nelson-Saxe00].  For
+example, <code>\elemtype(\type(int[]))</code> is <code>\type(int)</code>.  The
+argument to <code>\elemtype</code> must be an expression of type <code>\TYPE</code>,
+which JML considers to be the same as <code>java.lang.Class</code>, and its
+result also has type <code>\TYPE</code> (see section <a href="jmlrefman_7.html#SEC61">Type-Specs</a>).  If the argument is not an array type,
+then the result is <code>null</code>.  For example, <code>\elemtype(\type(int))</code>
+and <code>\elemtype(\type(Object))</code> are both <code>null</code>.
+</p>
+
+<hr size="6">
+<a name="Backslash-type"></a>
+<a name="SEC143"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC142" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC144" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.18 <code>\type</code> </h3>
+
+<p>The syntax of a <var>type-expression</var> is as follows.
+See section <a href="jmlrefman_7.html#SEC61">Type-Specs</a>, for the syntax of <var>type</var>.
+</p>
+<a name="IDX1978"></a>
+<a name="IDX1979"></a>
+<a name="IDX1980"></a>
+<a name="IDX1981"></a>
+<a name="IDX1982"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>type-expression</var> ::= <code>\type</code> <code>(</code> <var>type</var> <code>)</code>
+</pre></td></tr></table>
+<a name="IDX1983"></a>
+<a name="IDX1984"></a>
+<a name="IDX1985"></a>
+<p>The operator <code>\type</code> can be used to introduce literals of type
+<code>\TYPE</code> in expressions.
+An expression of the form <code>\type(T)</code>,
+where <code>T</code> is a type name, has the type <code>\TYPE</code>.
+Since in JML <code>\TYPE</code> is the same as <code>java.lang.Class</code>,
+an expression of the form <code>\type(</code><i>T</i><code>)</code>
+means the same thing as <i>T</i><code>.class</code>, if <i>T</i> is a reference type.
+If <i>T</i> is a primitive type, then <code>\type(T)</code> is equivalent to the value
+of the <code>TYPE</code> field of the corresponding reference type.  Thus
+<code>\type(boolean)</code> equals <code>Boolean.TYPE</code>.
+</p>
+<p>For example, in
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   \typeof(myObj) &lt;: \type(PlusAccount)
+</pre></td></tr></table>
+
+<p>the use of <code>\type(PlusAccount)</code> is used to introduce 
+the type <code>PlusAccount</code> into this expression context.
+</p>
+<hr size="6">
+<a name="Backslash-lockset"></a>
+<a name="SEC144"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC143" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC145" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.19 <code>\lockset</code> </h3>
+
+<p>The syntax of a <var>lockset-expression</var> is as follows.
+</p>
+<a name="IDX1986"></a>
+<a name="IDX1987"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>lockset-expression</var> ::= <code>\lockset</code>
+</pre></td></tr></table>
+
+<a name="IDX1988"></a>
+<a name="IDX1989"></a>
+<a name="IDX1990"></a>
+<a name="IDX1991"></a>
+<p>The <code>\lockset</code> primitive denotes
+the set of locks held by the current thread.
+It is of type <code>JMLObjectSet</code>.
+(This is an adaptation from ESC/Java [Leino-etal00]
+[Leino-Nelson-Saxe00] for dealing with threads.)
+</p>
+<hr size="6">
+<a name="Backslash-max"></a>
+<a name="SEC145"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC144" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC146" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.20 <code>\max</code> </h3>
+
+<p>The syntax of a <var>max-expression</var> is as follows. 
+See section <a href="#SEC123">Specification Expressions</a>, for the syntax of <var>spec-expression</var>.
+</p>
+<a name="IDX1992"></a>
+<a name="IDX1993"></a>
+<a name="IDX1994"></a>
+<a name="IDX1995"></a>
+<a name="IDX1996"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>max-expression</var> ::= <code>\max</code> <code>(</code> <var>spec-expression</var> <code>)</code>
+</pre></td></tr></table>
+<a name="IDX1997"></a>
+<a name="IDX1998"></a>
+<p>The <code>\max</code> operator returns the &quot;largest&quot; (as defined by <code>&lt;</code>) of a
+set of lock objects, given a lock set as an argument.  The result is of type Object.
+(This is an adaptation from ESC/Java [Leino-etal00]
+[Leino-Nelson-Saxe00] for dealing with threads.)
+</p>
+<p>If you are looking to take the maximum of several integers, use the
+max quantifier
+(see section <a href="#SEC151">Generalized Quantifiers</a>).
+</p>
+<hr size="6">
+<a name="Backslash-is_005finitialized"></a>
+<a name="SEC146"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC145" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC147" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.21 <code>\is_initialized</code> </h3>
+
+<p>The syntax of the <var>is-initialized-expression</var> is as follows.
+See section <a href="jmlrefman_7.html#SEC61">Type-Specs</a>, for the syntax of <var>reference-type</var>
+</p>
+<a name="IDX1999"></a>
+<a name="IDX2000"></a>
+<a name="IDX2001"></a>
+<a name="IDX2002"></a>
+<a name="IDX2003"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>is-initialized-expression</var> ::= <code>\is_initialized</code> <code>(</code> <var>reference-type</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX2004"></a>
+<a name="IDX2005"></a>
+<p>The <code>\is_initialized</code> operator returns true just when its
+<var>reference-type</var> argument is a class that has finished its static
+initialization.  It is of type <code>boolean</code>.
+</p>
+<hr size="6">
+<a name="Backslash-invariant_005ffor"></a>
+<a name="SEC147"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC146" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC148" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.22 <code>\invariant_for</code> </h3>
+
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>invariant-for-expression</var> ::= <code>\invariant_for</code> <code>(</code> <var>spec-expression</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX2006"></a>
+<p>The <code>\invariant_for</code> operator returns true just when its argument
+satisfies the invariant of its static type; for example,
+<code>\invariant_for((MyClass)o)</code> is true when <code>o</code> satisfies the
+invariant of <code>MyClass</code>.  The entire <code>\invariant_for</code>
+expression is of type <code>boolean</code>.
+</p>
+<hr size="6">
+<a name="Backslash-lblneg-and-lblpos"></a>
+<a name="SEC148"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC147" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC149" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.23 <code>\lblneg</code> and <code>\lblpos</code> </h3>
+
+<p>The syntax of the two kinds of labeled expressions is as follows.
+See section <a href="#SEC123">Specification Expressions</a>, for the syntax of <var>spec-expression</var>.
+</p>
+<a name="IDX2007"></a>
+<a name="IDX2008"></a>
+<a name="IDX2009"></a>
+<a name="IDX2010"></a>
+<a name="IDX2011"></a>
+<a name="IDX2012"></a>
+<a name="IDX2013"></a>
+<a name="IDX2014"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>lblneg-expression</var> ::= <code>(</code> <code>\lblneg</code> <var>ident</var> <var>spec-expression</var> <code>)</code>
+<var>lblpos-expression</var> ::= <code>(</code> <code>\lblpos</code> <var>ident</var> <var>spec-expression</var> <code>)</code>
+</pre></td></tr></table>
+
+<a name="IDX2015"></a>
+<a name="IDX2016"></a>
+<p>Parenthesized expressions that start with
+<code>\lblneg</code> and <code>\lblpos</code>
+can be used to attach labels to expressions [Leino-Nelson-Saxe00];
+these labels might be printed in various messages by support tools,
+for example, to identify an assertion that failed.
+Such an expression has a <em>label</em> and a <em>body</em>;
+for example, in
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">   (\lblneg indexInBounds 0 &lt;= index &amp;&amp; index &lt; length)
+</pre></td></tr></table>
+
+<p>the label is <code>indexInBounds</code>
+and the body is the expression <code>0 &lt;= index &amp;&amp; index &lt; length</code>.
+The value of a labeled expression is the value of its body,
+hence its type is the type of its body.
+The idea is that if this expression is used in an assertion
+and its value is <code>false</code> (e.g., when doing run-time checking
+of assertions), then a warning will be printed that includes
+the label <code>indexInBounds</code>.
+The form using <code>\lblpos</code> has a similar syntax,
+but should be used for warnings when the value of the enclosed expression
+is <code>true</code>.
+</p>
+<hr size="6">
+<a name="Quantified-Expressions"></a>
+<a name="SEC149"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC148" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC150" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC125" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.4.24 Quantified Expressions </h3>
+
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>spec-quantified-expr</var> ::= <code>(</code> <var>quantifier</var> <var>quantified-var-decls</var> <code>;</code>
+                           [ [ <var>predicate</var> ] <code>;</code> ]
+                           <var>spec-expression</var> <code>)</code>
+<var>quantifier</var> ::= <code>\forall</code> | <code>\exists</code>
+        | <code>\max</code> | <code>\min</code>
+        | <code>\num_of</code> | <code>\product</code> | <code>\sum</code>
+<var>quantified-var-decls</var> ::= [ <var>bound-var-modifiers</var> ] <var>type-spec</var> <var>quantified-var-declarator</var>
+                         [ <code>,</code> <var>quantified-var-declarator</var> ] &hellip;
+<var>quantified-var-declarator</var> ::= <var>ident</var> [ <var>dims</var> ]
+<var>spec-variable-declarators</var> ::= <var>spec-variable-declarator</var>
+                          [ <code>,</code> <var>spec-variable-declarator</var> ] &hellip;
+<var>spec-variable-declarator</var> ::= <var>ident</var> [ <var>dims</var> ]
+                             [ <code>=</code> <var>spec-initializer</var> ]
+<var>spec-array-initializer</var> ::= <code>{</code> [ <var>spec-initializer</var>
+             [ <code>,</code> <var>spec-initializer</var> ] &hellip; [ <code>,</code> ] ] <code>}</code>
+<var>spec-initializer</var> ::= <var>spec-expression</var>
+        | <var>spec-array-initializer</var>
+</pre></td></tr></table>
+
+<p>Note that each quantified expression includes a set of parentheses; these
+parentheses cannot be omitted.  The first part of a quantified expression is
+the <var>quantifier</var>, which determines the operation to be performed. Every
+quantifier starts with a backslash (<code>\</code>).  Following the quantifier are
+<var>quantified-var-decls</var>, which declare <em>bound variables</em> whose scope is
+the <var>spec-quantified-expr</var>. The bound variables may not conflict with
+existing local variables, but may hide static and instance fields. The
+optional predicate between the two semicolons is the <em>range predicate</em>; a
+quantifier ranges over all possible values of its bound variables that satisfy
+the range predicate (for a discussion of the ranges of values for reference
+types, see section <a href="#SEC155">Quantifying over Reference Types</a>). If the range predicate is
+omitted, it defaults to <code>true</code>. The final <var>spec-expression</var> is called
+the <em>body</em> of the quantifier. 
+</p>
+<p>We discuss the various kinds of quantified expressions below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC150">11.4.24.1 Universal and Existential Quantifiers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC151">11.4.24.2 Generalized Quantifiers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC152">11.4.24.3 Numerical Quantifier</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">        
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC153">11.4.24.4 Executability of Quantified Expressions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC154">11.4.24.5 Modifiers for Bound Variables</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC155">11.4.24.6 Quantifying over Reference Types</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Universal-and-Existential-Quantifiers"></a>
+<a name="SEC150"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC149" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC151" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC149" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 11.4.24.1 Universal and Existential Quantifiers </h4>
+
+<p>The quantifiers
+<code>\forall</code> and <code>\exists</code>,
+are universal and existential quantifiers (respectively).
+For example,
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">  (\forall int i,j; 0 &lt;= i &amp;&amp; i &lt; j &amp;&amp; j &lt; 10; a[i] &lt; a[j])
+</pre></td></tr></table>
+
+<p>says that the values <code>a[0]</code> &hellip; <code>a[9]</code> are sorted. 
+</p>
+<p>The body of a universal or existential quantifier must be of type 
+<code>boolean</code>. The type of a universal or existential quantified expression 
+as a whole is <code>boolean</code>. When the range predicate is not satisfiable, the value of a <code>\forall</code> expression is <code>true</code> and the value of an <code>\exists</code> expression is <code>false</code>. For example:
+<a name="IDX2017"></a>
+<a name="IDX2018"></a>
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  (\forall int i; 0 &lt; i &amp;&amp; i &lt; 0; 0 &lt; i) == true
+  (\exists int i; 0 &lt; i &amp;&amp; i &lt; 0; 0 &lt; i) == false
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Generalized-Quantifiers"></a>
+<a name="SEC151"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC150" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC152" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC149" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 11.4.24.2 Generalized Quantifiers </h4>
+
+<p>The quantifiers <code>\max</code>, <code>\min</code>, <code>\product</code>, and
+<code>\sum</code>, are generalized quantifiers that return the maximum,
+minimum, product, or sum of the values of the expressions given, where
+the variables satisfy the given range. The expression in the body must be of a 
+built-in numeric type, such as <code>int</code> or <code>double</code>; the type of the
+quantified expression as a whole is the type of its body.  For example, the 
+following equations are all true (see chapter 3 of [Cohen90]):
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  (\sum int i; 0 &lt;= i &amp;&amp; i &lt; 5; i) == 0 + 1 + 2 + 3 + 4
+  (\product int i; 0 &lt; i &amp;&amp; i &lt; 5; i) == 1 * 2 * 3 * 4
+  (\max int i; 0 &lt;= i &amp;&amp; i &lt; 5; i) == 4
+  (\min int i; 0 &lt;= i &amp;&amp; i &lt; 5; i-1) == -1
+</pre></td></tr></table>
+
+<p>For computing the value of a sum or product, Java's arithmetic is
+used.  [[[ This would depend on the arithmetic mode in force - DRC]]]The meaning thus depends on the type of the expression.  For
+example, in Java, floating point numbers use the IEEE 754 standard,
+and thus when an overflow occurs, the appropriate positive or negative
+infinity is returned.  However, Java integers wrap on overflow.
+Consider the following examples.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  (\product float f; 1.0e30f &lt; f &amp;&amp; f &lt; 1.0e38f; f)
+    == Float.POSITIVE_INFINITY
+
+  (\sum int i; i == Integer.MAX_VALUE || i == 1; i)
+    == Integer.MAX_VALUE + 1
+    == Integer.MIN_VALUE
+</pre></td></tr></table>
+
+<a name="IDX2019"></a>
+<a name="IDX2020"></a>
+<p>When the range predicate is not satisfiable, the sum is 0 and the
+product is 1; for example:
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  (\sum int i; false; i) == 0
+  (\product double d; false; d*d) == 1.0
+</pre></td></tr></table>
+
+<p>When the range predicate is not satisfiable for <code>\max</code> the result
+is the smallest number with the type of the expression in the body;
+for floating point numbers, negative infinity is used.  Similarly,
+when the range predicate is not satisfiable for <code>\min</code>, the
+result is the largest number with the type of the expression in the
+body.  [[[ Or should this be undefined - DRC]]]
+</p>
+
+<hr size="6">
+<a name="Numerical-Quantifier"></a>
+<a name="SEC152"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC151" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC153" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC149" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 11.4.24.3 Numerical Quantifier </h4>
+
+<p>The numerical quantifier, <code>\num_of</code>, returns the number of values
+for its variables for which the range and the expression in its body
+are true.  The body must have type <code>boolean</code>, and the entire quantified 
+expression has type <code>long</code>.  The meaning of this quantifier is defined by 
+the following equation (see p. 57 of [Cohen90]).
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">  (\num_of T x; R(x); P(x)) == (\sum T x; R(x) &amp;&amp; P(x); 1L)
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Executability-of-Quantified-Expressions"></a>
+<a name="SEC153"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC152" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC154" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC149" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 11.4.24.4 Executability of Quantified Expressions </h4>
+
+<p>When are universal or existential quantifiers executable for purposes
+of runtime assertion checking?
+If the type of the quantified variable is <code>boolean</code>, then it is
+always executable.  Otherwise a <var>spec-quantified-expr</var> 
+is only executable if the form of the expression
+matches a pattern that the runtime assertion checker understands. 
+This varies by tool implementation, but you can expect that the
+runtime assertion checker understands patterns where the range predicate
+gives a finite range for an ordinal primitive value type (such as
+<code>int</code>) or where the range predicate requires the quantified
+variable to be drawn from some set.
+Examples include the following.
+[[[Make these examples be real examples in the samples directory]]]
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">     (\forall int x; 0 &lt;= x &amp;&amp; x &lt; somelimit; ...)
+     (\forall Object x; someSet.has(x); ...)
+</pre></td></tr></table>
+
+<a name="IDX2021"></a>
+<a name="IDX2022"></a>
+<p>You should get warnings from the <code>jmlc</code> tool
+when assertions are not executable,
+but you have to use the <code>-w2</code> flag to see them.
+</p>
+<p>If a <var>spec-quantified-expr</var>, <i>QE</i>, is executable, then a tool executing
+it should only evaluate any range expression in <i>QE</i>
+once per execution of <i>QE</i>.  Since the value of such a range expression
+cannot change, this evaluation strategy will not change the value of
+<i>QE</i>, but it will save time to only evaluate the
+range expression once for each evaluation of <i>QE</i>.
+</p>
+<hr size="6">
+<a name="Modifiers-for-Bound-Variables"></a>
+<a name="SEC154"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC153" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC155" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC149" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 11.4.24.5 Modifiers for Bound Variables </h4>
+
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>bound-var-modifiers</var> ::= <code>non_null</code> | <code>nullable</code>
+</pre></td></tr></table>
+
+<p>Logical variables can be bound in 
+</p>
+<ul>
+<li> quantified expressions (see section <a href="#SEC149">Quantified Expressions</a>),
+</li><li> set comprehension expressions (see section <a href="#SEC156">Set Comprehensions</a>),
+</li><li> forall clauses of method contracts (see section <a href="jmlrefman_9.html#SEC102">Forall Variable Declarations</a>), or
+</li><li> old clauses of method contracts (see section <a href="jmlrefman_9.html#SEC103">Old Variable Declarations</a>).
+</li></ul>
+
+<p>Note that in JML, <code>non_null</code> and <code>nullable</code> are not reserved
+words, hence such identifiers can be used as type names. In order to
+quantify over the elements of a type named <code>non_null</code> or
+<code>nullable</code> is necessary to provide an explicit nullity
+modifier.  For example,
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  (\forall non_null non_null nn; ...)
+</pre></td></tr></table>
+<p>where the first <code>non_null</code> is one of the <var>bound-var-modifiers</var> and
+the second is the type <code>non_null</code>.
+</p>
+<hr size="6">
+<a name="Quantifying-over-Reference-Types"></a>
+<a name="SEC155"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC154" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC156" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC149" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 11.4.24.6 Quantifying over Reference Types </h4>
+
+<p>The range of values for a quantified variable that is declared to be of a reference type:
+</p><ul>
+<li>
+Does not include <code>null</code> unless the bound variable is declared
+<code>nullable</code> (see section <a href="jmlrefman_25.html#SEC244">Non-null by Default</a>). 
+<a name="IDX2023"></a>
+<a name="IDX2024"></a>
+
+</li><li>
+May include references to objects that are not constructed by the program;
+one should use a range predicate to eliminate such cases if they are not desired.
+</li></ul>
+
+<hr size="6">
+<a name="Set-Comprehensions"></a>
+<a name="SEC156"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC155" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC157" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 11.5 Set Comprehensions </h2>
+
+<p>The syntax of a <var>set-comprehension</var> expression is as follows.
+</p>
+<a name="IDX2025"></a>
+<a name="IDX2026"></a>
+<a name="IDX2027"></a>
+<a name="IDX2028"></a>
+<a name="IDX2029"></a>
+<a name="IDX2030"></a>
+<a name="IDX2031"></a>
+<a name="IDX2032"></a>
+<a name="IDX2033"></a>
+<a name="IDX2034"></a>
+<a name="IDX2035"></a>
+<a name="IDX2036"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>set-comprehension</var> ::= <code>{</code> [ <var>bound-var-modifiers</var> ] <var>type-spec</var>
+            <var>quantified-var-declarator</var> `<code>|</code>'
+            <var>postfix-expr</var> <code>&amp;&amp;</code> <var>predicate</var> <code>}</code>
+</pre></td></tr></table>
+
+<p>The set comprehension notation can be used to succinctly define sets.
+For example, the following is the <code>JMLObjectSet</code> that is the
+subset of non-<code>null</code> <code>Integer</code> objects found in the set
+<code>myIntSet</code> whose values are between 0 and 10, inclusive.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">  new JMLObjectSet {Integer i | myIntSet.has(i) &amp;&amp; 
+      i != null &amp;&amp; 0 &lt;= i.intValue() &amp;&amp; i.intValue() &lt;= 10 }
+</pre></td></tr></table>
+
+<p>The syntax of JML limits set comprehensions so that the <var>postfix-expr</var>
+following the vertical bar (<code>|</code>) is always a method invocation with the 
+bound variable declared in the <var>quantified-var-declarator</var> as its 
+parameter; the method may be either the <code>has</code> method of an 
+<code>org.jmlspecs.models.JMLObjectSet</code> or 
+<code>org.jmlspecs.models.JMLValueSet</code>, or the <code>contains</code> method of a 
+<code>java.util.Collection</code>. This restriction is used to avoid Russell's 
+paradox [Whitehead-Russell25]. The bound variable, whose scope is the 
+<var>set-comprehension</var>, may not conflict with existing local variables, but 
+may hide static and instance fields. The bound variable type is used to restrict the objects that become part of the resulting set; if the set called in the <var>postfix-expr</var> contains objects that are not assignable to the bound variable, they are not contained in the resulting set comprehension. Thus, the following two set comprehension expressions result in identical sets:
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">  new JMLObjectSet {Integer i | s.has(i) &amp;&amp; 0 &lt; i.intValue() }
+  new JMLObjectSet {Object i | s.has(i) &amp;&amp; i instanceof Integer &amp;&amp; 
+      0 &lt; ((Integer) i).intValue() }
+</pre></td></tr></table>
+
+<p>In practice, one starts either from some relevant set at hand or from the sets 
+found in <code>JMLObjectSet</code> and <code>JMLValueSet</code> containing the objects of 
+primitive types. The type of a set comprehension is the type named following 
+<code>new</code>, which must be <code>JMLObjectSet</code> or <code>JMLValueSet</code>. The bound
+variable type must be compatible with the set comprehension type; in 
+particular, the bound variable type must be a subtype of
+<code>org.jmlspecs.models.JMLType</code> if the set comprehension type is 
+<code>JMLValueSet</code>. 
+</p>
+<hr size="6">
+<a name="JML-Operators"></a>
+<a name="SEC157"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC156" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC158" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 11.6 JML Operators </h2>
+
+<p>In this section we describe the various new operators that JML adds to
+Java expressions.  The following can all be used in <var>spec-expression</var>s.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC158">11.6.1 Subtype operator</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC159">11.6.2 Equivalence and Inequivalence Operators</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC160">11.6.3 Forward and Reverse Implication Operators</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC161">11.6.4 Lockset Ordering</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Subtype-operator"></a>
+<a name="SEC158"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC157" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC159" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC157" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.6.1 Subtype operator </h3>
+
+<p>The relational operator <code>&lt;:</code> compares two reference types and
+returns true when the type on the left is a subtype of the type on the
+right [Leino-Nelson-Saxe00].  Although the notation might suggest
+otherwise, this operator is also reflexive; a type will compare as
+<code>&lt;:</code> with itself.  In an expression of the form <i>E1</i> <code>&lt;:</code>
+<i>E2</i>, both <i>E1</i> and <i>E2</i> must have type <code>\TYPE</code>; since in JML
+<code>\TYPE</code> is the same as <code>java.lang.Class</code> the expression <i>E1</i>
+<code>&lt;:</code> <i>E2</i> means the same thing as the expression
+<i>E2</i><code>.isAssignableFrom(</code><i>E1</i><code>)</code>.
+As a result, primitive types are not subtypes of <code>java.lang.Object</code>,
+nor of each other, though they are of themselves; so, for example, <code>Integer.TYPE &lt;: Integer.TYPE</code> is true.
+</p>
+<hr size="6">
+<a name="Equivalence-and-Inequivalence-Operators"></a>
+<a name="SEC159"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC158" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC160" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC157" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.6.2 Equivalence and Inequivalence Operators </h3>
+
+<p>The operators <code>&lt;==&gt;</code> and <code>&lt;=!=&gt;</code> work only on
+boolean-subexpressions and have the same meaning as <code>==</code> and
+<code>!=</code>, respectively.  However, they have very low precedence, and
+so are useful at the top-level of a <var>spec-expression</var>.
+Unlike <code>==</code> and <code>!=</code>, the
+operators <code>&lt;==&gt;</code> and <code>&lt;=!=&gt;</code> are also associative and symmetric.
+</p>
+<p>The notation <code>&lt;==&gt;</code> can be read &ldquo;if and only if&rdquo;.  It has the same
+meaning for Boolean  values as <code>==</code>, but has a lower precedence.
+Therefore, the expression &ldquo;<code>\result &lt;==&gt; size == 0</code>&rdquo;
+means the same thing as &ldquo;<code>\result == (size == 0)</code>&rdquo;.
+</p>
+<p>The notation <code>&lt;=!=&gt;</code> can be read &ldquo;is not equivalent to&rdquo;.
+It has the same meaning for Boolean  values as <code>!=</code>, but has a
+lower precedence. Therefore, the expression &ldquo;<code>\result &lt;=!=&gt; size == 0</code>&rdquo;
+means the same thing as &ldquo;<code>\result != (size == 0)</code>&rdquo;.
+</p>
+<p>The expressions on either side of these operators must be of type
+<code>boolean</code>, and the type of the result is also <code>boolean</code>.
+</p>
+<hr size="6">
+<a name="Forward-and-Reverse-Implication-Operators"></a>
+<a name="SEC160"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC159" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC161" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC157" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.6.3 Forward and Reverse Implication Operators </h3>
+
+<p>The operators <code>==&gt;</code> and <code>&lt;==</code> work only on
+boolean-subexpressions.  They compute forward and reverse
+implications, respectively.
+</p>
+<p>For example, the formula <code>raining ==&gt; getsWet</code> is true if either
+<code>raining</code> is false or <code>getsWet</code> is true.
+The formula <code>getsWet &lt;== raining</code> means the same thing.
+The <code>==&gt;</code> operator associates to the right, but
+the <code>&lt;==</code> operator associates to the left.
+The expressions on either side of these operators must be of type
+<code>boolean</code>, and the type of the result is also <code>boolean</code>.
+</p>
+<p>These two operators are evaluated in short-circuit fashion, left to right.
+Thus, in <code>a ==&gt; b</code>, if <code>a</code> is false, then the expression is true
+and <code>b</code> is not evaluated.  Similarly, in <code>a &lt;== b</code>, if <code>a</code> is true, the expression is true and <code>b</code> is not evaluated.  In other words, <code>a ==&gt; b</code> is equivalent to <code>!a || b</code> and <code>a &lt;== b</code> is equivalent to <code> a || !b</code>.
+</p>
+<p>Because of this short-circuit evaluation, <code>a ==&gt; b</code> is not quite 
+equivalent to <code>b &lt;== a</code>.  For example, <code>x != null ==&gt; x.a &gt; 0</code>
+will be true if <code>x</code> is <code>null</code>, but <code>x.a&gt;0 &lt;== x != null</code>
+would be undefined (or throw a NullPointerException) if <code>x</code> is <code>null</code>.
+</p>
+<hr size="6">
+<a name="Lockset-Ordering"></a>
+<a name="SEC161"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC160" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC162" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC157" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 11.6.4 Lockset Ordering </h3>
+
+<p>JML uses
+<code>&lt;</code> and <code>&lt;=</code> to test order of locks.
+JML extends these two operators, but not
+<code>&gt;</code> and <code>&gt;=</code>, as comparisons on Objects.
+Using <code>synchronized</code> statements, Java
+programs can establish monitor locks to permit only one thread at a
+time to execute given sections of code. Any object can be used as
+a lock. In order for ESC/Java [Leino-Nelson-Saxe00] to
+reason about the possibility of deadlocks among threads, a partial order
+must be statically declared on lock objects, with &quot;larger&quot; objects
+being objects whose locks should be acquired later.  ESC/Java suggests
+the use of <var>axiom-clause</var>s to declare this partial order.
+</p>
+<p>The <code>&lt;</code> and <code>&lt;=</code> operators test this partial order in assertions.
+When used in this way, the subexpressions to either side of <code>&lt;</code>
+or <code>&lt;=</code> must be reference types, and the result is of type boolean.
+</p>
+<hr size="6">
+<a name="Store-Refs"></a>
+<a name="SEC162"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC161" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC121" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 11.7 Store Refs </h2>
+
+<p>The syntax related to the <var>store-ref</var> production is used in several places.
+</p>
+<a name="IDX2037"></a>
+<a name="IDX2038"></a>
+<a name="IDX2039"></a>
+<a name="IDX2040"></a>
+<a name="IDX2041"></a>
+<a name="IDX2042"></a>
+<a name="IDX2043"></a>
+<a name="IDX2044"></a>
+<a name="IDX2045"></a>
+<a name="IDX2046"></a>
+<a name="IDX2047"></a>
+<a name="IDX2048"></a>
+<a name="IDX2049"></a>
+<a name="IDX2050"></a>
+<a name="IDX2051"></a>
+<a name="IDX2052"></a>
+<a name="IDX2053"></a>
+<a name="IDX2054"></a>
+<a name="IDX2055"></a>
+<a name="IDX2056"></a>
+<a name="IDX2057"></a>
+<a name="IDX2058"></a>
+<a name="IDX2059"></a>
+<a name="IDX2060"></a>
+<a name="IDX2061"></a>
+<a name="IDX2062"></a>
+<a name="IDX2063"></a>
+<a name="IDX2064"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>store-ref-list</var> ::= <var>store-ref-keyword</var> | <var>store-ref</var> [ <code>,</code> <var>store-ref</var> ] &hellip;
+<var>store-ref</var> ::= <var>store-ref-expression</var>
+        | <var>informal-description</var> 
+<var>store-ref-expression</var> ::= <var>store-ref-name</var> [ <var>store-ref-name-suffix</var> ] &hellip;
+<var>store-ref-name</var> ::= <var>ident</var> | <code>super</code> | <code>this</code>
+<var>store-ref-name-suffix</var> ::= <code>.</code> <var>ident</var> | <code>.</code> <code>this</code> | `<code>[</code>' <var>spec-array-ref-expr</var> `<code>]</code>' | <code>.</code> <code>*</code> 
+<var>spec-array-ref-expr</var> ::= <var>spec-expression</var>
+        | <var>spec-expression</var> <code>..</code> <var>spec-expression</var>
+        | <code>*</code>
+<var>store-ref-keyword</var> ::= <code>\nothing</code> | <code>\everything</code> | <code>\not_specified</code>
+</pre></td></tr></table>
+
+<p>A <var>store-ref</var> denotes a set of locations in general.
+</p>
+<p>The form <code>\nothing</code> denotes the empty set of locations.
+The form <code>\everything</code> denotes the set of all locations in the program.
+The form <code>\not_specified</code> denotes a unspecified set of locations,
+whose usage is determined by the tool.
+</p>
+<p>The form <i>SR</i><code>.*</code> refers to all fields of the object denoted by <i>SR</i>.
+Similarly, the form <i>A</i><code>[*]</code> refers to all locations of
+elements in the array <i>A</i>.  [[[ And their datagroups? - DRC]]]
+</p>
+<p>Otherwise if a <var>store-ref</var> refers to a field, it denotes that
+field's data group (see section <a href="jmlrefman_10.html#SEC118">Data Groups</a>).
+If a <var>store-ref</var> refers to an element or a range of elements, it
+refers to all of the named locations in that array.
+</p>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC121" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_12.html#SEC163" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

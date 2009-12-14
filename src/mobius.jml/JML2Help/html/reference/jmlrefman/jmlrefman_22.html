@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: B. Modifier Summary</title>
+
+<meta name="description" content="JML Reference Manual: B. Modifier Summary">
+<meta name="keywords" content="JML Reference Manual: B. Modifier Summary">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Modifier-Summary"></a>
+<a name="SEC237"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_21.html#SEC236" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_23.html#SEC238" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_21.html#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_23.html#SEC238" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="appendix"> B. Modifier Summary </h1>
+
+<p>This table summarizes which Java and JML modifiers may be used in 
+various grammatical contexts.
+</p>
+<table>
+<tr><td><p> Grammatical construct </p></td><td> </td><td><p> Java modifiers </p></td><td> </td><td><p> JML modifiers
+</p>
+</td></tr>
+<tr><td><p> All modifiers
+</p></td><td>
+</td><td><p> <code>public protected private abstract static final synchronized transient volatile native strictfp</code>
+</p></td><td>
+</td><td><p> <code>spec_public spec_protected model ghost pure instance helper non_null nullable nullable_by_default monitored uninitialized</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Class declaration
+</p></td><td>
+</td><td><p> <code>public final abstract strictfp</code>
+</p></td><td>
+</td><td><p> <code>pure model nullable_by_default spec_public spec_protected</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Interface declaration
+</p></td><td>
+</td><td><p> <code>public strictfp</code>
+</p></td><td>
+</td><td><p> <code>pure model nullable_by_default spec_public spec_protected</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Nested Class declaration
+</p></td><td>
+</td><td><p> <code>public protected private static final abstract strictfp</code>
+</p></td><td>
+</td><td><p> <code>spec_public spec_protected model pure</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Nested interface declaration
+</p></td><td>
+</td><td><p> <code>public protected private static strictfp</code>
+</p></td><td>
+</td><td><p> <code>spec_public spec_protected model pure</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Local Class (and local model class) declaration
+</p></td><td>
+</td><td><p> <code>final abstract strictfp</code>
+</p></td><td>
+</td><td><p> <code>pure model</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Type specification (e.g. invariant)
+</p></td><td>
+</td><td><p> <code>public protected private static</code>
+</p></td><td>
+</td><td><p> <code>instance</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Field declaration
+</p></td><td>
+</td><td><p> <code>public protected private final volatile transient static</code>
+</p></td><td>
+</td><td><p> <code>spec_public spec_protected non_null nullable instance monitored</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Ghost Field declaration
+</p></td><td>
+</td><td><p> <code>public protected private static final</code>
+</p></td><td>
+</td><td><p> <code>non_null nullable instance monitored</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Model Field declaration
+</p></td><td>
+</td><td><p> <code>public protected private static</code>
+</p></td><td>
+</td><td><p> <code>non_null nullable instance</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Method declaration in a class
+</p></td><td>
+</td><td><p> <code>public protected private abstract final static synchronized native strictfp</code>
+</p></td><td>
+</td><td><p> <code>spec_public spec_protected pure non_null nullable helper extract</code>
+</p>
+</td></tr>
+<tr><td> 
+
+</td></tr>
+<tr><td><p> Method declaration in an interface
+</p></td><td>
+</td><td><p> <code>public abstract</code>
+</p></td><td>
+</td><td><p> <code>spec_public spec_protected pure non_null nullable helper</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Constructor declaration
+</p></td><td>
+</td><td><p> <code>public protected private</code>
+</p></td><td>
+</td><td><p> <code>spec_public spec_protected helper pure extract</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Model method (in a class or interface)
+</p></td><td>
+</td><td><p> <code>public protected private abstract static final synchronized strictfp</code>
+</p></td><td>
+</td><td><p> <code>pure non_null nullable helper extract</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Model constructor
+</p></td><td>
+</td><td><p> <code>public protected private</code>
+</p></td><td>
+</td><td><p> <code>pure helper extract</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Java initialization block 
+</p></td><td>
+</td><td><p> <code>static</code>
+</p></td><td>
+</td><td><p> -
+</p>
+</td></tr>
+<tr><td><p> JML initializer and static_initializer annotation 
+</p></td><td>
+</td><td><p> -
+</p></td><td>
+</td><td><p> -
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Formal parameter 
+</p></td><td>
+</td><td><p> <code>final</code>
+</p></td><td>
+</td><td><p> <code>non_null nullable</code>
+</p>
+</td></tr>
+<tr><td>
+
+</td></tr>
+<tr><td><p> Local variable and local ghost variable declaration
+</p></td><td>
+</td><td><p> <code>final</code>
+</p></td><td>
+</td><td><p> <code>ghost non_null nullable uninitialized</code>
+</p>
+</td></tr>
+</table>
+
+<p>Note that within interfaces, fields are implicitly public, static and
+final [Gosling-etal00].
+In an interface, ghost and model fields are implicitly public and
+static, though they may be declared as <code>instance</code> fields, which
+makes them not static.
+</p>
+<p>Also within an interface, methods may not be static and are implicitly
+abstract.  Model methods in interfaces, however, are not implicitly 
+abstract and may be declared static.
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_21.html#SEC219" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_23.html#SEC238" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

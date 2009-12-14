@@ -1,0 +1,1129 @@
+<!-- Creator     : groff version 1.18.1 -->
+<!-- CreationDate: Thu Jan 18 13:41:02 2007 -->
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta name="Content-Style" content="text/css">
+<title>JML</title>
+</head>
+<body>
+
+<h1 align=center>JML</h1>
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#ENVIRONMENT">ENVIRONMENT</a><br>
+<a href="#EXAMPLES">EXAMPLES</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#WHAT TO READ">WHAT TO READ</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+
+<hr>
+<a name="NAME"></a>
+<h2>NAME</h2>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>jml &minus; Java Modeling Language (JML) specification
+checker</p>
+</td>
+</table>
+<a name="SYNOPSIS"></a>
+<h2>SYNOPSIS</h2>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>jml</b> [option] ... file-or-directory-or-package
+[file-or-directory-or-package] ...<b><br>
+jml-gui</b> [option] ... file-or-directory-or-package
+[file-or-directory-or-package] ...</p>
+</td>
+</table>
+<a name="DESCRIPTION"></a>
+<h2>DESCRIPTION</h2>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>The command <b>jml</b> and the graphical user interface
+version <b>jml-gui</b> both do type checking of Java
+Modeling Language (JML) specifications. JML is a behavioral
+interface specification language for Java(TM).</p>
+<!-- INDENTATION -->
+<p>The <b>jml</b> script sets the CLASSPATH and then runs
+the Java class org.jmlspecs.checker.Main, which does both
+syntax and type checking of Java and JML files. That is it
+checks both Java source code and the JML annotations in
+source code and JML files.</p>
+<!-- INDENTATION -->
+<p>The <b>jml-gui</b> script is similar, but just runs the
+Java class org.jmlspecs.checker.JmlGUI, which brings up a
+graphical user-interface to do the checking.</p>
+<!-- INDENTATION -->
+<p>If the checker finds a error, the file name, line number,
+and column number where the error occurred are reported.</p>
+</td>
+</table>
+<a name="OPTIONS"></a>
+<h2>OPTIONS</h2>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>The <b>jml</b> script and the graphical user interface
+support the options described below. On the command line,
+one can give the options in the form described below; the
+graphical user interface has other ways to select files and
+set the options. Both options without arguments and options
+with arguments simply set the option as indicated by the
+description below. On the command line, multiple uses of the
+same option generally have no effect that is different than
+a single use of that option.</p>
+<!-- INDENTATION -->
+<p>For the command line, each option has both a short form
+and two long forms. The long forms consists of one or two
+hyphens and a word. To avoid duplication, we only show the
+long forms with two hyphens, since these are unambiguous;
+however one can use the forms with a single hyphen if
+desired. To avoid ambiguity between multiple short form
+options and the long form with a single hyphen, one should
+give each option separately. The short form consists of a
+hyphen and a single letter. In the synopsis below, the long
+form is separated from the short form by a comma (,), but in
+actual usage, you would pick one of these forms and not use
+the comma.</p>
+<!-- INDENTATION -->
+<p>Note that options on the command line are case
+sensitive.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;admissibility
+&lt;String&gt;</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Checks the admissibility of invariants and represents
+clauses in accordance with a certain proof technique. For
+more details about admissibility see &quot;Modular
+Invariants for Layered Object Structures&quot; by P.
+Mueller, A. Poetzsch-Heffter and G. Leavens, 2004.<br>
+Statics (static invariants, static represents clauses and
+static fields appearing in one of the former) and method
+calls (in an invariant or a represents clause) are not yet
+supported.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>Available option strings:</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="30%"></td>
+<td width="69%">
+<p>&quot;none&quot;</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="42%"></td>
+<td width="57%">
+<p>No admissibility checks are performed.<br>
+This is the default.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="30%"></td>
+<td width="69%">
+<p>&quot;classical&quot;</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="42%"></td>
+<td width="57%">
+<p>Admissibility checks of invariants and represents clauses
+are done in accordance with the classical modular proof
+technique.<br>
+See the above mentioned paper for details.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="30%"></td>
+<td width="69%">
+<p>&quot;ownership&quot;</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="42%"></td>
+<td width="57%">
+<p>Admissibility checks of invariants and represents clauses
+are done in accordance with the ownership proof technique,
+using the UTS information. Therefore this option only makes
+sense if the UTS is enabled at least for parsing and
+typechecking. Additionally fields and methods are checked to
+ensure subclass separation.<br>
+For further details see the above mentioned paper.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;Assignable, &minus;A</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Turn off errors that are otherwise given when a method
+with an &quot;assignable&quot; clause calls methods that do
+not have &quot;assignable&quot; clauses. The default is to
+produce such messages.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;assignable, &minus;a</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Turn off caution messages for heavyweight specification
+cases of non-pure methods that have no
+&quot;assignable&quot; clause. A heavyweight specification
+case is a specification case that starts with one of the
+keywords &quot;behavior&quot;, &quot;normal_behavior&quot;,
+or &quot;exceptional_behavior&quot;. A pure method is a
+method annotated with the JML modifier &quot;pure&quot;. The
+default is to produce such caution messages.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;classpath &lt;directory-list&gt;,
+&minus;C &lt;directory-list&gt;</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Use the given string as the CLASSPATH during checking. By
+default the value of the environment variable CLASSPATH is
+used instead.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;debug, &minus;c</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Produces (copious) debugging information, intended for
+developers. The default is not to produce this
+information.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;deprecation, &minus;D</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Test for deprecated members. The default is not to test
+for deprecated members.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;excludefiles
+&lt;pattern&gt;</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>A pattern (regular expression) for file names to exclude
+from processing. By default this is the pattern</p>
+<!-- INDENTATION -->
+<pre>   _JML_Test[\044.]
+</pre>
+<!-- INDENTATION -->
+<p>which means that file names that contain the strings
+_JML_Test. or _JML_Test$ are not processed (044 is the octal
+code for a dollar sign), unless they are referred to by
+other files that are processed. The regular expressions that
+can be used are described in the javadocs for the type
+java.util.regexp.Pattern.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;filter &lt;String&gt;, &minus;f
+&lt;String&gt;</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Make the warning filter be the named class. The default
+is org.jmlspecs.checker.JMLDefaultWarningFilter.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;generic, &minus;G</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Accept the Java 1.5 generic syntax. This feature is still
+experimental. The default is not to do this.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;help, &minus;h</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Display the help information and exit. The default is not
+to do this.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;keepGoing, &minus;k</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Keep going when errors are encountered. Be warned that
+this may cause the tool to die with an exception. The
+default is to not keep going.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;multijava, &minus;M</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Accept MultiJava source code. The default is to not
+accept Multijava constructs.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;nomultijava</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Do not accept MultiJava source code. This turns off
+acceptance of Multijava constructs.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;nonnull, &minus;N</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>(Obsolete. To be removed soon.) Generate statistics with
+respect to the proportion of non-null declarations.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;nonnulltypes, &minus;j</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Enable the use of the non-null type system which enables
+the static detection of potential null dereferences.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;norecursive</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Turn off &minus;&minus;recursive.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;purity, &minus;p</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Do not check for pure-ness of methods referenced in
+assertions. A method is considered to be pure if it is
+annotated with the JML modifier &quot;pure&quot;. The
+default is to check for purity.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;Quiet, &minus;Q</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Shuts off all type checking informational messages. The
+default is produce these messages.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;quiet, &minus;q</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Do not suppress information on compilation passes
+completed. This information is probably most useful to
+developers. The default is to suppress this information.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;recursive, &minus;R</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Process all subdirectories of given directory and package
+arguments recursively. The default is not to process given
+subdirectories recursively.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;relaxed, &minus;r</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Accept Relaxed MultiJava source code. The default is not
+to allow the special constructs in Relaxed MultiJava.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;safemath, &minus;s</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Turns on safe math mode. This is an experimental feature,
+currently under development, in which the checker will
+report a compile-time error if the evaluation of a constant
+integral expression causes an overflow. The default is not
+to report such errors.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;source
+&lt;release-number&gt;</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Accept code containing source for the given Java version.
+When the release-number is &quot;1.4&quot;, the compiler
+accepts code containing Java 1.4 assert statements, and
+treats &lsquo;assert&rsquo; as a reserved word in Java code.
+The default is &quot;1.3&quot;, meaning that
+&lsquo;assert&rsquo; is not a reserved word in Java code
+(although it is in annotations). In some future release of
+JML, the default will change to &quot;1.4&quot;.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;sourcepath &lt;directory-list&gt;,
+&minus;S &lt;directory-list&gt;</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Use the given path when searching for Java and annotation
+source files. A path is a list of directories separated by
+either colons (on Unix) or semicolons (on Windows). The
+default is to use the CLASSPATH.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;universesx &lt;String&gt;, &minus;E
+&lt;String&gt;</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Specify the degree of support for the Universe type
+system (UTS).</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>Available option strings:</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="30%"></td>
+<td width="69%">
+<p>&quot;no&quot;</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="42%"></td>
+<td width="57%">
+<p>UTS features are disabled and no keywords are
+reserved.<br>
+Only the \xxx version of the keywords are allowed (all UTS
+keywords have to be prefixed by a backslash).<br>
+This is the default.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="30%"></td>
+<td width="69%">
+<p>&quot;parse&quot;</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="42%"></td>
+<td width="57%">
+<p>the UTS keywords are reserved and parsed.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="30%"></td>
+<td width="69%">
+<p>&quot;check&quot;</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="42%"></td>
+<td width="57%">
+<p>UTS typechecking is performed.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="30%"></td>
+<td width="69%">
+<p>&quot;dynchecks&quot;</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="42%"></td>
+<td width="57%">
+<p>code for UTS runtime checks (for downcasts and array
+updates) is generated.<br>
+This also turns on the &quot;check&quot; option, because the
+runtime checks rely on a type-checked program.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="30%"></td>
+<td width="69%">
+<p>&quot;purity&quot;</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="42%"></td>
+<td width="57%">
+<p>purity of methods is checked with a conservative method,
+which might forbid some methods that do not modify existing
+objects.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="30%"></td>
+<td width="69%">
+<p>&quot;xbytecode&quot;</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="42%"></td>
+<td width="57%">
+<p>Universe type information is stored in special bytecode
+attributes.<br>
+This also turns on the &quot;check&quot; option, because it
+is important that the stored information is
+type-checked.<br>
+The resulting class-file is compatible with standard Java
+VMs.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="30%"></td>
+<td width="69%">
+<p>&quot;annotations&quot;</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="42%"></td>
+<td width="57%">
+<p>Universe type information is stored in Java 5
+annotations.<br>
+This also turns on the &quot;check&quot; option, because it
+is important that the stored information is
+type-checked.<br>
+The resulting class-file is compatible with Java 5
+VMs.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="30%"></td>
+<td width="69%">
+<p>&quot;full&quot;</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="42%"></td>
+<td width="57%">
+<p>all UTS features except &quot;annotations&quot; are
+enabled; this corresponds to the &minus;&minus;universes
+flag below.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>The options &quot;no&quot; and &quot;full&quot; must be
+used alone. All other options can be combined by separating
+them with commas. First all options are turned off and then
+the given options (and the options implicitly turned on by
+the given options) are turned on.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;universes, &minus;e</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Enable the default Universe type system features. This
+corresponds to the &quot;&minus;&minus;universesx full&quot;
+flag.<br>
+This option is disabled by default.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;verbose, &minus;v</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Display verbose information during compilation. The
+default is not to display this information.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;version, &minus;V</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Instead of doing anything else, print the checker&rsquo;s
+version information on standard output and exit. The default
+is not to do this.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;warning=&lt;int&gt;,
+&minus;w&lt;int&gt;</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the &lsquo;pickiness&rsquo; of warnings displayed to
+the given integer. The default is 1. Using 2 generates more
+picky warnings, and 3 more picky still.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;Xnoversion</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Omits printing the version in help messages, which is
+useful for regression testing (but not normally by users).
+The default is to print the version in help messages.</p>
+</td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&minus;&minus;xArrayNNTS, &minus;J</b></p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Enable the experimental handling of array types in the
+non-null type system.</p>
+</td>
+</table>
+<a name="ENVIRONMENT"></a>
+<h2>ENVIRONMENT</h2>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>The <b>CLASSPATH</b> environment variable is used to find
+Java class and source files, as well as JML specification
+files.</p>
+</td>
+</table>
+<a name="EXAMPLES"></a>
+<h2>EXAMPLES</h2>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>The typical way to check files is as follows.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>jml file1.java file2.java</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>The following checks all the Java and JML files in a
+directory, and only writes error messages and warnings, not
+status information.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>jml -Q .</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>The following example is the same as the previous one,
+but recurses into all subdirectories of the directory
+.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>jml --Quiet --recursive .</p></td>
+</table>
+<a name="BUGS"></a>
+<h2>BUGS</h2>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>The <b>jml</b> script sets the CLASSPATH environment
+variable, but does not look at any -classpath option that
+might be used. If you use a -classpath option, then you must
+explicitly include paths to the jar files and directories
+that this script would have otherwise included. On the other
+hand, this allows you to override the default orderings for
+such jar files and directories.</p>
+</td>
+</table>
+<a name="WHAT TO READ"></a>
+<h2>WHAT TO READ</h2>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>If you are new to JML, you&rsquo;ll want to look at some
+of the documents that ship with the system. You can access
+it from a web browser easily starting at the JML.html file
+in the top-level JML directory, $JMLDIR, i.e., from</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<pre>$JMLDIR/JML.html
+</pre>
+</td>
+</table>
+<!-- INDENTATION -->
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>See also the the JML web page.</p></td>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<pre>http://www.jmlspecs.org
+</pre>
+</td>
+</table>
+<a name="SEE ALSO"></a>
+<h2>SEE ALSO</h2>
+<!-- INDENTATION -->
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>java(1), javadoc(1), jmlc(1), jmldoc(1), jmlrac(1),
+jmlunit(1), jtest(1)</p>
+</td>
+</table>
+<a name="COPYRIGHT"></a>
+<h2>COPYRIGHT</h2>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>Copyright (c) 1999-2007 by Iowa State University</p>
+<!-- INDENTATION -->
+<p>JML is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version
+2, or (at your option) any later version.</p>
+<!-- INDENTATION -->
+<p>JML is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty
+of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+the GNU General Public License for more details.</p>
+<!-- INDENTATION -->
+<p>You should have received a copy of the GNU General Public
+License along with JML; see the file COPYING. If not, write
+to the Free Software Foundation, 675 Mass Ave, Cambridge, MA
+02139, USA.</p>
+</td>
+</table>
+<hr>
+</body>
+</html>

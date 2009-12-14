@@ -1,0 +1,870 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 18. Universe Type System</title>
+
+<meta name="description" content="JML Reference Manual: 18. Universe Type System">
+<meta name="keywords" content="JML Reference Manual: 18. Universe Type System">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Universe-Type-System"></a>
+<a name="SEC203"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_17.html#SEC202" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC204" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_17.html#SEC200" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 18. Universe Type System </h1>
+
+<p>This section describes how the Universe type system
+[Dietl-Drossopoulou-Mueller07] [Dietl-Mueller05] [Dietl-Mueller-Schregenberger-08] [Mueller-Poetzsch-Heffter01a]
+is realized in JML and the impact it has on JML specifications.
+The Universe type system is a lightweight ownership type system that
+hierarchically structures the object store and confines the possible
+effects of expressions.
+</p>
+<p>The syntax for the Universe type system consists of three ownership
+modifiers.  
+</p>
+<a name="IDX2440"></a>
+<a name="IDX2441"></a>
+<a name="IDX2442"></a>
+<a name="IDX2443"></a>
+<a name="IDX2444"></a>
+<a name="IDX2445"></a>
+<a name="IDX2446"></a>
+<a name="IDX2447"></a>
+<a name="IDX2448"></a>
+<a name="IDX2449"></a>
+<a name="IDX2450"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>ownership-modifiers</var> ::= <var>ownership-modifier</var> [ <var>ownership-modifier</var> ]
+<var>ownership-modifier</var> ::= <code>\rep</code> | <code>\peer</code> | <code>\readonly</code>
+         | <var>reserved-ownership-modifier</var> <i>// with --universesx parse or --universesx full</i>
+<var>reserved-ownership-modifier</var> ::= <code>rep</code> | <code>peer</code> | <code>readonly</code>
+</pre></td></tr></table>
+
+<p>Depending on the options selected, one can use either form of the
+modifiers, with or 
+without the backslash, in annotations.
+The forms without the backslashes are the only ones that can be used
+in Java code, and when they are enabled, they are treated as new
+reserved words in both JML annotations and in Java code.
+</p>
+<a name="IDX2451"></a>
+<p>Currently the Universe type checking and the
+<var>reserved-ownership-modifier</var> syntax are not enabled by default in
+JML, but is only available when various options are used in the tools.
+It can also be used with different levels of checking.  If the
+<code>--universesx no</code> option is used, only the <var>ownership-modifier</var>s
+<code>\rep</code>, <code>\peer</code>, and <code>\readonly</code> are available.
+</p>
+<p>To enable just parsing of the full syntax, one can use the
+<code>--universesx parse</code> option; in this case, all of the syntax is
+parsed, and <code>rep</code>, <code>peer</code>, and <code>readonly</code> are treated as
+reserved words.  However, with this option, none of the checking
+described below is done.
+</p>
+<p>To enable checking, but without reserving the keywords <code>rep</code>,
+<code>peer</code>, and <code>readonly</code>,
+one uses the <code>--universesx check</code> option.
+With this option, only the <var>ownership-modifier</var>s
+<code>\rep</code>, <code>\peer</code>, and <code>\readonly</code> are available.
+This allows the use of ownership modifiers in specifications, but not
+in Java code.
+</p>
+<p>Various other options control the generation of runtime checks and the
+storage of ownership modifiers in the created class files.
+See [Dietl-Mueller-Schregenberger08] for a complete list of the
+different supported compiler options.
+</p>
+<p>One can also enable checking, all of the syntax, and default options
+by using the <code>--universesx full</code> option.  An equivalent option is
+<code>--universes</code> (synonym <code>-e</code>). This parses and type checks all
+the <var>ownership-modifier</var>s, not only in specifications, but also in
+Java code.
+</p>
+<p>For a simple reference type, one can use only one
+<var>ownership-modifier</var> where <var>ownership-modifiers</var> appears in
+the grammar.  The only case where two <var>ownership-modifier</var>s can be
+used is for array types as described below.
+</p>
+<p>Note that in [Dietl-Drossopoulou-Mueller07] the Universe type system is
+extended to type genericity as found in Java 5. The JML tools support
+Generic Universe Types and also recognize the <code>any</code> modifier as
+synonym for <code>readonly</code>.
+As the rest of this report is about non-generic Java, we refer to
+[Dietl-Drossopoulou-Mueller07] [Dietl-Mueller-Schregenberger08]
+for details.
+</p>
+<p>In the sections below we just use the forms without the backslashes
+when discussing the semantics of each form.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC204">18.1 Basic Concepts of Universes</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC205">18.2 Rep and Peer</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC206">18.3 Readonly</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                    
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC207">18.4 Ownership Modifiers for Array Types</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC208">18.5 Default Ownership Modifiers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC209">18.6 Ownership Type Rules</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">        
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC212">18.7 Casts and Ownership Types</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">   
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Basic-Concepts-of-Universes"></a>
+<a name="SEC204"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC203" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC205" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 18.1 Basic Concepts of Universes </h2>
+
+<p>The Universe type system organizes
+objects into ownership contexts [Dietl-Mueller05] [Mueller-Poetzsch-Heffter01a].
+Each object has 0 or 1 <em>owner</em> objects.
+The owner of an object (or the absence of an owner) is determined by the
+<code>new</code> expression that creates the object.
+Once determined, the owner of an object cannot be changed.
+</p>
+<p>An <em>ownership context</em> is a set of objects with the same owner.
+There is also a <em>root ownership context</em>, which is the set of all objects
+that have no owner.
+Each object thus belongs to exactly one ownership context.
+The contexts form a hierarchy, with the root ownership context at the top.
+The owner of an ownership context is not considered to be part of the
+context it owns, 
+but rather part of that context's parent context.
+</p>
+<a name="IDX2452"></a>
+<a name="IDX2453"></a>
+<a name="IDX2454"></a>
+<p>The Universe type system enforces the &ldquo;owner-as-modifier&rdquo; property
+(see section 1 of [Dietl-Mueller05]).
+This property says &ldquo;an object <i>X</i> can be referenced by any other
+object, but reference chains that do not pass through <i>X</i>’s owner
+must not be used to modify <i>X</i>&rdquo; (section 1 of [Dietl-Mueller05]).
+Thus, if one looks at all the references from outside an ownership context into
+objects within the context, all of these references must be readonly
+references, with the exception of any references from the context's owner.
+</p>
+<hr size="6">
+<a name="Rep-and-Peer"></a>
+<a name="SEC205"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC204" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC206" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 18.2 Rep and Peer </h2>
+
+<p>The <code>rep</code> and <code>peer</code> annotations are type modifiers
+(see section <a href="jmlrefman_7.html#SEC61">Type-Specs</a>) that specify ownership relative to a receiver object.
+The <em>receiver</em> object is defined as follows:
+</p><ul>
+<li>
+For a field access of the form <i>E.f</i>, the receiver object is the
+result of the expression <i>E</i>.
+
+</li><li>
+For a call to an instance method of the form <i>E.m(&hellip;)</i>, the
+receiver object is the result of the expression <i>E</i>.
+
+</li><li>
+For all other expressions occurring in the declaration of an instance
+method or constructor (including the specification),
+or in an instance invariant or instance history constraint,
+the receiver object is <code>this</code>.
+
+</li><li>
+For all other expressions in the declaration of a static method, there
+is no receiver object.  In this case, the ownership modifier specifies
+ownership relative to the current ownership context, as explained below.
+</li></ul>
+
+<a name="IDX2455"></a>
+<a name="IDX2456"></a>
+<p>A <code>rep</code> modifier says that the referenced object
+is owned by the receiver object. 
+Thus if <code>myList</code> has a field <code>head</code> of type <code>rep Node</code>,
+then <code>myList.head</code> is owned by <code>myList</code>,
+because <code>myList</code> is the receiver.
+If <code>n</code> is a local variable of type <code>rep Node</code> in an instance
+method, then <code>n</code> is owned by <code>this</code>.
+(Formal parameters are treated in exactly the same way as local
+variables.)
+</p>
+<a name="IDX2457"></a>
+<p>Since the meaning of the <code>rep</code> modifier depends on the existence
+of a receiver object, it cannot be used in static
+declarations where there is no receiver object.
+Hence, a <code>rep</code> modifier cannot be used in a static field
+declaration.  It also cannot be used in the declaration of a static method or
+in its specification.  Furthermore, it cannot be used in static
+invariants or static history constraints.
+</p>
+<a name="IDX2458"></a>
+<a name="IDX2459"></a>
+<a name="IDX2460"></a>
+<p>A <code>peer</code>
+modifier says that the referenced object has the same
+owner as the receiver object. 
+Thus if <code>myNode</code> has a field <code>next</code> of type <code>peer Node</code>,
+then <code>myNode.next</code> is owned by the owner of <code>myNode</code>,
+because <code>myNode</code> is the receiver.
+If <code>n</code> is a local variable of type <code>peer Node</code> in an instance
+method, then <code>n</code> is owned by the owner of <code>this</code>.
+</p>
+<p>The <code>peer</code> modifier can be used in all declarations, even in
+static declarations.
+Currently, a <code>peer</code> modifier in a static field declaration leads
+to type unsafety and should therefore not be used.  (The tools give a
+warning in this situation, and a safe semantics is a subject of
+current research.)
+The same remark applies to static invariants and static history constraints.
+</p>
+<a name="IDX2461"></a>
+<p>When used in a static method or its specification, <code>peer</code> refers
+to the current ownership context.
+The <em>current ownership context</em> for a method execution
+is defined as follows.
+For executions of instance methods the current ownership context is the
+one containing the <code>this</code> object.
+For executions of static methods, the current ownership context is
+determined by the current ownership context of the caller and the
+ownership modifier (<code>rep</code> or <code>peer</code>) used in the call as follows:
+</p><ul>
+<li>
+If the call has the form
+<code>peer</code> <i>T</i><code>.</code><i>m</i><code>(&hellip;)</code>,
+then <i>m</i> executes in the same ownership context as the code making
+the call (and hence in the current ownership context of the caller).
+
+</li><li>
+If the call has the form
+<code>rep</code> <i>T</i><code>.</code><i>m</i><code>(&hellip;)</code>,
+then <i>m</i> executes in the ownership context owned by the caller's
+<code>this</code> object; hence this form
+of static method call cannot be used in static declarations.
+</li></ul>
+
+<p>For example, if <code>p</code> is a local variable of type <code>peer Node</code>
+in a static method, then <code>p</code> is in the current ownership
+context, because there is no receiver object.
+</p>
+<p>See section <a href="#SEC207">Ownership Modifiers for Array Types</a>, for the usage of these
+modifiers with array types.
+</p>
+<hr size="6">
+<a name="Readonly"></a>
+<a name="SEC206"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC205" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC207" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 18.3 Readonly </h2>
+
+<p>The <code>readonly</code> (or <code>\readonly</code>) modifier does not specify an
+ownership context. 
+Therefore, following the owner-as-modifier property, references
+specified with the <code>readonly</code> modifier cannot be used to modify
+the referenced object.  (Note that this does not guarantee that the
+object referenced cannot change, only that it cannot be changed using
+this reference.)
+</p>
+<p>A readonly type thus cannot be used as the type of the receiver
+expression of: a field update, a call to a non-<code>pure</code> instance method
+(See section <a href="jmlrefman_7.html#SEC57">Pure Methods and Constructors</a>, for more about pure methods.),
+or a call to a static method.
+In more detail, the cases are:
+</p><ul>
+<li>
+A field update in general might change the value of the field and
+always needs to be forbidden on a readonly receiver.
+
+</li><li>
+A (strictly) <code>pure</code> instance method call is guaranteed to
+preserve the owner-as-modifier property and is therefore allowed
+on a readonly receiver.
+
+</li><li>
+A non-<code>pure</code> instance method call might change the receiver or objects reachable from
+it and needs to be forbidden.
+
+</li><li>
+A static method can create new peer objects and therefore a specific current ownership context
+needs to be provided when a static method is called. Only <code>peer</code> and <code>rep</code> determine
+a current ownership context and therefore <code>readonly</code> is forbidden as the receiver type
+of a static method call.
+</li></ul>
+
+
+
+<hr size="6">
+<a name="Ownership-Modifiers-for-Array-Types"></a>
+<a name="SEC207"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC206" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC208" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 18.4 Ownership Modifiers for Array Types </h2>
+
+<p>An array of reference types always has two ownership modifiers, the
+first for the array object itself and the second for the elements.
+Both modifiers express ownership relative to the receiver object and both
+modifiers can be any of the <var>ownership-modifier</var>s.
+For example, the type <code>rep readonly Object[]</code>
+says that the array object itself is owned by the receiver object,
+but the elements are readonly (and hence may belong to an arbitrary
+ownership context).
+A <code>peer rep Object[]</code> type says that the array object has the same
+owner as the receiver object and that the array elements are owned by the
+receiver object.
+</p>
+<p>All array objects in a multidimensional array of a reference type are in the
+same context, which is determined by the first ownership modifier.
+For example, if an instance field, <code>f</code>, has type <code>rep peer Object[][]</code>,
+then <code>f</code> and <code>f[3]</code> are both owned by the receiver and
+<code>f[3][1]</code> has the same owner as the receiver object.
+</p>
+
+<p>For one-dimensional arrays of primitive types, the second ownership modifier is
+omitted. Primitive types are not owned and do not take an ownership modifier.
+A one-dimensional array of primitive types is one object that needs to specify
+ownership information.
+For example, the type <code>readonly int[]</code> says that the array object
+can belong to any context, but cannot be modified through this reference.
+A <code>rep int[]</code> references an array object that is owned by the receiver object
+and that manages <code>int</code> values.
+</p>
+<p>Multi-dimensional arrays of primitive types have two ownership modifiers, the first
+for the array object itself and the second for the one-dimensional array at
+the &ldquo;lowest&rdquo; level.
+All array objects in a multidimensional array are in the same context,
+which is determined by the first ownership modifier.
+</p>
+<p>For example, if an instance field, <code>g</code>, has type <code>rep peer int[][][]</code>,
+then:
+</p><ul>
+<li>
+<code>g</code> references a <code>rep peer int[][][]</code> array object that is
+owned by the receiver and the array manages <code>rep peer int[][]</code> references.
+
+</li><li>
+<code>g[3]</code> references a <code>rep peer int[][]</code> array object that is
+owned by the receiver and the array manages <code>peer int[]</code> references.
+
+</li><li>
+<code>g[3][1]</code> references a <code>peer int[]</code> array object that has
+the same owner as the receiver and the array manages <code>int</code>
+values.
+
+</li><li>
+<code>g[3][1][0]</code> is an <code>int</code> value.
+</li></ul>
+
+<p>Note how the first modifier changes when going from a two- or
+more-dimensional array of a primitive type to a one-dimensional array
+of a primitive type.
+</p>
+<p>Also note that <code>java.lang.Object</code> is a supertype of arrays, in
+particular also of arrays of primitive type.
+A <code>peer int[]</code> can be assigned to a <code>peer Object</code>
+reference. Then a <code>rep peer Object[][]</code> type behaves consistently
+with the <code>rep peer int[][][]</code> type.
+</p>
+
+<p>Following the convention in Java, array types support covariant
+subtyping that needs runtime checks on write accesses.
+For example, a <code>peer rep Object[]</code> is a subtype
+of a <code>peer readonly Object[]</code> and when an element is inserted it
+needs to be checked that it is owned by the receiver object.
+</p>
+
+<hr size="6">
+<a name="Default-Ownership-Modifiers"></a>
+<a name="SEC208"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC207" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC209" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 18.5 Default Ownership Modifiers </h2>
+
+<p>If the <var>ownership-modifiers</var> are omitted in a <var>type-spec</var>,
+then a default is used.  This default is normally <code>peer</code>, but
+there are a few exceptions, described below.
+</p>
+<ul>
+<li>
+The ownership modifier of immutable types defaults to <code>readonly</code>.
+Currently, the set of immutable types only includes the Java wrapper
+types for primitive types (e.g. <code>java.lang.Integer</code> and
+<code>java.lang.Long</code>), <code>java.lang.String</code>, <code>java.lang.Class</code>,
+and <code>java.math.BigInteger</code>.
+
+</li><li>
+The ownership modifiers of local variable declarations are propagated
+from the initializer expression.
+If no initializer is present, the other defaults are applied.
+
+</li><li>
+The ownership modifiers of field declarations are propagated from the
+initializer expression.
+If no initializer is present, the other defaults are applied.
+If a field type was already used to determine the ownership modifier of
+some other field, i.e. it was used in the initializer expression of some
+other field, then the type cannot be changed any more and the other
+defaults are used.
+
+</li><li>
+<a name="IDX2462"></a>
+The default modifier for explicit formal parameters to a <code>pure</code>
+method (but not for the receiver, <code>this</code>) is
+<code>readonly</code>.
+(Note that this is not the case for pure constructors, however.)
+
+
+
+</li><li>
+<a name="IDX2463"></a>
+The default ownership modifier for a type in the <code>throws</code> clause
+of a method header, and in the declaration of a <code>catch</code> clause of
+a <code>try</code> statement is <code>readonly</code> [Dietl-Mueller04].
+
+</li><li>
+<a name="IDX2464"></a>
+If, for a type that is an array of references,
+one of the two ownership modifiers is omitted,
+then the element type is used to determine the meaning of the ownership
+modifier.
+If the element type is a mutable type, then
+the specified modifier is taken to be the element modifier, and
+the array's modifier defaults to <code>peer</code>.
+If the element type is an immutable type, then
+the specified modifier is taken to be the array modifier, and
+the element modifier defaults to <code>readonly</code>.
+
+<p>For example, the type <code>readonly Object[]</code> is the same as
+<code>peer readonly Object[]</code>.
+A type <code>rep Integer[]</code> is the same as <code>rep readonly Integer[]</code>.
+Note that if one wants to specify a <code>rep</code> or <code>readonly</code> array
+of mutable references, one is thus forced to use two ownership modifiers;
+for example, <code>rep readonly Object[]</code>.
+</p>
+<p>One-dimensional arrays of primitive types default to <code>peer</code>.
+For multi-dimensional arrays of primitive types there is no
+distinction between immutable and mutable types and a single
+ownership modifier is always taken to be the element modifier.
+</p>
+</li><li>
+<a name="IDX2465"></a>
+In a cast expression of the form <code>(</code><i>T</i><code>)</code><i>E</i>,
+where <i>T</i> is a reference type that is not an array type,
+the default ownership modifier of <i>T</i> is the ownership modifier of
+the type of <i>E</i>; in this case, if the type of <i>E</i> is an array
+type, this is the ownership modifier of the array object itself, not
+the ownership modifier of the elements.
+
+<p>In a cast expression of the form <code>(</code><i>T</i><code>)</code><i>E</i>,
+where <i>T</i> is an array type,
+the default ownership modifiers of <i>T</i> are the same as the ownership
+modifiers of the type of <i>E</i>.
+</p>
+<p>In a cast expression of the form <code>(</code><i>T</i><code>)</code><i>E</i>,
+where <i>T</i> is a primitive value type, there is no ownership
+modifier attached to <i>T</i>.
+</p>
+</li><li>
+<a name="IDX2466"></a>
+In an <code>instanceof</code> expression of the form <i>E</i> <code>instanceof</code> <i>T</i>,
+where <i>T</i> is a reference type that is not an array type,
+the default ownership modifier of <i>T</i> is the ownership modifier of
+the type of <i>E</i>; in this case, if the type of <i>E</i> is an array
+type, this is the ownership modifier of the array object itself, not
+the ownership modifier of the elements.
+
+<p>In an <code>instanceof</code> expression of the form <i>E</i> <code>instanceof</code> <i>T</i>,
+where <i>T</i> is an array type,
+the default ownership modifiers of <i>T</i> are the same as the ownership
+modifiers of the type of <i>E</i>.
+</p></li></ul>
+
+<a name="IDX2467"></a>
+<a name="IDX2468"></a>
+<p>The defaults for casts and instanceof expressions allow one to only
+test for Java types, if the ownership modifiers are omitted
+[Dietl-Mueller05].
+See section <a href="#SEC212">Casts and Ownership Types</a>, for more details on these
+expressions and their interaction with the Universe type system.
+</p>
+
+
+<hr size="6">
+<a name="Ownership-Type-Rules"></a>
+<a name="SEC209"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC208" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC210" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 18.6 Ownership Type Rules </h2>
+
+<p>This section explains details of how the Universe type system does
+type checking.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC210">18.6.1 Ownership Subtyping</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC211">18.6.2 Ownership Typing for Expressions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Ownership-Subtyping"></a>
+<a name="SEC210"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC209" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC211" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC209" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 18.6.1 Ownership Subtyping </h3>
+
+<p>Type checking in the Universe type system uses a notion of subtyping
+that extends Java's rules to take <var>ownership-modifiers</var> into
+account (see section 3 of [Dietl-Mueller05]).
+</p>
+<p>If two types have the same ownership modifiers,
+then they are subtypes if the underlying Java types are subtypes.
+For example, <code>rep Stack</code> is a subtype of <code>rep Object</code>,
+because <code>Stack</code> is a subtype of <code>Object</code>.
+</p>
+<p>If <i>S</i> is a reference type, then both <code>peer</code> <i>S</i> and <code>rep</code>
+<i>S</i> are subtypes of the type <code>readonly</code> <i>S</i>. Moreover, both
+<code>peer</code> <i>om</i> <i>S</i><code>[]</code> and <code>rep</code> <i>om</i> <i>S</i><code>[]</code>
+are subtypes of the type <code>readonly</code> <i>om</i> <i>S</i><code>[]</code>, where
+<i>om</i> is any ownership modifier. For instance, <code>peer peer
+Natural[]</code> is a subtype of <code>readonly peer Natural[]</code>.
+</p>
+<p>The types <code>peer</code> <i>S</i> and <code>rep</code> <i>S</i> as well as the array
+types <code>peer</code> <i>om</i> <i>S</i><code>[]</code> and <code>rep</code> <i>om</i>
+<i>S</i><code>[]</code> are incomparable&mdash;neither is a subtype of the other. 
+</p>
+<a name="IDX2469"></a>
+<a name="IDX2470"></a>
+<a name="IDX2471"></a>
+<p>Like Java, the Universe type system has covariant array subtyping:
+&ldquo;two array types
+with the same ownership modifier are subtypes if their element types
+are subtypes. &hellip;
+For instance, <code>rep peer Object[]</code> is a subtype of
+<code>rep readonly Object[]</code>
+because the element type <code>peer Object</code> is a subtype of the element type
+<code>readonly Object</code>&rdquo; (Section 3 of [Dietl-Mueller05]).
+</p>
+<hr size="6">
+<a name="Ownership-Typing-for-Expressions"></a>
+<a name="SEC211"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC210" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC212" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC209" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 18.6.2 Ownership Typing for Expressions </h3>
+
+<p>Most of the typing rules for the Universe type system are unchanged
+from standard Java (and JML) rules.
+For example, to type check an assignment expression, one checks that
+the type of the right hand side expression is a subtype of the type of
+the left hand side.
+</p>
+<a name="IDX2472"></a>
+<p>A small, but important change, is that
+the type given in a <code>new</code> expression must be a <code>rep</code> or
+<code>peer</code> type.  The result type of the <code>new</code> expression has
+the given ownership modifier.
+</p>
+<a name="IDX2473"></a>
+<a name="IDX2474"></a>
+<a name="IDX2475"></a>
+<p>The main difference is that the type of field accesses, method
+parameters, and method results is determined by combining the type of
+the receiver, <i>R</i>, and the type of the field, the return type of the method, or the type of the formal parameter, <i>F</i>.
+The Java type is taken from the type <i>F</i>, and the modifier is
+determined by the following cases (see Section 3 of [Dietl-Mueller05]):
+</p><ol>
+<li>
+If both <i>R</i> and <i>F</i> are <code>peer</code> types, then the combination is
+also a <code>peer</code> type.
+For example, if <code>myList</code> has type <code>peer List</code> and the field
+<code>head</code> has type <code>peer Node</code>, then <code>myList.head</code> has
+type <code>peer Node</code>.
+
+</li><li>
+If the receiver is <code>this</code> and <i>F</i> is a <code>rep</code> type,
+then the combination is a <code>rep</code> type.
+For example, if a <code>Set</code> class has
+an instance field <code>elems</code> of type <code>rep List</code>,
+then in its instance methods, <code>this.elems</code> has type <code>rep List</code>.
+
+</li><li>
+If <i>R</i> is a <code>rep</code> type and <i>F</i> is a <code>peer</code> type,
+then the combination is a <code>rep</code> type.
+For example, <code>(this.elems).head</code> has type <code>rep Node</code>,
+because the receiver <code>this.elems</code> has type <code>rep List</code>,
+and the type of field <code>head</code> is <code>peer Node</code>.
+
+</li><li>
+Otherwise, the combination is a <code>readonly</code> type.
+For example, if <code>e</code> has type <code>readonly List</code>, then
+<code>e.head</code> has type <code>readonly Node</code>.
+</li></ol>
+
+<p>One can also illustrate these rules using method calls.
+For example, consider a method <code>lastNode</code> with the following signature.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">   public peer Node lastNode()
+</pre></td></tr></table>
+<p>In this example, if <code>elems</code> has type <code>rep List</code>,
+then a call such as <code>elems.lastNode()</code> has type <code>rep Node</code>
+(by case 3).
+</p>
+<p>As another example, consider a method <code>addNode</code> with the
+following signature. 
+</p><table><tr><td>&nbsp;</td><td><pre class="example">   public void addNode(peer Node n)
+</pre></td></tr></table>
+<p>Still assuming that <code>elems</code> has type <code>rep List</code>,
+a call such as <code>elems.addNode(p)</code>, requires that <code>p</code> has
+type <code>rep Node</code>
+(also by case 3),
+because the argument, <code>p</code>, has to have the same owner as the
+receiver of call, <code>elems</code>, namely <code>this</code>.
+</p>
+<p>The rules are analogous for arrays.
+For example, suppose that an instance field <code>a</code> has type
+<code>rep readonly Object[]</code>. 
+Then the expression <code>this.a</code> has the same type,
+<code>rep readonly Object[]</code> (by case 2).
+Similarly, if <code>r</code> has a <code>readonly</code> type,
+then <code>r.a</code> would have type 
+<code>readonly readonly Object[]</code> (by case 4).
+</p>
+<p>Finally, consider a static method that returns a <code>peer</code> object, such as
+the following, in a class <code>Cache</code>.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">   public static peer int[] getInstance()
+</pre></td></tr></table>
+<p>A call such as <code>peer Cache.getInstance()</code> has type
+<code>peer int[]</code>
+(by case 1).
+</p>
+<hr size="6">
+<a name="Casts-and-Ownership-Types"></a>
+<a name="SEC212"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC211" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC203" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 18.7 Casts and Ownership Types </h2>
+
+<p>Since <code>readonly</code> types are supertypes of the corresponding
+<code>rep</code> and <code>peer</code> types, it is possible to do a downcast.
+Such a downcast will succeed when the object is in the context
+specified by the peer or rep type.
+For example, suppose <code>ro</code> has type <code>readonly List</code>.
+Then the cast <code>(rep List) ro</code> will succeed only if the
+object referenced by <code>ro</code> is owned by <code>this</code>.
+The cast <code>(peer List) ro</code> will succeed only if the
+object referenced by <code>ro</code> is owned by the owner of <code>this</code>.
+</p>
+<a name="IDX2476"></a>
+<p>Instanceof expressions of the form <i>E</i> <code>instanceof</code> <i>T</i>
+yield true when the value of <i>E</i> is not <code>null</code>
+and the corresponding cast would succeed.
+For example, suppose <code>ro</code> has type <code>readonly List</code>.
+Then <code>ro instanceof rep List</code> yields true only if
+<code>ro</code> references an object that is owned by <code>this</code>.
+</p>
+<p>Both casts and instanceof expressions have runtime overhead, in
+general.  (Furthermore, as in Java, array updates also generate
+runtime checks.)
+</p>
+<p>See [Dietl-Drossopoulou-Mueller07] [Dietl-Mueller-Schregenberger08] for
+a complete list of the Universe type system rules and the different
+supported compiler options.
+</p>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC203" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_19.html#SEC213" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

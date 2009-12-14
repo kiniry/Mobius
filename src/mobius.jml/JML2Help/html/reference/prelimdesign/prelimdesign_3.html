@@ -1,0 +1,625 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>Preliminary Design of JML: 3. Extensions to Java Expressions</title>
+
+<meta name="description" content="Preliminary Design of JML: 3. Extensions to Java Expressions">
+<meta name="keywords" content="Preliminary Design of JML: 3. Extensions to Java Expressions">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Extensions-to-Java-Expressions"></a>
+<a name="SEC49"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC48" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC50" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign_2.html#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_4.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 3. Extensions to Java Expressions </h1>
+
+<p>JML makes extensions to the Java expression syntax for two purposes.
+The main set of extensions are used in predicates.
+But there are also some extensions used in
+<var>store-ref</var>s, which are themselves used in the <code>assignable</code>
+and <code>represents</code> clauses.
+</p>
+<p>We give an overview of these extensions in this section.  However, we
+only describe the most important and useful extensions here.
+See the <cite>JML Reference Manual</cite> [Leavens-etal-JMLRef]
+for more extensions and for more detail.
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC50">3.1 Extensions to Java Expressions for Predicates</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC51">3.2 Extensions to Java Expressions for Store-Refs</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Extensions-to-Java-Expressions-for-Predicates"></a>
+<a name="SEC50"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC49" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC51" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC49" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC49" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_4.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 3.1 Extensions to Java Expressions for Predicates </h2>
+
+<p>The expressions that can be used as predicates in JML are an extension
+to the side-effect free Java expressions.
+Since predicates are required to be side-effect free,
+the following Java operators are <em>not</em> allowed within predicates:
+</p><ul>
+<li>
+<a name="IDX425"></a>
+<a name="IDX426"></a>
+<a name="IDX427"></a>
+<a name="IDX428"></a>
+assignment (<code>=</code>),
+and the various assignment operators (such as <code>+=</code>, <code>-=</code>, etc.)
+
+</li><li>
+<a name="IDX429"></a>
+<a name="IDX430"></a>
+all forms of increment and decrement operators
+(<code>++</code> and <code>--</code>),
+
+</li><li>
+calls to methods that are not pure, and
+
+</li><li>
+<a name="IDX431"></a>
+any use of operator <code>new</code> that would call a constructor that is not pure.
+</li></ul>
+
+<a name="IDX432"></a>
+<p>Furthermore, within method specifications that are not model programs,
+one cannot use <code>super</code> to call a pure superclass method,
+because it is confusing in combination with JML's specification inheritance.<a name="DOCF26" href="prelimdesign_fot.html#FOOT26">(26)</a>
+</p>
+<p>We allow the allocation of storage (e.g., using operator <code>new</code>
+and pure constructors)
+in predicates, because such storage
+can never be referred to after the evaluation of the predicate,
+and because such pure constructors have no side-effects other than initializing
+the new objects so created.
+</p>
+<p>JML adds the following new syntax to the Java expression syntax,
+for use in predicates
+(see the <cite>JML Reference Manual</cite> [Leavens-etal-JMLRef]
+for syntactic details such as precedence):
+</p><ul>
+<li>
+<a name="IDX433"></a>
+<a name="IDX434"></a>
+<a name="IDX435"></a>
+Informal descriptions, which look like
+
+<table><tr><td>&nbsp;</td><td><pre class="example">        (* some text describing a Boolean-valued predicate *)
+</pre></td></tr></table>
+
+<p>have type <code>boolean</code>.
+Their meaning is either <code>true</code> or <code>false</code>,
+but is entirely determined by the reader.
+Since informal descriptions are not-executable, they may be treated
+differently by different tools in different situations.
+</p>
+</li><li>
+<a name="IDX436"></a>
+<a name="IDX437"></a>
+<a name="IDX438"></a>
+<a name="IDX439"></a>
+<a name="IDX440"></a>
+<code>==&gt;</code> and <code>&lt;==</code> for logical implication and reverse implication.
+For example, the formula <code>raining ==&gt; getsWet</code> is true if either
+<code>raining</code> is false or <code>getsWet</code> is true.
+The formula <code>getsWet &lt;== raining</code> means the same thing.
+The <code>==&gt;</code> operator associates to the right, but
+the <code>&lt;==</code> operator associates to the left.
+The expressions on both sides of these operators must be of type
+<code>boolean</code>, and the type of the result is also <code>boolean</code>.
+
+</li><li>
+<a name="IDX441"></a>
+<a name="IDX442"></a>
+<a name="IDX443"></a>
+<a name="IDX444"></a>
+<a name="IDX445"></a>
+<a name="IDX446"></a>
+<a name="IDX447"></a>
+<a name="IDX448"></a>
+<a name="IDX449"></a>
+<code>&lt;==&gt;</code> and <code>&lt;=!=&gt;</code> for logical equivalence
+and logical inequivalence, respectively.
+The expressions on either side of these operators must be of type
+<code>boolean</code>, and the type of the result is also <code>boolean</code>.
+Note that <code>&lt;==&gt;</code> means the same thing as <code>==</code>
+for expressions of type <code>boolean</code>,
+and <code>&lt;=!=&gt;</code> means the same thing as <code>!=</code> for boolean expressions;
+however, <code>&lt;==&gt;</code> and <code>&lt;=!=&gt;</code> have a much lower precedence,
+and are also associative and symmetric.
+
+</li><li>
+<a name="IDX450"></a>
+<a name="IDX451"></a>
+<a name="IDX452"></a>
+<a name="IDX453"></a>
+<a name="IDX454"></a>
+<code>\forall</code> and <code>\exists</code>,
+which are universal and existential quantifiers (respectively);
+for example,
+
+<table><tr><td>&nbsp;</td><td><pre class="example">  (\forall int i,j; 0 &lt;= i &amp;&amp; i &lt; j &amp;&amp; j &lt; 10; a[i] &lt; a[j])
+</pre></td></tr></table>
+
+<p>says that <code>a</code> is sorted at indexes between 0 and 9.
+<a name="IDX455"></a>
+<a name="IDX456"></a>
+<a name="IDX457"></a>
+The quantifiers range over all potential values of the variables declared
+which satisfy the <em>range</em> predicate, given between the semicolons
+(<code>;</code>).  If the range predicate is omitted, it defaults to <code>true</code>.
+Since a quantifier quantifies over all potential values of the
+variables,
+when the variables declared are reference types,
+they may be null, or may refer to objects not constructed by the program;
+one should use a range predicate to eliminate such cases
+if they are not desired.
+The type of a universal and existential quantifier is <code>boolean</code>.
+</p>
+</li><li>
+<a name="IDX458"></a>
+<a name="IDX459"></a>
+<a name="IDX460"></a>
+<a name="IDX461"></a>
+<a name="IDX462"></a>
+<a name="IDX463"></a>
+<a name="IDX464"></a>
+<a name="IDX465"></a>
+<a name="IDX466"></a>
+<a name="IDX467"></a>
+<a name="IDX468"></a>
+<a name="IDX469"></a>
+<a name="IDX470"></a>
+<a name="IDX471"></a>
+<a name="IDX472"></a>
+<a name="IDX473"></a>
+<a name="IDX474"></a>
+<a name="IDX475"></a>
+<a name="IDX476"></a>
+<code>\max</code>, <code>\min</code>, <code>\product</code>, and <code>\sum</code>,
+which are generalized quantifiers that return the maximum, minimum,
+product, or sum of the values of the expressions given,
+where the variables satisfy the given range.
+The range predicate must be of type <code>boolean</code>.
+The expression in the body must be a built-in numeric type,
+such as <code>int</code> or <code>double</code>; the type of the quantified expression
+as a whole is the type of its body.
+The <em>body</em> of a quantified expression is the last top-level expression
+it contains; it is the expression following the range predicate,
+if there is one.
+As with the universal and existential quantifiers, 
+if the range predicate is omitted, it defaults to <code>true</code>.
+For example, the following equations are all true (see chapter 3 of [Cohen90]):
+<table><tr><td>&nbsp;</td><td><pre class="example">  (\sum int i; 0 &lt;= i &amp;&amp; i &lt; 5; i) == 0 + 1 + 2 + 3 + 4
+  (\product int i; 0 &lt; i &amp;&amp; i &lt; 5; i) == 1 * 2 * 3 * 4
+  (\max int i; 0 &lt;= i &amp;&amp; i &lt; 5; i) == 4
+  (\min int i; 0 &lt;= i &amp;&amp; i &lt; 5; i-1) == -1
+</pre></td></tr></table>
+
+<p>For computing the value of a sum or product, Java's arithmetic is used.
+The meaning thus depends on the type of the expression.  For example,
+in Java, floating point numbers use the IEEE 754 standard,
+and thus when an overflow occurs, the appropriate positive or negative
+infinity is returned.  However, Java integers wrap on overflow.
+Consider the following examples.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  (\product float f; 1.0e30f &lt; f &amp;&amp; f &lt; 1.0e38f; f)
+    == Float.POSITIVE_INFINITY
+
+  (\sum int i; i == Integer.MAX_VALUE || i == 1; i)
+    == Integer.MAX_VALUE + 1
+    == Integer.MIN_VALUE
+</pre></td></tr></table>
+
+
+<a name="IDX477"></a>
+<a name="IDX478"></a>
+<p>When the range predicate is not satisfiable,
+the sum is 0 and the product is 1; for example:
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  (\sum int i; false; i) == 0
+  (\product double d; false; d*d) == 1.0
+</pre></td></tr></table>
+
+<p>When the range predicate is not satisfiable for <code>\max</code>
+the result is the smallest number with the type of the expression in the body;
+for floating point numbers, negative infinity is used.
+Similarly, when the range predicate is not satisfiable for <code>\min</code>,
+the result is the largest number with the type of the expression in the body.
+</p>
+</li><li>
+<a name="IDX479"></a>
+<a name="IDX480"></a>
+<a name="IDX481"></a>
+<code>\num_of</code>, which is &ldquo;numerical quantifier.&rdquo; It returns the number
+of values for its variables for which the range and the expression in its
+body are true.  Both the range predicate and the body must have type <code>boolean</code>, and the entire quantified expression has type <code>long</code>.
+The meaning of this quantifier is defined by the following equation
+(see p. 57 of [Cohen90]).
+
+<table><tr><td>&nbsp;</td><td><pre class="example">  (\num_of T x; R(x); P(x)) == (\sum T x; R(x) &amp;&amp; P(x); 1L)
+</pre></td></tr></table>
+
+</li><li>
+<a name="IDX482"></a>
+<a name="IDX483"></a>
+<a name="IDX484"></a>
+<a name="IDX485"></a>
+<a name="IDX486"></a>
+<a name="IDX487"></a>
+Set comprehensions, which can be used to succinctly define sets;
+for example, the following is the <code>JMLObjectSet</code>
+that is the subset of non-null <code>Integer</code> objects
+found in the set <code>myIntSet</code>
+whose values are between 0 and 10, inclusive.
+
+<table><tr><td>&nbsp;</td><td><pre class="example">  new JMLObjectSet {Integer i | myIntSet.has(i)
+                                &amp;&amp; i != null &amp;&amp; 0 &lt;= i.getInteger()
+                                &amp;&amp; i.getInteger() &lt;= 10 }
+</pre></td></tr></table>
+
+<p>The syntax of JML 
+(see the <cite>JML Reference Manual</cite> [Leavens-etal-JMLRef] for details)
+limits set comprehensions so that following
+the vertical bar (`<code>|</code>') is always an invocation of the <code>has</code>
+method of some set on the variable declared.
+<a name="IDX488"></a>
+<a name="IDX489"></a>
+<a name="IDX490"></a>
+(This restriction is used to avoid Russell's paradox
+[Whitehead-Russell25].)
+In practice, one either starts from some relevant set at hand,
+or one can start from the sets containing the objects of primitive types
+found in <code>org.jmlspecs.models.JMLModelObjectSet</code>
+and (in the same Java package) <code>JMLModelValueSet</code>.
+The type of such an expression is the type named following
+<code>new</code>, which must be <code>JMLObjectSet</code> or <code>JMLValueSet</code>.
+</p>
+</li><li>
+<a name="IDX491"></a>
+<a name="IDX492"></a>
+<code>\elemtype</code>, which returns the most-specific static type
+shared by all elements of its array argument [Leino-Nelson-Saxe00].
+For example, <code>\elemtype(\type(int[]))</code> is <code>\type(int)</code>.
+The argument to <code>\elemtype</code> must be an expression of type
+<code>\TYPE</code>, which JML considers to be the same as <code>java.lang.Class</code>,
+and its result also has type <code>\TYPE</code>.  If the argument is not an
+array type, the result is <code>null</code>.
+
+</li><li>
+<a name="IDX493"></a>
+<a name="IDX494"></a>
+<code>\fresh</code>, which asserts that objects were freshly allocated;
+for example, <code>\fresh(x,y)</code> asserts that
+<code>x</code> and <code>y</code> are not null
+and that the objects bound to these identifiers
+were not allocated in the pre-state.
+The arguments to <code>\fresh</code> can have any reference type,
+and the type of the overall expression is <code>boolean</code>.<a name="DOCF27" href="prelimdesign_fot.html#FOOT27">(27)</a>
+
+</li><li>
+<a name="IDX495"></a>
+<a name="IDX496"></a>
+<a name="IDX497"></a>
+<code>\nonnullelements</code>,
+which can be used to assert that an array and its elements are all non-null.
+For example, <code>\nonnullelements(myArray)</code>, is equivalent to
+[Leino-Nelson-Saxe00]
+
+<table><tr><td>&nbsp;</td><td><pre class="example">  myArray != null &amp;&amp;
+  (\forall int i; 0 &lt;= i &amp;&amp; i &lt; myArray.length;
+                  myArray[i] != null)
+</pre></td></tr></table>
+
+</li><li>
+<a name="IDX498"></a>
+<a name="IDX499"></a>
+<code>\old</code>, which can be used to refer to values in the pre-state;
+e.g., <code>\old(myPoint.x)</code> is the value of the <code>x</code>
+field of the object <code>myPoint</code> in the pre-state.
+The type of such an expression is the type of the expression it
+contains;
+for example the type of <code>\old(myPoint.x)</code>
+is the type of <code>myPoint.x</code>.
+The keyword <code>\old</code>
+can only be used in an <var>ensures-clause</var>, a <var>signals-clause</var>,
+or a <var>history-constraint</var>;
+it cannot be used, for example, in preconditions.
+
+</li><li>
+<a name="IDX500"></a>
+<a name="IDX501"></a>
+<a name="IDX502"></a>
+<code>\result</code>, which, in an <code>ensures</code> clause
+is the value or object that is being returned by a method.
+Its type is the return type of the method; hence it is a type error to
+use <code>\result</code> in a void method or in a constructor.
+The keyword <code>\result</code> can only be used in an <var>ensures-clause</var>;
+it cannot be used, for example, in preconditions or in signals clauses.
+
+</li><li>
+<a name="IDX503"></a>
+<a name="IDX504"></a>
+<a name="IDX505"></a>
+<code>\typeof</code>, which returns the most-specific dynamic type of an
+expression's value [Leino-Nelson-Saxe00].
+The meaning of <code>\typeof(</code><i>E</i><code>)</code> is unspecified if <i>E</i> is null.
+If <i>E</i> has a static type that is a reference type,
+then <code>\typeof(</code><i>E</i><code>)</code> means the same thing as
+<i>E</i><code>.getClass()</code>.
+For example, if <code>c</code> is a variable of static type
+<code>Collection</code> that holds an object of class <code>HashSet</code>,
+then <code>\typeof(c)</code> is <code>HashSet.class</code>, which is the same
+thing as <code>\type(HashSet)</code>.
+If <i>E</i> has a static type that is not a reference type,
+then <code>\typeof(</code><i>E</i><code>)</code> means the instance of <code>java.lang.Class</code>
+that represents its static type.
+For example, <code>\typeof(true)</code> is <code>Boolean.TYPE</code>, which is the
+same as <code>\type(boolean)</code>.
+Thus an expression of the form <code>\typeof(</code><i>E</i><code>)</code> has
+type <code>\TYPE</code>, which JML considers to be the same as
+<code>java.lang.Class</code>.
+
+</li><li>
+<a name="IDX506"></a>
+<a name="IDX507"></a>
+<a name="IDX508"></a>
+<a name="IDX509"></a>
+<code>&lt;:</code>, which compares two reference types and returns true
+when the type on the left is a subtype of the type on the right
+[Leino-Nelson-Saxe00].
+Although the notation might suggest otherwise,
+this operator is also reflexive;
+a type will compare as <code>&lt;:</code> with itself.
+In an expression of the form <i>E1</i> <code>&lt;:</code> <i>E2</i>,
+both <i>E1</i> and <i>E2</i> must have type <code>\TYPE</code>;
+since in JML <code>\TYPE</code> is the same as <code>java.lang.Class</code>
+the expression <i>E1</i> <code>&lt;:</code> <i>E2</i> means the same thing as the expression
+<i>E2</i><code>.isAssignableFrom(</code><i>E1</i><code>)</code>.
+
+</li><li>
+<a name="IDX510"></a>
+<a name="IDX511"></a>
+<a name="IDX512"></a>
+<a name="IDX513"></a>
+<code>\type</code>, which can be used to mark types in expressions.
+An expression of the form <code>\type(T)</code> has the type <code>\TYPE</code>.
+Since in JML <code>\TYPE</code> is the same as <code>java.lang.Class</code>,
+an expression of the form <code>\type(</code><i>T</i><code>)</code>
+means the same thing as <i>T</i><code>.class</code>.
+For example, in
+
+<table><tr><td>&nbsp;</td><td><pre class="example">   \typeof(myObj) &lt;: \type(PlusAccount)
+</pre></td></tr></table>
+
+<p>the use of <code>\type(PlusAccount)</code> is used to introduce 
+the type <code>PlusAccount</code> into this expression context.
+</p></li></ul>
+
+<a name="IDX514"></a>
+<a name="IDX515"></a>
+<a name="IDX516"></a>
+<a name="IDX517"></a>
+<p>To avoid referring to the value of uninitialized locations,
+a constructor's precondition can only refer
+to locations in the object being constructed that are not assignable.
+This allows a constructor to refer to instance fields
+of the object being constructed if they are not made assignable by the
+constructor's assignable clause, for example,
+if they are declared with initializers.
+In particular, the precondition of a constructor may not mention a
+&ldquo;blank final&rdquo; instance variable that it must assign.
+</p>
+<a name="IDX518"></a>
+<a name="IDX519"></a>
+<a name="IDX520"></a>
+<a name="IDX521"></a>
+<a name="IDX522"></a>
+<a name="IDX523"></a>
+<a name="IDX524"></a>
+<a name="IDX525"></a>
+<a name="IDX526"></a>
+<p>Since we are using Java expressions for predicates, there
+are some additional problems in mathematical modeling.
+We are excluding the possibility of side-effects by limiting the syntax
+of predicates, and by using type checking
+[Gifford-Lucassen86] [Lucassen87] [Lucassen-Gifford88]
+[Nielson-Nielson-Amtoft97] [Talpin-Jouvelot94] [Wright92]
+to make sure that only pure
+methods and constructors may be called in predicates.
+</p>
+<a name="IDX527"></a>
+<a name="IDX528"></a>
+<a name="IDX529"></a>
+<a name="IDX530"></a>
+<a name="IDX531"></a>
+<a name="IDX532"></a>
+<a name="IDX533"></a>
+<p>Exceptions in expressions are particularly important,
+since they may arise in type casts.
+JML deals with exceptions
+by having the evaluation
+of predicates substitute an arbitrary expressible value of the 
+normal result type when an exception is thrown during evaluation.
+When the expression's result type is a reference type,
+an implementation would have to return <code>null</code>
+if an exception is thrown while executing such a predicate.
+This corresponds to a mathematical model in which partial functions
+are mathematically modeled by underspecified total functions
+[Gries-Schneider95].
+However, tools sometimes only approximate this semantics.
+In tools, instead of fully catching exceptions for all subexpressions,
+many tools only catch exceptions for the smallest boolean-valued subexpression
+that may throw an exception (and for entire expressions used
+in JML's <var>measured-clause</var> and <var>variant-function</var>).
+</p>
+<p>JML will check that errors (i.e., exceptions that inherit from Error)
+are not explicitly thrown by pure methods.
+This means that they can be ignored during mathematical modeling.
+When executing predicates, errors will cause run-time errors.
+</p>
+<hr size="6">
+<a name="Extensions-to-Java-Expressions-for-Store_002dRefs"></a>
+<a name="SEC51"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC50" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_4.html#SEC52" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC49" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC49" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_4.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 3.2 Extensions to Java Expressions for Store-Refs </h2>
+
+<p>The grammatical production <var>store-ref</var>
+(see the <cite>JML Reference Manual</cite> [Leavens-etal-JMLRef] for the exact syntax)
+is used to name locations
+in the <code>assignable</code> and <code>represents</code> clauses. 
+A <var>store-ref</var> names a location, not an object;
+a location is either a field of an object, or an array element.
+Besides the Java syntax of names and field and array references,
+JML supports the following syntax for <var>store-ref</var>s.
+See the <cite>JML Reference Manual</cite> [Leavens-etal-JMLRef] for more
+details on the syntax. 
+</p>
+<ul>
+<li>
+<a name="IDX534"></a>
+<a name="IDX535"></a>
+Array ranges, of the form <i>A</i><code>[</code><i>E1</i><code> .. </code><i>E2</i><code>]</code>,
+denote the locations in the array <i>A</i> between the value of <i>E1</i>
+and the value of <i>E2</i> (inclusive).
+For example, the clause
+
+<table><tr><td>&nbsp;</td><td><pre class="example">    assignable myArray[3 .. 5]
+</pre></td></tr></table>
+
+<p>can be thought of an abbreviation for the following.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">    assignable myArray[3], myArray[4], myArray[5]
+</pre></td></tr></table>
+
+</li><li>
+<a name="IDX536"></a>
+<a name="IDX537"></a>
+One can also name all the indexes in an array <i>A</i> by writing,
+<i>A</i><code>[*]</code>, which is shorthand for
+<i>A</i><code>[0 .. </code><i>A</i><code>.length-1]</code>.
+
+</li><li>
+<a name="IDX538"></a>
+Two notations allow one to refer to the fields in some particular object.
+<ul class="toc">
+<li> - 
+The syntax <i>x</i><code>.*</code>
+names all of the non-static fields of the object referred to by <i>x</i>.
+For example, if <code>p</code> is a <code>Point</code> object with two fields,
+<code>x</code> and <code>y</code> of type <code>BigInteger</code>,
+then <code>p.*</code> names the fields <code>p.x</code> and <code>p.y</code>.
+Notice that the fields of the <code>BigInteger</code> objects are not named.
+Also, <code>p.*.*</code> is not allowed. 
+
+</li><li> - 
+If <code>a</code> is an array of type <code>Rocket []</code>,
+then the <var>store-ref</var> <code>a[*].*</code> means all of the 
+non-static fields of each <code>Rocket</code> 
+object referred to by the elements of array <code>a</code>.
+</li></ul>
+</li></ul>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC49" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_4.html#SEC52" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

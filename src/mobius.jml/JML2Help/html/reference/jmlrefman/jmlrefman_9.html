@@ -1,0 +1,2701 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 9. Method Specifications</title>
+
+<meta name="description" content="JML Reference Manual: 9. Method Specifications">
+<meta name="keywords" content="JML Reference Manual: 9. Method Specifications">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Method-Specifications"></a>
+<a name="SEC80"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC79" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC81" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_8.html#SEC63" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 9. Method Specifications </h1>
+
+<p>Although the use of pre- and postconditions for specification of the
+behavior of methods is standard, JML offers some features that are
+not so standard.  A good example of such a feature is the distinction
+between normal and exceptional postconditions (in <code>ensures</code> and
+<code>signals</code> clauses, respectively), and the specification of frame
+conditions using <code>assignable</code> clauses.  Another example of such a
+feature is that JML uses privacy modifiers to allow one to write
+different specification that are intended for different readers; for
+example, one can write a public specification for clients, a protected
+specification for subclasses, and a private specification to record
+implementation design decisions.
+Yet another such feature is the use of redundancy to allow one to
+point out important consequences of a specification for readers
+[Tan95] [Leavens-Baker99].
+</p>
+<p>JML provides two constructs for specifying methods and constructors:
+</p><ul>
+<li>
+pre- and postconditions, and
+
+</li><li>
+model programs.
+
+</li></ul>
+
+<p>This chapter only discusses the first of these,
+which is by far the most common.
+Model programs are discussed in <a href="jmlrefman_14.html#SEC180">Model Programs</a>.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC81">9.1 Basic Concepts in Method Specification</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC82">9.2 Organization of Method Specifications</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC83">9.3 Access Control in Specification Cases</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC84">9.4 Lightweight Specification Cases</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC87">9.5 Heavyweight Specification Cases</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC88">9.6 Behavior Specification Cases</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC97">9.7 Normal Behavior Specification Cases</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC98">9.8 Exceptional Behavior Specification Cases</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC100">9.9 Method Specification Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Basic-Concepts-in-Method-Specification"></a>
+<a name="SEC81"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC80" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC82" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 9.1 Basic Concepts in Method Specification </h2>
+
+<p>[[[Discuss the &ldquo;client viewpoint&rdquo; here and give some basic examples here.]]]
+</p>
+<p>[[[Perhaps discuss other common things to avoid repeating ourselves below...]]]
+</p>
+<hr size="6">
+<a name="Organization-of-Method-Specifications"></a>
+<a name="SEC82"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC81" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC83" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 9.2 Organization of Method Specifications </h2>
+
+<p>The following gives the syntax of behavioral specifications for methods.
+We start with the top-level syntax that organizes these specifications.
+</p>
+<a name="IDX1356"></a>
+<a name="IDX1357"></a>
+<a name="IDX1358"></a>
+<a name="IDX1359"></a>
+<a name="IDX1360"></a>
+<a name="IDX1361"></a>
+<a name="IDX1362"></a>
+<a name="IDX1363"></a>
+<a name="IDX1364"></a>
+<a name="IDX1365"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>method-specification</var> ::= <var>specification</var> | <var>extending-specification</var>
+<var>extending-specification</var> ::= <code>also</code> <var>specification</var>
+<var>specification</var> ::= <var>spec-case-seq</var> [ <var>redundant-spec</var> ]
+              | <var>redundant-spec</var>
+<var>spec-case-seq</var> ::= <var>spec-case</var> [ <code>also</code> <var>spec-case</var> ] &hellip;
+</pre></td></tr></table>
+
+<p>Redundant specifications (<var>redundant-spec</var>) are discussed
+in <a href="jmlrefman_13.html#SEC177">Redundancy</a>.
+</p>
+<p>A
+<var>method-specification</var> of a method in a class or interface <em>must</em> start with
+the keyword <code>also</code> if (and only if) 
+this method is already declared in the parent
+type that the current type extends, in one of the interfaces the class
+implements, or in a previous file of the refinement sequence for this type.
+Starting a <var>method-specification</var> with the keyword <code>also</code> is
+intended to tell the reader that this specification is in addition to
+some specifications of the method that are given in the superclass of
+the class, one of the interfaces it implements, or in another file in the
+refinement sequence.  
+</p>
+<p>A <var>method-specification</var> can include any number of
+<var>spec-case</var>s, joined by the keyword <code>also</code>, 
+as well as a <var>redundant-spec</var>.  
+Aside from the <var>redundant-spec</var>, each of the <var>spec-case</var>s
+specifies a behavior that must be satisfied by 
+a correct implementation of the method or constructor.
+That is, whenever a call to the specified method or constructor satisfies
+the precondition of one of its <var>spec-case</var>s,
+the rest of the clauses in that <var>spec-case</var> 
+must also be satisfied by the implementation
+[Dhara-Leavens96] [Leavens-Naumann06] [Leavens06b]
+[Raghavan-Leavens05] [Wills92b] [Wing83].
+Model program specification cases, which have no explicit
+preconditions, must be satisified by all implementations.
+</p>
+<p>The <var>spec-case</var>s in a <var>method-specification</var> can have 
+several forms:
+</p>
+<a name="IDX1366"></a>
+<a name="IDX1367"></a>
+<a name="IDX1368"></a>
+<a name="IDX1369"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>spec-case</var> ::= <var>lightweight-spec-case</var> | <var>heavyweight-spec-case</var>
+        | <var>model-program</var>
+</pre></td></tr></table>
+
+<p>Model programs are discussed in <a href="jmlrefman_14.html#SEC180">Model Programs</a>. 
+The remainder of
+this chapter concentrates on lightweight and heavyweight 
+behavior specification cases.
+JML distinguishes between
+</p><ul>
+<li> 
+<em>heavyweight specification cases</em>, which start with one of the
+keywords <code>behavior</code>, <code>normal_behavior</code> or
+<code>exceptional_behavior</code>, or one of their British variant spellings
+keywords <code>behaviour</code>, <code>normal_behaviour</code> or
+<code>exceptional_behaviour</code>
+(these are also called behavior, normal
+behavior, and exceptional behavior specification cases, respectively),
+and
+
+</li><li> 
+<em>lightweight specification cases</em>, which do not contain one of
+these behavior keywords.
+</li></ul>
+
+<p>A lightweight specification case is similar to a behavior specification
+case, but with different defaults [Leavens-Baker-Ruby06].  It also is
+possible to desugar all such specification cases into behavior
+specification cases [Raghavan-Leavens05].
+</p>
+<hr size="6">
+<a name="Access-Control-in-Specification-Cases"></a>
+<a name="SEC83"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC82" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC84" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 9.3 Access Control in Specification Cases </h2>
+
+<p>Heavyweight specification cases may be declared with an explicit
+access modifier, according to the following syntax.
+</p>
+<a name="IDX1370"></a>
+<a name="IDX1371"></a>
+<a name="IDX1372"></a>
+<a name="IDX1373"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>privacy</var> ::= <code>public</code> | <code>protected</code> | <code>private</code>
+</pre></td></tr></table>
+
+<p>The access modifier of a heavyweight specification case 
+cannot allow more access than the method being specified.
+So a <code>public</code> method may have a <code>private</code> behavior specification,
+but a <code>private</code> method may not have a <code>public</code> public specification.
+A heavyweight specification case without an explicit access modifier
+is considered to have default (package) access.
+</p>
+<p>Lightweight specification cases have no way to explicitly specify an
+access modifier, so their access modifier is implicitly the same
+as the method being specified.  For example, a lightweight specification
+of a <code>public</code> method has <code>public</code> access, implicitly,
+but a lightweight specification
+of a <code>private</code> method has <code>private</code> access, implicitly.
+Note that this is a different default than that for heavyweight
+specifications, where an omitted access modifier always means package access.
+</p>
+<p>The access modifier of a specification case affects only which annotations
+are visible in the specification and does <em>not</em> affect
+the semantics of a specification case in any other way.
+</p>
+<a name="IDX1374"></a>
+<p>JML's usual visibility rules apply to specification cases.
+So, for example, a public specification case
+may only refer to public members,
+a protected specification case may refer to both public and protected members,
+as long as the protected members are otherwise accessible according to
+Java's rules, etc.
+See section <a href="jmlrefman_2.html#SEC12">Privacy Modifiers and Visibility</a>, for more details and examples.
+</p>
+<hr size="6">
+<a name="Lightweight-Specification-Cases"></a>
+<a name="SEC84"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC83" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC87" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 9.4 Lightweight Specification Cases </h2>
+
+
+<a name="SEC85"></a>
+<h3 class="subheading"> Syntax </h3>
+
+<p>The following is the syntax of lightweight specification cases.
+These are the most concise specification cases.
+</p>
+<a name="IDX1375"></a>
+<a name="IDX1376"></a>
+<a name="IDX1377"></a>
+<a name="IDX1378"></a>
+<a name="IDX1379"></a>
+<a name="IDX1380"></a>
+<a name="IDX1381"></a>
+<a name="IDX1382"></a>
+<a name="IDX1383"></a>
+<a name="IDX1384"></a>
+<a name="IDX1385"></a>
+<a name="IDX1386"></a>
+<a name="IDX1387"></a>
+<a name="IDX1388"></a>
+<a name="IDX1389"></a>
+<a name="IDX1390"></a>
+<a name="IDX1391"></a>
+<a name="IDX1392"></a>
+<a name="IDX1393"></a>
+<a name="IDX1394"></a>
+<a name="IDX1395"></a>
+<a name="IDX1396"></a>
+<a name="IDX1397"></a>
+<a name="IDX1398"></a>
+<a name="IDX1399"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>lightweight-spec-case</var> ::= <var>generic-spec-case</var>
+<var>generic-spec-case</var> ::= [ <var>spec-var-decls</var> ]
+                      <var>spec-header</var>
+                      [ <var>generic-spec-body</var> ]
+        | [ <var>spec-var-decls</var> ]
+          <var>generic-spec-body</var>
+<var>generic-spec-body</var> ::= <var>simple-spec-body</var>
+        | <code>{|</code> <var>generic-spec-case-seq</var> <code>|}</code>
+<var>generic-spec-case-seq</var> ::= <var>generic-spec-case</var>
+                          [ <code>also</code> <var>generic-spec-case</var> ] &hellip;
+<var>spec-header</var> ::= <var>requires-clause</var> [ <var>requires-clause</var> ] &hellip;
+<var>simple-spec-body</var> ::= <var>simple-spec-body-clause</var>
+                     [ <var>simple-spec-body-clause</var> ] &hellip; 
+<var>simple-spec-body-clause</var> ::= <var>diverges-clause</var>
+        | <var>assignable-clause</var> | <var>captures-clause</var> 
+        | <var>when-clause</var> | <var>working-space-clause</var>
+        | <var>duration-clause</var> | <var>ensures-clause</var>
+        | <var>signals-only-clause</var> | <var>signals-clause</var>
+</pre></td></tr></table>
+<p>[[[ Is this list missing measured_by, accessible, callable? &ndash; DRC ]]]
+</p>
+<p>As far as the syntax is concerned, the only difference between a
+lightweight specification case and a <var>behavior-specification-case</var>
+(see section <a href="#SEC88">Behavior Specification Cases</a>) is that the latter has the
+keyword <code>behavior</code> and possibly an access control modifier.
+</p>
+<p>A lightweight specification case always has the same access modifier as
+the method being specified, 
+see <a href="#SEC83">Access Control in Specification Cases</a>.  
+To specify a different access control modifier, one must use a
+heavyweight specification.
+</p>
+<a name="SEC86"></a>
+<h3 class="subheading"> Semantics </h3>
+
+<p>A lightweight specification case can be understood as syntactic sugar for
+a behavior specification case,
+except that the defaults for omitted
+specification clauses are different for lightweight specification cases
+than for behavior specification cases.
+So, for example, apart from the class names,
+method <code>m</code> in class <code>Lightweight</code> below
+<a name="IDX1400"></a>
+</p><table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;
+
+public abstract class Lightweight {
+
+    protected boolean P, Q, R;
+    protected int X;
+
+    /*@ requires P;
+      @  assignable X;
+      @  ensures Q;
+      @  signals (Exception) R;
+      @*/
+    protected abstract int m() throws Exception;
+}
+</pre></td></tr></table>
+<p>has a specification that is equivalent to that
+of method <code>m</code> in class <code>Heavyweight</code> below.
+<a name="IDX1401"></a>
+</p><table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;
+
+public abstract class Heavyweight {
+
+    protected boolean P, Q, R;
+    protected int X;
+
+    /*@ protected behavior
+      @   requires P;
+      @   diverges false;
+      @   assignable X;
+      @   when \not_specified;
+      @   working_space \not_specified;
+      @   duration \not_specified;
+      @   ensures Q;
+      @   signals_only Exception;
+      @   signals (Exception) R;
+      @*/
+    protected abstract int m() throws Exception;
+}
+</pre></td></tr></table>
+
+<a name="IDX1402"></a>
+<a name="IDX1403"></a>
+<p>As this example illustrates, the default for an omitted clause in a
+lightweight specification is <code>\not_specified</code> for all clauses,
+except <code>diverges</code>, which has a default of <code>false</code>, and
+<code>signals</code> [Leavens-Baker-Ruby06].  The default for an omitted
+<code>signals</code> clause is to only permit the exceptions declared in the
+method's header to be thrown.  Thus, if the method declares that
+exceptions <code>DE1</code> and <code>DE2</code> may be thrown, then the default
+for an omitted <code>signals</code> clause is
+</p><table><tr><td>&nbsp;</td><td><pre class="display">  signals (Exception e) e instanceof DE1 || e instanceof DE2;
+</pre></td></tr></table>
+<a name="IDX1404"></a>
+<p>It is intended that the meaning of
+<code>\not_specified</code> may vary between different uses of a JML
+specification.  For example, a static checker might treat a
+<code>requires</code> clause that is <code>\not_specified</code> as if it were
+<code>true</code>, while a verification logic may decide to treat it as if it
+were <code>false</code>.
+</p>
+<a name="IDX1405"></a>
+<a name="IDX1406"></a>
+<a name="IDX1407"></a>
+<a name="IDX1408"></a>
+<a name="IDX1409"></a>
+<p>A completely omitted specification is taken to be a lightweight
+specification.
+If the default (zero-argument) constructor of a class is omitted
+because its code is omitted,  then its specification defaults to
+an assignable clause that allows all the locations that the
+default (zero-argument) constructor of its superclass assigns &mdash; in
+essence a copy of the superclass's default constructor's assignable clause.
+If some other frame is desired, then one has to write the specification,
+or at least the code, explicitly.
+</p>
+<a name="IDX1410"></a>
+<a name="IDX1411"></a>
+<a name="IDX1412"></a>
+<a name="IDX1413"></a>
+<p>A method or constructor with code present has a
+<em>completely omitted</em> specification if it has no
+<var>specification-case</var>s and does not use 
+annotations like <code>non_null</code> or <code>pure</code> that add implicit
+specifications.
+</p>
+<p>If a method or constructor has code, has a completely omitted
+specification, and does not override another method, then 
+its meaning is taken as the lightweight specification
+<code>diverges \not_specified;</code>. 
+Thus, its meaning can be read
+from the lightweight column of table above, except that the diverges
+clause is not given its usual default.
+This is done so that the default
+specification when no specification is given truly says nothing about
+the method's behavior.
+However, if a method with code and a completely omitted
+specification overrides some other method, then its meaning is taken
+to be the lightweight specification <code>also requires false;</code>.  This somewhat
+counter-intuitive specification is the unit under specification
+conjunction with <code>also</code>; it is used so as not to
+change the meaning of the inherited specification.
+</p>
+<p>If the code is annotated with keywords like <code>non_null</code> or
+<code>pure</code> that add implicit specifications, then these implicit
+specifications are used instead of the default.  Code with such
+annotations is considered to have an implicit specification.
+</p>
+
+<hr size="6">
+<a name="Heavyweight-Specification-Cases"></a>
+<a name="SEC87"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC84" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC88" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 9.5 Heavyweight Specification Cases </h2>
+
+
+<p>There are three kinds of heavyweight specification cases, called
+behavior, normal behavior, and exceptional behavior specification
+cases, beginning (after an optional privacy modifier) with the one of
+the keywords <code>behavior</code>, <code>normal_behavior</code>, or
+<code>exceptional_behavior</code>, respectively.
+</p>
+<a name="IDX1414"></a>
+<a name="IDX1415"></a>
+<a name="IDX1416"></a>
+<a name="IDX1417"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>heavyweight-spec-case</var> ::= <var>behavior-spec-case</var>
+        | <var>exceptional-behavior-spec-case</var>
+        | <var>normal-behavior-spec-case</var>
+</pre></td></tr></table>
+
+<p>Like lightweight specification cases, normal behavior and exceptional
+behavior specification cases can be understood as syntactic sugar for
+special kinds of <code>behavior</code> specification cases
+[Raghavan-Leavens05].
+</p>
+<hr size="6">
+<a name="Behavior-Specification-Cases"></a>
+<a name="SEC88"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC87" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC92" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 9.6 Behavior Specification Cases </h2>
+
+<p>The behavior specification case is the most general form of
+specification case.  All other forms of specification cases simply
+provide some syntactic sugar for special kinds of <code>behavior</code>
+specification cases.
+</p>
+<a name="SEC89"></a>
+<h3 class="subheading"> Syntax </h3>
+
+<p>As far as the syntax is concerned, the only difference between a
+<code>behavior</code> specification case and a lightweight one is 
+the optional access control modifier, <var>privacy</var>,
+and the keyword <code>behavior</code> (or the British variant, <code>behaviour</code>).
+One can use either the British or the American spelling of this
+keyword, although for historical reasons most examples will use the
+American spelling.
+</p>
+<a name="IDX1418"></a>
+<a name="IDX1419"></a>
+<a name="IDX1420"></a>
+<a name="IDX1421"></a>
+<a name="IDX1422"></a>
+<a name="IDX1423"></a>
+<a name="IDX1424"></a>
+<a name="IDX1425"></a>
+<a name="IDX1426"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>behavior-spec-case</var> ::= [ <var>privacy</var> ] [ <code>code</code> ] <var>behavior-keyword</var>
+                       <var>generic-spec-case</var>
+<var>behavior-keyword</var> ::= <code>behavior</code> | <code>behaviour</code>
+</pre></td></tr></table>
+
+<p>See section <a href="jmlrefman_15.html#SEC192">Code Contracts</a>, for details of the semantics of
+<var>behavior-spec-case</var>s that use the <code>code</code> keyword.
+</p>
+<a name="SEC90"></a>
+<h3 class="subheading"> Semantics </h3>
+
+<p>To explain the semantics of a behavior specification case we make a
+distinction between flat and nested specification cases:
+</p><ul>
+<li>
+<em>Flat</em> specification cases are of the form
+<table><tr><td>&nbsp;</td><td><pre class="display"> <code>behavior</code> [ <var>spec-var-decls</var> ] [ <var>spec-header</var> ] <var>simple-spec-body</var> 
+</pre></td></tr></table>
+<p>A flat specification case is just made up of a sequence of method
+specification clauses, ie. <code>require</code>, <code>ensures</code>, etc. clauses,
+and its semantics is explained directly in 
+<a href="#SEC92">Semantics of flat behavior specification cases</a>.
+</p>
+</li><li>
+<em>Nested</em> specification cases are all other specification cases.
+They use the special brackets <code>{|</code> and <code>|}</code> to nest
+specification clauses and possibly also <code>also</code> inside these
+brackets to join several specification cases.
+
+<p>A nested specification case can be syntactically desugared into a list
+of one or more simple specification cases, joined by the <code>also</code>
+keyword [Raghavan-Leavens05].  
+This is explained in <a href="#SEC96">Semantics of nested behavior specification cases</a>.
+</p></li></ul>
+
+<a name="SEC91"></a>
+<h3 class="subheading"> Invariants and constraints </h3>
+
+<p>The semantics of a behavior specification case for a method or
+constructor in a class depends on the invariants and constraints that
+have been specified.  This is discussed in <a href="jmlrefman_8.html#SEC65">Invariants</a> and
+<a href="jmlrefman_8.html#SEC70">Constraints</a>.  In a nutshell, methods must preserve invariants
+and respect constraints, and constructors must establish invariants.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC92">9.6.1 Semantics of flat behavior specification cases</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC93">9.6.2 Non-helper methods</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC94">9.6.3 Non-helper constructors</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC95">9.6.4 Helper methods and constructors</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC96">9.6.5 Semantics of nested behavior specification cases</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Semantics-of-flat-behavior-specification-cases"></a>
+<a name="SEC92"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC88" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC93" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC88" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.6.1 Semantics of flat behavior specification cases </h3>
+
+<p>Below we explain the semantics of a simple <var>behavior-spec-case</var>
+case with precisely 
+one <code>requires</code> clause,
+one <code>diverges</code> clause,
+one <code>measured_by</code> clause,
+one <code>assignable</code> clause,
+one <code>accessible</code> clause,
+one <code>callable</code> clause,
+one <code>when</code> clause,
+one <code>ensures</code> clause,
+one <code>duration</code> clause,
+one <code>working_space</code> clause,
+one <code>signals_only</code> clause,
+and
+one <code>signals</code> clause.
+</p>
+<p>A <code>behavior</code> specification case can contain any number of these
+clauses, and there are defaults that allow any of them to be omitted.
+However, as explained in <a href="#SEC100">Method Specification Clauses</a>, any
+<code>behavior</code> specification case is equivalent with a <code>behavior</code>
+specification case of this form.
+</p>
+<hr size="6">
+<a name="Non_002dhelper-methods"></a>
+<a name="SEC93"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC92" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC94" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC88" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.6.2 Non-helper methods </h3>
+
+<p>Consider a non-<code>helper</code> instance method <code>m</code>, and a
+specification case of the following form.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  behavior
+    forall <i>T1</i> <i>x1</i>; &hellip; forall <i>Tn</i> <i>xn</i>;
+    old <i>U1</i> <i>y1</i> = <i>F1</i>; &hellip; old <i>Uk</i> <i>yk</i> = <i>Fk</i>;
+    requires <i>P</i>;
+    measured_by <i>Mbe</i> <code>if</code> <i>Mbp</i>;
+    diverges <i>D</i>;
+    when <i>W</i>;
+    accessible <i>R</i>;
+    assignable <i>A</i>;
+    callable <i>p1</i>(&hellip;), &hellip;, <i>pl</i>(&hellip;);
+    captures <i>Z</i>;
+    ensures <i>Q</i>;
+    signals_only <i>E1</i>, &hellip;, <i>Eo</i>;
+    signals (<i>E</i> <i>e</i>) <i>S</i>;
+    working_space <i>Wse</i> <code>if</code> <i>Wsp</i>;
+    duration <i>De</i> <code>if</code> <i>Dp</i>;
+</pre></td></tr></table>
+
+<p>The meaning of this specification case is as follows.
+</p>
+<p>Consider a particular call of the method <i>m</i>.
+</p>
+<a name="IDX1427"></a>
+<a name="IDX1428"></a>
+<a name="IDX1429"></a>
+<p>The state of the program after passing parameters to <i>m</i>, but before
+running any of the code of <i>m</i> is called the <em>pre-state</em> of the
+method call.
+</p>
+<p>Suppose all applicable invariants hold in the pre-state of this call.
+</p>
+<a name="IDX1430"></a>
+<p>For every possible value of the variables declared in the
+<code>forall</code> clauses, <i>x1</i>, &hellip;, <i>xn</i>, the following must be
+true.  (If there are no <code>forall</code> clauses, then the following just
+has to hold all by itself.)
+</p>
+<a name="IDX1431"></a>
+<p>Suppose that the variable <i>y1</i> is bound to the pre-state value of
+<i>F1</i> in the pre-state (i.e., the beginning of the method, after
+parameter passing), and in turn each of the <code>old</code> variable
+declarations are bound to the values of the corresponding expressions,
+also evaluated in the pre-state, and finally <i>yk</i> is bound to the value
+of <i>Fk</i> in the pre-state.  These bindings can depend on previously
+defined <code>old</code> variable declarations in the specification case.
+(If there are no <code>old</code> clauses, then no such variables are
+bound.)
+<a name="IDX1432"></a>
+We call the state with such bindings in place the <em>augmented pre-state</em>.
+</p>
+<a name="IDX1433"></a>
+<p>Suppose also that with these binding
+(i.e., in the augmented pre-state), that the precondition, <i>P</i>, from
+the <code>requires</code> clause, holds.
+</p>
+<p>If the method has a <code>measured_by</code> clause,
+and if the predicate in the <code>measured_by</code> clause,
+<i>Mbp</i>, is true in the augmented pre-state, 
+and if this call is in the control flow of another instance of this
+method, <i>Caller</i>,
+then the value of the expression <i>Mbe</i> in this call's augmented pre-state
+must be non-negative and strictly less than the value of
+<i>Mbe</i> in the pre-state of <i>Caller</i>.
+(If the <code>measured_by</code> clause is omitted, there is no such requirement.)
+For example, consider a method <code>fib</code> that calls itself directly
+and has an integer parameter <code>n</code> and for which the
+<code>measured_by</code> clause has <code>n</code> as its expression (<i>Mbe</i>),
+and the default predicate (<i>Mbp</i>) is true;
+then recursive calls of <code>fib</code> that appear in the body of
+<code>fib</code> must have actual argument exprssions whose value is
+(non-negative and)
+strictly less than <code>n</code>, such as <code>n-1</code> and <code>n-2</code>.<a name="DOCF8" href="jmlrefman_fot.html#FOOT8">(8)</a>
+</p>
+<p>Then one of the following must also hold:
+</p><ul>
+<li>
+<a name="IDX1434"></a>
+the <code>diverges</code> predicate, <i>D</i>, holds in the augmented pre-state
+and the execution of the method does not terminate (i.e., it loops
+forever or the Java virtual machine exits in such a way that the method call
+does not return or throw an exception).  (If the <code>diverges</code> clause
+is omitted, then the default for <i>D</i> is <code>false</code>, and hence
+these outcomes are effectively prohibited.)
+or
+
+</li><li>
+<a name="IDX1435"></a>
+<a name="IDX1436"></a>
+the Java virtual machine throws an error (i.e., an instance of
+<code>java.lang.Throwable</code> whose type does not inherit from
+<code>java.lang.Exception</code>, usually an instance of <code>java.lang.Error</code>), or
+
+</li><li>
+<a name="IDX1437"></a>
+<a name="IDX1438"></a>
+<a name="IDX1439"></a>
+the method terminates by returning or throwing an exception,
+reaching a state called its <em>post-state</em>,
+in which all of the following hold.
+<ul class="toc">
+<li>
+<a name="IDX1440"></a>
+<a name="IDX1441"></a>
+<a name="IDX1442"></a>
+<a name="IDX1443"></a>
+The method's execution only reaches its commit point (a label in the
+method body with the name &ldquo;<code>commit</code>&rdquo; [Rogriguez-etal05]) in a state such
+that the <code>when</code> clause's condition, <i>W</i>, holds.
+(If the condition does not hold,
+then the method's execution waits for a concurrent thread to make it
+true, and then proceeds.  There is no guarantee that the method will
+proceed the first time this condition holds, so the condition may have
+to hold many times before the thread may proceed to its commit point.)
+(If the <code>when</code> clause is omitted, there is no need to have a
+commit point in the method, and the method need not wait for the
+execution of concurrent threads.)
+
+</li><li>
+<a name="IDX1444"></a>
+During execution of the method (which includes all directly and
+indirectly called methods and constructors),
+only locations that either did not exist in the pre-state,
+that are local to the method (including the method's formal parameters),
+or that are either named in the lists <i>R</i> and <i>A</i> found in the 
+<code>accessible</code> and <code>assignable</code> clauses
+or that are dependees (see section <a href="jmlrefman_10.html#SEC118">Data Groups</a>) of such locations,
+are read from.
+The set of locations named by the accessible and assignable clauses
+(and hence the elements of their data groups) are computed in the pre-state.
+(If the <code>accessible</code> clause is omitted, it defaults to
+<code>accessible \everything;</code>, which allows all locations to be accessed.)
+
+</li><li> 
+<a name="IDX1445"></a>
+During execution of the method,
+only locations that either did not exist in the pre-state,
+that are local to the method,
+or that are either named by the <code>assignable</code> clause's list, <i>A</i>,
+or are dependees (see section <a href="jmlrefman_10.html#SEC118">Data Groups</a>) of such locations,
+are assigned to.
+The set of locations named by the assignable clause (and hence the
+elements of their data groups) are computed in the pre-state.
+(If the <code>assignable</code> clause is omitted, it defaults to
+<code>assignable \everything;</code>, which allows all locations to be assigned.)
+
+</li><li> 
+<a name="IDX1446"></a>
+During execution of the method,
+the only methods and constructors called are those listed in the
+<code>callable</code> clause's list <i>p1</i>, &hellip;, <i>pl</i>.
+(If the <code>callable</code> clause is omitted, it defaults to
+<code>callable \everything;</code>, which allows all methods and
+constructors to be called.)
+
+<p>The form <i>p</i><code>.*</code> refers to all methods of the object denoted by <i>p</i>.
+</p>
+</li><li>
+<a name="IDX1447"></a>
+<a name="IDX1448"></a>
+During execution of the method, of the formal parameters whose type is
+a reference type, only those listed in the
+<code>captures</code> clause's list, <i>Z</i>, may be assigned to fields of
+some object or to array elements.
+(References in formals may freely be assigned to local variables,
+however, as these are &ldquo;borrowed&rdquo; but not captured [Boyland00].
+If the <code>captures</code> clause is omitted, then all such formals may
+be assigned freely.)
+
+</li><li> 
+<a name="IDX1449"></a>
+If the execution of the method terminates by returning normally,
+then the normal postcondition, <i>Q</i>, given in the <code>ensures</code>
+clause, holds in the post-state.
+
+</li><li> 
+<a name="IDX1450"></a>
+<a name="IDX1451"></a>
+If the execution of the method terminates by throwing an exception of
+some type <i>Ea</i> that is a subtype of <code>java.lang.Exception</code>, then:
+<ul class="toc">
+<li>
+<a name="IDX1452"></a>
+the type <i>Ea</i> must be a subtype of some type in the list <i>E1</i>,
+&hellip;, <i>Eo</i>, listed in the <code>signals_only</code> clause (this list
+of types has as its default the list in the method's <code>throws</code>
+clause), and 
+
+</li><li>
+<a name="IDX1453"></a>
+if <i>Ea</i> is a subtype of the type <i>E</i> given in the <code>signals</code>
+clause, then the exceptional postcondition <i>R</i> must hold in the
+post-state, augmented by a binding from the variable <i>e</i> to 
+the exception object thrown.
+</li></ul>
+
+</li><li>
+All applicable invariants and history constraints hold in the
+post-state.
+
+</li><li>
+<a name="IDX1454"></a>
+If the predicate in the <code>working_space</code> clause,
+<i>Wsp</i>, was true in the augmented pre-state, then
+the method execution had available to it the amount of heap space, in bytes,
+<i>Wse</i> [Krone-Ogden-Sitaraman03].
+(Note that the expression <i>Wse</i> may depend on post-state values
+so this expression is conceptually evaluated in the post-state,
+although it may use <code>\old()</code> to refer to pre-state values.
+If the <code>working_space</code> clause is omitted, there is no restriction
+placed on the maximum space that the method call may during its execution.)
+
+</li><li>
+<a name="IDX1455"></a>
+If the predicate in the <code>duration</code> clause,
+<i>Dp</i>, was true in the augmented pre-state, then
+the method execution used no more than the number of virtual machine
+cycles given by the expression <i>De</i> [Krone-Ogden-Sitaraman03].
+(Note that the expression <i>De</i> may depend on post-state values
+so this expression is conceptually evaluated in the post-state,
+although it may use <code>\old()</code> to refer to pre-state values.
+If the <code>duration</code> clause is omitted, there is no restriction
+placed on the maximum number of virtual machine cycles that the call
+may use during its execution.)
+</li></ul>
+</li></ul>
+
+<p>In all of these clauses, the value of a formal parameter is always
+considered to be the value they had in the pre-state.
+That is the actual post-state value they take in an execution is not
+considered, as explained in See section <a href="#SEC108">Parameters in Postconditions</a>.
+</p>
+<hr size="6">
+<a name="Non_002dhelper-constructors"></a>
+<a name="SEC94"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC93" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC95" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC88" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.6.3 Non-helper constructors </h3>
+
+<p>The semantics of a flat specification case for a (non-<code>helper</code>) 
+constructor is the same as that for a (non-<code>helper</code>) method given 
+above, except that:
+</p><ul class="toc">
+<li>
+any instance invariants of the object being initialized by the
+constructor are not assumed to hold in the precondition,
+
+</li><li>
+any instance constraints do not have to be established as implicit
+part of the postcondition of the constructor.
+</li></ul>
+<p>These two differences are also discussed in <a href="jmlrefman_8.html#SEC65">Invariants</a> 
+and <a href="jmlrefman_8.html#SEC70">Constraints</a>.
+</p>
+<hr size="6">
+<a name="Helper-methods-and-constructors"></a>
+<a name="SEC95"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC94" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC96" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC88" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.6.4 Helper methods and constructors </h3>
+
+<p>The semantics of a flat specification case for a helper method 
+(or constructor) is the same as that for a non-helper method 
+(or constructor) given above,
+except that:
+</p><ul>
+<li>
+the instance invariants for the current object
+and the static invariants for the current class
+are not assumed to hold in the pre-state, 
+and do not have to be established in the post-state.
+
+</li><li>
+the instance constraints for current object
+and the static constraints for the current class
+do not have to be established in the post-state
+</li></ul>
+<p>These differences are also discussed in <a href="jmlrefman_8.html#SEC65">Invariants</a> 
+and <a href="jmlrefman_8.html#SEC70">Constraints</a>.
+</p>
+<hr size="6">
+<a name="Semantics-of-nested-behavior-specification-cases"></a>
+<a name="SEC96"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC95" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC97" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC88" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.6.5 Semantics of nested behavior specification cases </h3>
+
+<p>We now explain how all behavior specification cases can be desugared
+into a list of one or more flat specification cases joined by the
+<code>also</code> keyword [Raghavan-Leavens05].  The semantics of a behavior
+specification case is then simply the semantics of this desugared
+version. 
+</p>
+<p>The desugaring is as follows.  Consider a specification of the form.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example"><var>spec-var-decls</var>
+<var>spec-header</var>
+{|
+    <var>GenSpecCase1</var> 
+  also 
+    &hellip; 
+  also 
+    <var>GenSpecCasen</var> 
+|}
+</pre></td></tr></table>
+
+<p>The above desugars to the following.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">    <var>spec-var-decls</var>
+    <var>spec-header</var>
+    <var>GenSpecCase1</var>
+  also 
+    &hellip; 
+  also 
+    <var>spec-var-decls</var>
+    <var>spec-header</var>
+    <var>GenSpecCasen</var>
+</pre></td></tr></table>
+
+<p>In the above desugaring either the <var>spec-var-decls</var> or the
+<var>spec-header</var> (or both) may be omitted.
+</p>
+<p>The meaning of the desugared list of specification cases is
+explained in <a href="#SEC82">Organization of Method Specifications</a>.
+The meaning of a single simple specification case is explained in
+<a href="#SEC92">Semantics of flat behavior specification cases</a>.
+</p>
+
+<hr size="6">
+<a name="Normal-Behavior-Specification-Cases"></a>
+<a name="SEC97"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC96" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC98" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 9.7 Normal Behavior Specification Cases </h2>
+
+<p>A <code>normal_behavior</code> specification case is just syntactic sugar for
+a <code>behavior</code> specification case with an implicit <code>signals</code>
+clause
+</p><table><tr><td>&nbsp;</td><td><pre class="example">    signals (java.lang.Exception) false;
+</pre></td></tr></table>
+<p>ruling out abrupt termination, i.e., the throwing of any exception.
+Note that this includes unchecked exceptions, since in Java,
+<code>RuntimeException</code> is a subclass of <code>Exception</code>.
+</p>
+<p>The following gives the syntax of the body of a normal behavior
+specification case.
+</p>
+<a name="IDX1456"></a>
+<a name="IDX1457"></a>
+<a name="IDX1458"></a>
+<a name="IDX1459"></a>
+<a name="IDX1460"></a>
+<a name="IDX1461"></a>
+<a name="IDX1462"></a>
+<a name="IDX1463"></a>
+<a name="IDX1464"></a>
+<a name="IDX1465"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>normal-behavior-spec-case</var> ::= [ <var>privacy</var> ] [ <code>code</code> ] <var>normal-behavior-keyword</var>
+                              <var>normal-spec-case</var>
+<var>normal-behavior-keyword</var> ::= <code>normal_behavior</code> | <code>normal_behaviour</code>
+<var>normal-spec-case</var> ::= <var>generic-spec-case</var>
+</pre></td></tr></table>
+
+<p>As far as syntax is concerned, the only difference 
+between a <var>normal-spec-case</var> and a <var>generic-spec-case</var>
+is that normal behavior specification cases
+cannot include <var>signals-clause</var>s or <var>signals-only-clause</var>s.
+</p>
+<p>The semantics of a normal behavior specification case is the same as the
+corresponding
+<code>behavior</code> specification case
+(see section <a href="#SEC88">Behavior Specification Cases</a>)
+with the addition of the following
+<var>signals-clause</var>
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">    signals (java.lang.Exception) false;
+</pre></td></tr></table>
+
+<p>So a normal behavior specification case specifies a precondition which
+guarantees normal termination; i.e., it prohibits the method from
+throwing an exception.
+</p>
+<hr size="6">
+<a name="Exceptional-Behavior-Specification-Cases"></a>
+<a name="SEC98"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC97" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC99" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 9.8 Exceptional Behavior Specification Cases </h2>
+
+<p>The following gives the syntax of the body of an exceptional behavior
+specification case.
+</p>
+<a name="IDX1466"></a>
+<a name="IDX1467"></a>
+<a name="IDX1468"></a>
+<a name="IDX1469"></a>
+<a name="IDX1470"></a>
+<a name="IDX1471"></a>
+<a name="IDX1472"></a>
+<a name="IDX1473"></a>
+<a name="IDX1474"></a>
+<a name="IDX1475"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>exceptional-behavior-spec-case</var> ::= [ <var>privacy</var> ] [ <code>code</code> ] <code>exceptional-behavior-keyword</code>
+                                   <var>exceptional-spec-case</var>
+<var>exceptional-behavior-keyword</var> ::= <code>exceptional_behavior</code> | <code>exceptional_behaviour</code>
+<var>exceptional-spec-case</var> ::= <var>generic-spec-case</var>
+</pre></td></tr></table>
+
+<p>As far as syntax is concerned, the only difference 
+between an <var>exceptional-spec-case</var> and a <var>generic-spec-case</var>
+is that exceptional behavior specification cases
+cannot include <var>ensures-clause</var>s.
+</p>
+<p>The semantics of an exceptional behavior specification case is the same
+as the corresponding behavior specification case
+(see section <a href="#SEC88">Behavior Specification Cases</a>)
+with the addition of the following
+<code>ensures</code> clause.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">    ensures false;
+</pre></td></tr></table>
+
+<p>So an exceptional behavior specification case specifies a precondition
+which guarantees that the method throws an exception, if it terminates, i.e., a
+precondition which prohibits the method from terminating normally.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC99">9.8.1 Pragmatics of Exceptional Behavior Specifications Cases</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Pragmatics-of-Exceptional-Behavior-Specification-Cases"></a>
+<a name="SEC99"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC98" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC98" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.8.1 Pragmatics of Exceptional Behavior Specifications Cases </h3>
+
+<p>Note that an exceptional behavior specification case says that some
+exception <em>must</em> be thrown if its precondition is met (assuming
+the diverges clause predicate is <code>false</code>, as is the default.)
+Beware of the difference between specifying that an exception
+<em>must</em> be thrown and specifying that an exception <em>may</em> be
+thrown. To specify that an exception <em>may</em> be thrown you should
+<em>not</em> use an exceptional behavior, but should instead use a
+behavior specification case [Leavens-Baker-Ruby06].
+</p>
+<p>For example, the following method specification
+<a name="IDX1476"></a>
+</p><table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;
+
+public abstract class InconsistentMethodSpec {
+
+    /** A specification that can't be satisfied. */
+    /*@  public normal_behavior
+     @    requires z &lt;= 99;
+     @    assignable \nothing;
+     @    ensures \result &gt; z;
+     @ also
+     @  public exceptional_behavior
+     @    requires z &lt; 0;
+     @    assignable \nothing;
+     @    signals (IllegalArgumentException) true;
+     @*/
+    public abstract int cantBeSatisfied(int z)
+        throws IllegalArgumentException;
+}
+</pre></td></tr></table>
+<p>is <em>inconsistent</em> because the preconditions <code>z &lt;= 99</code> and
+<code>z &lt; 0</code> overlap, for example when <code>z</code> is <code>-1</code>.  When
+both preconditions hold then the exceptional behavior case specifies
+that an exception <em>must</em> be thrown and the normal behavior case
+specifies that an exception <em>must not</em> be thrown, but the
+implementation cannot both throw and not throw an exception.
+</p>
+<a name="IDX1477"></a>
+<p>Similarly, multiple exceptional specification cases with overlapping 
+preconditions may give rise to an inconsistent specification.
+For example, the following method specification
+<a name="IDX1478"></a>
+</p><table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;
+
+public abstract class InconsistentMethodSpec2 {
+
+    /** A specification that can't be satisfied. */
+    /*@  public exceptional_behavior
+     @     requires z &lt; 99;
+     @     assignable \nothing;
+     @     signals_only IllegalArgumentException;
+     @ also
+     @   public exceptional_behavior
+     @     requires z &gt; 0;
+     @     assignable \nothing;
+     @     signals_only NullPointerException;
+     @*/
+    public abstract int cantBeSatisfied(int z)
+        throws IllegalArgumentException, NullPointerException;
+}
+</pre></td></tr></table>
+<p>is inconsistent because, again, the two preconditions overlap, and the
+<code>signals_only</code> clauses do not permit the same exception to be
+thrown in both cases.
+</p>
+<a name="IDX1479"></a>
+<p>There is an important distinction to be made between the
+<code>signals</code> and the <code>signals_only</code> clauses in JML.
+The <code>signals_only</code> clause says what exceptions may be thrown
+(when the specification case's precondition is met); this clause does
+not say anything about the state of the exception object or other
+locations in the system.  On the other hand, the <code>signals</code> clause
+only describes what must be true of the system state when an exception
+is thrown, and does not say anything about what exceptions may be thrown.
+For example, consider the following specification.
+<a name="IDX1480"></a>
+</p><table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;
+
+public abstract class SignalsClause {
+
+    /*@ signals (IllegalArgumentException) x &lt; 0;
+      @ signals (NullPointerException) x &lt; 0;
+      @*/
+    public abstract int notPrecise(int x) throws RuntimeException;
+}
+</pre></td></tr></table>
+<p>The above allows a method to throw either an <code>IllegalArgumentException</code> or
+a <code>NullPointerException</code> when <code>x</code> is less than 0, but in
+that condition the method might also throw a different exception
+altogether, as long as that exception was permitted by the method's
+declaration header.  The only thing ruled out by this specification is
+throwing either a <code>IllegalArgumentException</code> or
+a <code>NullPointerException</code> when <code>x</code> is not less than 0.
+Thus from such a specification one may draw the conclusion that
+<code>x &lt; 0</code> only when one of these two exceptions is thrown.
+</p>
+<p>Therefore, if one just wants to specify the exceptions that are permitted
+to be thrown in a specific situation, 
+one should use the <code>signals_only</code> clause.
+</p>
+<hr size="6">
+<a name="Method-Specification-Clauses"></a>
+<a name="SEC100"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC99" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC101" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 9.9 Method Specification Clauses </h2>
+
+<p>The different kinds of clauses that can be used in method
+specifications are discussed in this section.  
+See section <a href="#SEC84">Lightweight Specification Cases</a>, 
+for the overall syntax that ties these clauses together.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC101">9.9.1 Specification Variable Declarations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC104">9.9.2 Requires Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC105">9.9.3 Ensures Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC106">9.9.4 Signals Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC107">9.9.5 Signals-Only Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">        
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC108">9.9.6 Parameters in Postconditions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC109">9.9.7 Diverges Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC110">9.9.8 When Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC111">9.9.9 Assignable Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC112">9.9.10 Accessible Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC113">9.9.11 Callable Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC114">9.9.12 Measured By Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC115">9.9.13 Captures Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC116">9.9.14 Working Space Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">       
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC117">9.9.15 Duration Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">            
+</td></tr>
+</table>
+
+
+<hr size="6">
+<a name="Specification-Variable-Declarations"></a>
+<a name="SEC101"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC100" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC102" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.1 Specification Variable Declarations </h3>
+
+<p>The syntax of <var>spec-var-decls</var> is as follows.
+</p>
+<a name="IDX1481"></a>
+<a name="IDX1482"></a>
+<a name="IDX1483"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>spec-var-decls</var> ::= <var>forall-var-decls</var> [ <var>old-var-decls</var> ]
+        | <var>old-var-decls</var>
+</pre></td></tr></table>
+<p>The scope of the variables declared in the <var>spec-var-decls</var> is the
+entire specification case in which they appear.  The two types of such
+declarations are described below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC102">9.9.1.1 Forall Variable Declarations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC103">9.9.1.2 Old Variable Declarations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">   
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Forall-Variable-Declarations"></a>
+<a name="SEC102"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC101" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC103" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC101" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 9.9.1.1 Forall Variable Declarations </h4>
+
+<p>The syntax of the <var>forall-var-decls</var> is as follows.
+</p>
+<a name="IDX1484"></a>
+<a name="IDX1485"></a>
+<a name="IDX1486"></a>
+<a name="IDX1487"></a>
+<a name="IDX1488"></a>
+<a name="IDX1489"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>forall-var-decls</var> ::= <var>forall-var-declarator</var> [ <var>forall-var-declarator</var> ] &hellip; 
+<var>forall-var-declarator</var> ::= <code>forall</code> [ <var>bound-var-modifiers</var> ] <var>quantified-var-declarator</var> <code>;</code>
+</pre></td></tr></table>
+
+<p>When a <var>forall-var-declarator</var> is used, it specifies that the
+specification case that follows must hold for every possible value of
+the declared variables.  In other words, it is a universal
+quantification over the specification case.
+</p>
+
+<p>Note that if such variables are used in preconditions, then
+they can be thought to range over all values that satisfy the preconditions.  The bound variable may not rename earlier bound 
+variables in the specification, nor the formal parameters of the
+method declaration.
+</p>
+<hr size="6">
+<a name="Old-Variable-Declarations"></a>
+<a name="SEC103"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC102" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC104" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC101" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 9.9.1.2 Old Variable Declarations </h4>
+
+<p>The syntax of the <var>old-var-decls</var> is as follows.
+See section <a href="jmlrefman_7.html#SEC61">Type-Specs</a>, for the syntax of <var>type-spec</var>.
+[[[Give cross ref for <var>spec-variable-declarators</var> when ready.]]]
+</p>
+<a name="IDX1490"></a>
+<a name="IDX1491"></a>
+<a name="IDX1492"></a>
+<a name="IDX1493"></a>
+<a name="IDX1494"></a>
+<a name="IDX1495"></a>
+<a name="IDX1496"></a>
+<a name="IDX1497"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>old-var-decls</var> ::= <var>old-var-declarator</var> [ <var>old-var-declarator</var> ] &hellip;
+<var>old-var-declarator</var> ::= <code>old</code> [ <var>bound-var-modifiers</var> ] <var>type-spec</var> <var>spec-variable-declarators</var> <code>;</code>
+</pre></td></tr></table>
+
+<p>An <var>old-var-declarator</var> allows abbreviation within a specification
+case.  The names defined in the <var>spec-variable-declarators</var> can be
+used throughout the specification case for the values of their
+initializers.  As the name suggests, the expressions are evaluated in
+the method's pre-state.  The bound variable may not rename earlier bound 
+variables in the specification, nor the formal parameters of the
+method declaration.
+</p>
+<p>[[[Example]]]
+</p>
+<hr size="6">
+<a name="Requires-Clauses"></a>
+<a name="SEC104"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC103" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC105" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.2 Requires Clauses </h3>
+
+
+<p>A requires clause specifies a precondition of
+method or constructor.  Its syntax is as follows.
+</p>
+<a name="IDX1498"></a>
+<a name="IDX1499"></a>
+<a name="IDX1500"></a>
+<a name="IDX1501"></a>
+<a name="IDX1502"></a>
+<a name="IDX1503"></a>
+<a name="IDX1504"></a>
+<a name="IDX1505"></a>
+<a name="IDX1506"></a>
+<a name="IDX1507"></a>
+<a name="IDX1508"></a>
+<a name="IDX1509"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>requires-clause</var> ::= <var>requires-keyword</var> <var>pred-or-not</var> <code>;</code>
+        | <var>requires-keyword</var> <code>\same</code> <code>;</code>
+<var>requires-keyword</var> ::= <code>requires</code> | <code>pre</code> 
+        | <code>requires_redundantly</code> | <code>pre_redundantly</code>
+<var>pred-or-not</var> ::= <var>predicate</var> | <code>\not_specified</code>
+</pre></td></tr></table>
+
+<p>The <var>predicate</var> in a <code>requires</code> clause can
+refer to any visible fields and to the parameters of the method.
+See section <a href="jmlrefman_2.html#SEC12">Privacy Modifiers and Visibility</a>, for more details on visibility
+in JML.
+</p>
+
+<p>Any number of requires clauses can be included a single 
+specification case.
+Multiple requires clauses in a specification case
+mean the same as a single requires clause whose precondition predicate
+is the <em>conjunction</em> of these precondition predicates in
+the given requires clauses.
+For example,
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  requires <i>P</i>;
+  requires <i>Q</i>;
+</pre></td></tr></table>
+<p>means the same thing as:
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  requires <i>P</i> &amp;&amp; <i>Q</i>;
+</pre></td></tr></table>
+
+<a name="IDX1510"></a>
+<a name="IDX1511"></a>
+<p>When a requires clause is omitted in a specification case,
+a default requires clause is used.
+For a lightweight specification case, the default precondition is
+<code>\not_specified</code>.
+The default precondition for a heavyweight specification case is
+<code>true</code>.
+</p>
+<a name="IDX1512"></a>
+<p>At most one precondition in a specification case can use <code>\same</code>,
+and <code>\same</code> cannot be used in the only specification case for a
+method unless the method is an override.
+Similarly, <code>\same</code> cannot be used in the only specification case for a
+constructor or a static method.
+Another restriction is that <code>\same</code> cannot be used in a requires
+clause of a nested specification case
+(see section <a href="#SEC96">Semantics of nested behavior specification cases</a>). 
+</p>
+<p>When the precondition is <code>\same</code> in a specification case,
+it means that the specification
+case being written has, effectively, the same precondition as that
+specified in the other (non-<code>\same</code>) specification cases.
+That is, <code>\same</code> stands for
+the disjunction of the preconditions in all non-<code>\same</code>
+specification cases of the method's specification from the current class
+together with the inherited specification cases defined in its supertypes 
+(i.e., in its superclasses and implemented interfaces). 
+</p>
+
+<hr size="6">
+<a name="Ensures-Clauses"></a>
+<a name="SEC105"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC104" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC106" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.3 Ensures Clauses </h3>
+
+<p>An ensures clause specifies a normal postcondition, i.e., a property
+that is guaranteed to hold at the end of the method (or constructor)
+invocation in the case that this method (or constructor) invocation
+returns without throwing an exception.  The syntax is as follows
+See section <a href="#SEC104">Requires Clauses</a>, for the syntax of <var>pred-or-not</var>.
+</p>
+<a name="IDX1513"></a>
+<a name="IDX1514"></a>
+<a name="IDX1515"></a>
+<a name="IDX1516"></a>
+<a name="IDX1517"></a>
+<a name="IDX1518"></a>
+<a name="IDX1519"></a>
+<a name="IDX1520"></a>
+<a name="IDX1521"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>ensures-clause</var> ::= <var>ensures-keyword</var> <var>pred-or-not</var> <code>;</code>
+<var>ensures-keyword</var> ::= <code>ensures</code> | <code>post</code>
+        | <code>ensures_redundantly</code> | <code>post_redundantly</code>
+</pre></td></tr></table>
+
+<p>A <var>predicate</var> in an <code>ensures</code> clause can
+refer to any visible fields, the parameters of the method,
+<code>\result</code> if the method is non-void,
+and may contain expressions of the form <code>\old(<var>E</var>)</code>.
+See section <a href="jmlrefman_2.html#SEC12">Privacy Modifiers and Visibility</a>, for more details on visibility
+in JML.
+</p>
+
+<p>Informally,
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  ensures <i>Q</i>;
+</pre></td></tr></table>
+<p>means 
+</p><blockquote><p>if the method invocation terminates normally (ie. without
+throwing an exception), then predicate <i>Q</i> holds in the post-state.
+</p></blockquote>
+
+<p>In an ensures clause,
+<code>\result</code> stands for the result that is returned by the method.
+The postcondition <i>Q</i> may contain expressions of 
+the form <code>\old(e)</code>.
+Such expressions are evaluated in the pre-state, and not in the post-state,
+and allow <i>Q</i> to express a relation between the pre- and the post-state.
+If parameters of the method occur in the postcondition <i>Q</i>,
+these are always evaluated in the pre-state, not the post-state.
+In other words, if a method parameter <i>x</i> occurs in  <i>Q</i>,
+it is treated as <code>\old(</code><i>x</i><code>)</code>.
+For a detailed explanation of this see <a href="#SEC108">Parameters in Postconditions</a>.
+</p>
+<p>Any number of ensures clauses can be given in a single specification
+case.
+Multiple ensures clauses in a specification case
+mean the same as a single ensures clause whose postcondition predicate
+is the <em>conjunction</em> of the postcondition predicates in the given
+ensures clauses.
+So 
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  ensures <i>P</i>;
+  ensures <i>Q</i>;
+</pre></td></tr></table>
+<p>means the same as
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  ensures <i>P</i> &amp;&amp; <i>Q</i>;
+</pre></td></tr></table>
+<p>Note that, in JML's semantics for expressions within assertions, the
+order of evaluation of <i>P</i> and <i>Q</i> does not matter.
+See section <a href="jmlrefman_2.html#SEC15">Expression Evaluation and Undefinedness</a>, for more details on
+this topic.
+</p>
+<a name="IDX1522"></a>
+<p>When an ensures clause is omitted in a specification case, a default
+ensures clause is used.  For a lightweight specification case, the
+default precondition is <code>\not_specified</code>.  The default
+precondition for a heavyweight specification case is <code>true</code>.
+</p>
+<hr size="6">
+<a name="Signals-Clauses"></a>
+<a name="SEC106"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC105" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC107" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.4 Signals Clauses </h3>
+
+<p>In a specification case a <code>signals</code> clause specifies the
+exceptional or abnormal postcondition, i.e., the property that is
+guaranteed to hold at the end of a method (or constructor) invocation
+when this method (or constructor) invocation terminates abruptly by
+throwing a given exception.
+</p>
+<p>The syntax is as follows.
+See section <a href="#SEC104">Requires Clauses</a>, for the syntax of <var>pred-or-not</var>.
+</p>
+<a name="IDX1523"></a>
+<a name="IDX1524"></a>
+<a name="IDX1525"></a>
+<a name="IDX1526"></a>
+<a name="IDX1527"></a>
+<a name="IDX1528"></a>
+<a name="IDX1529"></a>
+<a name="IDX1530"></a>
+<a name="IDX1531"></a>
+<a name="IDX1532"></a>
+<a name="IDX1533"></a>
+<a name="IDX1534"></a>
+<a name="IDX1535"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>signals-clause</var> ::= <var>signals-keyword</var> <code>(</code> <var>reference-type</var> [ <var>ident</var> ] <code>)</code>
+                   [ <var>pred-or-not</var> ] <code>;</code>
+<var>signals-keyword</var> ::= <code>signals</code> | <code>signals_redundantly</code>
+        | <code>exsures</code> | <code>exsures_redundantly</code>
+</pre></td></tr></table>
+
+<p>In a <var>signals-clause</var> of the form
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  signals (<i>E</i> <i>e</i>) <i>P</i>;
+</pre></td></tr></table>
+<p><i>E</i> has to be a subclass of <code>java.lang.Exception</code>, and the
+variable <i>e</i> is bound in <i>P</i>.  If <i>E</i> is a checked exception
+(i.e., if it does not inherit from <code>java.lang.RuntimeException</code>
+[Arnold-Gosling-Holmes00] [Gosling-etal00]), it must either be one of
+the exceptions listed in the method or constructor's <code>throws</code>
+clause, or a subclass or a superclass of such a declared exception.
+</p>
+<p>Informally,
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  signals (<i>E</i> <i>e</i>) <i>P</i>;
+</pre></td></tr></table>
+<p>means 
+</p><blockquote><p>If the method (or constructor) invocation terminates abruptly by
+throwing an exception of type <i>E</i>, then predicate <i>P</i> holds in the
+final state for this exception object <i>E</i>.
+</p></blockquote>
+
+<p>A signals clause of the form
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  signals (<i>E</i> <i>e</i>) <i>R</i>;
+</pre></td></tr></table>
+<p>is equivalent to the signals clause 
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  signals (java.lang.Exception <i>e</i>) (<i>e</i> instanceof <i>E</i>) ==&gt; <i>R</i>;
+</pre></td></tr></table>
+
+<p>Several signals clauses can be given in a single lightweight, behavior
+or exceptional behavior specification case.  Multiple signals clauses
+in a specification case mean the same as a single signals clause whose
+exceptional postcondition predicate is the <em>conjunction</em> of the
+exceptional postcondition predicates in the given signals clauses.
+This should be understood to take place after the desugaring given
+above, which makes all the signals clauses refer to exceptions of type
+<code>java.lang.Exception</code>.  Also, the names in the given signals
+clauses have to be standardized [Raghavan-Leavens05].  So for example,
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  signals (<i>E1</i> e) <i>R1</i>;
+  signals (<i>E2</i> e) <i>R2</i>;
+</pre></td></tr></table>
+<p>means the same as
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  signals (Exception e)   ((e instanceof <i>E1</i>) ==&gt; <i>R1</i>)
+                       &amp;&amp; ((e instanceof <i>E2</i>) ==&gt; <i>R2</i>);
+</pre></td></tr></table>
+<p>Note that this means that if an exception is thrown that is both of
+type <i>E1</i> and of type <i>E2</i>, then both <i>R1</i> and <i>R2</i> must hold.
+</p>
+<p>[[[EXAMPLE]]]
+</p>
+<p>Beware that a <code>signals</code> clause specifies when a certain exception
+<em>may</em> be thrown, not when a certain exception <em>must</em> be
+thrown.  To say that an exception must be thrown in some situation,
+one has to exclude that situation from other signals clauses and from
+ensures clause (and any diverges clauses). It may also be useful to
+use the <code>signals_only</code> clause in such specifications
+(see section <a href="#SEC107">Signals-Only Clauses</a>).
+</p>
+<p>[[[EXAMPLE?]]]
+</p>
+<a name="IDX1536"></a>
+<a name="IDX1537"></a>
+<a name="IDX1538"></a>
+<a name="IDX1539"></a>
+<p>When a behavior or exceptional specification case has no
+<var>signals-clause</var>, a default signals clause is used.  For a
+heavyweight specification case, 
+the default signals clause is <code>signals (Exception) true;</code>.
+Since normal behavior specification cases do not have signals clauses,
+no default applies for such specification cases.
+For a lightweight specification case, the default is
+<code>signals \not_specified;</code>.
+</p>
+
+<hr size="6">
+<a name="Signals_002dOnly-Clauses"></a>
+<a name="SEC107"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC106" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC108" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.5 Signals-Only Clauses </h3>
+
+<p>A <code>signals_only</code> clause is an abbreviation for a
+<var>signals-clause</var> (see section <a href="#SEC106">Signals Clauses</a>) that
+specifies what exceptions may be thrown by a method, and thus, implicitly, what
+exceptions may <em>not</em> be thrown.
+</p>
+<p>The syntax is as follows.
+</p>
+<a name="IDX1540"></a>
+<a name="IDX1541"></a>
+<a name="IDX1542"></a>
+<a name="IDX1543"></a>
+<a name="IDX1544"></a>
+<a name="IDX1545"></a>
+<a name="IDX1546"></a>
+<a name="IDX1547"></a>
+<a name="IDX1548"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>signals-only-clause</var> ::= <var>signals-only-keyword</var> <var>reference-type</var> [ <code>,</code> <var>reference-type</var> ] &hellip; <code>;</code>
+        | <var>signals-only-keyword</var> <code>\nothing</code> <code>;</code>
+<var>signals-only-keyword</var> ::= <code>signals_only</code> | <code>signals_only_redundantly</code>
+
+</pre></td></tr></table>
+
+<p>All of the <var>reference-type</var>s named in a <var>signals-only-clause</var>
+must be subtypes of <code>java.lang.Exception</code>.  Each
+<var>reference-type</var> that is a checked exception type
+(i.e., that does not inherit from <code>java.lang.RuntimeException</code>
+[Arnold-Gosling-Holmes00] [Gosling-etal00]), must either be one of
+the exceptions listed in the method or constructor's <code>throws</code>
+clause, or a subclass or a superclass of such a declared exception.
+</p>
+<p>A <var>signals-only-clause</var> of the form
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  signals_only <i>E1</i>, <i>E2</i>, &hellip;, <i>En</i>;
+</pre></td></tr></table>
+<p>is considered to be an abbreviation (syntactic sugar) for
+the following <var>signals</var> clause (see section <a href="#SEC106">Signals Clauses</a>).
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  signals (java.lang.Exception e)
+           e instanceof <i>E1</i>
+        || e instanceof <i>E2</i>
+        || &hellip;
+        || e instanceof <i>En</i>;
+</pre></td></tr></table>
+<p>That is, such a clause specifies that if the method or constructor
+throws an exception, it must be an instance of one of the types named.
+</p>
+<a name="IDX1549"></a>
+<p>Several <var>signals-only-clause</var>s can be given in a single
+lightweight, behavior or exceptional behavior specification case.
+Multiple such clauses 
+in a specification case mean the same as a single clause whose
+list contains only the names <i>Ej</i> that are subtypes of some type
+named in all of the given <var>signals-only-clause</var>s.
+Thus, the meaning is a kind of intersection of the <code>signals_only</code>
+clauses.  Since this may be confusing, only one
+<code>signals_only</code> clause should ever be used in a given specification case.
+</p>
+<a name="IDX1550"></a>
+<p>The <code>signals_only</code> clause is useful for specifying
+when a certain exception, or one of a small set of exceptions, <em>must</em> be
+thrown.  To say that an exception must be thrown in some situation,
+one has to exclude the method from returning normally in that
+situation (using an ensures clause or the precondition of some other
+specification case) and from not terminating (by using the diverges clause).
+</p>
+<p>[[[Example]]]
+</p>
+<a name="IDX1551"></a>
+<p>If the <code>signals_only</code> is omitted from a specification case,
+a default <code>signals_only</code> clause is provided.
+The same default is used for both lightweight and heavyweight
+behavior and exceptional behavior specification cases.
+(Since normal behavior specification cases cannot throw exceptions at all,
+there is no default <code>signals_only</code> clause for such specification cases.)
+This default prohibits any exception not declared by the method in
+the method's header from being thrown.  Thus the exact default depends on the
+method header. If the method header does not list any exceptions that
+can be thrown, then the default is <code>signals_only \nothing;</code>
+(which means that the method cannot throw any exceptions).
+However, if the method header declares that the method may throw
+exceptions <i>DE_1</i>, &hellip;, <i>DE_n</i>, <i>Err_1</i>, &hellip;, <i>Err_m</i>,
+where each <i>DE_i</i> is a subtype of <code>java.lang.Exception</code>, and
+each <i>Err_j</i> is not a subtype of <code>java.lang.Exception</code>,
+then the default 
+<code>signals_only</code> clause is as follows.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">   signals_only <i>DE_1</i>, &hellip;, <i>DE_n</i>
+</pre></td></tr></table>
+<p>For example, if the method has the header
+</p><table><tr><td>&nbsp;</td><td><pre class="display">   public void foo() throws E1, E2
+</pre></td></tr></table>
+<p>then the default <code>signals_only</code> clause
+would be 
+</p><table><tr><td>&nbsp;</td><td><pre class="display">   signals_only E1, E2;
+</pre></td></tr></table>
+
+<a name="IDX1552"></a>
+<a name="IDX1553"></a>
+<a name="IDX1554"></a>
+<a name="IDX1555"></a>
+<p>It is important to note that the set of exceptions included in the default
+<code>signals</code> clause described above never includes
+<code>java.lang.Throwable</code>, and does not include
+<code>java.lang.Error</code> or any of its subtypes.  Furthermore, this
+default would not normally include
+<code>java.lang.RuntimeException</code> or any of its subtypes, because Java
+explicitly allows RuntimeExceptions to be thrown even if they are not
+declared in the method header's <code>throws</code> clause.
+Since such unchecked, runtime exceptions are not usually listed in the
+method header, they would not find their way into the default
+<code>signals_only</code> clause.
+In JML, however, if you wish to allow such runtime exceptions, you
+can either explicitly list them in the method header or, more
+usually, you would list them in an explicit <code>signals_only</code> clause.
+</p>
+<hr size="6">
+<a name="Parameters-in-Postconditions"></a>
+<a name="SEC108"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC107" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC109" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.6 Parameters in Postconditions </h3>
+
+<p>Parameters of methods are passed by value in Java,
+meaning that parameters are local variables 
+in a method body, which are initialized when the method
+is called with the values of the parameters for the invocation.
+</p>
+<p>This leads us to the following two rules:
+</p>
+<ul>
+<li>
+The parameters of a method or constructor can never be listed in
+its assignable clause.
+
+</li><li>
+If parameters of a method (or constructor) are used in
+a normal or exceptional postcondition for that method (or constructor),
+i.e., in an ensures or signals clause,
+then these always have their value in the pre-state of the method 
+(or constructor),
+not the post-state.
+In other words, there is an implicit <code>\old()</code> placed around
+any occurrence of a formal parameter in a postcondition.
+</li></ul>
+
+<p>The justification for the first convention is that clients cannot observe
+assignments to the parameters anyway, as these are
+local variables that can only be used by the implementation
+of the method.
+Given that clients can never observe these assignments,
+there is no point in making them 
+part of the contract between a class and its clients.
+</p>
+<p>The justification for the second convention is that clients only know 
+the initial values of the parameter that they supply, 
+and do not have any knowledge of the final values
+that these variables may have in the post-state.
+</p>
+<p>The reason for this is best illustrated by an example.
+Consider the following class and its method specifications.
+Without the convention described above 
+the implementations given for methods
+<code>notCorrect1</code> and <code>notCorrect2</code> would satisfy their specifications.
+However, clearly neither of these satisfies the specification
+when read from the caller's point of view.
+</p>
+<a name="IDX1556"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;
+
+public abstract class ImplicitOld {
+
+    /*@ ensures 0 &lt;= \result &amp;&amp; \result &lt;= x;
+      @ signals (Exception) x &lt; 0;
+      @*/
+    public static int notCorrect1(int x) throws Exception {
+        x = 5;
+        return 4;
+    }
+
+    /*@ ensures 0 &lt;= \result &amp;&amp; \result &lt;= x;
+      @ signals (Exception) x &lt; 0;
+      @*/
+    public static int notCorrect2(int x) throws Exception {
+        x = -1;
+        throw new Exception();
+    }
+
+    /*@ ensures 0 &lt;= \result &amp;&amp; \result &lt;= x;
+      @ signals (Exception) x &lt; 0;
+      @*/
+    public static int correct(int x) throws Exception {
+        if (x &lt; 0) {
+            throw new Exception();
+        } else {
+            return 0;
+        }
+    }
+}
+</pre></td></tr></table>
+
+<p>The convention above rules out such
+pathological implementations as <code>notCorrect1</code> 
+above; because mention of a formal parameter name, such as <code>x</code> above,
+in postconditions always means the pre-state value of that name,
+e.g., <code>\old(x)</code> in the example above.
+</p>
+<hr size="6">
+<a name="Diverges-Clauses"></a>
+<a name="SEC109"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC108" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC110" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.7 Diverges Clauses </h3>
+
+<p>The diverges clause is a seldom-used feature of JML.  It says when a
+method may loop forever or otherwise not return to its caller, by
+either throwing an exception or returning normally.  The syntax is as
+follows See section <a href="#SEC104">Requires Clauses</a>, for the syntax of <var>pred-or-not</var>.
+</p>
+<a name="IDX1557"></a>
+<a name="IDX1558"></a>
+<a name="IDX1559"></a>
+<a name="IDX1560"></a>
+<a name="IDX1561"></a>
+<a name="IDX1562"></a>
+<a name="IDX1563"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>diverges-clause</var> ::= <var>diverges-keyword</var> <var>pred-or-not</var> <code>;</code>
+<var>diverges-keyword</var> ::= <code>diverges</code> | <code>diverges_redundantly</code>
+</pre></td></tr></table>
+
+<a name="IDX1564"></a>
+<a name="IDX1565"></a>
+<a name="IDX1566"></a>
+<p>When a diverges clause is omitted in a specification case, a default
+diverges clause is used.  For both lightweight and heavyweight
+specification cases, the 
+default diverges condition is <code>false</code>.
+Thus by default, specification cases
+give total correctness specifications [Dijkstra76].  Explicitly writing
+a diverges clause allows one to obtain a partial correctness
+specification [Hoare69].  Being able to specify both total and partial
+correctness specification cases for a method leads to additional power
+[Hesselink92] [Nelson89].
+</p>
+<p>As an example of the use of <code>diverges</code>, consider the <code>exit</code>
+method in the following class.  (This example is simplified from the
+specification of Java's <code>System.exit</code> method.
+This specification says that the method can always be called (the
+implicit precondition is <code>true</code>),
+may always not return to the caller (i.e., diverge),
+and may never return normally, and
+may never throw an exception.
+Thus the only thing the method can legally do, aside from causing a JVM
+error, is to not return to its caller.
+</p>
+<a name="IDX1567"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;
+ 
+public abstract class Diverges {
+
+    /*@ public behavior
+      @    diverges true;
+      @    assignable \nothing;
+      @    ensures false;
+      @    signals (Exception) false;
+      @*/
+    public static void abort();
+
+}
+</pre></td></tr></table>
+
+<p>The diverges clause is also useful to specify things like methods that
+are supposed to abort the program when certain conditions occur,
+although that isn't really good practice in Java.  In general, it is
+most useful for examples like the one given above, when you want to say when
+a method cannot return to its caller.
+</p>
+<hr size="6">
+<a name="When-Clauses"></a>
+<a name="SEC110"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC109" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC111" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.8 When Clauses </h3>
+
+<p>The <code>when</code> clause allows concurrency aspects of a method or
+constructor to be specified [Lerner91] [Rodriguez-etal05].
+A caller of a method will be delayed until the condition given in the
+<code>when</code> clause holds.  What is checked is that the method does not
+proceed to its commit point, which is the start of execution of
+statement with the label <code>commit</code>, until the given predicate is
+true.
+</p>
+<p>The syntax is as follows.
+See section <a href="#SEC104">Requires Clauses</a>, for the syntax of <var>pred-or-not</var>.
+</p>
+<a name="IDX1568"></a>
+<a name="IDX1569"></a>
+<a name="IDX1570"></a>
+<a name="IDX1571"></a>
+<a name="IDX1572"></a>
+<a name="IDX1573"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>when-clause</var> ::= <var>when-keyword</var> <var>pred-or-not</var> <code>;</code>
+<var>when-keyword</var> ::= <code>when</code> | <code>when_redundantly</code>
+</pre></td></tr></table>
+
+<a name="IDX1574"></a>
+<p>When a when clause is omitted in a specification case, a default when
+clause is used.  For a lightweight specification case, the default
+when condition is <code>\not_specified</code>.  The default when condition
+for a heavyweight specification case is <code>true</code>.
+</p>
+<p>See [Rodriguez-etal05] for more about the <code>when</code> clause and JML's
+plans for support of multithreading.
+</p>
+
+<hr size="6">
+<a name="Assignable-Clauses"></a>
+<a name="SEC111"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC110" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC112" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.9 Assignable Clauses </h3>
+
+<p>An assignable clause gives a frame axiom for a specification.  It says
+that, from the client's point of view, only the locations named, and
+locations in the data groups associated with these locations,
+can be assigned to during the execution of the method.
+The values of all subexpressions used in assignable clauses,
+such as <code>i-1</code> in <code>a[i-1]</code>,
+are computed in the pre-state of the method,
+because the assignable clause only talks about locations that exist in
+the pre-state.
+</p>
+<p>See section <a href="jmlrefman_10.html#SEC118">Data Groups</a>, for more about specification of data groups.
+However, locations that are local to the method (or methods it calls)
+and locations that are created during the method's execution are not
+subject to this restriction.
+</p>
+<p>The syntax is as follows.
+See section <a href="jmlrefman_11.html#SEC162">Store Refs</a>, for the syntax of <var>store-ref-list</var>.
+</p>
+<a name="IDX1575"></a>
+<a name="IDX1576"></a>
+<a name="IDX1577"></a>
+<a name="IDX1578"></a>
+<a name="IDX1579"></a>
+<a name="IDX1580"></a>
+<a name="IDX1581"></a>
+<a name="IDX1582"></a>
+<a name="IDX1583"></a>
+<a name="IDX1584"></a>
+<a name="IDX1585"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>assignable-clause</var> ::= <var>assignable-keyword</var> <var>store-ref-list</var> <code>;</code>
+<var>assignable-keyword</var> ::= <code>assignable</code> | <code>assignable_redundantly</code>
+        | <code>modifiable</code> | <code>modifiable_redundantly</code>
+        | <code>modifies</code> | <code>modifies_redundantly</code>
+</pre></td></tr></table>
+
+<a name="IDX1586"></a>
+<a name="IDX1587"></a>
+<a name="IDX1588"></a>
+<a name="IDX1589"></a>
+<a name="IDX1590"></a>
+<p>When an assignable clause is omitted in a specification case, a
+default assignable clause is used.  This default has a default
+<var>store-ref-list</var>.  For a lightweight specification
+case, the default <var>store-ref-list</var> is
+<code>\not_specified</code>.  The default <var>store-ref-list</var>
+for a heavyweight specification case is <code>\everything</code>.
+</p>
+<a name="IDX1591"></a>
+<a name="IDX1592"></a>
+<p>If one wants the opposite of the default (for a heavyweight
+specification case), then one can specify that a method cannot assign to any
+locations by writing:
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  assignable \nothing;
+</pre></td></tr></table>
+<p>Using the modifier <code>pure</code> on a method achieves the same effect as
+specifying <code>assignable \nothing</code>, but does so for the method's entire
+specification as opposed to a single <var>specification-case</var>.
+</p>
+<a name="IDX1593"></a>
+<p>Assignable clauses are subject to several restrictive rules in JML.
+The first rule has to do with fields of model objects.
+Because model objects are abstract 
+and do not have a concrete state or concrete fields, the JML typechecker 
+does not allow fields of model objects to be listed in the assignable clause; 
+that is, such expressions do not specify a set of locations 
+(concrete fields) that can be assigned to. Thus expressions 
+like <code>f.x</code> are not allowed in the assignable clause when <code>f</code> 
+is a model field. 
+</p>
+<p>[[[Flesh out other restrictions.  Refer to
+[Mueller-Poetzsch-Heffter-Leavens03] for details.]]]
+</p>
+<hr size="6">
+<a name="Accessible-Clauses"></a>
+<a name="SEC112"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC111" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC113" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.10 Accessible Clauses </h3>
+
+<p>The accessible clause is a seldom-used feature of JML.
+Together with the <code>assignable</code> clause (see section <a href="#SEC111">Assignable Clauses</a>), 
+it says what (pre-existing) locations a method may
+read during its execution.
+It has the following syntax.
+</p>
+<a name="IDX1594"></a>
+<a name="IDX1595"></a>
+<a name="IDX1596"></a>
+<a name="IDX1597"></a>
+<a name="IDX1598"></a>
+<a name="IDX1599"></a>
+<a name="IDX1600"></a>
+<a name="IDX1601"></a>
+<a name="IDX1602"></a>
+<a name="IDX1603"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>accessible-clause</var> ::= <var>accessible-keyword</var> <var>store-ref-list</var> <code>;</code>
+<var>accessible-keyword</var> ::= <code>accessible</code> | <code>accessible_redundantly</code>
+</pre></td></tr></table>
+
+<p>During execution of the method (which includes all directly and
+indirectly called methods and constructors),
+only locations that either did not exist in the pre-state,
+that are local to the method (including the method's formal parameters),
+or that are either named in the lists found in the 
+<code>accessible</code> and <code>assignable</code> clauses
+or that are dependees (see section <a href="jmlrefman_10.html#SEC118">Data Groups</a>) of such locations,
+are read from.
+Note that locations that are local to the method (or methods it calls)
+and locations that are created during the method's execution are not
+subject to this restriction and may be read from freely.
+</p>
+<a name="IDX1604"></a>
+<a name="IDX1605"></a>
+<p>When an accessible clause is omitted in a code contract specification case, a
+default accessible clause is used.  
+This default has a default <var>store-ref-list</var> which is  
+<code>\everything</code>.
+</p>
+<p>See section <a href="jmlrefman_15.html#SEC190">Specification for Subtypes</a>, for more discussion and examples.
+</p>
+<hr size="6">
+<a name="Callable-Clauses"></a>
+<a name="SEC113"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC112" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC114" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.11 Callable Clauses </h3>
+
+<p>The callable clause says what methods may be called, either directly
+or indirectly, by the method being specified.  It has the following syntax.
+</p>
+<a name="IDX1606"></a>
+<a name="IDX1607"></a>
+<a name="IDX1608"></a>
+<a name="IDX1609"></a>
+<a name="IDX1610"></a>
+<a name="IDX1611"></a>
+<a name="IDX1612"></a>
+<a name="IDX1613"></a>
+<a name="IDX1614"></a>
+<a name="IDX1615"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>callable-clause</var> ::= <var>callable-keyword</var> <var>callable-methods-list</var> <code>;</code>
+<var>callable-keyword</var> ::= <code>callable</code> | <code>callable_redundantly</code>
+<var>callable-methods-list</var> ::= <var>method-name-list</var> | <var>store-ref-keyword</var>
+</pre></td></tr></table>
+
+<p>During execution of a method,
+the only methods and constructors that may be called are those listed in the
+<code>callable</code> clause's list.
+</p>
+<a name="IDX1616"></a>
+<a name="IDX1617"></a>
+<p>When a callable clause is omitted in a code contract specification case, a
+default callable clause is used.  
+This default has a default <var>callable-methods-list</var> which is  
+<code>\everything</code>.
+</p>
+<p>See section <a href="jmlrefman_15.html#SEC190">Specification for Subtypes</a>, for more discussion and examples.
+</p>
+<hr size="6">
+<a name="Measured-By-Clauses"></a>
+<a name="SEC114"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC113" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC115" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.12 Measured By Clauses </h3>
+
+<p>A measured by clause can be used in a termination argument for a
+recursive specification.  It has the following syntax.
+</p>
+<a name="IDX1618"></a>
+<a name="IDX1619"></a>
+<a name="IDX1620"></a>
+<a name="IDX1621"></a>
+<a name="IDX1622"></a>
+<a name="IDX1623"></a>
+<a name="IDX1624"></a>
+<a name="IDX1625"></a>
+<a name="IDX1626"></a>
+<a name="IDX1627"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>measured-clause</var> ::= <var>measured-by-keyword</var> <code>\not_specified</code> <code>;</code>
+        | <var>measured-by-keyword</var> <var>spec-expression</var> [ <code>if</code> <var>predicate</var> ] <code>;</code>
+<var>measured-by-keyword</var> ::= <code>measured_by</code> | <code>measured_by_redundantly</code>
+</pre></td></tr></table>
+
+<p>The <var>spec-expression</var> in a measured by clause must have type
+<code>int</code>.
+</p>
+<p>In both lightweight and heavyweight specification cases, an omitted 
+measured by clause means the same as a measured by clause of the
+following form.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">    measured_by \not_specified;
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="Captures-Clauses"></a>
+<a name="SEC115"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC114" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC116" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.13 Captures Clauses </h3>
+
+
+<p>The captures clause has the following syntax.
+</p>
+<a name="IDX1628"></a>
+<a name="IDX1629"></a>
+<a name="IDX1630"></a>
+<a name="IDX1631"></a>
+<a name="IDX1632"></a>
+<a name="IDX1633"></a>
+<a name="IDX1634"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>captures-clause</var> ::= <var>captures-keyword</var> <var>store-ref-list</var> <code>;</code>
+<var>captures-keyword</var> ::= <code>captures</code> | <code>captures_redundantly</code>
+</pre></td></tr></table>
+
+<p>The captures clause says that references to the <var>store-ref</var>s listed can be
+retained after the method returns, for example in a field of the
+receiver object or in a static field.
+Therefore, the captures clause specifies when an object, passed as an 
+actual parameter in a method call, may be captured during the call.
+</p>
+<p>An actual parameter object (including the receiver this) is captured if it 
+appears on the right-hand side of an assignment statement 
+during the call.  
+This can also happen indirectly through another method or constructor call 
+or by returning the parameter object as the method result (we assume 
+the result will be assigned to a field or local variable after the 
+call).  
+</p>
+<p>The captures clause is used to prevent certain kinds of representation 
+exposure as part of an alias control technique. 
+For example, if an object should not be aliased, then   
+that object must not be passed to a method that may capture it, 
+i.e., may create an alias to it (this includes the receiver). 
+Furthermore, objects used as part of the abstract representation of a type
+should not be aliased, and thus should not be passed to methods 
+that capture it.  
+JML tools will eventually prevent such aliasing.
+</p>
+<a name="IDX1635"></a>
+<a name="IDX1636"></a>
+<p>When a captures clause is omitted in a method specification case, then a
+default captures clause is used.  
+This default has a default <var>store-ref-list</var> which is  
+<code>\everything</code>. 
+Thus when omitted, a method is allowed to capture any of the actual 
+parameter objects or the receiver.
+</p>
+<hr size="6">
+<a name="Working-Space-Clauses"></a>
+<a name="SEC116"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC115" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC117" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.14 Working Space Clauses </h3>
+
+<p>A <var>working-space-clause</var> can be used to specify the maximum amount
+of heap space used by a method, over and above that used by its
+callers.  The clause applies only to the particular specification case
+it is in, of course
+This is adapted from the work of Krone, Ogden, and Sitaraman on
+RESOLVE [Krone-Ogden-Sitaraman03].
+</p>
+<a name="IDX1637"></a>
+<a name="IDX1638"></a>
+<a name="IDX1639"></a>
+<a name="IDX1640"></a>
+<a name="IDX1641"></a>
+<a name="IDX1642"></a>
+<a name="IDX1643"></a>
+<a name="IDX1644"></a>
+<a name="IDX1645"></a>
+<a name="IDX1646"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>working-space-clause</var> ::= <var>working-space-keyword</var> <code>\not_specified</code> <code>;</code>
+        | <var>working-space-keyword</var> <var>spec-expression</var> [ <code>if</code> <var>predicate</var> ] <code>;</code>
+<var>working-space-keyword</var> ::= <code>working_space</code> | <code>working_space_redundantly</code>
+</pre></td></tr></table>
+
+<p>The <var>spec-expression</var> in a working space clause must have type
+<code>long</code>.  It is to be understood in units of bytes.
+</p>
+<a name="IDX1647"></a>
+<a name="IDX1648"></a>
+<p>The <var>spec-expression</var> in a working space clause may use
+<code>\old</code> and other JML operators appropriate for postconditions.
+This is because it is considered to be evaluated in the post-state,
+and provides a guarantee of the maximum amount of additional space
+used by the call.  In some cases this space may depend on the
+<code>\result</code>, exceptions thrown, or other post-state values.
+[[[ There is however no way to identify the exception thrown - DRCok]]]
+</p>
+<p>In both lightweight and heavyweight specification cases, an omitted 
+working space clause means the same as a working space clause of the
+following form.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">    working_space \not_specified;
+</pre></td></tr></table>
+
+<p>See section <a href="jmlrefman_11.html#SEC138"><code>\working_space</code></a>, for information about the
+<code>\working_space</code> expression that can be used
+to describe the working space needed by a
+method call.  See section <a href="jmlrefman_11.html#SEC137"><code>\space</code></a>, for information about the
+<code>\space</code> expression that can be used
+to describe the heap space occupied by an object.
+</p>
+<hr size="6">
+<a name="Duration-Clauses"></a>
+<a name="SEC117"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC116" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC100" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 9.9.15 Duration Clauses </h3>
+
+<p>A duration clause can be used to specify the maximum (i.e., worst
+case) time needed to process a method call in a particular
+specification case.  [[[ Tools are simpler if the argument can simply be an arbitrary expression rather than a method call. &ndash; DRCok ]]]
+This is adapted from the work of Krone, Ogden, and Sitaraman on
+RESOLVE [Krone-Ogden-Sitaraman03].
+</p>
+<a name="IDX1649"></a>
+<a name="IDX1650"></a>
+<a name="IDX1651"></a>
+<a name="IDX1652"></a>
+<a name="IDX1653"></a>
+<a name="IDX1654"></a>
+<a name="IDX1655"></a>
+<a name="IDX1656"></a>
+<a name="IDX1657"></a>
+<a name="IDX1658"></a>
+<table><tr><td>&nbsp;</td><td><pre class="display"><var>duration-clause</var> ::= <var>duration-keyword</var> <code>\not_specified</code> <code>;</code>
+        | <var>duration-keyword</var> <var>spec-expression</var> [ <code>if</code> <var>predicate</var> ] <code>;</code>
+<var>duration-keyword</var> ::= <code>duration</code> | <code>duration_redundantly</code>
+</pre></td></tr></table>
+
+<p>The <var>spec-expression</var> in a duration clause must have type
+<code>long</code>.  It is to be understood in units of [[[the JVM
+instruction that takes the least time to execute, which may be thought
+of as the JVM's cycle time.]]]  The time it takes the JVM to execute
+such an instruction can be multiplied by the number of such cycles to
+arrive at the clock time needed to execute the method in the given
+specification case.  [[[This time should also be understood as not
+counting garbage collection time.]]]
+</p>
+<a name="IDX1659"></a>
+<a name="IDX1660"></a>
+<p>The <var>spec-expression</var> in a duration clause may use
+<code>\old</code> and other JML operators appropriate for postconditions.
+This is because it is considered to be evaluated in the post-state,
+and provides a guarantee of the maximum amount of additional space
+used by the call.  In some cases this space may depend on the
+<code>\result</code>, exceptions thrown, or other post-state values.
+[[[  There is no way to identify the exception thrown -  DRCok]]]
+</p>
+<p>In both lightweight and heavyweight specification cases, an omitted 
+duration clause means the same as a duration clause of the
+following form.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">    duration \not_specified;
+</pre></td></tr></table>
+
+<p>See section <a href="jmlrefman_11.html#SEC136"><code>\duration</code></a>, for information about the <code>\duration</code>
+expression that can be used in the duration clause to specify the
+duration of other methods.
+</p>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC80" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_10.html#SEC118" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

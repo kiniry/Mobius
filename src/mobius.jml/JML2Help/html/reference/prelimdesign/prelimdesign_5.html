@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>Preliminary Design of JML: A. Specification Case Defaults</title>
+
+<meta name="description" content="Preliminary Design of JML: A. Specification Case Defaults">
+<meta name="keywords" content="Preliminary Design of JML: A. Specification Case Defaults">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Specification-Case-Defaults"></a>
+<a name="SEC54"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="prelimdesign_4.html#SEC52" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_6.html#SEC55" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign_4.html#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_6.html#SEC55" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="appendix"> A. Specification Case Defaults </h1>
+
+<p>As noted above (see section <a href="prelimdesign_1.html#SEC3">Lightweight Specifications</a>),
+specifications in JML do not need to be as detailed
+as most of the examples given in this document.
+If a <var>spec-case</var> 
+does not use one of the behavior keywords
+(<code>behavior</code>, <code>normal_behavior</code>, or <code>exceptional_behavior</code>),
+or if an <var>example</var>
+does not use one of the example keywords
+(<code>example</code>, <code>normal_example</code>,
+<code>exceptional_example</code>),
+then it is called a <em>lightweight</em> specification or example.
+Otherwise it is a <em>heavyweight</em> specification or example.
+</p>
+<a name="IDX620"></a>
+<a name="IDX621"></a>
+<a name="IDX622"></a>
+<a name="IDX623"></a>
+<a name="IDX624"></a>
+<a name="IDX625"></a>
+<a name="IDX626"></a>
+<a name="IDX627"></a>
+<a name="IDX628"></a>
+<a name="IDX629"></a>
+<p>When the various clauses of a <var>spec-case</var>
+or <var>example</var> are omitted, they have
+the defaults given in the table below.  The table distinguishes between
+lightweight and heavyweight specifications and examples.  In most cases
+the default for the lightweight form is that
+no assumption is made about the omitted clause.  There are only two
+exceptions to this rule.  The first is that for an omitted
+<code>diverges</code> clause defaults to <code>false</code>.  The second is that
+an omitted <code>signals_only</code> has a default that depends on the
+exceptions declared in the method.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="display">   <tt>                                Default</tt>
+   <tt>Omitted clause  lightweight                 heavyweight</tt> 
+   <tt>___________________________________________________________</tt>
+   <tt>requires        \not_specified              true</tt> 
+   <tt>diverges        false                       false</tt>
+   <tt>measured_by     \not_specified              \not_specified</tt>
+   <tt>assignable      \not_specified              \everything</tt> 
+   <tt>when            \not_specified              true</tt> 
+   <tt>working_space   \not_specified              \not_specified</tt>
+   <tt>duration        \not_specified              \not_specified</tt>
+   <tt>ensures         \not_specified              true</tt>
+   <tt>signals_only    <i>see text</i>                    <i>see text</i></tt>
+   <tt>signals         \not_specified              (Exception) true</tt> 
+</pre></td></tr></table>
+
+<p>However, in a heavyweight
+specification or example, the specifier is assumed to be giving a complete
+specification or example.  Therefore, in a heavyweight specification the
+meaning of an omitted clause is given a definite default.
+For example, the meaning of an omitted <code>assignable</code> clause
+is that all locations (that can otherwise be legally assigned to)
+can be assigned.
+<a name="IDX630"></a>
+Furthermore, in a non-lightweight specification, the meaning of an
+omitted diverges clause is that the method may not diverge in that case.
+(The <code>diverges</code> clause is almost always omitted; it can be used
+to say what should be true, of the pre-state, when the specification
+is allowed to loop forever or signal an error.)
+</p>
+<p>The defaults for omitted <code>signals_only</code> and <code>signals</code> clauses do
+not apply to <code>normal_behavior</code> specification cases, since
+<code>normal_behavior</code> specification cases cannot contain these clauses.
+</p>
+<a name="IDX631"></a>
+<p>The default for the <code>signals_only</code> clause is the same in both
+heavyweight and lightweight specifications, but depends on the list of
+exceptions declared in the method.  If the method declares no
+exceptions, then the default clause is <code>signals_only \nothing;</code>
+(which means that the method cannot throw any exceptions).
+However, if the method header declares that the method may throw
+exceptions <i>DE1</i>, &hellip;, <i>DEn</i>, then the default
+<code>signals_only</code> clause is as follows.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">   signals_only <i>DE1</i>, &hellip;, <i>DEn</i>
+</pre></td></tr></table>
+<p>This default applies whenever the <code>signals_only</code> clause is
+omitted from a specification case, even if the method has a
+<code>signals</code> clause.  If this default is too strong, the effect can
+be changed by either writing an explicit <code>signals_only</code> clause,
+or by declaring further exceptions in the method's header.
+Note that although Java allows runtime exceptions (subtypes of
+<code>java.lang.RuntimeException</code>) to be thrown 
+without being declared in a method's header, JML does not take make a
+special case for these.
+</p>
+<a name="IDX632"></a>
+<a name="IDX633"></a>
+<a name="IDX634"></a>
+<a name="IDX635"></a>
+<a name="IDX636"></a>
+<p>A completely omitted specification is taken to be a lightweight
+specification.
+If the default (zero-argument) constructor of a class is omitted
+because its code is omitted,  then its specification defaults to
+an assignable clause that allows all the locations that the
+default (zero-argument) constructor of its superclass assigns &mdash; in
+essence a copy of the superclass's default constructor's assignable clause.
+If some other frame is desired, then one has to write the specification,
+or at least the code, explicitly.
+</p>
+<a name="IDX637"></a>
+<a name="IDX638"></a>
+<a name="IDX639"></a>
+<a name="IDX640"></a>
+<p>A method or constructor with code present has a
+<em>completely omitted</em> specification if it has no
+<var>specification-case</var>s and does not use 
+annotations like <code>non_null</code> or <code>pure</code> that add implicit
+specifications.
+</p>
+<p>If a method or constructor has code, has a completely omitted
+specification, and does not override another method, then 
+its meaning is taken as the lightweight specification
+<code>diverges \not_specified;</code>. 
+Thus, its meaning can be read
+from the lightweight column of table above, except that the diverges
+clause is not given its usual default.
+This is done so that the default
+specification when no specification is given truly says nothing about
+the method's behavior.
+However, if a method with code and a completely omitted
+specification overrides some other method, then its meaning is taken
+to be the lightweight specification <code>also requires false;</code>.  This somewhat
+counter-intuitive specification is the unit under specification
+conjunction with <code>also</code>; it is used so as not to
+change the meaning of the inherited specification.
+</p>
+<p>If the code is annotated with keywords like <code>non_null</code> or
+<code>pure</code> that add implicit specifications, then these implicit
+specifications are used instead of the default.  Code with such
+annotations is considered to have an implicit specification.
+</p>
+<a name="IDX641"></a>
+<p>It is intended that the meaning of <code>\not_specified</code> may vary
+between different uses of a JML specification.
+For example, a static checker might treat a <code>requires</code> clause 
+that is <code>\not_specified</code> as if it were <code>true</code>,
+while a verification logic might treat it as if it were <code>false</code>.
+However, a reasonable default for the interpretation for <code>\not_specified</code>
+in a lightweight specification is the most liberal possible
+(i.e., the one that permits the most correct implementations); this is
+generally the same as the heavyweight default, except for the
+<code>diverges</code> clause (where the most liberal interpretation would be
+<code>true</code>).
+</p>
+<a name="IDX642"></a>
+<a name="IDX643"></a>
+<a name="IDX644"></a>
+<p>Note that specification statements
+(see the <cite>JML Reference manual</cite> [Leavens-etal-JMLRef] for details)
+cannot be lightweight.  In addition, a <var>spec-statement</var> can specify
+abrupt termination.  The additional clauses possible in a <var>spec-statement</var>
+have the following defaults.  These are not liberally interpreted, but
+instead prohibit the statement from having abrupt behavior by default.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="display">   <tt>               Default</tt>
+   <tt>Omitted clause (heavyweight)</tt> 
+   <tt>____________________________</tt>
+   <tt>continues      false</tt>
+   <tt>breaks         false</tt> 
+   <tt>returns        false</tt>
+</pre></td></tr></table>
+
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="prelimdesign_4.html#SEC52" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_6.html#SEC55" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

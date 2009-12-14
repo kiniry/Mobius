@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Getting Started" link_to="toc.xml#gettingstarted"> 
+	<topic label="Design-by-Contract with JML (PDF)" href="html/gettingstarted/jmldbc.pdf">
+	</topic> 
+
+	<topic label="Universe Type System --- Quick-Reference (PDF)" href="html/gettingstarted/universes.pdf">
+	</topic>
+</toc>

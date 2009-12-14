@@ -1,0 +1,1014 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: 1. Introduction</title>
+
+<meta name="description" content="JML Reference Manual: 1. Introduction">
+<meta name="keywords" content="JML Reference Manual: 1. Introduction">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Introduction"></a>
+<a name="SEC1"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC2" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[ &lt;&lt; ]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC8" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 1. Introduction </h1>
+
+<p>JML is a notation for formally specifying
+the behavior and interfaces of Java [Arnold-Gosling-Holmes00] [Gosling-etal00]
+classes and methods.
+</p>
+<a name="IDX1"></a>
+<a name="IDX2"></a>
+<a name="IDX3"></a>
+<a name="IDX4"></a>
+<p>The goal of this reference manual is to precisely record the design of
+JML.  We include both informal semantics (intentions) and where possible
+[[[we will eventually include]]]
+formal semantics (describing when an implementation satisfies a
+specification). We also discuss the implications for various tools
+(such as the run-time assertion checker, static checkers such as ESC/Java2, and
+documentation generators such as jmldoc [Burdy-etal03]).
+</p>
+<a name="IDX5"></a>
+<a name="IDX6"></a>
+<a name="IDX7"></a>
+<a name="IDX8"></a>
+<a name="IDX9"></a>
+<a name="IDX10"></a>
+<p>In this manual we also try to give examples and explanations, and we
+hope that these will 
+be helpful to readers trying to learn about formal specification using
+JML.
+However, this manual is not designed to give all the background needed
+to write JML specifications, nor to give the prospective user an
+overview of a useful subset of the language.
+For this background, we recommend starting with
+the papers &ldquo;Design by Contract with JML&rdquo;
+[Leavens-Cheon06]
+and &ldquo;JML: A notation for detailed design&rdquo;
+[Leavens-Baker-Ruby99], and continuing with the
+paper &ldquo;Preliminary Design of JML&rdquo; [Leavens-Baker-Ruby06].
+These are all available from the JML web site
+&lsquo;<tt>http://www.jmlspecs.org/</tt>&rsquo;, where further readings and examples
+may also be found.
+</p>
+<p>Readers with the necessary background,
+and users wanting more details may, we hope, profit from reading this manual.
+We suggest reading this manual starting with chapters 1-3,
+skimming chapter 4 quickly,
+skimming chapter 5 to get the idea of what declarations mean in JML,
+and then reading the chapters on class specifications (chapter 6)
+and method specifications (chapter 7),
+paying particular attention to the examples.
+After that, one can use the rest of this manual as a reference.
+</p>
+<p>The rest of this chapter describes some of the fundamental ideas and
+background behind JML.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC2">1.1 Behavioral Interface Specifications</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC3">1.2 A First Example</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC4">1.3 What is JML Good For?</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">       
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC5">1.4 Status and Plans for JML</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">    
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC6">1.5 Historical Precedents</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">       
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC7">1.6 Acknowledgments</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Behavioral-Interface-Specifications"></a>
+<a name="SEC2"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC1" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC3" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC8" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 1.1 Behavioral Interface Specifications </h2>
+
+<p>JML is a <em>behavioral interface specification language</em> (BISL)
+that builds on the Larch approach [Guttag-Horning93] [Guttag-Horning-Wing85b]
+and that found in APP [Rosenblum95] and Eiffel [Meyer92b] [Meyer97].
+In this style of specification,
+which might be called model-oriented [Wing90a],
+one specifies both the interface of a method or abstract data type
+and its behavior [Lamport89].
+In particular JML builds on the work done by Leavens and others in Larch/C++
+[Leavens-Baker99] [Leavens96b] [Leavens97c].
+(Indeed, large parts of this manual are adapted wholesale from
+the Larch/C++ reference manual [Leavens97c].)
+Much of JML's design was heavily influenced by the work of Leino and his
+collaborators [Leino95] [Leino95b] [Leino98] [Leino-etal00]
+[Leino-Nelson-Saxe00]. 
+JML continues to be influenced by ongoing work in formal
+specification and verification.
+A collection of papers relating directly to JML and its design is
+found at 
+&lsquo;<tt>http://www.jmlspecs.org/papers.shtml</tt>&rsquo;.
+</p>
+<a name="IDX11"></a>
+<a name="IDX12"></a>
+<a name="IDX13"></a>
+<a name="IDX14"></a>
+<p>The <em>interface</em> of the method or type is
+the information needed to use it from other programs.  In the case of
+JML, this is the Java syntax and type information needed to call a
+method or use a field or type.  For a method the interface 
+includes such things as the name of the method, its modifiers
+(including its visibility and whether it is final)
+its number of arguments, its return type, what exceptions it may
+throw, and so on. 
+For a field the interface includes its name and type, and its modifiers.
+For a type, the interface
+includes its name, its modifiers, its package, whether it is a class
+or interface, its supertypes, and the interfaces of the fields and methods it
+declares and inherits.
+JML specifies all such interface information using Java's syntax.
+</p>
+<a name="IDX15"></a>
+<a name="IDX16"></a>
+<a name="IDX17"></a>
+<a name="IDX18"></a>
+<a name="IDX19"></a>
+<a name="IDX20"></a>
+<a name="IDX21"></a>
+<p>A <em>behavior</em> of a method or type describes a set of state
+transformations that it can perform.
+A behavior of a method is specified by describing:
+a set of states in which calling the method is defined,
+a set of locations that the method is allowed to assign to (and hence change),
+and the relations between the calling state and
+the state in which it either returns normally, throws an exception,
+or for which it might not return to the caller.
+The states for which the method is defined are formally described by
+a logical assertion, called the method's <em>precondition</em>.
+The allowed relationships between these states
+and the states that may result from normal return are formally described
+by another logical assertion called the method's <em>normal postcondition</em>.
+Similarly the relationships between these pre-states
+and the states that may result from throwing an exception
+are described by the method's <em>exceptional postcondition</em>.
+The states for which the method need not return to the caller are
+described by the method's <em>divergence condition</em>; however,
+explicit specification of divergence is rarely used in JML.
+The set of locations the method is allowed to assign to
+is described by the method's <em>frame axiom</em> [Borgida-etal95].
+In JML one can also specify other aspects of behavior, such as the
+time a method can use to execute and the space it may need.
+</p>
+<a name="IDX22"></a>
+<a name="IDX23"></a>
+<a name="IDX24"></a>
+<a name="IDX25"></a>
+<a name="IDX26"></a>
+<a name="IDX27"></a>
+<a name="IDX28"></a>
+<a name="IDX29"></a>
+<a name="IDX30"></a>
+<a name="IDX31"></a>
+<a name="IDX32"></a>
+<a name="IDX33"></a>
+<p>The behavior of an abstract data type (ADT), which is implemented by a
+class in Java, is specified by describing a set of abstract fields for
+its objects and by specifying the behavior of its methods (as described
+above).  The abstract fields for an object can be specified either by
+using JML's model and ghost fields [Cheon-etal05], which are
+specification-only fields, or by specifying some of the fields used in
+the implementation as <code>spec_public</code> or <code>spec_protected</code>.
+These declarations allow the specifier using JML to model an
+instance as a collection of abstract instance variables,
+in much the same way as other specification languages, such as Z [Hayes93]
+[Spivey92] or Fresco [Wills92b].
+</p>
+<hr size="6">
+<a name="A-First-Example"></a>
+<a name="SEC3"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC2" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC4" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC8" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 1.2 A First Example </h2>
+
+<p>For example, consider the following JML specification
+of a simple Java abstract class <code>IntHeap</code>. (An explanation of
+the notation follows the specification.  This specification, like the
+others in this manual, ships with the JML release in the
+&lsquo;<tt>JML/org/jmlspecs/samples/jmlrefman</tt>&rsquo; directory.)
+</p>
+<a name="IDX34"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.jmlrefman;               // line 1
+                                                      // line 2
+public abstract class IntHeap {                       // line 3
+                                                      // line 4
+    //@ public model non_null int [] elements;        // line 5
+                                                      // line 6
+    /*@ public normal_behavior                        // line 7
+      @   requires elements.length &gt;= 1;              // line 8
+      @   assignable \nothing;                        // line 9
+      @   ensures \result                             // line 10
+      @        == (\max int j;                        // line 11
+      @               0 &lt;= j &amp;&amp; j &lt; elements.length;  // line 12
+      @               elements[j]);                   // line 13
+      @*/                                             // line 14
+    public abstract /*@ pure @*/ int largest();       // line 15
+                                                      // line 16
+    //@ ensures \result == elements.length;           // line 17
+    public abstract /*@ pure @*/ int size();          // line 18
+};                                                    // line 19  
+</pre></td></tr></table>
+
+<p>The interface of this class consists of lines 1, 3, 15, and 18.
+Line 3 specifies the class name, and the fact that the class
+is both public and abstract. Lines 15 and 18, apart from their comments,
+give the interface information for the methods of this class.
+</p>
+<a name="IDX35"></a>
+<a name="IDX36"></a>
+<a name="IDX37"></a>
+<a name="IDX38"></a>
+<a name="IDX39"></a>
+<a name="IDX40"></a>
+<a name="IDX41"></a>
+<p>The behavior of this class is specified in the JML annotations found
+in the special comments that have an at-sign (<code>@</code>) as their
+first character following the usual comment beginning.
+Such lines look like comments to Java, but are interpreted by JML and
+its tools.
+For example, line 5 starts with an annotation comment marker of the form
+<code>//@</code>, and this annotation continues until the <code>//</code> towards
+the end of the line, which starts a comment within the annotation
+which even JML ignores.
+The other form of such annotations can be seen on lines 7 through 14,
+line 17, and on lines 15 and 18.
+These annotations start with the characters <code>/*@</code>
+and end with either <code>@*/</code> or <code>*/</code>; within such annotations,
+at-signs (<code>@</code>) at the beginnings of lines are ignored by JML.
+Note that there can be no space between the start of comment marker,
+either <code>//</code> or <code>/*</code> and the first at-sign;
+thus <code>// @</code> starts a comment, not an annotation.
+(See section <a href="jmlrefman_4.html#SEC25">Lexical Conventions</a>, for more details about annotations.)
+</p>
+<a name="IDX42"></a>
+<p>The first annotation, on line 5 of the figure above,
+gives the specification of a field,
+named <code>elements</code>, which is part of this class's behavioral specification.
+Ignoring, for the moment the extra JML modifiers,
+one should think of this field, in essence, as being declared like:
+</p><table><tr><td>&nbsp;</td><td><pre class="example">   public int[] elements;
+</pre></td></tr></table>
+<p>That is, it is a public field with an integer array type;
+within specifications it is treated as such.
+However, because it is declared in an annotation, this field cannot be
+manipulated by Java code.  Therefore, for example, the fact that the
+field is declared public is not a problem, because it cannot be
+directly changed by Java code.
+</p>
+<a name="IDX43"></a>
+<a name="IDX44"></a>
+<a name="IDX45"></a>
+<p>Such declarations of fields in annotations should be marked as
+specification-only fields, using the JML modifier
+<code>model</code>.<a name="DOCF1" href="jmlrefman_fot.html#FOOT1">(1)</a>
+A model field should be thought of as an abstraction of a set of concrete
+fields used in the implementation of this type and its subtypes.
+(See section <a href="jmlrefman_8.html#SEC74">Represents Clauses</a>, for a discussion of how to specify the
+connection between the concrete fields and such model fields.  See also
+the paper by Cheon et al. [Cheon-etal05].) That is, we imagine that
+objects that are instances of the type <code>IntHeap</code> have such a field,
+whose value is determined by the concrete fields that are known to Java
+in the actual object.  Of course at runtime, objects of type
+<code>IntHeap</code> have no such field, the model fields are purely
+imaginary.  Model fields are thus a convenient fiction that is useful
+for describing the behavior of an ADT.  One does not have to worry about
+their cost (in space or time), and should only be concerned with how
+they clarify the behavior of an ADT.
+</p>
+<a name="IDX46"></a>
+<p>The other annotation used on line 5 is <code>non_null</code>.
+This just says that in any publicly-visible
+state, the value of <code>elements</code> must not be <code>null</code>.
+It is thus a simple kind of invariant (see section <a href="jmlrefman_8.html#SEC65">Invariants</a>).
+</p>
+<a name="IDX47"></a>
+<a name="IDX48"></a>
+<p>In the above specification of <code>IntHeap</code>,
+the specification of each method precedes its interface declaration.
+This follows the usual convention of Java tools, such as JavaDoc,
+which put such descriptive information in front of the method.  In
+JML, it is also possible to put the specification just before the
+semicolon (<code>;</code>) following the method's interface information
+(see section <a href="jmlrefman_9.html#SEC80">Method Specifications</a>), but
+we will usually not to do that in this document.
+</p>
+<a name="IDX49"></a>
+<a name="IDX50"></a>
+<a name="IDX51"></a>
+<a name="IDX52"></a>
+<p>The specification of the method <code>largest</code> is given on lines 7
+through 15. Line 7 says that this is a public, normal behavior specification.
+JML permits several different specifications for a given method,
+which can be of different privacy levels [Ruby-Leavens00] [Leavens-Mueller07].
+The modifier <code>public</code> says that the specification is intended for
+use by clients.
+(If the privacy modifier had been
+<code>protected</code>, for example,
+then the specification would have been intended for subclasses.)
+</p>
+<a name="IDX53"></a>
+<a name="IDX54"></a>
+<a name="IDX55"></a>
+<a name="IDX56"></a>
+<a name="IDX57"></a>
+<a name="IDX58"></a>
+<p>The keyword <code>normal_behavior</code> tells JML several things.
+First, it says that the specification is a heavyweight
+method specification, as opposed to a lightweight method specification
+like that given on line 17.
+A <em>heavyweight</em> specification uses one of JML's behavior keywords,
+like <code>normal_behavior</code>, which tells JML that the method
+specification is intended to be complete.  By contrast, a
+<em>lightweight</em> specification does not use one of JML's behavior
+keywords, and tells JML that the specification is incomplete in the
+sense that it contains only some of what the specifier had in mind.<a name="DOCF2" href="jmlrefman_fot.html#FOOT2">(2)</a>
+Second, the keyword <code>normal_behavior</code> tells JML that when the
+precondition of this method is met, then the method must return
+normally, without throwing an exception. In other words, it says that
+the exceptional postcondition is <code>false</code>, which prohibits the
+method from throwing an exception when the precondition holds.
+(Third, it says that the divergence condition defaults to <code>false</code>.
+See section <a href="jmlrefman_9.html#SEC80">Method Specifications</a>, for more details.)
+</p>
+<a name="IDX59"></a>
+<a name="IDX60"></a>
+<a name="IDX61"></a>
+<a name="IDX62"></a>
+<a name="IDX63"></a>
+<a name="IDX64"></a>
+<a name="IDX65"></a>
+<p>The heart of the method specification of <code>largest</code> is found on
+lines 7 through 13.  This part of the specification gives the method's
+precondition, on line 8, frame axiom, on line 9, and normal postcondition, on
+lines 10 through 13.  The precondition is contained in the
+<code>requires</code> clause on line 8.  The frame axiom is contained in the
+<code>assignable</code> clause on line 9.  The normal postcondition is
+contained in the <code>ensures</code> clause on lines 10-13.<a name="DOCF3" href="jmlrefman_fot.html#FOOT3">(3)</a>
+</p>
+<a name="IDX66"></a>
+<p>The precondition in the requires clause on line 8 says that the length of
+<code>elements</code> must be at least 1 before this method can be called.
+If that is not true, then the method is under no obligation to fulfill
+the rest of the specified behavior.
+</p>
+<a name="IDX67"></a>
+<a name="IDX68"></a>
+<a name="IDX69"></a>
+<a name="IDX70"></a>
+<a name="IDX71"></a>
+<p>The frame axiom in the assignable clause on line 9 says that the method may not
+assign to any locations (i.e. fields of objects) that are visible
+outside the method and which existed before the method started
+execution.  (The method may still modify its local variables.)  This
+form of the frame axiom is quite common.<a name="DOCF4" href="jmlrefman_fot.html#FOOT4">(4)</a>
+Note that in assignable clauses and in assertions, JML
+uses keywords that start with a backslash (<code>\</code>), to avoid
+interfering with identifiers in the user's program.  Examples of this
+are <code>\nothing</code> on line 9 and <code>\result</code> on line 10.
+</p>
+<a name="IDX72"></a>
+<a name="IDX73"></a>
+<a name="IDX74"></a>
+<a name="IDX75"></a>
+<a name="IDX76"></a>
+<a name="IDX77"></a>
+<a name="IDX78"></a>
+<p>The postcondition in the ensures clause, on lines 10 through 13,
+says that the result of the method (<code>\result</code>)
+must be equal to the maximum integer found in the array
+<code>elements</code>.
+This postcondition uses JML's <code>\max</code> quantifier (lines 11 through
+13).  Such a quantifier is always parenthesized, and can consist of
+three parts.  The first part of a quantifier
+is a declaration of some quantified variables,
+in this case the integer <code>j</code> on line 11.
+The second part is a <em>range predicate</em>, on line 12,
+which constrains the quantified variables.  The third part is the <em>body</em> of
+the quantifier, on line 13, which in this case describes the elements
+of the array from which the maximum value is taken.
+</p>
+<a name="IDX79"></a>
+<p>The methods <code>largest</code> and <code>size</code> are both specified
+using the JML modifier <code>pure</code>.  This modifier says that the
+method has no side effects, and allows the method to be used in
+assertions if desired.
+</p>
+<a name="IDX80"></a>
+<p>The method <code>size</code> is specified using a lightweight
+specification, which is given on line 17.  
+The ensures clause on line 17 says nothing about the precondition,
+frame axiom, exceptional postcondition, or divergence condition of <code>size</code>,
+although the use of <code>pure</code> on line 18 gives an implicit frame
+axiom.  Such a form of specification is useful when one only cares to
+state (the important) part of a method's specification.
+It is also useful when first learning JML, and when one is using tools,
+such as ESC/Java2, that do not need heavyweight specifications.
+</p>
+<a name="IDX81"></a>
+<a name="IDX82"></a>
+<a name="IDX83"></a>
+<a name="IDX84"></a>
+<p>The specifications of the method <code>largest</code> above is
+very precise: it gives a complete specification of what the method does. 
+Even the specification of <code>size</code> has a fairly complete normal
+postcondition.
+We can also give JML specifications that are far less detailed.
+For example, we could just specify that the result of <code>size</code> is
+non-negative, with a normal postcondition such as
+</p><table><tr><td>&nbsp;</td><td><pre class="example"> //@ ensures \result &gt;= 0;
+</pre></td></tr></table>
+<p>instead of the postcondition given earlier.
+Such incomplete specifications give considerably more freedom to
+implementations, and can often be useful for hiding implementation
+details.
+However, one should try to write specifications that capture the important
+properties expected of callers (preconditions) and implementations
+(postconditions) [Meyer92a] [Liskov-Guttag86].
+</p>
+<hr size="6">
+<a name="What-is-JML-Good-For_003f"></a>
+<a name="SEC4"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC3" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC5" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC8" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 1.3 What is JML Good For? </h2>
+
+
+<p>JML is a formal specification language tailored to Java.
+Its basic use is thus the formal specification of
+the behavior of Java program modules.
+As it is a behavioral interface specification language,
+JML specifies how to use such Java program modules from
+<em>within</em> a Java program; hence JML is <em>not</em> designed
+for specifying the behavior of an entire program.
+So the question &ldquo;what is JML good for?&rdquo; really boils down to
+the following question: what good is formal specification
+for Java program modules?
+</p>
+<a name="IDX85"></a>
+<a name="IDX86"></a>
+<p>The two main benefits in using JML are:
+</p><ul>
+<li>
+the precise, unambiguous specification
+of the behavior of Java program modules (i.e., classes and interfaces),
+and documentation of Java code,
+
+</li><li>
+the possibility of tool support [Burdy-etal03].
+</li></ul>
+
+<a name="IDX87"></a>
+<a name="IDX88"></a>
+<a name="IDX89"></a>
+<a name="IDX90"></a>
+<p>Although we would like tools that would help with reasoning about
+concurrent aspects of Java programs, the current version of JML
+focuses on the sequential behavior of Java code.
+While there is work in progress on extending JML to support
+concurrency, the current version of JML does not have features that help
+specify how Java threads interact with each other.
+JML does not, for example, allow the specification of elaborate
+temporal properties, such as coordinated access to shared variables or the
+absence of deadlock.  Indeed, we assume, in the rest of this manual, that
+there is only one thread of execution in a Java program annotated with
+JML, and we focus on how the program manipulates object states.  To summarize,
+JML is currently limited to sequential specification; we say that JML
+specifies the <em>sequential behavior</em> of Java program modules.
+</p>
+<p>In terms of detailed design documentation,
+a JML specification can be a completely formal contract about
+an interface and its sequential behavior.
+Because it is an interface specification,
+one can record all the Java details about the interface,
+such as the parameter mechanisms, whether the method is <code>final</code>,
+<code>protected</code>, etc.;
+if one used a specification language such as VDM-SL or Z,
+which is not tailored to Java, then one could not record such details
+of the interface, which could cause problems in code integration.
+For example, in JML one can specify the precise conditions under
+which certain exceptions may be thrown, something which is difficult
+in a specification language that is not tailored to Java and that
+doesn't have the notion of an exception.
+</p>
+<a name="IDX91"></a>
+<a name="IDX92"></a>
+<a name="IDX93"></a>
+<p>When should JML documentation be written?
+That is up to you, the user.
+A goal of JML is to make the notation indifferent to the precise
+programming method used.
+One can use JML either before coding or as documentation of finished code.
+While we recommend doing some design before
+coding, JML can also be used for documentation after the code is written.
+</p>
+<a name="IDX94"></a>
+<a name="IDX95"></a>
+<a name="IDX96"></a>
+<a name="IDX97"></a>
+<p>Reasons for formal documentation of interfaces and their
+behavior, using JML, include the following.
+</p><ul>
+<li>
+One can ship the object code for a class library to customers,
+sending the JML specifications but not the source code.
+Customers would then have documentation that is precise,
+unambiguous, but not overly specific.
+Customers would not have the code, protecting proprietary rights.
+In addition, customers would not rely on details of the implementation
+of the library that they might otherwise glean from the code,
+easing the process of improving the code in future releases.
+
+</li><li>
+<a name="IDX98"></a>
+<a name="IDX99"></a>
+<a name="IDX100"></a>
+One can use a formal specification to analyze certain properties of
+a design carefully or formally
+(see [Hall90] and Chapter 7 of [Guttag-Horning93]).
+In general, the act of formally specifying a program module has
+salutary effects on the quality of the design.
+
+</li><li>
+<a name="IDX101"></a>
+<a name="IDX102"></a>
+<a name="IDX103"></a>
+One can use the JML specification as an aid to careful reasoning
+about the correctness of code, or even for formal verification
+[Huisman01] [Jacobs-Poll01] [Ruby06].
+
+</li><li>
+<a name="IDX104"></a>
+JML specifications can be used by several tools that can help debug
+and improve the code [Burdy-etal03].
+</li></ul>
+
+<a name="IDX105"></a>
+<a name="IDX106"></a>
+<a name="IDX107"></a>
+<a name="IDX108"></a>
+<p>There is one additional benefit from using JML.
+It is that JML allows one to record not just public interfaces
+and behavior, but also some detailed design decisions.
+That is, in JML, one can specify not just the public
+interface of a Java class,
+but also behavior of a class's protected and private interfaces.
+Formally documenting a base class's protected interface
+and &ldquo;subclassing contract&rdquo;
+allows programmers to implement derived
+classes of such a base class without looking at its code
+[Ruby-Leavens00] [Ruby06].
+</p>
+<p>Recording the private interface of a class may be helpful
+in program development or maintenance.
+Usually one would expect that the public interface of a class would
+be specified, and then separate, more refined specifications would
+be given for use by derived classes and for detailed implementation
+(and friend classes).
+(See section <a href="jmlrefman_16.html#SEC193">Refinement</a>, for how to record each level in JML.)
+</p>
+<a name="IDX109"></a>
+<a name="IDX110"></a>
+<a name="IDX111"></a>
+<a name="IDX112"></a>
+<p>The reader may also wish to consult
+the &ldquo;Preliminary Design of JML&rdquo; [Leavens-Baker-Ruby06]
+for a discussion of the goals that are behind JML's design.
+Apart from the improved precision in the specifications and
+documentation of code, the main advantage of using a formal specification 
+language, as opposed to informal natural language, is the possibility of 
+tool support.
+One specific goal that has emerged over time is that JML should be
+able to unify several different tool-building efforts in the area of
+formal methods.  
+</p>
+<a name="IDX113"></a>
+<a name="IDX114"></a>
+<a name="IDX115"></a>
+<a name="IDX116"></a>
+<a name="IDX117"></a>
+<a name="IDX118"></a>
+<p>The most basic tool support for JML &ndash; simply parsing and typechecking &ndash;
+is already useful.
+Whereas informal comments in code are typically not kept up to date
+as the code is changed, the simple act of running the typechecker
+will catch any JML assertions referring to parameter or field names 
+that no longer exist, and all other typos of course.
+Enforcing the visibility rules can also provide useful feedback;
+for example, a precondition of a <code>public</code> method which refers
+to a <code>private</code> field of an object is suspect.
+</p>
+<a name="IDX119"></a>
+<a name="IDX120"></a>
+<a name="IDX121"></a>
+<a name="IDX122"></a>
+<a name="IDX123"></a>
+<a name="IDX124"></a>
+<a name="IDX125"></a>
+<a name="IDX126"></a>
+<a name="IDX127"></a>
+<a name="IDX128"></a>
+<a name="IDX129"></a>
+<a name="IDX130"></a>
+<a name="IDX131"></a>
+<p>Of course, there are more exciting forms of tool support than just 
+parsing and typechecking.  In particular JML is designed to support static
+analysis (as in ESC/Java [Leino-etal00]), formal verification
+(as in the LOOP tool [Huisman01] [Jacobs-etal98]),
+recording of dynamically obtained invariants (as in Daikon [Ernst-etal01]),
+runtime assertion checking (as in JML's runtime assertion checker,
+jmlc [Cheon-Leavens02b] [Cheon03]), unit testing [Cheon-Leavens02],
+and documentation (as in JML's jmldoc tool).
+The paper by Burdy et al.&nbsp;[Burdy-etal03] is a recent survey of tools
+for JML.
+The utility of these tools is the ultimate answer to the question of
+what JML is good for.
+</p>
+<hr size="6">
+<a name="Status-and-Plans-for-JML"></a>
+<a name="SEC5"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC4" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC6" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC8" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 1.4 Status and Plans for JML </h2>
+
+<p>JML is still in development.
+As you can see, this reference manual is still a draft,
+and there are some holes in it.
+[[[And some notes for the authors by the authors that look like this.]]]
+</p>
+<a name="IDX132"></a>
+<a name="IDX133"></a>
+<a name="IDX134"></a>
+<a name="IDX135"></a>
+<a name="IDX136"></a>
+<a name="IDX137"></a>
+<p>Influences on JML that may lead to changes in its design include
+our desire to specify programs written using the unique features of
+MultiJava
+[Clifton-etal00],
+an eventual integration with Bandera [Corbett-etal00] or other tools for
+specification of concurrency, aspect-oriented programming,
+and the evolution of Java itself.
+Another influence is the ongoing effort to use JML on examples,
+in designing the JML tools, and efforts to give a formal semantics
+to JML.
+</p>
+<hr size="6">
+<a name="Historical-Precedents"></a>
+<a name="SEC6"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC5" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC7" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC8" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 1.5 Historical Precedents </h2>
+
+<p>JML combines ideas from Eiffel [Meyer92a] [Meyer92b] [Meyer97]
+with ideas from model-based specification languages such as
+VDM [Jones90] and the Larch family
+[Guttag-Horning93] [LeavensLarchFAQ] [Wing87] [Wing90a].
+It also adds some ideas from the refinement calculus
+[Back88] [Back-vonWright89a] [Back-vonWright98] [Morgan-Vickers94] [Morgan94]
+(see section <a href="jmlrefman_16.html#SEC193">Refinement</a>).
+In this section we describe the advantages and disadvantages
+of these approaches.
+Readers unfamiliar with these historical precedents may want to skip
+this section.
+</p>
+<a name="IDX138"></a>
+<a name="IDX139"></a>
+<a name="IDX140"></a>
+<a name="IDX141"></a>
+<a name="IDX142"></a>
+<a name="IDX143"></a>
+<a name="IDX144"></a>
+<a name="IDX145"></a>
+<a name="IDX146"></a>
+<p>Formal, model-based languages such as those typified by the
+Larch family build on ideas found originally in Hoare's work.
+Hoare used pre- and postconditions to describe the semantics of computer
+programs in his famous article [Hoare69].
+Later Hoare adapted these axiomatic techniques to the specification
+and correctness proofs of abstract data types [Hoare72a].
+To specify an ADT, Hoare described a mathematical set of abstract values
+for the type, and then specified pre- and postconditions for each of the
+operations of the type in terms of how the abstract values of objects
+were affected.
+For example, one might specify a class <code>IntHeap</code>
+using abstract values of the form <code>empty</code> and <code>add(i,h)</code>,
+where <code>i</code> is an <code>int</code> and <code>h</code> is an <code>IntHeap</code>.
+These notations form a mathematical vocabulary used in the rest of the
+specification.
+</p>
+<a name="IDX147"></a>
+<a name="IDX148"></a>
+<a name="IDX149"></a>
+<a name="IDX150"></a>
+<p>There are two advantages to writing specifications with abstract values
+instead of directly using Java variables and data structures.
+The first is that by using abstract values,
+the specification does not have to be
+changed when the particular data structure used in the program is changed.
+This permits different implementations of the same specification
+to use different data structures.
+Therefore the specification forms a contract between the rest
+of the program in the implementation, which ensures that the rest of the
+program is also independent of the particular data structures used
+[Liskov-Guttag86] [Meyer97] [Meyer92a] [Parnas72].
+Second, it allows the specification to be written even when
+there are no implementation data structures, as is the case for <code>IntHeap</code>.
+</p>
+<a name="IDX151"></a>
+<a name="IDX152"></a>
+<a name="IDX153"></a>
+<a name="IDX154"></a>
+<a name="IDX155"></a>
+<a name="IDX156"></a>
+<a name="IDX157"></a>
+<a name="IDX158"></a>
+<a name="IDX159"></a>
+<a name="IDX160"></a>
+<a name="IDX161"></a>
+<a name="IDX162"></a>
+<a name="IDX163"></a>
+<a name="IDX164"></a>
+<a name="IDX165"></a>
+<a name="IDX166"></a>
+<a name="IDX167"></a>
+<p>This idea of model-oriented specification has been followed in VDM
+[Jones90], VDM-SL [Fitzgerald-Larsen98] [ISO96], Z [Hayes93] [Spivey92],
+and the Larch family [Guttag-Horning93].
+In the Larch approach,
+the essential elaboration of Hoare's original idea is that
+the abstract values also come with a set of operations.
+The operations on abstract values
+are used to precisely describe the set of abstract values
+and to make it possible to abbreviate interface specifications
+(pre- and postconditions for methods).
+In Z one builds abstract values using tuples, sets, relations, functions,
+sequences, and bags; these all come with pre-defined operations that
+can be used in assertions.
+In VDM one has a similar collection of mathematical tools to describe
+abstract values, and another set of pre-defined operations.
+In the Larch approach, there are some pre-defined kinds of abstract values
+(found in Guttag and Horning's LSL Handbook, Appendix A of [Guttag-Horning93]),
+but these are expected to be extended as needed.
+(The advantage of being able to extend the mathematical vocabulary is
+similar to one advantage of object-oriented programming:
+one can use a vocabulary that is close to the way one thinks about a
+problem.)
+</p>
+<a name="IDX168"></a>
+<a name="IDX169"></a>
+<a name="IDX170"></a>
+<a name="IDX171"></a>
+<p>However, there is a problem with using mathematical notations for
+describing abstract values and their operations.  The problem is that
+such mathematical notations are an extra burden on a programmer who is
+learning to use a specification language.
+The solution to this problem
+is the essential insight that JML takes from the Eiffel
+language [Meyer92a] [Meyer92b] [Meyer97].
+Eiffel is a programming language with built-in specification
+constructs.  It features pre- and postconditions, although it has no
+direct support for frame axioms.
+Programmers like Eiffel because they can easily read the assertions,
+which are written in Eiffel's own expression syntax.  However, Eiffel
+does not provide support for specification-only variables, and it does
+not provide much explicit support for describing abstract values.
+Because of this, it is difficult to write specifications that are as
+mathematically complete in Eiffel as one can write in a language like
+VDM or Larch/C++.
+</p>
+<p>JML attempts to combine the good features of these approaches.  From
+Eiffel we have taken the idea that assertions can be written in a
+language that is based on Java expressions.
+<a name="IDX172"></a>
+We also adopt the &ldquo;<code>old</code>&rdquo; notation from Eiffel, which appears
+in JML as <code>\old</code>, instead of the Larch-style annotation of names
+with state functions.  To make it easy to write more complete
+specifications, however, we use various semantic ideas from
+model-based specification languages.  In particular we use a variant
+of abstract value specifications, where one describes the abstract
+value of an object implicitly using several model fields.  These
+specification-only fields allow one to implicitly partition the
+abstract value of an object into smaller chunks, which helps in
+stating frame axioms.  More importantly, we hide the mathematical
+notation behind a facade of Java classes.  This makes it so the
+operations on abstract values appear in familiar (although perhaps
+verbose) Java notation, and also insulates JML from the details of the
+particular mathematical logic used to do reasoning.
+</p>
+
+<hr size="6">
+<a name="Acknowledgments"></a>
+<a name="SEC7"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC6" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC8" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC1" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC8" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 1.6 Acknowledgments </h2>
+
+<p>The work of Leavens and Ruby was supported in part by
+a grant from Rockwell International Corporation
+and by NSF grant CCR-9503168.
+Work on JML by Leavens, and Ruby was also supported in part by
+NSF grant CCR-9803843.
+Work on JML by Cheon, Clifton, Leavens, Ruby, and others
+has been supported in part by NSF grants CCR-0097907, CCR-0113181,
+CCF-0428078, and CCF-0429567. 
+Support from the NSF continues under a Computing Research
+Infrastructure (CRI) grant jointly to several institutions: 
+CNS 08-08913 (Leavens at U. of Central Florida, and a subcontact to
+Rajan and Basu at Iowa State Unviversity),
+CNS 07-07874 (Cheon at UTEP), CNS 07-07701 (Clifton at Rose Hulman), 
+CNS 07-07885 (Flanagan at U. Cal. Santa Cruz), 
+CNS 07-08330 (Naumann at Stevens), 
+and CNS 07-09169 (Robby at Kansas State).
+The work of Poll is partly supported by the Information Society Technologies 
+(IST) Programme of the European Union,
+as part of the VerifiCard project, IST-2000-26328.
+</p>
+<a name="IDX173"></a>
+<a name="IDX174"></a>
+<a name="IDX175"></a>
+<a name="IDX176"></a>
+<a name="IDX177"></a>
+<a name="IDX178"></a>
+<p>Thanks to Bart Jacobs, Rustan Leino, Arnd Poetzsch-Heffter,
+and Joachim van den Berg,
+for many discussions about the semantics of JML specifications.
+Thanks for Raymie Stata for
+spearheading an effort at Compaq SRC to unify JML and ESC/Java, and to
+Rustan and Raymie for many interesting ideas and discussions that have
+profoundly influenced JML.
+<a name="IDX179"></a>
+<a name="IDX180"></a>
+<a name="IDX181"></a>
+Thanks to Leo Freitas, Robin Greene, and Jesus Ravelo
+for comments and questions on earlier versions of this document.
+Thanks to the many who have worked on the
+JML checker used to check the specifications in this document.
+Leavens thanks Iowa State University and its computer science department
+for helping foster and support the initial work on JML.
+</p>
+<p>See the &ldquo;Preliminary Design of JML&rdquo; [Leavens-Baker-Ruby06]
+for more acknowledgments relating to the earlier history, design,
+and implementation of JML.
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_2.html#SEC8" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

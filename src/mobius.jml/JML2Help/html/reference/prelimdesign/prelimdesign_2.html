@@ -1,0 +1,3686 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>Preliminary Design of JML: 2. Class and Interface Specifications</title>
+
+<meta name="description" content="Preliminary Design of JML: 2. Class and Interface Specifications">
+<meta name="keywords" content="Preliminary Design of JML: 2. Class and Interface Specifications">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Class-and-Interface-Specifications"></a>
+<a name="SEC11"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="prelimdesign_1.html#SEC10" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC12" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign_1.html#SEC1" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter"> 2. Class and Interface Specifications </h1>
+
+<p>In this section we give some examples of JML class
+specifications that illustrate the basic features of JML.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC12">2.1 Abstract Models</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">             
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC21">2.2 Data Groups</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                 
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC34">2.3 Types For Modeling</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC43">2.4 Use of Pure Classes</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC44">2.5 Composition for Container Classes</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC48">2.6 Behavioral Subtyping</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">        
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Abstract-Models"></a>
+<a name="SEC12"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC11" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC13" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.1 Abstract Models </h2>
+
+<p>A simple example of an abstract class specification is the ever-popular
+<code>UnboundedStack</code> type,
+which is presented below.
+It would appear in a file named &lsquo;<tt>UnboundedStack.java</tt>&rsquo;.
+</p>
+<a name="IDX177"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.stacks;
+
+//@ model import org.jmlspecs.models.*;
+
+public abstract class UnboundedStack {
+
+  /*@ public model JMLObjectSequence theStack;
+    @ public initially theStack != null
+    @                  &amp;&amp; theStack.isEmpty();
+    @*/
+
+  //@ public invariant theStack != null;
+
+  /*@ public normal_behavior
+    @   requires !theStack.isEmpty();
+    @   assignable theStack;
+    @   ensures theStack.equals(
+    @              \old(theStack.trailer()));
+    @*/
+  public abstract void pop( );
+
+  /*@ public normal_behavior
+    @   assignable theStack;
+    @   ensures theStack.equals(
+    @              \old(theStack.insertFront(x)));
+    @*/
+  public abstract void push(Object x);
+
+  /*@ public normal_behavior
+    @   requires !theStack.isEmpty();
+    @   assignable \nothing;
+    @   ensures \result == theStack.first();
+    @*/
+  public /*@ pure @*/ abstract Object top( );
+}
+</pre></td></tr></table>
+
+<p>The above specification contains the declaration of a model field, an
+invariant, and some method specifications.  These are described below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC13">2.1.1 Model Fields</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC14">2.1.2 Invariants</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC15">2.1.3 Method Specifications</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">       
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC20">2.1.4 Models and Lightweight Specifications</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Model-Fields"></a>
+<a name="SEC13"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC12" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC14" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC12" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.1.1 Model Fields </h3>
+
+<p>In the fourth non-blank line of &lsquo;<tt>UnboundedStack.java</tt>&rsquo;,
+a model data field, <code>theStack</code>,
+is declared.
+Since it is declared using the JML modifier <code>model</code>,
+such a field is not part of the Java implementation, and must appear
+in an annotation;
+however, for purposes of the specification we treat it much like any other
+Java field (i.e., as a variable location).
+That is, we imagine that each instance of the class <code>UnboundedStack</code>
+has such a field.
+</p>
+<a name="IDX178"></a>
+<a name="IDX179"></a>
+<a name="IDX180"></a>
+<a name="IDX181"></a>
+<p>The type of the model field <code>theStack</code>
+is a type designed for mathematical modeling,
+<code>JMLObjectSequence</code>.
+Objects of this type are sequences of objects.
+This type is provided by JML in the package <code>org.jmlspecs.models</code>,
+which is imported in the second non-blank line of the figure.
+Note that this <code>import</code> declaration is not part of
+the Java implementation, since it is modified by the keyword
+<code>model</code>.
+Such model imports must also appear in annotation comments.
+In general, any declaration form in Java can have the <code>model</code> modifier,
+with the same meaning.  That is, a model declaration is only
+used for specification purposes, and does not have to appear in
+an implementation.
+</p>
+<a name="IDX182"></a>
+<a name="IDX183"></a>
+<a name="IDX184"></a>
+<a name="IDX185"></a>
+<a name="IDX186"></a>
+<a name="IDX187"></a>
+<a name="IDX188"></a>
+<a name="IDX189"></a>
+<a name="IDX190"></a>
+<a name="IDX191"></a>
+<p>At the end of the model field's declaration
+above
+is an <code>initially</code> clause.
+(Such clauses are adapted from RESOLVE [Ogden-etal94]
+and the refinement calculus
+[Back88] [Back-vonWright98] [Morgan-Vickers94] [Morgan94].)
+Model fields cannot be explicitly initialized (and thus cannot be
+final), because there is no storage directly associated with them.
+However, one can use an <code>initially</code> clause to describe an
+abstract initialization for a model field.
+Initially clauses can be attached to any field declaration, including
+non-model fields, and permit one to constrain the initial values
+of such fields.
+Knowing something about the initial value of the field
+permits data type induction [Hoare72a] [Wing83]
+for abstract classes and interfaces.
+The <code>initially</code> clause must be true
+of the field's starting value.
+That is,
+all reachable objects of the type <code>UnboundedStack</code>
+must have been created
+as empty stacks and subsequently modified using the type's methods.
+</p>
+<hr size="6">
+<a name="Invariants"></a>
+<a name="SEC14"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC13" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC15" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC12" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.1.2 Invariants </h3>
+
+<p>Following the model field declaration is an invariant.
+An invariant does not have to hold during the execution
+of an object's methods,
+but it must hold, for each reachable object
+in each <em>publicly visible state</em>;
+i.e., for each state outside of a public method or constructor's execution,
+and at the beginning and end of each public method's
+execution.<a name="DOCF9" href="prelimdesign_fot.html#FOOT9">(9)</a>
+The figure's invariant just says that the value of <code>theStack</code>
+should never be <code>null</code>.
+</p>
+<hr size="6">
+<a name="Method-Specifications"></a>
+<a name="SEC15"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC14" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC16" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC12" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.1.3 Method Specifications </h3>
+
+<p>Following the invariant are the specifications of
+the methods <code>pop</code>, <code>push</code>, and <code>top</code>.
+We describe the new aspects of these specifications below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC16">2.1.3.1 The Assignable Clause</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">       
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC17">2.1.3.2 Old Values</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC18">2.1.3.3 Reference Semantics</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC19">2.1.3.4 Correct Implementation</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">      
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="The-Assignable-Clause"></a>
+<a name="SEC16"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC15" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC17" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC15" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.1.3.1 The Assignable Clause </h4>
+
+<p>The use of the <code>assignable</code><a name="DOCF10" href="prelimdesign_fot.html#FOOT10">(10)</a>  clauses in
+the behavioral specifications of <code>pop</code> and <code>push</code>
+<a name="IDX192"></a>
+is interesting (and another difference from Eiffel).
+<a name="IDX193"></a>
+<a name="IDX194"></a>
+<a name="IDX195"></a>
+These clauses give frame conditions [Borgida-Mylopoulos-Reiter95].
+<a name="IDX196"></a>
+In JML, the frame condition given by a method's assignable clause
+only permits the method to assign to a location, <i>loc</i>, if:
+</p><ul>
+<li>
+<i>loc</i> is mentioned in the method's <code>assignable</code> clause,
+
+</li><li>
+<i>loc</i> is a member of a data group mentioned in the 
+method's <code>assignable</code> clause (see section <a href="#SEC21">Data Groups</a>),
+
+</li><li>
+<i>loc</i> was not allocated when the method started execution, or
+
+</li><li>
+<i>loc</i> is local to the method (i.e., a local variable, including the
+method's formal parameters).
+</li></ul>
+<p>For example, <code>push</code>'s specification says that it may only assign
+to <code>theStack</code> (and locations in <code>theStack</code>'s data group).
+This allows <code>push</code> to assign to <code>theStack</code> (and the members
+of its data group), or to call some other method that makes such an
+assignment.  Furthermore, <code>push</code> may assign to the formal
+parameter <code>x</code> itself, even though that location is not listed in
+the <code>assignable</code> clause, since <code>x</code> is local to the method.
+However, <code>push</code> may not assign to fields not mentioned in the
+<code>assignable</code> clause; in particular it may not assign to fields of
+its formal parameter <code>x</code>,<a name="DOCF11" href="prelimdesign_fot.html#FOOT11">(11)</a>  or call a method that makes such an
+assignment.
+</p>
+<a name="IDX197"></a>
+<p>The design of JML is intended to allow tools to statically check the
+body of a method's implementation to determine whether its
+<code>assignable</code> clause is satisfied.  This would be done by checking
+each assignment statement in the implementation to see if what is
+being assigned to is a location that some <code>assignable</code> clause
+permits.  It is an error to assign to any other allocated, non-local
+location.  However, to do this, a tool must conservatively track
+aliases and changes to objects containing the locations in question.
+Also, arrays can only be dynamically checked, in general.<a name="DOCF12" href="prelimdesign_fot.html#FOOT12">(12)</a>  Furthermore, JML will flag as an error a call to a method
+that would assign to locations that are not permitted by the calling
+method's <code>assignable</code> clause.  It can do this using the
+<code>assignable</code> clause of the called method.
+</p>
+<a name="IDX198"></a>
+<a name="IDX199"></a>
+<a name="IDX200"></a>
+<p>In JML, a location is <em>modified</em> by a method when it is allocated
+in both the pre-state of the method, reachable in the post-state, and
+has a value that is different in these two states.  The
+<em>pre-state</em> of a method call is the state just after the method is
+called and parameters have been evaluated and passed, but before
+execution of the method's body.  The <em>post-state</em> of a method call
+is the state just before the method returns or throws an exception; in
+JML we imagine that <code>\result</code> and information about exception
+results is recorded in the post-state.
+</p>
+<a name="IDX201"></a>
+<a name="IDX202"></a>
+<p>Since modification only involves objects allocated in the pre-state,
+allocation of an object, using Java's <code>new</code> operator, does not
+itself cause any modification.  Furthermore, since the fields of new
+objects are locations that were not allocated when the method started
+execution, they may be assigned to freely.
+</p>
+<a name="IDX203"></a>
+<a name="IDX204"></a>
+<p>The reason assignments to local variables are permitted by the
+assignable clause is that a JML specification takes the client's
+(i.e., the caller's) point of view.  From the client's point of view,
+the local variables in a method are newly-allocated, and thus
+assignments to such variables are invisible to the client.  Hence, in
+JML, it is an error to list the locations corresponding to formal
+parameters in the <code>assignable</code> clause.
+However, the locations corresponding to fields or array elements of
+such formal parameters can be sensibly mentioned in 
+the <code>assignable</code> clause.
+Furthermore, when formal
+parameters are used in a postcondition, JML interprets these as
+meaning the value initially given to the formal in the pre-state,
+since assignments to the formals within the method do not matter to
+the client.
+</p>
+<a name="IDX205"></a>
+<a name="IDX206"></a>
+<a name="IDX207"></a>
+<a name="IDX208"></a>
+<a name="IDX209"></a>
+<p>JML's interpretation of the assignable clause does not permit
+either temporary side effects or benevolent side effects.
+A method with a <em>temporary side effect</em> assigns to a location,
+does some work, and then assigns the original value back to that location.
+In JML, a method may not have temporary side effects
+on locations that it is not permitted to modify
+[Ruby-Leavens00].
+A method has a <em>benevolent side effect</em>
+if it assigns to a location in a way that is not observable by clients.
+In JML, a method may not have benevolent side effects on locations
+that it is not permitted to modify  [Leino95] [Leino95a].
+</p>
+<a name="IDX210"></a>
+<a name="IDX211"></a>
+<p>Because JML's assignable clauses give permission
+to assign to locations, it is safe for clients to assume that
+only the listed locations (and locations of their data group members)
+may have their values modified.
+Because locations listed in the <code>assignable</code> clause are the only
+ones that can be modified, we often speak of what locations a method can
+&ldquo;modify,&rdquo; instead of the more precise &ldquo;can assign to.&rdquo;
+</p>
+<a name="IDX212"></a>
+<a name="IDX213"></a>
+<a name="IDX214"></a>
+<p>What does the assignable clause say about the modification of locations?
+In particular, although the &ldquo;location&rdquo; for a model field
+or model variable cannot be directly assigned to in JML,
+its value is determined by the concrete fields and variables
+that it (ultimately) depends on, specifically the members of its 
+data group. 
+That is, a model field or variable can be modified by assignments
+to the concrete members of its data group (see section <a href="#SEC21">Data Groups</a>). 
+Thus, a method's assignable clause only
+permits the method to modify a location if the location:
+</p><ul>
+<li>
+is mentioned in the method's <code>assignable</code> clause,
+
+</li><li>
+is a member of a data group mentioned in the <code>assignable</code> 
+clause (see section <a href="#SEC21">Data Groups</a>),
+
+</li><li>
+was not allocated when the method started execution, or
+
+</li><li>
+is local to the method.
+</li></ul>
+
+<a name="IDX215"></a>
+<a name="IDX216"></a>
+<a name="IDX217"></a>
+<a name="IDX218"></a>
+<a name="IDX219"></a>
+<p>In the specification of <code>top</code>,
+the assignable clause says that a call to <code>top</code> that satisfies
+the precondition cannot assign to any locations.
+It does this by using the <var>store-ref</var> &ldquo;<code>\nothing</code>.&rdquo;
+Unlike some formal specification languages (including Larch BISLs and
+older versions of JML),
+when the <code>assignable</code> clause is omitted in a heavyweight
+specification, the default <var>store-ref</var> for the assignable 
+clause is <code>\everything</code>. 
+Thus an omitted assignable clause in JML means that the method can assign 
+to all locations (that could otherwise be assigned to by the method). 
+Such an assignable clause plays havoc with formal
+reasoning, and thus if one cares about verification, one should give
+an assignable clause explicitly if the method is not pure
+(see section <a href="#SEC35">Purity</a>).
+</p>
+<hr size="6">
+<a name="Old-Values"></a>
+<a name="SEC17"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC16" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC18" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC15" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.1.3.2 Old Values </h4>
+
+<p>When a method can modify some locations, they may have different
+values in the pre-state and post-state of a call.
+Often the post-condition must refer to the values held
+in both of these states.
+JML uses a notation similar to Eiffel's to refer
+to the pre-state value of a variable.
+In JML the syntax is <code>\old(</code><i>E</i><code>)</code>, where <i>E</i> is an expression.
+(Unlike Eiffel, we use parentheses following <code>\old</code>
+to delimit the expression to be evaluated in the pre-state explicitly.
+JML also uses backslashes (<code>\\</code>) to mark the keywords it uses in
+expressions; this avoids interfering with Java program identifiers,
+such as &ldquo;<code>old</code>&rdquo;.)
+</p>
+<a name="IDX220"></a>
+<a name="IDX221"></a>
+<p>The meaning of <code>\old(</code><i>E</i><code>)</code> is as if <i>E</i> were evaluated
+in the pre-state and that value is used in place of
+<code>\old(</code><i>E</i><code>)</code> in the assertion.
+It follows that, an expression like <code>\old(myVar).theStack</code>
+may not mean what is desired,
+since only the old value of <code>myVar</code> is saved;
+access to the field <code>theStack</code> is done in the post-state.
+If it is the field, <code>theStack</code>, not the variable, <code>myVar</code>,
+that is changing, then probably
+what is desired is <code>\old(myVar.theStack)</code>.
+To avoid such problems, it is good practice to have the expression <i>E</i>
+in <code>\old(</code><i>E</i><code>)</code>
+be such that its type is either the type of a primitive value,
+such as an <code>int</code>, or a type with immutable objects,
+such as <code>JMLObjectSequence</code>.
+</p>
+<p>As another example, in <code>pop</code>'s postcondition
+the expression <code>\old(theStack.trailer())</code>
+has type <code>JMLObjectSequence</code>, so it is immutable.
+The value of <code>theStack.trailer()</code> is computed
+in the pre-state of the method.
+</p>
+<hr size="6">
+<a name="Reference-Semantics"></a>
+<a name="SEC18"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC17" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC19" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC15" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.1.3.3 Reference Semantics </h4>
+
+<p>Note also that, since <code>JMLObjectSequence</code> is a reference type,
+one must use <code>equals</code> instead of <code>==</code> to compare
+instances of this type for equality of values.  For example, in
+the postcondition of the <code>pop</code> method, we use <code>equals</code>
+to compare <code>theStack</code> and <code>\old(theStack.trailer())</code>,
+as these may yield different objects.
+Using <code>==</code> would be a mistake, since it would only compare them
+for object identity.
+</p>
+<a name="IDX222"></a>
+<a name="IDX223"></a>
+<a name="IDX224"></a>
+<a name="IDX225"></a>
+<a name="IDX226"></a>
+<p>As in Java itself, most types are reference types, and hence many expressions
+yield references (i.e., object identities or addresses),
+as opposed to primitive values.
+This means that <code>==</code>, except when used to compare
+pure values of primitive types such as <code>boolean</code> or <code>int</code>,
+is reference equality.
+As in Java,
+to get value equality for reference types one uses the
+<code>equals</code> method in assertions.
+For example, the predicate
+<code>myString == yourString</code>, is only true if
+the objects denoted by <code>myString</code> and <code>yourString</code> are the
+same object (i.e., if the names are aliases);
+to compare their values one must write
+<code>myString.equals(yourString)</code>.
+</p>
+<hr size="6">
+<a name="Correct-Implementation"></a>
+<a name="SEC19"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC18" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC20" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC15" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.1.3.4 Correct Implementation </h4>
+
+<p>The specification of <code>push</code> does not have a <code>requires</code>
+clause.
+This means that the method imposes no obligations on the caller.
+(The meaning of an omitted <code>requires</code> clause
+is that the method's precondition is <code>true</code>, which
+is satisfied by all states, and hence imposes no obligations on the caller.)
+This seems to imply that the implementation must provide
+a literally unbounded stack, which is surely impossible.
+We avoid this problem, by following Poetzsch-Heffter [Poetzsch-Heffter97]
+in releasing implementations from their obligations
+to fulfill the postcondition when Java runs out of storage.
+In general, a method specified with <code>normal_behavior</code>
+has a correct implementation if,
+whenever it is called in a state that satisfies
+its precondition, either
+</p><ul>
+<li>
+the method terminates normally in a state that satisfies its postcondition,
+having assigned to only the locations permitted by its <code>assignable</code>
+clause, or
+
+</li><li>
+Java signals an error,
+by throwing an exception that inherits from <code>java.lang.Error</code>.
+</li></ul>
+<p>We discuss the specification of methods with exceptions in the next
+subsection.
+</p>
+<hr size="6">
+<a name="Models-and-Lightweight-Specifications"></a>
+<a name="SEC20"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC19" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC21" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC12" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.1.4 Models and Lightweight Specifications </h3>
+
+<p>In specifying existing code, one often does not want to introduce new
+model fields or think up new names for them.  And sometimes,
+especially for fields with simple, atomic values, the field name
+itself is so &ldquo;natural&rdquo; that it would be difficult to think up a second
+good name for a model field that would be an abstraction of it.
+Thus JML provides two modifiers, <code>spec_public</code> and
+<code>spec_protected</code> that can used to make existing fields public or
+protected, for purposes of specification.
+</p>
+<p>For example, consider the (lightweight) specification of the class
+<code>Point2D</code> below.  In this specification the private fields,
+<code>x</code> and <code>y</code> are specified as <code>spec_public</code>, which
+allows them to be used in the public invariant clause and in the
+(implicitly public) specifications of the constructors and methods of
+<code>Point2D</code>. 
+</p>
+<a name="IDX227"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.prelimdesign;
+
+//@ model import org.jmlspecs.models.JMLDouble;
+
+public class Point2D
+{
+  private /*@ spec_public @*/ double x = 0.0;
+  private /*@ spec_public @*/ double y = 0.0;
+
+  //@ public invariant !Double.isNaN(x);
+  //@ public invariant !Double.isNaN(y);
+  //@ public invariant !Double.isInfinite(x);
+  //@ public invariant !Double.isInfinite(y);
+
+  //@ ensures x == 0.0 &amp;&amp; y == 0.0;
+  public Point2D() { }
+
+  /*@ requires !Double.isNaN(xc);
+    @ requires !Double.isNaN(yc);
+    @ requires !Double.isInfinite(xc);
+    @ requires !Double.isInfinite(yc);
+    @ assignable x, y;
+    @ ensures x == xc &amp;&amp; y == yc;
+    @*/
+  public Point2D(double xc, double yc) {
+    x = xc;
+    y = yc;
+  }
+
+  //@ ensures \result == x;
+  public /*@ pure @*/ double getX() {
+    return x;
+  }
+
+  //@ ensures \result == y;
+  public /*@ pure @*/ double getY() {
+    return y;
+  }
+  
+  /*@ requires !Double.isNaN(x+dx);
+    @ requires !Double.isInfinite(x+dx);
+    @ assignable x;
+    @ ensures JMLDouble.approximatelyEqualTo(x,
+    @                       \old(x+dx), 1e-10);
+    @*/
+  public void moveX(double dx) {
+    x += dx;
+  }
+  
+  /*@ requires !Double.isNaN(y+dy);
+    @ requires !Double.isInfinite(y+dy);
+    @ assignable y;
+    @ ensures JMLDouble.approximatelyEqualTo(y,
+    @                       \old(y+dy), 1e-10);
+    @*/
+  public void moveY(double dy) {
+    y += dy;
+  }
+}
+</pre></td></tr></table>
+
+<p>Note that these specifications would be illegal without the use of
+<code>spec_public</code>, since JML requires that public specifications only
+mention publicly-visible names
+(see section <a href="prelimdesign_1.html#SEC2">Behavioral Interface Specification</a>).
+</p>
+<a name="IDX228"></a>
+<a name="IDX229"></a>
+<a name="IDX230"></a>
+<a name="IDX231"></a>
+<p>However, <code>spec_public</code> is more than just a way to change the
+visibility of a name for specification purposes.  When applied to
+fields it can be considered to be shorthand for the declaration of a
+model field with the same name.  That is, the declaration of <code>x</code>
+in <code>Point2D</code> can be thought of as equivalent to the following
+declarations, together with a rewrite of the Java code that uses <code>x</code> to
+use <code>_x</code> instead (where we assume <code>_x</code> is not used elsewhere).
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">  //@ public model int x;
+  private int _x; //@ in x;
+  //@ private represents x &lt;- _x;
+</pre></td></tr></table>
+
+<p>So in this way of thinking <code>spec_public</code> is not
+just an access modifier, but shorthand for declaration of a model
+field.  This model field declaration is a commitment to readers that
+they can understand the specification using these model fields, even
+if the underlying private fields are changed, just as if the model
+field were declared explicitly.
+The model fields that are implicit allow such changes to be made without
+affecting the readers of the specification.
+</p>
+<p>For example, suppose one wanted to change the implementation of
+<code>Point2D</code>, to use polar coordinates.
+To do that while keeping the public specification
+unchanged, one would declare the model fields <code>x</code> and <code>y</code>
+explicitly.  One would then declare other fields for the polar and
+rectangular coordinates (and perhaps additional model fields as well).
+One would then also need to give explicit declarations that the new
+concrete fields are members of the model fields data groups, and give
+appropriate represents clauses.  
+(See section <a href="#SEC29">Data Groups and Represents Clauses</a>, for more on data group
+membership and represents clauses.)
+All of this is exactly analogous to what is done implicitly in the the
+desugaring described above. 
+</p>
+<p>Similar remarks apply to <code>spec_protected</code>.  The
+<code>spec_public</code> and <code>spec_protected</code> shorthands were borrowed
+from ESC/Java, but the desugaring described above is novel with JML.
+</p>
+<hr size="6">
+<a name="Data-Groups"></a>
+<a name="SEC21"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC20" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC22" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.2 Data Groups </h2>
+
+<p>In this subsection we present two example specifications.
+The two example specifications,
+<code>BoundedThing</code> and <code>BoundedStackInterface</code>,
+are used to describe how model (and concrete) fields can be related
+to one another, and how dependencies among them affect the meaning
+of the <code>assignable</code> clause.
+Along the way we also demonstrate how to specify methods
+that can throw exceptions and other features of JML.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC22">2.2.1 Specification of BoundedThing</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC28">2.2.2 Specification of BoundedStackInterface</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Specification-of-BoundedThing"></a>
+<a name="SEC22"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC21" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC23" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC21" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.2.1 Specification of BoundedThing </h3>
+
+<p>The specification in the file &lsquo;<tt>BoundedThing.java</tt>&rsquo;,
+shown below, is an interface specification
+with a simple abstract model.
+In this case, there are two model fields <code>MAX_SIZE</code>
+and <code>size</code>.
+</p>
+<a name="IDX232"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.stacks;
+
+public interface BoundedThing {
+
+    //@ public model instance int MAX_SIZE;
+    //@ public model instance int size;
+
+    /*@ public instance invariant MAX_SIZE &gt; 0;
+        public instance invariant
+                0 &lt;= size &amp;&amp; size &lt;= MAX_SIZE;
+        public instance constraint
+                MAX_SIZE == \old(MAX_SIZE);
+      @*/
+
+    /*@  public normal_behavior
+           ensures \result == MAX_SIZE;
+      @*/
+    public /*@ pure @*/ int getSizeLimit();
+
+    /*@  public normal_behavior
+           ensures \result &lt;==&gt; size == 0;
+      @*/
+    public /*@ pure @*/ boolean isEmpty();
+
+    /*@  public normal_behavior
+          ensures \result &lt;==&gt; size == MAX_SIZE;
+      @*/
+    public /*@ pure @*/ boolean isFull();
+
+    /*@ also
+         public behavior
+           assignable \nothing;
+           ensures \result instanceof BoundedThing
+               &amp;&amp; size == ((BoundedThing)\result).size;
+           signals_only CloneNotSupportedException;
+      @*/
+    public Object clone ()
+       throws CloneNotSupportedException;
+}
+</pre></td></tr></table>
+
+<p>After discussing the model fields, we describe the other parts
+of the specification below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC23">2.2.1.1 Model Fields in Interfaces</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC24">2.2.1.2 Invariants and History Constraint</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC25">2.2.1.3 Details of the Method Specifications</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC26">2.2.1.4 Adding to Method Specifications</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC27">2.2.1.5 Specifying Exceptional Behavior</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Model-Fields-in-Interfaces"></a>
+<a name="SEC23"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC22" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC24" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC22" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.2.1.1 Model Fields in Interfaces </h4>
+
+<p>In the specification above,
+the fields <code>MAX_SIZE</code> and <code>size</code> 
+are both declared using the modifier <code>instance</code>.
+Because of the use of the keyword <code>instance</code>,
+these fields are thus treated as normal model fields,
+i.e., as an instance variable in each object that implements this interface.
+By default, as in Java, fields are static in interfaces,
+and so if <code>instance</code> is omitted, the field declarations
+would be treated as class variables.
+The <code>instance</code> keyword tells the reader
+that the variable being declared is not
+static, but has a copy in each instance of a class that implements this
+interface.
+</p>
+<p>Java does not allow non-static fields to be declared in interfaces.
+However,  JML allows non-static model (and ghost) fields in interfaces
+when one uses <code>instance</code>.
+The reason for this extension is that such fields
+are essential for defining the abstract values and behavior of
+the objects being specified.<a name="DOCF13" href="prelimdesign_fot.html#FOOT13">(13)</a>
+</p>
+<p>In specifications of interfaces that extend
+or classes that implement this interface,
+these model fields are inherited.
+Thus, every object that has a type that is a subtype of the
+<code>BoundedThing</code> interface is thought of, abstractly,
+as having two fields, <code>MAX_SIZE</code> and <code>size</code>,
+both of type <code>int</code>.
+</p>
+<hr size="6">
+<a name="Invariants-and-History-Constraint"></a>
+<a name="SEC24"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC23" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC25" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC22" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.2.1.2 Invariants and History Constraint </h4>
+
+<p>Three pieces of class-level specification come after the abstract model
+in the above specification.
+</p>
+<a name="IDX233"></a>
+<a name="IDX234"></a>
+<p>The first two are <code>invariant</code> clauses.
+Writing several invariant clauses in a specification, like this
+is equivalent to writing one invariant clause which is their
+conjunction.
+Both of these invariants are instance invariants,
+because they use the <code>instance</code> modifier.
+By default, in interfaces, invariants and history constraints are
+static, unless marked with the <code>instance</code> modifier.
+Static invariants may only refer to static fields, while instance
+invariants can refer to both instance and static fields.
+</p>
+<p>The first invariant in the figure says that in every publicly visible state,
+every reachable object that is a <code>BoundedThing</code>
+must have a positive <code>MAX_SIZE</code> field.
+The second invariant says that, in each publicly visible state,
+every reachable object that is a <code>BoundedThing</code> must have a size
+field that is non-negative and less than or equal to <code>MAX_SIZE</code>.
+</p>
+<a name="IDX235"></a>
+<a name="IDX236"></a>
+<a name="IDX237"></a>
+<a name="IDX238"></a>
+<a name="IDX239"></a>
+<a name="IDX240"></a>
+<a name="IDX241"></a>
+<a name="IDX242"></a>
+<p>Following the invariants is a history constraint [Liskov-Wing94].
+Like the invariants, it uses the modifier <code>instance</code>,
+because it refers to instance fields.
+A history constraint is used to say how values can change between earlier
+and later publicly-visible states, 
+such as a method's pre-state and its post-state.
+This prohibits subtype objects from making certain state changes, even
+if they implement more methods than are specified in a given class.
+The history constraint in the specification above
+says that the value of <code>MAX_SIZE</code> cannot change,
+since in every pre-state and post-state, its value in the post-state,
+written <code>MAX_SIZE</code>, must equal its value in the pre-state,
+written <code>\old(MAX_SIZE)</code>.
+</p>
+<hr size="6">
+<a name="Details-of-the-Method-Specifications"></a>
+<a name="SEC25"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC24" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC26" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC22" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.2.1.3 Details of the Method Specifications </h4>
+
+<p>Following the history constraint are the interfaces and specifications
+for four public methods.  Notice that, if desired,
+the at-signs (<code>@</code>) may be omitted from the left sides
+of intermediate lines, as we do in this specification.
+</p>
+<a name="IDX243"></a>
+<a name="IDX244"></a>
+<p>The use of <code>==</code> in the method specifications
+is okay, since in each case, the things being compared are primitive values,
+not references.
+The notation <code>&lt;==&gt;</code> can be read &ldquo;if and only if&rdquo;.  It has the same
+meaning for Boolean  values as <code>==</code>, but has a lower precedence.
+Therefore, the expression &ldquo;<code>\result &lt;==&gt; size == 0</code>&rdquo;
+in the postcondition of the <code>isEmpty</code> method means the same
+thing as &ldquo;<code>\result == (size == 0)</code>&rdquo;.
+</p>
+<hr size="6">
+<a name="Adding-to-Method-Specifications"></a>
+<a name="SEC26"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC25" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC27" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC22" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.2.1.4 Adding to Method Specifications </h4>
+
+<p>The specification of the last method of <code>BoundedThing</code>,
+<code>clone</code>, is interesting.
+Note that it begins with the keyword <code>also</code>.
+This form is intended to tell the reader that the specification given is
+in addition to any specification that might have been given in the superclass
+<code>Object</code>, where <code>clone</code> is declared as a protected
+method.
+A form like this must be used whenever a specification is given for a
+method that overrides a method in a superclass, or that implements a
+method from an implemented interface.
+</p>
+<hr size="6">
+<a name="Specifying-Exceptional-Behavior"></a>
+<a name="SEC27"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC26" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC28" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC22" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.2.1.5 Specifying Exceptional Behavior </h4>
+
+<p>The specification of <code>clone</code>
+also uses <code>behavior</code> instead of <code>normal_behavior</code>.
+In a specification that starts this way, one can describe
+not just the case where the execution returns normally, but also
+executions where exceptions are thrown.
+In such a specification, the conditions under
+which exceptions can be thrown can be described by the predicate in the
+<code>signals</code> clauses,<a name="DOCF14" href="prelimdesign_fot.html#FOOT14">(14)</a>
+and the conditions under which the method may return without throwing
+an exception are described by the <code>ensures</code> clause. 
+In this specification, the <code>clone</code>
+method may always throw the exception, because it only needs to make
+the predicate &ldquo;<code>true</code>&rdquo; true to do so.
+When the method returns normally, it must make the given postcondition
+true.
+</p>
+<a name="IDX245"></a>
+<a name="IDX246"></a>
+<p>In JML, a <code>normal_behavior</code> specification can be thought of as a
+syntactic sugar for a <code>behavior</code> specification to which the
+following clause is added [Raghavan-Leavens05].
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">     signals (java.lang.Exception) false;
+</pre></td></tr></table>
+
+<p>This formalizes the idea that a method with a <code>normal_behavior</code>
+specification may not throw an exception
+when the specification's precondition is satisfied.
+</p>
+<a name="IDX247"></a>
+<a name="IDX248"></a>
+<a name="IDX249"></a>
+<p>JML also has a specification form <code>exceptional_behavior</code>,
+which can be used to specify when a method may not return normally.
+A specification that uses <code>exceptional_behavior</code> can be thought of as a
+syntactic sugar for a <code>behavior</code> specification to which the
+following clause is added [Raghavan-Leavens05].
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">     ensures false;
+</pre></td></tr></table>
+
+<p>This formalizes the idea that a method with an <code>exceptional_behavior</code>
+specification may not return normally
+when the specification's precondition is satisfied.
+Thus, when the precondition of such a specification case holds,
+some exception must be thrown (unless the execution encounters an
+error or is permitted to not return to the caller).
+</p>
+<a name="IDX250"></a>
+<p>Since, in the specification of <code>clone</code>, we want to allow the
+implementation to make a choice between either returning normally or
+throwing an exception, and we do not wish to distinguish the
+preconditions under which each choice must be made,
+we cannot use either of the more specialized
+forms <code>normal_behavior</code> or <code>exceptional_behavior</code>.
+Thus the specification of <code>clone</code>
+demonstrates the somewhat unusual case when
+the more general form of a <code>behavior</code> specification is needed.
+</p>
+<a name="IDX251"></a>
+<a name="IDX252"></a>
+<a name="IDX253"></a>
+<a name="IDX254"></a>
+<p>The specification of <code>clone</code> also illustrates the
+<code>signals_only</code> clause.
+The <code>signals_only</code> clause in the example says that the method may
+only throw an exception that is a subtype of
+<code>CloneNotSupportedException</code> when the exceptional behavior's
+precondition is true.  This says the same thing as the following,
+more verbose, signals clause.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">     signals (Exception e) e instanceof CloneNotSupportedException;
+</pre></td></tr></table>
+
+<p>The signals clause itself only describes what must be true when
+the exceptions it applies to are thrown; it does not constrain a
+method's behavior with respect to exceptions that are not subtypes of
+the exceptions named.  For example, a <code>signals</code> clause of the
+form
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">    signals (CloneNotSupportedException) true;
+</pre></td></tr></table>
+
+<p>would only say that a <code>CloneNotSupportedException</code> can always be thrown;
+it would not prohibit other exceptions
+that are not subtypes of <code>CloneNotSupportedException</code> from being
+thrown.
+For example, if <code>clone</code> were specified with such a signals
+clause, then an implementation could legally throw a
+<code>NullPointerException</code>.  To prevent such a possibility, in many
+cases it is preferable to use a <code>signals_only</code> clause to limit
+what exceptions may be thrown. 
+</p>
+<a name="IDX255"></a>
+<a name="IDX256"></a>
+<a name="IDX257"></a>
+<a name="IDX258"></a>
+<p>Finally note that in the specification of <code>clone</code>,
+the normal postcondition says that the result will be a <code>BoundedThing</code>
+and that its size will be the same as the model field <code>size</code>.
+The use of the cast in this postcondition is necessary,
+since the type of <code>\result</code> is <code>Object</code>.
+(This also adheres to our goal of using Java syntax and
+semantics to the extent possible.)
+Note also that the conjunct <code>\result instanceof BoundedThing</code>
+&ldquo;protects&rdquo; the next conjunct [Leavens-Wing97a]
+since if it is false the meaning of the cast does not matter.
+</p>
+<hr size="6">
+<a name="Specification-of-BoundedStackInterface"></a>
+<a name="SEC28"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC27" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC29" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC21" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.2.2 Specification of BoundedStackInterface </h3>
+
+<p>The specification in the file &lsquo;<tt>BoundedStackInterface.java</tt>&rsquo; below
+gives an interface for bounded stacks
+that extends the interface for <code>BoundedThing</code>.
+Note that this specification can refer to the instance fields
+<code>MAX_SIZE</code> and <code>size</code> inherited from the
+<code>BoundedThing</code> interface.
+</p>
+<a name="IDX259"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.stacks;
+//@ model import org.jmlspecs.models.*;
+public interface BoundedStackInterface extends BoundedThing {
+    //@ public initially theStack != null &amp;&amp; theStack.isEmpty();
+  /*@ public model instance JMLObjectSequence theStack;
+    @                                             in size;
+    @*/
+  //@ public instance represents size &lt;- theStack.int_length();
+  /*@ public instance invariant theStack != null;
+    @ public instance invariant_redundantly
+    @                           theStack.int_length() &lt;= MAX_SIZE;
+    @ public instance invariant 
+    @         (\forall int i; 0 &lt;= i &amp;&amp; i &lt; theStack.int_length();
+    @                         theStack.itemAt(i) != null);
+    @*/
+
+  /*@   public normal_behavior
+    @     requires !theStack.isEmpty();
+    @     assignable size, theStack;
+    @     ensures theStack.equals(\old(theStack.trailer()));
+    @ also
+    @   public exceptional_behavior
+    @     requires theStack.isEmpty();
+    @     assignable \nothing;
+    @     signals_only BoundedStackException;
+    @*/
+  public void pop( ) throws BoundedStackException;
+
+  /*@   public normal_behavior
+    @     requires theStack.int_length() &lt; MAX_SIZE &amp;&amp; x != null;
+    @     assignable size, theStack;
+    @     ensures theStack.equals(\old(theStack.insertFront(x)));
+    @     ensures_redundantly theStack != null &amp;&amp; top() == x
+    @              &amp;&amp; theStack.int_length() 
+    @                     == \old(theStack.int_length()+1);
+    @ also
+    @   public exceptional_behavior
+    @     requires theStack.int_length() &gt;= MAX_SIZE || x == null;
+    @     assignable \nothing;
+    @     signals_only BoundedStackException, NullPointerException;
+    @     signals (BoundedStackException)
+    @                  theStack.int_length() == MAX_SIZE;
+    @     signals (NullPointerException) x == null;
+    @*/
+  public void push(Object x )
+         throws BoundedStackException, NullPointerException;
+
+  /*@   public normal_behavior
+    @     requires !theStack.isEmpty();
+    @     ensures \result == theStack.first() &amp;&amp; \result != null;
+    @ also
+    @   public exceptional_behavior
+    @     requires theStack.isEmpty();
+    @     signals_only BoundedStackException;
+    @     signals (BoundedStackException e)
+    @             \fresh(e) &amp;&amp; e != null &amp;&amp; e.getMessage() != null
+    @           &amp;&amp; e.getMessage().equals(&quot;empty stack&quot;);
+    @*/
+  public /*@ pure @*/ Object top( ) throws BoundedStackException;
+}
+</pre></td></tr></table>
+
+<p>The abstract model for <code>BoundedStackInterface</code> adds to the inherited
+model by declaring a model instance field named <code>theStack</code>.
+This field is typed as a <code>JMLObjectSequence</code>.
+</p>
+<p>In the following we describe how the new model instance field,
+<code>theStack</code>, is related to <code>size</code> from <code>BoundedThing</code>.
+We also use this example to explain more JML features.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC29">2.2.2.1 Data Groups and Represents Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC30">2.2.2.2 Redundant Specification</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC31">2.2.2.3 Multiple Specification Cases</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC32">2.2.2.4 Pitfalls in Specifying Exceptions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC33">2.2.2.5 Redundant Ensures Clauses</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">   
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Data-Groups-and-Represents-Clauses"></a>
+<a name="SEC29"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC28" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC30" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC28" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.2.2.1 Data Groups and Represents Clauses </h4>
+
+<p>The <code>in</code> and <code>represents</code> clauses
+that follow the declaration of <code>theStack</code>
+are an important feature in modeling
+with layers of model fields.<a name="DOCF15" href="prelimdesign_fot.html#FOOT15">(15)</a>
+They also play a crucial role in relating model fields
+to the concrete fields of objects,
+which can be considered to be the final layer of detail in a design.
+</p>
+<a name="IDX260"></a>
+<a name="IDX261"></a>
+<a name="IDX262"></a>
+<a name="IDX263"></a>
+<a name="IDX264"></a>
+<p>When a model field is declared, a data group with the same name is 
+automatically created; 
+furthermore, this field is always a <em>member of</em> the group it creates.
+A <em>data group</em> is a set of fields (locations) referenced by 
+a specific name, i.e., the name of the model field that created it
+[Leino98] [Leino-Poetzsch-Heffter-Zhou02].
+</p>
+<a name="IDX265"></a>
+<a name="IDX266"></a>
+<a name="IDX267"></a>
+<a name="IDX268"></a>
+<a name="IDX269"></a>
+<a name="IDX270"></a>
+<a name="IDX271"></a>
+<a name="IDX272"></a>
+<p>When a data group (or field) is mentioned in the <code>assignable</code> clause 
+for a method <code>M</code>, then all members (i.e., fields) in that group 
+can be assigned to in the body of <code>M</code>. 
+Fields can become a <em>member of</em> a data group through the 
+data group clauses (i.e., the <code>in</code> and <code>maps-into</code> clauses) that 
+come immediately after the field declaration, in this case 
+the <code>in</code> clause. 
+The <code>in</code> clause in <code>BoundedStackInterface</code>
+says that <code>theStack</code> is a member of the group created by 
+the declaration of model field <code>size</code>;
+this means that <code>theStack</code> 
+might change its value whenever <code>size</code> changes.
+However, another way of looking at this is that,
+if one wants to change <code>size</code>, this can be done by
+changing <code>theStack</code>.
+We also say that <code>theStack</code> is a <em>member of</em> <code>size</code>.
+</p>
+<a name="IDX273"></a>
+<a name="IDX274"></a>
+<p>The <var>maps-into</var> clause is another way of adding members to a data 
+group; it allows the fields of an object to 
+be included in an existing data group.
+For example, if a field <code>F</code> is a reference or an array type, 
+then the fields or array elements of <code>F</code> can be included in a 
+data group using the <var>maps-into</var> clause.  
+The following are examples.
+</p><table><tr><td>&nbsp;</td><td><pre class="example">  protected ArrayList elems;
+  //@             maps elems.theList \into theStack;
+  protected java.lang.Object[] theItems;
+  //@             maps theItems[*] \into theStack;
+</pre></td></tr></table>
+
+<p>In the first example, the <code>maps-into</code> clause says that 
+<code>theList</code> field of 
+<code>elems</code> is a member of <code>theStack</code> data group. 
+Field <code>elems</code> is a <em>concrete</em> field of the type 
+(i.e., it is not a model field and thus is part of the implementation).  
+This allows model field <code>theList</code> of <code>elems</code> to change when 
+<code>theStack</code> changes.  
+Since <code>theList</code> is a model field and data group, this also allows
+concrete fields of <code>elems</code> to change as <code>theStack</code> changes.  
+Similarly, the second example says that the elements of the array,
+<code>theItems</code>, can change when <code>theStack</code> changes.  
+</p>
+<p>Data groups have the same visibility as the model field that declared it, 
+i.e, public, protected, private, or package visibility. 
+A field cannot be a member of a group that is less visible than it is. 
+For example, a public field cannot be a member of a 
+protected group.  
+</p>
+<a name="IDX275"></a>
+<a name="IDX276"></a>
+<a name="IDX277"></a>
+<a name="IDX278"></a>
+<a name="IDX279"></a>
+<a name="IDX280"></a>
+<a name="IDX281"></a>
+<a name="IDX282"></a>
+<p>The <code>in</code> and <var>maps-into</var> clauses are important in &ldquo;loosening up&rdquo; 
+the <code>assignable</code> clause, for example to permit the fields of an object
+that implement the abstract model to be changed
+[Leino95] [Leino95a].
+This &ldquo;loosening up&rdquo; also applies to model fields
+that are members of other groups.
+For example, since <code>theStack</code> is a member of <code>size</code>, 
+whenever <code>size</code> is mentioned in an <code>assignable</code> clause,
+then <code>theStack</code> is implicitly allowed to be modified.<a name="DOCF16" href="prelimdesign_fot.html#FOOT16">(16)</a>
+Thus it is only for rhetorical purposes that
+we mention both <code>size</code> and <code>theStack</code>
+in the assignable clauses of <code>pop</code> and <code>push</code>.
+Note, however, that just mentioning <code>theStack</code> would not permit
+<code>size</code> to be modified, because <code>size</code> is not a member of 
+<code>theStack</code>'s group. 
+Furthermore, it is redundant to mention <code>theStack</code> when 
+<code>size</code> has already been mentioned (although this can help clarify 
+the <code>assignable</code> clause, i.e., clarify which fields can be changed). 
+</p>
+<a name="IDX283"></a>
+<p>The <code>represents</code> clause in <code>BoundedStackInterface</code>
+says how the value of <code>size</code> is related
+to the value of <code>theStack</code>.
+It says that the value of <code>size</code> is <code>theStack.length()</code>.
+</p>
+<a name="IDX284"></a>
+<p>A represents clause gives additional facts that can be used
+in reasoning about the specification.
+It serves the same purpose as an abstraction function in various
+proof methods for abstract data types (such as [Hoare72a]).
+</p>
+<p>One can only use a represents clause to state facts about a field
+and its data group members.
+To state relationships among concrete data fields
+or on fields that are not related by a data group membership,
+one should use an invariant.
+</p>
+<hr size="6">
+<a name="Redundant-Specification"></a>
+<a name="SEC30"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC29" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC31" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC28" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.2.2.2 Redundant Specification </h4>
+
+<p>The second <code>invariant</code> clause
+that follows the <code>represents</code> clause
+in the specification of <code>BoundedStackInterface</code> above
+is our first example of checkable redundancy in a specification
+[Leavens-Baker99] [Tan94] [Tan95].
+This concept is signaled in JML by the use of the suffix <code>_redundantly</code>
+on a keyword (as in <code>ensures_redundantly</code>).
+It says both that the stated property is specified to hold
+and that this property is believed to follow from the other
+properties of the specification.
+In this case the redundant invariant follows from the given invariant,
+the invariant inherited from the specification of <code>BoundedThing</code>,
+and the fact stated in the <code>represents</code> clause.
+Even though this invariant is redundant,
+it is sometimes helpful to state such properties, to bring them
+to the attention of the readers of the specification.
+</p>
+<a name="IDX285"></a>
+<a name="IDX286"></a>
+<p>Checking that such claimed redundancies really do follow from
+other information is also a good way to make sure that what is being specified
+is really what is intended.
+Such checks could be done manually, during reviews, or with the aid
+of a theorem prover.
+JML's runtime assertion checker can also check such redundant
+specifications, but, of course, can only find examples where they do
+not hold.
+</p>
+<hr size="6">
+<a name="Multiple-Specification-Cases"></a>
+<a name="SEC31"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC30" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC32" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC28" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.2.2.3 Multiple Specification Cases </h4>
+
+<p>After the redundant invariant of <code>BoundedStackInterface</code>
+are the specifications of
+the <code>pop</code>, <code>push</code>, and <code>top</code> methods.
+These are interesting for several new features that they present.
+Each of these has both a normal and exceptional behavior specified.
+The meaning of such multiple <em>specification cases</em> is that,
+when the precondition of one of them is satisfied,
+the rest of that specification case must also be obeyed.
+</p>
+<a name="IDX287"></a>
+<a name="IDX288"></a>
+<a name="IDX289"></a>
+<a name="IDX290"></a>
+<a name="IDX291"></a>
+<a name="IDX292"></a>
+<a name="IDX293"></a>
+<a name="IDX294"></a>
+<a name="IDX295"></a>
+<a name="IDX296"></a>
+<a name="IDX297"></a>
+<p>A specification with several specification cases
+is shorthand for one in which the
+separate specifications are combined
+[Dhara-Leavens96] [Leavens97c] [Wing83] [Wills94].
+The desugaring can be thought of as proceeding in two steps
+(see [Raghavan-Leavens05] for more details).
+First, the <code>public normal_behavior</code> and <code>public exceptional_behavior</code>
+cases are converted into <code>public behavior</code> specifications as explained above.
+This would produce a specification for <code>pop</code> as shown below.
+The use of <code>implies_that</code> introduces a redundant specification
+that can be used, as is done here,
+to point out consequences of the specification to the reader.
+<a name="IDX298"></a>
+In this case the specification in question is the one mentioned in the
+<code>refine</code> clause.
+Note that in the second specification case of the figure below, 
+the default signals clause has been added.
+This clause was omitted from the original specification, since no
+particular details of the exception object were important to the specifier.
+</p>
+<a name="IDX299"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">//@ refine &quot;BoundedStackInterface.java&quot;;
+
+public interface BoundedStackInterface extends BoundedThing {
+  /*@ also
+    @ implies_that
+    @   public behavior
+    @     requires !theStack.isEmpty();
+    @     assignable size, theStack;
+    @     ensures theStack.equals(\old(theStack.trailer()));
+    @     signals (java.lang.Exception) false;
+    @  also
+    @   public behavior
+    @     requires theStack.isEmpty();
+    @     assignable \nothing;
+    @     ensures false;
+    @     signals_only BoundedStackException;
+    @     signals (java.lang.Exception) true;
+    @*/
+  public void pop( ) throws BoundedStackException;
+}    
+</pre></td></tr></table>
+
+<a name="IDX300"></a>
+<a name="IDX301"></a>
+<p>The second step of the desugaring is shown
+below.
+As can be seen from this example,
+<code>public behavior</code> specifications that are joined together using <code>also</code>
+have a precondition that is the disjunction of the preconditions
+of the combined specification cases.
+The <code>assignable</code> clause for the expanded specification
+is the union of all the assignable clauses for the cases.
+To compensate for this, the predicate <code>\not_assigned</code>, is used in
+the exceptional behavior specification cases to prohibit assignment to
+the locations (those in the data groups of <code>size</code> and <code>theStack</code>)
+that are now part of the assignable clause.
+The ensures clauses of the second desugaring step correspond to
+the ensures clauses for each specification case;
+they say that whenever the precondition for that specification case held
+in the pre-state, its postcondition must also hold.
+As can be seen in the specification below,
+in logic this is written using an implication between
+<code>\old</code> wrapped around the case's precondition and its postcondition.
+<a name="IDX302"></a>
+<a name="IDX303"></a>
+<a name="IDX304"></a>
+<a name="IDX305"></a>
+Having multiple ensures clauses is equivalent to writing
+a single ensures clause that has as its postcondition the conjunction
+of the given postconditions.
+Similarly, the signals clauses in the desugaring correspond to
+those in the given specification cases;
+as for the ensures clauses, each has a predicate that
+says that signaling that exception can only happen
+when the predicate in that case's precondition holds.
+</p>
+<a name="IDX306"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">//@ refine &quot;BoundedStackInterface.jml&quot;;
+public interface BoundedStackInterface extends BoundedThing {
+  /*@ also
+    @ implies_that
+    @   public behavior
+    @     requires !theStack.isEmpty() || theStack.isEmpty();
+    @     assignable size, theStack;
+    @     ensures \old(!theStack.isEmpty())
+    @               ==&gt; theStack.equals(\old(theStack.trailer()));
+    @     ensures \old(theStack.isEmpty()) ==&gt; 
+    @                 \not_assigned(size) &amp;&amp; \not_assigned(theStack);
+    @     signals_only BoundedStackException;
+    @     signals (java.lang.Exception)
+    @              \old(!theStack.isEmpty()) ==&gt; false;
+    @     signals (java.lang.Exception)
+    @              \old(theStack.isEmpty()) ==&gt;
+    @               \not_assigned(size) &amp;&amp; \not_assigned(theStack)
+    @               &amp;&amp; true;
+    @*/
+  public void pop( ) throws BoundedStackException;
+}
+</pre></td></tr></table>
+
+<p>In the file &lsquo;<tt>BoundedStackInterface.refines-java</tt>&rsquo; above,
+the precondition of <code>pop</code> reduces to <code>true</code>.
+However, the precondition shown is the general form of the expansion.
+Similar remarks apply to other predicates.
+</p>
+<a name="IDX307"></a>
+<a name="IDX308"></a>
+<p>Finally, note how, as in the specification of <code>top</code>,
+one can specify more details about the exception object thrown.
+The exceptional behavior for <code>top</code> says that the exception object
+thrown, <code>e</code>, must be freshly allocated, non-null, and have the
+given message.
+</p>
+<hr size="6">
+<a name="Pitfalls-in-Specifying-Exceptions"></a>
+<a name="SEC32"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC31" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC33" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC28" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.2.2.4 Pitfalls in Specifying Exceptions </h4>
+
+<p>A particularly interesting example of multiple specification cases occurs
+in the specification of the <code>BoundedStackInterface</code>'s <code>push</code> method.
+Like the other methods, this example has two specification cases;
+one of these is a <code>normal_behavior</code>
+and one is an <code>exceptional_behavior</code>.
+However, the exceptional behavior of <code>push</code> is interesting
+because it specifies more than one exception that may be thrown.
+The requires clause of the exceptional behavior says that
+an exception must be thrown when either the stack cannot grow larger,
+or when the argument <code>x</code> is null.
+The first signals clause says that, if a <code>BoundedStackException</code>
+is thrown, then the stack cannot grow larger,
+and the second signals clause says that, if a <code>NullPointerException</code>
+is thrown, then <code>x</code> must be null.
+The specification is written in this way because it may be that
+<em>both</em> conditions occur;
+when that is the case, the specification allows the implementation to choose
+(even nondeterministically) which exception is thrown.
+</p>
+<a name="IDX309"></a>
+<a name="IDX310"></a>
+<a name="IDX311"></a>
+<p>Specifiers should be wary of such situations, where two different
+signals clauses may both apply simultaneously, because it is impossible in
+Java to throw more than one exception from a method call.  Thus, for
+example, if the specification of <code>push</code> had been written as
+follows, it would not be implementable.<a name="DOCF17" href="prelimdesign_fot.html#FOOT17">(17)</a>
+The problem is that both exceptional preconditions may be true,
+and in that case an implementation cannot throw an exception that is
+an instance of both a <code>BoundedStackException</code> and a
+<code>NullPointerException</code>.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">  /*@   public normal_behavior
+    @     requires theStack.length() &lt; MAX_SIZE &amp;&amp; x != null;
+    @     assignable size, theStack;
+    @     ensures theStack.equals(\old(theStack.insertFront(x)));
+    @     ensures_redundantly theStack != null &amp;&amp; top() == x
+    @              &amp;&amp; theStack.length() == \old(theStack.length()+1);
+    @ also
+    @   public exceptional_behavior
+    @     requires theStack.length() &gt;= MAX_SIZE;
+    @     assignable \nothing;
+    @     signals (Exception e) e instanceof BoundedStackException;
+    @ also                                   // this is wrong!
+    @   public exceptional_behavior
+    @     requires x == null;
+    @     assignable \nothing;
+    @     signals (Exception e) e instanceof NullPointerException;
+    @*/
+  public void push(Object x )
+         throws BoundedStackException, NullPointerException;
+</pre></td></tr></table>
+
+<p>One could fix the example above by writing one of the requires clauses
+in the two exceptional behaviors to exclude the other, although this
+would make the specification deterministic about which exception
+would be thrown when both exceptional conditions occur.  In general, it
+seems best to avoid this pitfall by writing signals clauses
+that do not exclude other exceptions from being thrown whenever there
+are states in which multiple exceptions may be thrown.
+That is, instead of using multiple <code>signals_only</code> clauses or
+using multiple <code>signals</code> clauses like:
+</p><table><tr><td>&nbsp;</td><td><pre class="example">   signals (Exception e) e instanceof BoundedStackException;
+</pre></td></tr></table>
+<p>which only allows a <code>BoundedStackException</code> to be thrown when the
+precondition is true, one can write a signals clause like:
+</p><table><tr><td>&nbsp;</td><td><pre class="example">   signals (BoundedStackException);
+</pre></td></tr></table>
+<p>which says nothing about what happens when other exceptions are thrown
+(see section <a href="#SEC27">Specifying Exceptional Behavior</a> for more details).
+</p>
+<hr size="6">
+<a name="Redundant-Ensures-Clauses"></a>
+<a name="SEC33"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC32" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC34" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC28" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.2.2.5 Redundant Ensures Clauses </h4>
+
+<p>Finally, there is more redundancy in the specifications of <code>push</code>
+in the original specification of <code>BoundedStackInterface</code> above,
+which has a redundant <code>ensures</code> clause in its normal behavior.
+For an <code>ensures_redundantly</code> clause,
+what one checks is that the conjunction
+of the precondition, the meaning of the <code>assignable</code> clause, and the
+(non-redundant) postcondition together imply the redundant postcondition.
+It is interesting to note that,
+for <code>push</code>, the specifications for stacks written in
+Eiffel (see page 339 of [Meyer97]) expresses just what we specify
+in <code>push</code>'s redundant postcondition.
+This conveys strictly less information than the non-redundant
+postcondition for <code>push</code>'s normal behavior,
+since it says little about the elements of the stack.<a name="DOCF18" href="prelimdesign_fot.html#FOOT18">(18)</a>
+</p>
+<p>In summary, using types like <code>JMLObjectSequence</code> for modeling can
+help the specifier give more precise specifications.  We describe more
+about such types in the next section.
+</p>
+<hr size="6">
+<a name="Types-For-Modeling"></a>
+<a name="SEC34"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC33" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC35" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.3 Types For Modeling </h2>
+
+<p>JML comes with a suite of types with immutable objects and pure
+methods, that can be used for defining abstract models.
+These are found in the package
+<code>org.jmlspecs.models</code>,
+which includes both collection and non-collection types
+(such as <code>JMLInteger</code>)
+and a few auxiliary classes (such as exceptions and enumerators).
+</p>
+<a name="IDX312"></a>
+<a name="IDX313"></a>
+<p>The collection types in this package can hold either objects or values;
+this distinction determines the notion of equality used on their
+elements and whether cloning is done on the elements.
+The object collections, such as <code>JMLObjectSet</code>
+and <code>JMLObjectBag</code>, use <code>==</code> and do not clone.
+The value collections, such as <code>JMLValueSet</code>
+and <code>JMLValueBag</code>, use <code>.equals</code> to compare elements,
+and clone the objects added to and returned from them.
+The objects in a value collection are representatives of equivalence
+classes (under <code>.equals</code>) of objects; their values matter, but not
+their object identities.  By contrast an object container contains
+object identities, and the values in these objects do not matter.
+</p>
+<a name="IDX314"></a>
+<a name="IDX315"></a>
+<p>Simple collection types include
+the set types, <code>JMLObjectSet</code> and <code>JMLValueSet</code>,
+and sequence types <code>JMLObjectSequence</code> and <code>JMLValueSequence</code>.
+The binary relation and map types can independently have objects in their
+domain or range.
+The binary relation types are named
+<code>JMLObjectToObjectRelation</code>, <code>JMLObjectToValueRelation</code>,
+and so on.
+For example, <code>JMLObjectToValueRelation</code> is a type of binary
+relations between objects (not cloned and compared using <code>==</code>)
+and values (which are cloned and compared using <code>.equals</code>).
+The four map types are similarly named according to the scheme
+<code>JML...To...Map</code>.
+</p>
+<a name="IDX316"></a>
+<a name="IDX317"></a>
+<a name="IDX318"></a>
+<p>Users can also create their own types with pure methods for
+mathematical modeling if desired.
+Since pure methods may be used in assertions,
+they must be declared with the modifier <code>pure</code>
+and pass certain conservative checks that make sure there is no
+possibility of observable side-effects from their use.
+We discuss purity and give several examples of such types below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC35">2.3.1 Purity</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                      
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC36">2.3.2 Money</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                       
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC39">2.3.3 MoneyComparable and MoneyOps</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC40">2.3.4 MoneyAC</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC41">2.3.5 MoneyComparableAC</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">           
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC42">2.3.6 USMoney</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                     
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Purity"></a>
+<a name="SEC35"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC34" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC36" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC34" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.3.1 Purity </h3>
+
+
+<p>We say a method
+is <em>pure</em> if it is either specified with
+the modifier <code>pure</code> or is a method that
+appears in the specification of a <code>pure</code> interface or class.
+Similarly, a constructor is pure if it is either specified with
+the modifier <code>pure</code> or appears in the specification of a <code>pure</code>
+class.
+</p>
+<p>A <em>pure method</em>, that is not a constructor,
+implicitly has a specification that does not allow any side-effects.
+That is, its specification
+has the clauses
+</p><table><tr><td>&nbsp;</td><td><pre class="example">           diverges false;
+           assignable \nothing;
+</pre></td></tr></table>
+<p>added to each specification case; if the method has no specification
+given explicitly, then these clauses are added as a lightweight specification.
+For this reason, if one is writing a pure method, it is not necessary
+to otherwise specify an assignable clause
+(see section <a href="#SEC16">The Assignable Clause</a>), although doing so may improve the
+specification's clarity.
+</p>
+<a name="IDX319"></a>
+<a name="IDX320"></a>
+<p>A <em>pure constructor</em> has the clauses
+</p><table><tr><td>&nbsp;</td><td><pre class="example">           diverges false;
+           assignable this.*;
+</pre></td></tr></table>
+<p>added to each specification case; if the constructor has no specification
+given explicitly, then these clauses are added as a lightweight specification.
+This specification allows the constructor to assign to the non-static
+fields of the class in which it appears (including those inherited
+from its superclasses and model and ghost instance fields from the interfaces
+that it implements).
+</p>
+<a name="IDX321"></a>
+<a name="IDX322"></a>
+<p>Implementations of pure methods and constructors
+will be checked to see that they meet these conditions; i.e., that
+pure methods do not assign to locations that exist in the pre-state, and
+that pure constructors only assign to pre-existing locations that
+are fields of the <code>this</code> object.
+To make such checking modular, some JML tools prohibit a pure method
+or constructor implementation from calling methods or constructors
+that are not pure.  However, more sophisticated tools could more
+directly check the intended semantics [Salcianu-Rinard05].
+</p>
+<a name="IDX323"></a>
+<p>A pure method or constructor must also be provably terminating.
+Although JML does not force users to make such proofs of termination,
+users writing pure methods and constructors are supposed to make pure
+methods total in the sense that whenever, a pure method is called it either
+returns normally or throws some exception.
+This is supposed to lessen the possibility that assertion evaluation
+could loop forever, help make pure methods more like mathematical functions,
+and help the runtime assertion checker.
+The runtime assertion checker turns
+exceptions into arbitrary values of the appropriate result type
+[Cheon03] [Cheon-Leavens05];
+it cannot do anything with infinite loops.
+</p>
+<a name="IDX324"></a>
+<p>Furthermore, a pure method is supposed to always either terminate
+normally or throw an exception, even for calls that do not satisfy its
+precondition.  Static verification
+tools for JML should enforce this condition, by requiring a proof
+that a pure method implementation satisfies the following
+specification
+</p><table><tr><td>&nbsp;</td><td><pre class="example">   private behavior
+     requires true;
+     diverges false;
+     assignable \nothing;
+</pre></td></tr></table>
+<p>(and similarly for constructors, except that the assignable clause
+becomes <code>assignable this.*;</code> for constructors).
+</p>
+<p>However, this implicit verification condition is a
+specification, and is thus cannot be used in reasoning about
+calls to the method, even calls from within the class itself and recursive
+calls from within the implementation.
+For this reason we recommend writing the method or constructor
+specification in such a way that the effective precondition of the
+method is &ldquo;true,&rdquo; making the proof of the above implicit verification
+condition trivial, and allowing the
+termination behavior of the implementation to be relied upon by all clients.
+</p>
+<a name="IDX325"></a>
+<p>Recursion is permitted, both in the implementation of pure methods
+and the data structures they manipulate, and in the specifications of
+pure methods.
+When recursion is used in a specification,
+the proof of well-formedness for the specification
+involves the use of JML's <code>measured_by</code> clause.
+</p>
+<p>Since a pure method may not go into an infinite loop,
+if it has a non-trivial precondition, it should throw an exception
+when its normal precondition is not met.
+This exceptional behavior does not have to be specified or programmed
+explicitly, but technically there is an obligation to meet the specification
+that the method never loops forever.
+</p>
+<a name="IDX326"></a>
+<a name="IDX327"></a>
+<p>Furthermore, a pure method must be deterministic, in
+the sense that when called in a given state, it must always return the
+same value.  Similarly a pure constructor should be deterministic in
+the sense that when called in a given state, it always initializes the
+object in the same way.
+</p>
+<p>A pure method can be declared in any class or interface,
+and a pure constructor can be declared in any class.
+JML will specify the pure methods and constructors
+in the standard Java libraries as pure.
+</p>
+<a name="IDX328"></a>
+<p>As a convenience, instead of writing <code>pure</code> on each
+method declared in a class and interface,
+one can use the modifier <code>pure</code> on classes and
+interfaces.
+This simply means that each non-static method and each constructor
+declared in such a class or interface is <code>pure</code>.
+Note that this does not mean that all methods inherited (but not
+declared in and hence not overridden in) the class or interface are
+pure.
+For example, every class inherits ultimately from
+<code>java.lang.Object</code>,
+which has some methods, such as <code>notify</code> and <code>notifyAll</code>
+that are manifestly not pure.
+Thus each class will have some methods that are not pure.
+Despite this, it is convenient to refer to classes and interfaces declared
+with the <code>pure</code> modifier as <em>pure</em>.
+</p>
+<a name="IDX329"></a>
+<a name="IDX330"></a>
+<p>In JML the modifiers <code>model</code> and <code>pure</code>
+are orthogonal.  (Recall something declared with
+the modifier <code>model</code> does not have to be
+implemented, and is used purely for specification purposes.)
+Therefore, one can have a model method
+that is not pure (these might be useful in JML's model programs);
+conversely, a Java method can be pure (and thus not a model method).
+Nevertheless, usually a model method (or constructor) should be pure,
+since there is no way to use non-pure methods in an assertion,
+and model methods cannot be used in normal Java code.
+</p>
+<a name="IDX331"></a>
+<a name="IDX332"></a>
+<p>By the same reasoning, model classes should, in
+general, also be pure.
+Model classes cannot be used in normal Java code, and hence their
+methods are only useful in assertions (and JML's model programs).
+Hence it is typical, although not required, that a model class also be
+a pure class.
+We give some examples of pure interfaces, abstract classes, and classes below.
+</p>
+<hr size="6">
+<a name="Money"></a>
+<a name="SEC36"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC35" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC37" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC34" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.3.2 Money </h3>
+
+<p>The following example begins a specification of money
+that would be suitable for use in abstract models.
+Our specification is rather artificially broken up into pieces
+to allow each piece to have a specification that fits on a page.
+This organization is not necessarily something we would recommend,
+but it does give us a chance to illustrate more features of JML.
+</p>
+<p>Consider first the interface <code>Money</code>
+specified below.
+The abstract model here is a single field
+of the primitive Java type <code>long</code>,
+which holds a number of pennies.
+Note that the declaration of this field, <code>pennies</code>,
+again uses the JML keyword <code>instance</code>.
+</p>
+<a name="IDX333"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.prelimdesign;
+
+import org.jmlspecs.models.JMLType;
+
+public /*@ pure @*/ interface Money extends JMLType
+{
+  //@ public model instance long pennies;
+
+  //@ public instance constraint pennies == \old(pennies);
+
+  /*@     public normal_behavior
+    @       assignable \nothing;
+    @       ensures \result == pennies / 100;
+    @ for_example
+    @     public normal_example
+    @       requires pennies == 703;
+    @       assignable \nothing;
+    @       ensures \result == 7;
+    @   also
+    @     public normal_example
+    @       requires pennies == 799;
+    @       assignable \nothing;
+    @       ensures \result == 7;
+    @   also
+    @     public normal_example
+    @       requires pennies == -503;
+    @       assignable \nothing;
+    @       ensures \result == -5;
+    @*/
+  public long dollars();
+
+  /*@   public normal_behavior
+    @     assignable \nothing;
+    @     ensures \result == pennies % 100;
+    @ for_example
+    @     requires pennies == 703;
+    @     assignable \nothing;
+    @     ensures \result == 3;
+    @   also
+    @     requires pennies == -503;
+    @     assignable \nothing;
+    @     ensures \result == -3;
+    @*/
+  public long cents();
+
+  /*@ also
+    @   public normal_behavior
+    @     assignable \nothing;
+    @     ensures \result
+    @        &lt;==&gt; o2 instanceof Money
+    @             &amp;&amp; pennies == ((Money)o2).pennies;
+    @*/
+  public boolean equals(/*@ nullable @*/ Object o2);
+
+  /*@ also
+    @   public normal_behavior
+    @     assignable \nothing;
+    @     ensures \result instanceof Money
+    @       &amp;&amp; ((Money)\result).pennies == pennies;
+    @*/
+  public Object clone();
+}
+</pre></td></tr></table>
+
+<a name="IDX334"></a>
+<p>This interface has a history constraint, which says that the number
+of pennies in an object cannot change.<a name="DOCF19" href="prelimdesign_fot.html#FOOT19">(19)</a>
+</p>
+<p>The following explain more aspects of JML related to the above specification.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC37">2.3.2.1 Redundant Examples</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">          
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC38">2.3.2.2 JMLType and Informal Predicates</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Redundant-Examples"></a>
+<a name="SEC37"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC36" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC38" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC36" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.3.2.1 Redundant Examples </h4>
+
+<p>The interesting aspect of <code>Money</code>'s method specifications is another kind of redundancy.
+This new form of redundancy is examples,
+which follow the keyword &ldquo;<code>for_example</code>&rdquo;.
+</p>
+<a name="IDX335"></a>
+<a name="IDX336"></a>
+<a name="IDX337"></a>
+<p>Individual examples
+are given by <code>normal_example</code> clauses
+(adapted from our previous work on Larch/C++ [Leavens96b] [Leavens-Baker99]).
+Any number of these<a name="DOCF20" href="prelimdesign_fot.html#FOOT20">(20)</a> 
+can be given in a specification.
+In the specification of <code>Money</code> above
+there are three normal examples given for <code>dollars</code>
+and two in the specification of <code>cents</code>.
+</p>
+<a name="IDX338"></a>
+<p>The specification in each example should be such that:
+</p><ul>
+<li>
+the example's precondition implies
+the precondition of the expanded meaning of the specified behaviors,
+
+</li><li>
+the example's assignable clause
+specifies a subset of the locations that are assignable
+according to the expanded meaning of the specified behaviors, and
+
+</li><li>
+assuming the example's assignable clause,
+the conjunction of:
+<ul>
+<li>
+the example's precondition (wrapped by <code>\old()</code>),
+
+</li><li>
+the precondition of the expanded meaning of the specified behaviors
+(also wrapped by <code>\old()</code>),
+and
+
+</li><li>
+the postcondition of the expanded meaning of the specified behaviors
+</li></ul>
+<p>should be equivalent to the example's postcondition.
+</p></li></ul>
+<p>Requiring equivalence to the example's postcondition
+means that it can serve as a test oracle for the
+inputs described by the example's precondition.
+If there is only one specified <code>public normal_behavior</code> clause
+and if there are no preconditions and assignable clauses,
+then the example's postcondition should the equivalent to
+the conjunction of the example's precondition
+and the postcondition of the <code>public normal_behavior</code> specification.
+Typically, examples are concrete, and serve to make various rhetorical
+points about the use of the specification to the reader.
+(Exercise: check all the examples given!)
+</p>
+<hr size="6">
+<a name="JMLType-and-Informal-Predicates"></a>
+<a name="SEC38"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC37" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC39" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC36" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h4 class="subsubsection"> 2.3.2.2 JMLType and Informal Predicates </h4>
+
+<p>The interface <code>Money</code> is specified to extend the interface
+<code>JMLType</code>.
+This interface is given below.
+Classes that implement this interface must
+have pure <code>equals</code> and <code>clone</code> methods
+with the specified behavior.
+The methods specified override methods in the class
+<code>Object</code>, and so they use the form of specification
+that begins with the keyword &ldquo;<code>also</code>&rdquo;.
+</p>
+<a name="IDX339"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.models;
+
+/** Objects with a clone and equals method.
+ * JMLObjectType and JMLValueType are refinements
+ * for object and value containers (respectively).
+ * @version $Revision: 1.20 $
+ * @author Gary T. Leavens and Albert L. Baker.
+ * @see JMLObjectType
+ * @see JMLValueType
+ */
+//@ pure
+public interface JMLType extends Cloneable, java.io.Serializable {
+
+    /** Return a clone of this object. */
+    /*@ also
+      @   public normal_behavior
+      @     ensures \result != null;
+      @     ensures \result instanceof JMLType;
+      @     ensures ((JMLType)\result).equals(this);
+      @*/
+    //@ implies_that
+    /*@    ensures \result != null
+      @        &amp;&amp; \typeof(\result) &lt;: \type(JMLType);
+      @*/
+    public /*@ pure @*/ Object clone();    
+
+    /** Test whether this object's value is equal to the given argument.
+     */
+    /*@ also
+      @   public normal_behavior
+      @     ensures \result ==&gt;
+      @             ob2 != null
+      @             &amp;&amp; (* ob2 is not distinguishable from this,
+      @                   except by using mutation or == *);
+      @ implies_that
+      @   public normal_behavior
+      @   {|
+      @      requires ob2 != null &amp;&amp; ob2 instanceof JMLType;
+      @      ensures ((JMLType)ob2).equals(this) == \result;
+      @    also
+      @      requires ob2 == this;
+      @      ensures \result &lt;==&gt; true;
+      @   |}
+      @*/
+    public /*@ pure @*/ boolean equals(/*@ nullable @*/ Object ob2);    
+
+    /** Return a hash code for this object. */
+    public /*@ pure @*/ int hashCode();
+}
+</pre></td></tr></table>
+
+<a name="IDX340"></a>
+<a name="IDX341"></a>
+<a name="IDX342"></a>
+<a name="IDX343"></a>
+<a name="IDX344"></a>
+<a name="IDX345"></a>
+<p>The specification of <code>JMLType</code> 
+is noteworthy in its use of informal predicates [Leavens96b].
+In JML these start with an open parenthesis and an asterisk (`<code>(*</code>')
+and continue until a matching asterisk and closing parenthesis (`<code>*)</code>').
+In the public specification of <code>equals</code>,
+the <code>normal_behavior</code>'s <code>ensures</code> clause
+uses an informal predicate as an escape from formality.
+The use of informal predicates avoids the delicate issues of saying
+formally what observable aliasing means,
+and what equality of values means in general.<a name="DOCF21" href="prelimdesign_fot.html#FOOT21">(21)</a>
+</p>
+<a name="IDX346"></a>
+<a name="IDX347"></a>
+<a name="IDX348"></a>
+<a name="IDX349"></a>
+<a name="IDX350"></a>
+<a name="IDX351"></a>
+<a name="IDX352"></a>
+<p>In the <code>implies_that</code> section of the specification of the
+<code>equals</code> method is a nested case analysis, between <code>{|</code>
+and <code>|}</code>. The meaning of this is that each pre- and postcondition
+pair has to be obeyed.  The first of these nested pairs is essentially
+saying that <code>equals</code> has to be symmetric.  The second of these is
+saying that it has to be reflexive.
+</p>
+<p>The <code>implies_that</code> section of the <code>clone</code> method states
+some implications of the specification given that are useful for 
+ESC/Java.  These repeat, from the first part of <code>clone</code>'s
+specification, that the result must not be null, and that
+the result's dynamic type, <code>\typeof(\result)</code>,
+must be a subtype of (written <code>&lt;:</code>) the type <code>JMLType</code>.
+</p>
+<hr size="6">
+<a name="MoneyComparable-and-MoneyOps"></a>
+<a name="SEC39"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC38" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC40" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC34" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.3.3 MoneyComparable and MoneyOps </h3>
+
+<p>The type <code>Money</code> lacks some useful operations.
+The extensions below
+provide specifications of comparison operations and arithmetic, respectively.
+</p>
+<a name="IDX353"></a>
+<a name="IDX354"></a>
+<a name="IDX355"></a>
+<a name="IDX356"></a>
+<p>The specification in file &lsquo;<tt>MoneyComparable.java</tt>&rsquo; is interesting because
+each of the specified preconditions protects the postcondition from
+undefinedness in the postcondition [Leavens-Wing97a].
+For example, if the argument <code>m2</code> in the <code>greaterThan</code>
+method were <code>null</code>, then the expression <code>m2.pennies</code> would
+not be defined.
+</p>
+<a name="IDX357"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.prelimdesign;
+
+public /*@ pure @*/ interface MoneyComparable extends Money
+{
+  /*@ public normal_behavior
+    @   requires m2 != null;
+    @   assignable \nothing;
+    @   ensures \result &lt;==&gt; pennies &gt; m2.pennies;
+    @*/
+  public boolean greaterThan(Money m2);
+
+  /*@ public normal_behavior
+    @   requires m2 != null;
+    @   assignable \nothing;
+    @   ensures \result &lt;==&gt; pennies &gt;= m2.pennies;
+    @*/
+  public boolean greaterThanOrEqualTo(Money m2);
+
+  /*@ public normal_behavior
+    @   requires m2 != null;
+    @   assignable \nothing;
+    @   ensures \result &lt;==&gt; pennies &lt; m2.pennies;
+    @*/
+  public boolean lessThan(Money m2);
+
+  /*@ public normal_behavior
+    @   requires m2 != null;
+    @   assignable \nothing;
+    @   ensures \result &lt;==&gt; pennies &lt;= m2.pennies;
+    @*/
+  public boolean lessThanOrEqualTo(Money m2);
+}
+</pre></td></tr></table>
+
+<a name="IDX358"></a>
+<a name="IDX359"></a>
+<a name="IDX360"></a>
+<a name="IDX361"></a>
+<p>The interface specified in the file &lsquo;<tt>MoneyOps.java</tt>&rsquo;
+below extends the interface specified above.
+<code>MoneyOps</code> is interesting for
+the use of its pure model methods: <code>inRange</code>,
+<code>can_add</code>, and <code>can_scaleBy</code>.
+These methods cannot be invoked by Java programs;
+that is, they would not appear in the Java implementation.
+When, for example <code>inRange</code> is called in a predicate, it is
+equivalent to using some correct implementation of its specification.
+The specification of <code>inRange</code> also makes use of a local specification
+variable declaration, which follows the keyword &ldquo;<code>old</code>&rdquo;.
+Such declarations allow one to abbreviate long expressions, or,
+to make rhetorical points by naming constants,
+as is done with <code>epsilon</code>.
+These <code>old</code> declarations are treated as locations
+that are initialized to the pre-state value of the given expression.
+Model methods can be normal (instance) methods
+as well as static (class) methods. 
+</p>
+<a name="IDX362"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.prelimdesign;
+
+public /*@ pure @*/ interface MoneyOps extends MoneyComparable
+{
+  /*@  public normal_behavior
+    @     old double epsilon = 1.0;
+    @     assignable \nothing;
+    @     ensures \result
+    @        &lt;==&gt; Long.MIN_VALUE + epsilon &lt; d
+    @             &amp;&amp; d &lt; Long.MAX_VALUE - epsilon;
+    @ public model boolean inRange(double d);
+    @
+    @  public normal_behavior
+    @     requires m2!= null;
+    @     assignable \nothing;
+    @     ensures \result
+    @        &lt;==&gt; inRange((double) pennies + m2.pennies);
+    @ public model boolean can_add(Money m2);
+    @
+    @  public normal_behavior
+    @     ensures \result &lt;==&gt; inRange(factor * pennies);
+    @ public model boolean can_scaleBy(double factor);
+    @*/
+
+  /*@   public normal_behavior
+    @     old boolean can_add = can_add(m2); // FIXME: inline.
+    @     requires m2 != null &amp;&amp; can_add;
+    @     assignable \nothing;
+    @     ensures \result != null
+    @          &amp;&amp; \result.pennies == this.pennies + m2.pennies;
+    @ for_example
+    @   public normal_example
+    @     requires this.pennies == 300 &amp;&amp; m2.pennies == 400;
+    @     assignable \nothing;
+    @     ensures \result != null &amp;&amp; \result.pennies == 700;
+    @*/
+  public MoneyOps plus(Money m2);
+
+  /*@   public normal_behavior
+    @     old boolean inRange = inRange((double) pennies - m2.pennies); // FIXME: inline.
+    @     requires m2 != null
+    @           &amp;&amp; inRange;
+    @     assignable \nothing;
+    @     ensures \result != null
+    @          &amp;&amp; \result.pennies == this.pennies - m2.pennies;
+    @ for_example
+    @   public normal_example
+    @     requires this.pennies == 400 &amp;&amp; m2.pennies == 300;
+    @     assignable \nothing;
+    @     ensures  \result != null &amp;&amp; \result.pennies == 100;
+    @*/
+  public MoneyOps minus(Money m2);
+
+  /*@   public normal_behavior
+    @     requires can_scaleBy(factor);
+    @     assignable \nothing;
+    @     ensures \result != null
+    @          &amp;&amp; \result.pennies == (long)(factor * pennies);
+    @ for_example
+    @   public normal_example
+    @     requires pennies == 400 &amp;&amp; factor == 1.01;
+    @     assignable \nothing;
+    @     ensures \result != null &amp;&amp; \result.pennies == 404;
+    @*/
+  public MoneyOps scaleBy(double factor);
+}
+</pre></td></tr></table>
+
+<p>Note also that JML uses the Java semantics for mixed-type expressions.
+For example in the ensures clause of the above specification of <code>plus</code>,
+<code>m2.pennies</code> is implicitly coerced to a double-precision floating point number,
+as it would be in Java.
+</p>
+<hr size="6">
+<a name="MoneyAC"></a>
+<a name="SEC40"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC39" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC41" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC34" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.3.4 MoneyAC </h3>
+
+<p>The key to proofs that an implementation of a class or interface
+specification is correct lies in the use of <code>in</code>, <code>maps-into</code>,
+and <code>represents</code> clauses [Hoare72a] [Leino95].
+</p>
+<p>Consider, for example, the abstract class
+specified in the file &lsquo;<tt>MoneyAC.java</tt>&rsquo; below.
+This class is abstract and has no constructors.
+The class declares a concrete field <code>numCents</code>,
+which is related to the model instance field <code>pennies</code>
+by the <code>represents</code> clause.<a name="DOCF22" href="prelimdesign_fot.html#FOOT22">(22)</a>
+The represents clause states that the value of <code>pennies</code>
+is the value of <code>numCents</code>.
+This allows relatively trivial proofs of the correctness of the
+<code>dollars</code> and <code>cents</code> methods, and is key to the proofs
+of the other methods.
+</p>
+<a name="IDX363"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.prelimdesign;
+
+public /*@ pure @*/ abstract class MoneyAC implements Money
+{
+  protected long numCents;
+  //@                in pennies;
+
+  //@ protected represents pennies &lt;- numCents;
+
+  /*@ protected constraint_redundantly
+    @            numCents == \old(numCents); @*/
+
+  public long dollars() {
+    return numCents / 100;
+  }
+
+  public long cents() {
+    return numCents % 100;
+  }
+
+  public boolean equals(/*@ nullable @*/ Object o2) {
+    if (o2 instanceof Money) {
+      Money m2 = (Money)o2;
+      return numCents
+             == (100 * m2.dollars() + m2.cents());
+    } else {
+      return false;
+    }
+  }
+
+  public int hashCode() {
+    return (int)numCents;
+  }
+
+  public Object clone() {
+    return this;
+  }
+}
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="MoneyComparableAC"></a>
+<a name="SEC41"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC40" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC42" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC34" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.3.5 MoneyComparableAC </h3>
+
+<p>The straightforward implementation of the pure abstract subclass
+<code>MoneyComparableAC</code> is given below.
+Besides extending the class <code>MoneyAC</code>,
+it implements the interface <code>MoneyComparable</code>.
+Note that the model and concrete fields are both inherited
+by this class.
+</p>
+<a name="IDX364"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.prelimdesign;
+
+public /*@ pure @*/ abstract class MoneyComparableAC
+    extends MoneyAC implements MoneyComparable
+{
+  protected static /*@ pure @*/
+  long totalCents(Money m2)
+  {
+    long res = 100 * m2.dollars() + m2.cents();
+    //@ assert res == m2.pennies;
+    return res;
+  }
+
+  public boolean greaterThan(Money m2)
+  {
+    return numCents &gt; totalCents(m2);
+  }
+
+  public boolean greaterThanOrEqualTo(Money m2)
+  {
+    return numCents &gt;= totalCents(m2);
+  }
+
+  public boolean lessThan(Money m2)
+  {
+    return numCents &lt; totalCents(m2);
+  }
+
+  public boolean lessThanOrEqualTo(Money m2)
+  {
+    return numCents &lt;= totalCents(m2);
+  }
+}
+
+</pre></td></tr></table>
+
+<a name="IDX365"></a>
+<a name="IDX366"></a>
+<a name="IDX367"></a>
+<a name="IDX368"></a>
+<a name="IDX369"></a>
+<p>An interesting feature of the class <code>MoneyComparableAC</code>
+is the protected static method named <code>totalCents</code>.
+For this method, we give its code with an embedded assertion,
+written following the keyword <code>assert</code>.<a name="DOCF23" href="prelimdesign_fot.html#FOOT23">(23)</a>
+</p>
+<a name="IDX370"></a>
+<p>Note that the model method, <code>inRange</code> is not implemented,
+and does not need to be implemented to make this class correctly implement
+the interface <code>MoneyComparable</code>.
+</p>
+<hr size="6">
+<a name="USMoney"></a>
+<a name="SEC42"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC41" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC43" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC34" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.3.6 USMoney </h3>
+
+<p>Finally, a concrete class implementation
+is given in the file &lsquo;<tt>USMoney.java</tt>&rsquo; shown below.
+The class <code>USMoney</code> implements the interface <code>MoneyOps</code>.
+Note that specifications as well as code are given for the constructors.
+</p>
+<a name="IDX371"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.prelimdesign;
+
+public /*@ pure @*/ class USMoney
+                extends MoneyComparableAC implements MoneyOps
+{
+  /*@   public normal_behavior
+    @     assignable pennies;
+    @     ensures pennies == cs;
+    @ implies_that
+    @   protected normal_behavior
+    @     assignable pennies, numCents;
+    @     ensures numCents == cs;
+    @*/
+  public USMoney(long cs)
+  {
+    numCents = cs;
+  }
+
+  /*@ public normal_behavior
+    @   assignable pennies;
+    @   ensures pennies == (long)(100.0 * amt);
+    @   // ensures_redundantly (* pennies holds amt dollars *);
+    @*/
+  public USMoney(double amt)
+  {
+    numCents = (long)(100.0 * amt);
+  }
+
+  public MoneyOps plus(Money m2)
+  {
+    return new USMoney(numCents + totalCents(m2));
+  }
+
+  public MoneyOps minus(Money m2)
+  {
+    return new USMoney(numCents - totalCents(m2));
+  }
+    
+  public MoneyOps scaleBy(double factor)
+  {
+    return new USMoney(numCents * factor / 100.0);
+  }
+
+  public String toString()
+  {
+    return &quot;$&quot; + dollars() + &quot;.&quot; + cents();
+  }
+}
+</pre></td></tr></table>
+
+<a name="IDX372"></a>
+<a name="IDX373"></a>
+<a name="IDX374"></a>
+<a name="IDX375"></a>
+<a name="IDX376"></a>
+<p>The constructors each mention the fields that they initialize
+in their <code>assignable</code> clause.
+This is because the constructor's job is to initialize these fields.
+One can think of a <code>new</code> expression in Java as executing
+in two steps: allocating an object, and then calling the constructor.
+Thus the specification of a constructor needs to mention the fields
+that it can initialize in the <code>assignable</code> clause.
+</p>
+<a name="IDX377"></a>
+<a name="IDX378"></a>
+<a name="IDX379"></a>
+<p>The first constructor's specification also illustrates that redundancy
+can also be used in an <code>assignable</code> clause.
+A redundant <code>assignable</code> clause follows 
+if the meaning of the set of locations named is a subset of the
+ones denoted by the non-redundant clause for the same specification case.
+In this example
+the redundant assignable clause follows from the given assignable
+clause and the meaning of the <code>in</code> clause inherited from the
+superclass <code>MoneyAC</code>.
+</p>
+<a name="IDX380"></a>
+<a name="IDX381"></a>
+<p>The second constructor above is noteworthy in that there is a redundant
+ensures clause that uses an informal predicate [Leavens96b].
+In this instance, the informal predicate is used as a comment
+(which could also be used).
+Recall that informal predicates allow
+an escape from formality when
+one does not wish to give part of a specification in formal detail.
+</p>
+<a name="IDX382"></a>
+<a name="IDX383"></a>
+<a name="IDX384"></a>
+<a name="IDX385"></a>
+<a name="IDX386"></a>
+<a name="IDX387"></a>
+<p>The <code>plus</code> and <code>minus</code> methods use <code>assume</code> statements;
+these are like assertions, but are intended to impose obligations
+on the callers [Back-Mikhajlova-vonWright98].
+The main distinction between a <code>assume</code> statement and a <code>requires</code>
+clause is that the former is a statement and can be used within code.
+These may also be treated differently by different tools.  
+For example, ESC/Java [Leino-etal00]
+will require callers to satisfy the requires clause of a method,
+but will not enforce the precondition if it is stated as an assumption.
+</p>
+<hr size="6">
+<a name="Use-of-Pure-Classes"></a>
+<a name="SEC43"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC42" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC44" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.4 Use of Pure Classes </h2>
+
+<p>Since <code>USMoney</code> is a pure class,
+it can be used to make models of other classes.
+An example is the abstract class specified in the file
+&lsquo;<tt>Account.jml</tt>&rsquo; below.
+The first model field in this class has the type <code>USMoney</code>,
+which was specified above.
+(Further explanation follows the specification below.)
+</p>
+<a name="IDX388"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.prelimdesign;
+public class Account {
+  //@ public model MoneyOps credit;
+  //@ public model String accountOwner;
+  /*@ public invariant accountOwner != null &amp;&amp; credit != null
+    @         &amp;&amp; credit.greaterThanOrEqualTo(new USMoney(0)); @*/
+  //@ public constraint accountOwner.equals(\old(accountOwner));
+
+  /*@  public normal_behavior
+    @    requires own != null &amp;&amp; amt != null
+    @          &amp;&amp; (new USMoney(1)).lessThanOrEqualTo(amt);
+    @    assignable credit, accountOwner;
+    @    ensures credit.equals(amt) &amp;&amp; accountOwner.equals(own);
+    @*/
+  public Account(MoneyOps amt, String own);
+
+  /*@  public normal_behavior
+    @    assignable \nothing;
+    @    ensures \result.equals(credit);
+    @*/
+  public /*@ pure @*/ MoneyOps balance();
+
+  /*@  public normal_behavior
+    @    old boolean can_scale = credit.can_scaleBy(1.0 + rate);
+    @    requires 0.0 &lt;= rate &amp;&amp; rate &lt;= 1.0
+    @          &amp;&amp; can_scale;
+    @    assignable credit;
+    @    ensures credit.equals(\old(credit).scaleBy(1.0 + rate));
+    @ for_example
+    @  public normal_example
+    @    requires rate == 0.05
+    @          &amp;&amp; (new USMoney(4000)).equals(credit);
+    @    assignable credit;
+    @    ensures credit.equals(new USMoney(4200));
+    @*/
+  public void payInterest(double rate);
+
+  /*@  public normal_behavior
+    @    old boolean can_add = credit.can_add(amt);
+    @    requires amt != null
+    @          &amp;&amp; amt.greaterThanOrEqualTo(new USMoney(0))
+    @          &amp;&amp; can_add;
+    @    assignable credit;
+    @    ensures credit.equals(\old(credit).plus(amt));
+    @ for_example
+    @  public normal_example
+    @    requires credit.equals(new USMoney(40000))
+    @           &amp;&amp; amt.equals(new USMoney(1));
+    @    assignable credit;
+    @    ensures credit.equals(new USMoney(40001));
+    @*/
+  public void deposit(MoneyOps amt);
+
+  /*@  public normal_behavior
+    @   requires amt != null
+   @          &amp;&amp; (new USMoney(0)).lessThanOrEqualTo(amt)
+    @         &amp;&amp; amt.lessThanOrEqualTo(credit);
+    @    assignable credit;
+    @    ensures credit.equals(\old(credit).minus(amt));
+    @ for_example
+    @  public normal_example
+    @    requires credit.equals(new USMoney(40001))
+    @          &amp;&amp; amt.equals(new USMoney(40000));
+    @    assignable credit;
+    @    ensures credit.equals(new USMoney(1));
+    @*/
+  public void withdraw(MoneyOps amt);
+}
+</pre></td></tr></table>
+
+<a name="IDX389"></a>
+<a name="IDX390"></a>
+<a name="IDX391"></a>
+<a name="IDX392"></a>
+<a name="IDX393"></a>
+<p>The specification of <code>Account</code> makes good use of examples.
+It also demonstrates the various ways of protecting predicates used
+in the specification from undefinedness [Leavens-Wing97a].
+The principal concern here, as is often the case when using reference
+types in a model, is to protect against the model fields being
+<code>null</code>.
+As in Java, fields and variables of reference types can be <code>null</code>.
+In the specification of <code>Account</code>, the invariant states that these fields
+should not be null.
+Since implementations of public methods must preserve the invariants,
+one can think of the invariant as conjoined to the precondition
+and postcondition of each public method, and the postcondition of each
+public constructor.
+Hence, for example, method pre- and postconditions do not have
+to state that the fields are not null.
+However, often other parts of the specification must be written
+to allow the invariant to be preserved, or established by a constructor.
+For example, in the specification of <code>Account</code>'s constructor,
+this is done by requiring <code>amt</code> and <code>own</code> are not null,
+since, if they could be null, then the invariant and the postcondition
+could not be established.
+</p>
+<hr size="6">
+<a name="Composition-for-Container-Classes"></a>
+<a name="SEC44"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC43" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC45" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.5 Composition for Container Classes </h2>
+
+<p>The following specifications lead to
+the specification of a class <code>Digraph</code> (directed graph).
+This gives a more interesting example of how
+more complex models can be composed in JML from
+other classes.
+In this example we use model classes
+and the pure containers provided in the package
+<code>org.jmlspecs.models</code>.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC45">2.5.1 NodeType</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                    
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC46">2.5.2 ArcType</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                     
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC47">2.5.3 Digraph</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                     
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="NodeType"></a>
+<a name="SEC45"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC44" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC46" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC44" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.5.1 NodeType </h3>
+
+<p>The file &lsquo;<tt>NodeType.java</tt>&rsquo;
+contains the specification of an interface <code>NodeType</code>.
+We also declare this interface to be <code>pure</code>,
+since we want to use its methods in the specifications of other
+classes.
+(This is appropriate, since all the methods of <code>NodeType</code> are
+side-effect free.)
+</p>
+<a name="IDX394"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.digraph;
+
+import org.jmlspecs.models.*;
+
+public /*@ pure @*/ interface NodeType extends JMLType {
+  
+  /*@ also
+    @   public normal_behavior
+    @       requires !(o instanceof NodeType);
+    @       ensures \result == false;
+    @*/
+  public boolean equals(/*@ nullable @*/ Object o);
+
+  public int hashCode();
+
+  /*@ also
+    @   public normal_behavior
+    @     ensures \result instanceof NodeType
+    @          &amp;&amp; ((NodeType)\result).equals(this);
+    @*/
+  public Object clone();
+
+}
+</pre></td></tr></table>
+
+<hr size="6">
+<a name="ArcType"></a>
+<a name="SEC46"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC45" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC47" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC44" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.5.2 ArcType </h3>
+
+<p><code>ArcType</code> is specified as a
+pure class in the file &lsquo;<tt>ArcType.jml</tt>&rsquo; shown below.
+In theory, this class could have been declared with the <code>model</code> modifier,
+since it does not appear in the interface
+to <code>Digraph</code>.  However, we specify it as a normal Java class for
+simplicity, and because model classes do not currently work in JML's
+runtime assertion checker.
+We declare <code>ArcType</code> to be a pure class
+so that its methods can be used in assertions.
+The two model fields for <code>ArcType</code>,
+<code>from</code> and <code>to</code>, are both
+of type <code>NodeType</code>.
+We specify the <code>equals</code> method so that two references
+to objects of type <code>ArcType</code> are equal if and only if they have equal
+values in the <code>from</code> and <code>to</code> model fields.
+Thus, <code>equals</code> is specified using <code>NodeType.equals</code>.
+We also specify that <code>ArcType</code>
+has a public <code>clone</code> method,
+fulfilling the obligations of a type that implements
+<code>JMLType</code>.
+<code>ArcType</code> must implement <code>JMLType</code> so that
+its objects can be placed in a <code>JMLValueSet</code>.
+We use such a set for one of the model fields of <code>Digraph</code>.
+</p>
+<a name="IDX395"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.digraph;
+
+import org.jmlspecs.models.JMLType;
+
+/*@ pure @*/ public class ArcType implements JMLType {
+
+    //@ public model NodeType from;
+    //@ public model NodeType to;
+    //@ public invariant from != null &amp;&amp; to != null;
+
+    /*@ public normal_behavior
+      @   requires from != null &amp;&amp; to != null;
+      @   assignable this.from, this.to;
+      @   ensures this.from.equals(from)
+      @        &amp;&amp; this.to.equals(to);
+      @*/
+    public ArcType(NodeType from, NodeType to);
+
+    /*@ also
+      @   public normal_behavior
+      @   {|
+      @     requires o instanceof ArcType;
+      @     ensures \result
+      @        &lt;==&gt; ((ArcType)o).from.equals(from)
+      @             &amp;&amp; ((ArcType)o).to.equals(to);
+      @   also
+      @     requires !(o instanceof ArcType);
+      @     ensures \result == false;
+      @   |}
+      @*/
+    public boolean equals(/*@ nullable @*/ Object o);
+
+    /*@ also
+      @   public normal_behavior
+      @     ensures \result instanceof ArcType
+      @          &amp;&amp; ((ArcType)\result).equals(this);
+      @*/
+    public Object clone();
+}
+
+</pre></td></tr></table>
+
+<a name="IDX396"></a>
+<a name="IDX397"></a>
+<p>The use of <code>also</code> in the specification of
+<code>ArcType</code>'s <code>equals</code> method is interesting.
+It separates two cases of the normal behavior for that method.
+This is equivalent to using two <code>public normal_behavior</code> clauses,
+one for each case.
+That is, when the argument is an instance of <code>ArcType</code>,
+the method must return true just when 
+<code>this</code> and <code>o</code> have the same <code>from</code> and <code>to</code> fields.
+And when <code>o</code> is not an instance of <code>ArcType</code>,
+the <code>equals</code> method must return false.
+</p>
+<hr size="6">
+<a name="Digraph"></a>
+<a name="SEC47"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC46" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC48" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC44" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> 2.5.3 Digraph </h3>
+
+<p>Finally, the specification of the class <code>Digraph</code>
+is given in the file &lsquo;<tt>Digraph.jml</tt>&rsquo; shown below.
+This specification
+demonstrates how to use container classes,
+like <code>JMLValueSet</code>, combined with
+appropriate invariants, to specify models that are compositions of
+other classes.
+In this specification, the container class <code>JMLValueSet</code> is used
+as the type of the model fields <code>nodes</code> and <code>arcs</code>.
+Since JML currently only works with a non-generic version of Java,
+the first invariant clause restricts
+<code>nodes</code> so that every object in <code>nodes</code> is, in fact, of type
+<code>NodeType</code>.
+Similarly, the next invariant clause we restrict <code>arcs</code> to be
+a set of <code>ArcType</code> objects. In both cases, since the type is
+<code>JMLValueSet</code>, membership is determined by
+the <code>equals</code> method for the
+type of the elements (rather than reference equality).
+</p>
+<a name="IDX398"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.digraph;
+//@ model import org.jmlspecs.models.*;
+public class Digraph {
+ //@ public model JMLValueSet nodes;
+ //@ public model JMLValueSet arcs;
+ /*@ public invariant_redundantly nodes != null;
+   @ public invariant (\forall JMLType n; nodes.has(n);
+   @                          n instanceof NodeType);
+   @ public invariant_redundantly arcs != null;
+   @ public invariant (\forall JMLType a; arcs.has(a);
+   @                          a instanceof ArcType); 
+   @ public invariant
+   @      (\forall ArcType a; arcs.has(a);
+   @           nodes.has(a.from) &amp;&amp; nodes.has(a.to));
+   @*/
+
+ /*@  public normal_behavior
+   @   assignable nodes, arcs;
+   @   ensures nodes.isEmpty() &amp;&amp; arcs.isEmpty();
+   @*/
+ public Digraph();
+
+ /*@  public normal_behavior
+   @   requires_redundantly n != null;
+   @   assignable nodes;
+   @   ensures nodes.equals(\old(nodes.insert(n)));
+   @*/
+ public void addNode(NodeType n);
+ 
+ /*@  public normal_behavior
+   @   requires unconnected(n);
+   @   assignable nodes;
+   @   ensures nodes.equals(\old(nodes.remove(n)));
+   @*/
+ public void removeNode(NodeType n);
+ 
+ /*@  public normal_behavior
+   @   requires_redundantly inFrom != null &amp;&amp; inTo != null;
+   @   requires nodes.has(inFrom) &amp;&amp; nodes.has(inTo);
+   @   assignable arcs;
+   @   ensures arcs.equals(
+   @            \old(arcs).insert(new ArcType(inFrom, inTo)));
+   @*/
+ public void addArc(NodeType inFrom, NodeType inTo);
+ 
+ /*@  public normal_behavior
+   @   requires_redundantly inFrom != null &amp;&amp; inTo != null;
+   @   requires nodes.has(inFrom) &amp;&amp; nodes.has(inTo);
+   @   assignable arcs;
+   @   ensures arcs.equals(
+   @            \old(arcs).remove(new ArcType(inFrom, inTo)));
+   @*/
+ public void removeArc(NodeType inFrom, NodeType inTo);
+
+ /*@  public normal_behavior
+   @   assignable \nothing;
+   @   ensures \result == nodes.has(n);
+   @*/
+ public /*@ pure @*/ boolean isNode(NodeType n); 
+
+ /*@  public normal_behavior
+   @   requires_redundantly inFrom != null &amp;&amp; inTo != null;
+   @   ensures \result == arcs.has(new ArcType(inFrom, inTo));
+   @
+   @*/
+ public /*@ pure @*/ boolean isArc(NodeType inFrom,
+                                   NodeType inTo); 
+
+ /*@  public normal_behavior
+   @   requires nodes.has(start) &amp;&amp; nodes.has(end);
+   @   assignable \nothing;
+   @   ensures \result
+   @           == reachSet(new JMLValueSet(start)).has(end);
+   @*/
+ public /*@ pure @*/ boolean isAPath(NodeType start,
+                                     NodeType end);
+
+ /*@  public normal_behavior
+   @   assignable \nothing;
+   @   ensures \result &lt;==&gt;
+   @              !(\exists ArcType a; arcs.has(a);
+   @                     a.from.equals(n) || a.to.equals(n));
+   @*/
+ public /*@ pure @*/ boolean unconnected(NodeType n);
+
+ /*@  public normal_behavior
+   @   requires_redundantly nodeSet != null;
+   @   requires (\forall JMLType o; nodeSet.has(o);
+   @                o instanceof NodeType &amp;&amp; nodes.has(o));
+   @   {|
+   @      assignable \nothing;
+   @    also
+   @      requires nodeSet.equals(OneMoreStep(nodeSet));
+   @      ensures \result != null &amp;&amp; \result.equals(nodeSet);
+   @    also
+   @      requires !nodeSet.equals(OneMoreStep(nodeSet));
+   @      ensures \result != null
+   @         &amp;&amp; \result.equals(reachSet(OneMoreStep(nodeSet)));
+   @   |}
+   @ public pure model JMLValueSet reachSet(JMLValueSet nodeSet);
+   @*/
+
+ /*@  public normal_behavior
+   @   requires_redundantly nodeSet != null;
+   @   requires (\forall JMLType o; nodeSet.has(o);
+   @              o instanceof NodeType &amp;&amp; nodes.has(o));
+   @      assignable \nothing;
+   @   ensures_redundantly \result != null;
+   @   ensures \result.equals(nodeSet.union(
+   @        new JMLValueSet { NodeType n | nodes.has(n)
+   @          &amp;&amp; (\exists ArcType a; a != null &amp;&amp; arcs.has(a);
+   @                nodeSet.has(a.from) &amp;&amp; n.equals(a.to))}));
+   @ public pure model
+   @ JMLValueSet OneMoreStep(JMLValueSet nodeSet);
+   @*/
+}
+</pre></td></tr></table>
+
+<a name="IDX399"></a>
+<a name="IDX400"></a>
+<a name="IDX401"></a>
+<a name="IDX402"></a>
+<a name="IDX403"></a>
+<a name="IDX404"></a>
+<p>An interesting use of pure model methods appears at the end of
+the specification of <code>Digraph</code> in the pure model method <code>reachSet</code>.
+This method constructively defines the set of all nodes
+that are reachable from the nodes in the argument <code>nodeSet</code>.
+This specification uses a nested case analysis, between <code>{|</code>
+and <code>|}</code>.  The meaning of this is again that each pre- and postcondition
+pair has to be obeyed, but by using nesting, one can avoid duplication of the
+requires clause that is found at the beginning of the specification.
+The <code>measured_by</code> clause is needed because this specification is
+recursive; the measure given allows one to describe a termination argument,
+and thus ensure that the specification is well-defined. 
+This clause defines an integer-valued measure that must always
+be at least zero; furthermore, the measure for a call and recursive
+uses in the specification must strictly decrease [Owre-etal95].
+The recursion in the specification builds up the entire set
+of reachable nodes by, for each recursive reference, adding the nodes
+that can be reached directly (via a single arc) from the nodes in
+<code>nodeSet</code>. 
+</p>
+<hr size="6">
+<a name="Behavioral-Subtyping"></a>
+<a name="SEC48"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC47" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC11" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="section"> 2.6 Behavioral Subtyping </h2>
+
+<p>As in Java, a subtype inherits members (fields and methods) from its
+supertypes.  A subtype also inherits all the class
+level-specifications associated with fields and all method
+specifications for public and protected instance methods.
+This specification inheritance
+has the effect of making the subtype a behavioral subtype [Liskov-Wing94],
+in the sense that instances of the subtype obey the specifications its
+supertype(s) [Dhara-Leavens96] [Leavens-Weihl95].
+</p>
+<a name="IDX405"></a>
+<a name="IDX406"></a>
+<a name="IDX407"></a>
+<a name="IDX408"></a>
+<p>Class-level specifications associated with fields include include
+invariants and history constraints (see section <a href="#SEC24">Invariants and History Constraint</a>),
+as well as <code>initially</code> clauses (see section <a href="#SEC13">Model Fields</a>)
+data group declarations (see section <a href="#SEC21">Data Groups</a>),
+and represents clauses (see section <a href="#SEC29">Data Groups and Represents Clauses</a>).
+Inheritance of invariants means that
+each supertype's invariants must also hold in the subtype.
+Similarly, every history constraint specified in each supertype must
+be obeyed in the subtype. And all initially clauses specified
+for supertype fields must also be obeyed in all subtypes.
+Fields declared in a supertype retain their data group
+membership when inherited.  Their represents clauses are also
+inherited.
+</p>
+<a name="IDX409"></a>
+<a name="IDX410"></a>
+<a name="IDX411"></a>
+<a name="IDX412"></a>
+<a name="IDX413"></a>
+<p>As in Java, private fields are inherited by a subtype but not visible
+to it.  Similarly, default privacy (i.e., package
+visibility) fields are not accessible if the subtype is declared in a
+different package than the supertype declaring the field.
+As in Java, these fields are present in the
+objects of the subtype, but not accessible to code written in the
+subtype.
+In the same way, class level specifications associated with such
+fields must still be obeyed by objects of the subtype.
+Various restrictions to JML that ensure that this is always possible
+are being investigated [Ruby-Leavens00].
+</p>
+<p>Specifications for instance methods
+are also inherited in the sense that public and
+protected specification cases must
+be obeyed by all overriding methods [Dhara-Leavens96] [Leavens97c].
+This inheritance of method specifications
+ensures that a client's reasoning about a method call will still
+be valid, even if the method is overridden
+[America87] [America91] [Leavens-Weihl95],
+and thus that a subclass is a behavioral subtype of its
+supertypes [Dhara-Leavens96].
+Note that private and default (package) visibility specification cases
+are not visible to subtypes, and hence do not have to be obeyed by
+them; not inheriting such specification cases does not cause clients
+reasoning problems, as these specification cases are not
+visible to clients making method calls (in general).<a name="DOCF24" href="prelimdesign_fot.html#FOOT24">(24)</a>
+Furthermore, specifications are <em>not</em> inherited for constructors or for
+static methods, since they are not involved in dynamic dispatch.
+</p>
+<a name="IDX414"></a>
+<p>Inheritance of method specifications can be thought of textually.
+For each instance method, <i>m</i> specified in a class <i>C</i>,
+one can imagine copying into the specification of <i>m</i> the public and protected 
+specification cases for <i>m</i> given in all of <i>C</i>'s ancestors
+and in all the interfaces <i>C</i> implements;
+these specification cases would be combined using
+<code>also</code> [Dhara-Leavens96] [Raghavan-Leavens05].<a name="DOCF25" href="prelimdesign_fot.html#FOOT25">(25)</a>
+(This is the reason for the use of <code>also</code> at the beginning
+of specifications in overriding methods.)
+By the semantics of method combination using <code>also</code>,
+these behaviors must all be satisfied by the method,
+in addition to any explicitly specified behaviors.
+</p>
+<a name="IDX415"></a>
+<a name="IDX416"></a>
+<a name="IDX417"></a>
+<a name="IDX418"></a>
+<a name="IDX419"></a>
+<p>For example, consider the class <code>PlusAccount</code>,
+specified in file &lsquo;<tt>PlusAccount.jml</tt>&rsquo; shown below.
+It is specified as a subclass of <code>Account</code>
+(see section <a href="#SEC43">Use of Pure Classes</a>).
+Thus it inherits the fields of <code>Account</code>,
+and <code>Account</code>'s public invariants, history constraints,
+and method specifications.
+(The specification of <code>Account</code> given above
+does not have any <code>protected</code> specification information.)
+Since it inherits the fields of its superclass,
+a textual copy of the method specification cases of <code>Account</code>
+would still be meaningful in the context of <code>PlusAccount</code>.
+Thinking of such textual copies works if one adds new (model) fields to
+specify the subclass and relates them to the existing ones.
+If instead one tried to respecify the fields of a supertype
+with invariants and history constraints
+that violated the (inherited) specification of that supertype, then
+the resulting specification would be contradictory, and hence not be
+correctly implementable. 
+</p>
+<a name="IDX420"></a>
+<table><tr><td>&nbsp;</td><td><pre class="example">package org.jmlspecs.samples.prelimdesign;
+
+public class PlusAccount extends Account {
+  //@ public model MoneyOps savings, checking;  in credit;
+
+  /*@ public represents credit \such_that
+    @                   credit.equals(savings.plus(checking));
+    @*/
+  //@ public invariant savings != null &amp;&amp; checking != null;
+  /*@ public invariant_redundantly
+    @           savings.plus(checking)
+    @                  .greaterThanOrEqualTo(new USMoney(0));
+    @*/
+
+  /*@  public normal_behavior
+    @    requires sav != null &amp;&amp; chk != null &amp;&amp; own != null
+    @          &amp;&amp; (new USMoney(1)).lessThanOrEqualTo(sav)
+    @          &amp;&amp; (new USMoney(1)).lessThanOrEqualTo(chk);
+    @    assignable credit, owner;
+    @    assignable_redundantly savings, checking;
+    @    ensures savings.equals(sav) &amp;&amp; checking.equals(chk)
+    @             &amp;&amp; owner.equals(own);
+    @    ensures_redundantly credit.equals(sav.plus(chk));
+    @*/
+  public PlusAccount(MoneyOps sav, MoneyOps chk, String own);
+
+
+  /*@ also
+    @  public normal_behavior
+    @    old boolean can_scale = credit.can_scaleBy(1.0 + rate);
+    @    requires 0.0 &lt;= rate &amp;&amp; rate &lt;= 1.0
+    @          &amp;&amp; can_scale;
+    @    assignable credit, savings, checking;
+    @    ensures checking.equals(
+    @             \old(checking).scaleBy(1.0 + rate));
+    @ for_example
+    @  public normal_example
+    @    requires rate == 0.05
+    @          &amp;&amp; checking.equals(new USMoney(2000));
+    @    assignable credit, savings, checking;
+    @    ensures checking.equals(new USMoney(2100));
+    @*/
+  public void payInterest(double rate);
+
+  /*@ also
+    @  public normal_behavior
+    @    requires amt != null
+    @            &amp;&amp; (new USMoney(0)).lessThanOrEqualTo(amt)
+    @            &amp;&amp; amt.lessThanOrEqualTo(savings);
+    @    assignable credit, savings;
+    @    ensures savings.equals(\old(savings).minus(amt))
+    @            &amp;&amp; \not_modified(checking);
+    @ also
+    @  public normal_behavior
+    @    requires amt != null
+    @            &amp;&amp; (new USMoney(0)).lessThanOrEqualTo(amt)
+    @            &amp;&amp; amt.lessThanOrEqualTo(credit)
+    @            &amp;&amp; amt.greaterThan(savings);
+    @    assignable credit, savings, checking;
+    @    ensures savings.equals(new USMoney(0))
+    @           &amp;&amp; checking.equals(
+    @                \old(checking).minus(amt.minus(savings)));
+    @ for_example
+    @   public normal_example
+    @    requires savings.equals(new USMoney(40001))
+    @             &amp;&amp; amt.equals(new USMoney(40000));
+    @    assignable credit, savings, checking;
+    @    ensures savings.equals(new USMoney(1))
+    @            &amp;&amp; \not_modified(checking);
+    @  also
+    @   public normal_example
+    @    requires savings.equals(new USMoney(30001))
+    @           &amp;&amp; checking.equals(new USMoney(10000))
+    @           &amp;&amp; amt.equals(new USMoney(40000));
+    @    assignable credit, savings, checking;
+    @    ensures savings.equals(new USMoney(0))
+    @           &amp;&amp; checking.equals(new USMoney(1));
+    @*/
+  public void withdraw(MoneyOps amt);
+
+  /*@ also
+    @  public normal_behavior
+    @    old boolean can_add = credit.can_add(amt);
+    @    requires amt != null
+    @           &amp;&amp; amt.greaterThanOrEqualTo(new USMoney(0))
+    @           &amp;&amp; can_add;
+    @    assignable credit, savings;
+    @    ensures savings.equals(\old(savings).plus(amt))
+    @            &amp;&amp; \not_modified(checking);
+    @ for_example
+    @  public normal_example
+    @    requires savings.equals(new USMoney(20000))
+    @           &amp;&amp; amt.equals(new USMoney(1));
+    @    assignable credit, savings, checking;
+    @    ensures savings.equals(new USMoney(20001));
+    @*/ 
+  public void deposit(MoneyOps amt);
+
+  /*@    public normal_behavior
+    @    old boolean can_add = credit.can_add(amt);
+    @    requires amt != null
+    @           &amp;&amp; amt.greaterThanOrEqualTo(new USMoney(0))
+    @           &amp;&amp; can_add;
+    @    assignable credit, checking;
+    @    ensures checking.equals(\old(checking).plus(amt))
+    @          &amp;&amp; \not_modified(savings);
+    @ for_example
+    @  public normal_example
+    @    requires checking.equals(new USMoney(20000))
+    @           &amp;&amp; amt.equals(new USMoney(1));
+    @    assignable credit, checking;
+    @    ensures checking.equals(new USMoney(20001));
+    @*/
+  public void depositToChecking(MoneyOps amt);
+
+  /*@  public normal_behavior
+    @    requires amt != null;
+    @    {|
+    @      requires (new USMoney(0)).lessThanOrEqualTo(amt)
+    @             &amp;&amp; amt.lessThanOrEqualTo(checking);
+    @      assignable credit, checking;
+    @      ensures checking.equals(\old(checking).minus(amt))
+    @             &amp;&amp; \not_modified(savings);
+    @     also
+    @      requires (new USMoney(0)).lessThanOrEqualTo(amt)
+    @             &amp;&amp; amt.lessThanOrEqualTo(credit)
+    @             &amp;&amp; amt.greaterThan(checking);
+    @      assignable credit, checking, savings;
+    @      ensures checking.equals(new USMoney(0))
+    @          &amp;&amp; savings.equals(
+    @              \old(savings).minus(amt.minus(checking)));
+    @    |}
+    @ for_example
+    @  public normal_example 
+    @    requires checking.equals(new USMoney(40001))
+    @           &amp;&amp; amt.equals(new USMoney(40000));
+    @    assignable credit, checking;
+    @    ensures checking.equals(new USMoney(1))
+    @           &amp;&amp; \not_modified(savings);
+    @ also
+    @  public normal_example
+    @    requires savings.equals(new USMoney(30001))
+    @           &amp;&amp; checking.equals(new USMoney(10000))
+    @           &amp;&amp; amt.equals(new USMoney(40000));
+    @    assignable credit, checking, savings;
+    @    ensures checking.equals(new USMoney(0))
+    @          &amp;&amp; savings.equals(new USMoney(1));
+    @*/
+  public void payCheck(MoneyOps amt);
+}
+</pre></td></tr></table>
+
+<p>Similarly, if one tried to respecify a method in a way that violated
+an (inherited) specification case, then the method would have to obey
+both specifications, and would not be correctly implementable. Thus,
+specification inheritance guarantees that all subtypes are behavioral
+subtypes in JML, and trying to avoid behavioral subtyping results in
+unimplementable specifications <cite>Dhara-Leavens96</cite>.
+</p>
+<a name="IDX421"></a>
+<a name="IDX422"></a>
+<a name="IDX423"></a>
+<a name="IDX424"></a>
+<p>Note that in the represents clause below,
+instead of a left-facing arrow, <code>&lt;-</code>,
+the connective &ldquo;<code>\such_that</code>&rdquo;
+is used to introduce a relationship predicate.
+This form of the represents clause allows one to specify abstraction relations,
+instead of abstraction functions.
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC11" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_3.html#SEC49" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="prelimdesign.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_7.html#SEC56" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="prelimdesign_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on July, 21 2008 by texi2html 1.78 -->
+<!--
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+
+-->
+<head>
+<title>JML Reference Manual: E. Differences</title>
+
+<meta name="description" content="JML Reference Manual: E. Differences">
+<meta name="keywords" content="JML Reference Manual: E. Differences">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.78">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<a name="Differences"></a>
+<a name="SEC240"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="jmlrefman_24.html#SEC239" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC241" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman_24.html#SEC239" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_26.html#SEC245" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="appendix"> E. Differences </h1>
+
+<p>The subsections below detail the differences between the JML Common Tools
+release of JML and other tools and between JML and Java itself.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC241">E.1 Differences Between JML and Other Tools</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+<tr><td align="left" valign="top"><a href="#SEC243">E.2 Differences Between JML and Java</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Differences-Between-JML-and-Other-Tools"></a>
+<a name="SEC241"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC240" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC242" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC240" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC240" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_26.html#SEC245" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> E.1 Differences Between JML and Other Tools </h2>
+
+<p>ESC/Java [Leino-Nelson-Saxe00] and JML share a common syntax; this is
+even more true of ESC/Java2 and JML.  The initial efforts to merge
+syntaxes were due to the efforts of Raymie Stata.  After a long
+process, the syntax of ESC/Java and JML were both changed and JML was
+nearly a superset of ESC/Java when work on ESC/Java stopped with
+ESC/Java 1.2.4. Following the open-source release of ESC/Java, Kiniry
+and Cok began work on ESC/Java2, which is now very compatible with
+JML's syntax [Kiniry-Cok04].  Users can thus use both tools with
+little or no changes to their files.
+</p>
+<a name="IDX2480"></a>
+<p>Similarly the Daikon tool [Ernst-etal01] also uses a variant of JML's
+syntax, as do several other tools [Burdy-etal03].  While efforts are
+ongoing to avoid differences, some differences are unavoidable, as
+research is ongoing (and people have other things to do).
+</p>
+<p>We discuss the differences between the JML language described in this
+manual and the variants used in these other tools below.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC242">E.1.1 Differences Between JML and ESC/Java2</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">  
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Differences-Between-JML-and-ESC_002fJava2"></a>
+<a name="SEC242"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC241" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC243" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC240" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC241" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_26.html#SEC245" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="appendixsubsec"> E.1.1 Differences Between JML and ESC/Java2 </h3>
+
+<p>This section discusses the current state of affairs of ESC/Java2
+compatibility with JML's syntax.
+</p>
+<p>The following differences remain between ESC/Java2 and JML.
+</p>
+<ul>
+<li> ESC/Java2 is tolerant (with a suppressible warning) of missing semicolons
+at the ends of annotations, in many circumstances.
+
+</li><li> ESC/Java2 does not enforce the visibility modifiers.
+
+</li><li> ESC/Java2 strictly requires whole syntactic constructs within a single
+annotation comment; JML tools are more lenient.
+
+</li><li> JML and ESC/Java2 differ in the search order for refinement files in 
+the classpath.
+
+</li><li> JML and ESC/Java2 differ in where <code>helper</code> annotations are permitted.
+
+</li><li> JML does not support model classes (at least in runtime assertion checking).
+
+</li><li> ESC/Java2 reads but ignores model programs.
+
+</li></ul>
+
+<p>The following differences between ESC/Java2 and JML are designed to
+remain differences.  While the plan is for ESC/Java2 to parse all of
+JML's syntax, there are times when one needs to write annotations for
+one of these tool that are not understood by the other.
+Thus these differences are intended to allow users of both tools to write
+such annotations. 
+</p>
+<ul>
+<li>
+JML supports annotation forms <code>//+@</code> and <code>/*+@</code>
+... <code>@+*/</code>, so that annotations that JML understands but
+ESC/Java doesn't can be written.
+
+</li><li>
+ESC/Java2 supports annotation forms <code>//-@</code> and <code>/*-@</code>
+... <code>@-*/</code>, so that annotations that ESC/Java2 understands but
+JML doesn't can be written.
+
+</li></ul>
+
+<hr size="6">
+<a name="Differences-Between-JML-and-Java"></a>
+<a name="SEC243"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC242" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC244" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC240" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC240" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_26.html#SEC245" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h2 class="appendixsec"> E.2 Differences Between JML and Java </h2>
+
+<p>This section describes differences between JML and Java without JML.
+Currently the major differences are the way that JML treats
+<code>null</code>.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#SEC244">E.2.1 Non-null by Default</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">         
+</td></tr>
+</table>
+
+<hr size="6">
+<a name="Non_002dnull-by-Default"></a>
+<a name="SEC244"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC243" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_26.html#SEC245" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#SEC240" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#SEC243" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_26.html#SEC245" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h3 class="subsection"> E.2.1 Non-null by Default </h3>
+
+<p>As described earlier (see section <a href="jmlrefman_2.html#SEC16">Null is Not the Default</a>),
+JML does not, by default, allow <code>null</code> to be a value in a field,
+formal parameter, method or a bound variable (see section <a href="jmlrefman_11.html#SEC154">Modifiers for Bound Variables</a>).  
+To allow <code>null</code> as
+a value, one has to use the <code>nullable</code> modifier on the
+declaration, or the <code>nullable_by_default</code> modifier on the type
+where the declaration occurs
+See section <a href="jmlrefman_6.html#SEC51">Nullity Modifiers</a>, for more details.
+</p>
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#SEC240" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_26.html#SEC245" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="jmlrefman.html#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_28.html#SEC247" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="jmlrefman_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Werner M. Dietl</em> on <em>July, 21 2008</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.78</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>
