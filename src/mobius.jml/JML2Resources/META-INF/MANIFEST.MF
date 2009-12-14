@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JML2 Resources Plug-in
+Bundle-SymbolicName: ch.ethz.inf.pm.jml.plugin.resources
+Bundle-Version: 1.1.1
+Bundle-ClassPath: jml-resources.jar,specs/,jml-release.jar
+Export-Package: ch.ethz.inf.pm.jml.plugin.resources,org.jmlspecs.check
+ er,org.jmlspecs.jmlexec,org.jmlspecs.jmlrac,org.multijava.mjc,org.mul
+ tijava.util,org.multijava.util.compiler,gnu.getopt
+Bundle-Vendor: pm.inf.ethz.ch
+Require-Bundle: org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: ch.ethz.inf.pm.jml.plugin.resources.JmlResourcesPlugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+

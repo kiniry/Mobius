@@ -1,0 +1,52 @@
+// @(#)$Id: ResourceBundle.jml 11527 2008-07-16 12:19:44Z dietlw $
+
+// Copyright (C) 2005 Iowa State University
+//
+// This file is part of the runtime library of the Java Modeling Language.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2.1,
+// of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with JML; see the file LesserGPL.txt.  If not, write to the Free
+// Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+// 02110-1301  USA.
+
+
+package java.util;
+import java.io.*;
+
+public abstract class ResourceBundle {
+
+    protected /*@nullable*/ ResourceBundle parent;
+    
+    public ResourceBundle();
+
+    public final /*@non_null*/ String getString(/*@non_null*/ String key);
+    
+    public final /*@non_null*/ String[] getStringArray(/*@non_null*/ String key);
+    
+    public final /*@non_null*/ Object getObject(/*@non_null*/ String key);
+    
+    public /*@nullable*/ Locale getLocale();
+    
+    protected void setParent(/*@nullable*/ ResourceBundle parent);
+
+    public static final /*@non_null*/ ResourceBundle getBundle(/*@non_null*/ String baseName);
+    
+    public static final /*@non_null*/ ResourceBundle getBundle(/*@non_null*/ String baseName, /*@non_null*/ Locale locale);
+    
+    public static /*@non_null*/ ResourceBundle getBundle(/*@non_null*/ String baseName, /*@non_null*/ Locale locale, /*@non_null*/ ClassLoader loader);
+    
+    protected abstract Object handleGetObject(/*@non_null*/ String key);
+    
+    public abstract /*@non_null*/ Enumeration getKeys();
+
+}

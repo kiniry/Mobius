@@ -1,0 +1,58 @@
+// @(#)$Id: DriverManager.jml 11527 2008-07-16 12:19:44Z dietlw $
+//
+// Copyright (C) 2004 Dependable Software Research Group, Concordia University.
+//
+// This file is part of the runtime library of the Java Modeling Language.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2.1,
+// of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with JML; see the file LesserGPL.txt.  If not, write to the Free
+// Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+// 02110-1301  USA.
+
+package java.sql;
+
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.io.PrintStream;
+
+public class DriverManager {
+
+	public static /*@nullable*/ PrintWriter getLogWriter();
+
+	public static void setLogWriter(/*@nullable*/ PrintWriter out);
+
+	public static /*@non_null*/ Connection getConnection(String url, Properties info) throws SQLException;
+
+	public static /*@non_null*/ Connection getConnection(/*@non_null*/ String url, /*@nullable*/ String user, /*@nullable*/ String password) throws SQLException;
+
+	public static /*@non_null*/ Connection getConnection(/*@non_null*/ String url) throws SQLException;
+
+	public static /*@non_null*/ Driver getDriver(/*@non_null*/ String url) throws SQLException;
+
+	public static void registerDriver(/*@non_null*/ Driver driver) throws SQLException;
+
+	public static void deregisterDriver(/*@non_null*/ Driver driver) throws SQLException;
+
+	public static /*@non_null*/ Enumeration getDrivers();
+
+	public static void setLoginTimeout(int seconds);
+
+	public static int getLoginTimeout();
+
+	public static void setLogStream(/*@nullable*/ PrintStream out);
+
+	public static /*@nullable*/ PrintStream getLogStream();
+
+	public static void println(String message);
+}

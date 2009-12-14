@@ -1,0 +1,12 @@
+// @(#)$Id: RSAKey.jml,v 1.2 2007/12/22 23:15:28 chalin Exp $
+
+package java.security.interfaces;
+
+import java.math.BigInteger;
+
+public interface RSAKey {
+
+    /*@non_null*//*?*/ BigInteger getModulus();
+
+}
+
