@@ -330,7 +330,7 @@ class Utilities {
       if (my_debug.isOn()) {
           // It is, so see if this class is included in the list of
           // classes that have debugging enabled.
-          the_class_map = my_debug.my_classes_map;
+          the_class_map = my_debug.my_class_map;
 
           // If "*" is in the map, then we are testing for reductive
           // specification of classes.  I.e. if the class is not in the map

@@ -47,7 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * <p> A default simple core interface to gathering statistics. </p>
  *
- * <p> Users of IDebug wishing to keep statistics on their system need to
+ * <p> Users of mobius.logging wishing to keep statistics on their system need to
  * inherit from this abstract class and implement the protected methods.
  * The simplest means to collect statistics are to use a hashtable keyed on
  * statistic (since their <code>hashCode</code> is valid) and store
@@ -101,12 +101,9 @@ public class SimpleCollect extends AbstractCollect
    *
    * @param the_statistic the statistic to register.
    */
-  //@ also
-  //@ assignable collectorObjectState;
-  //@ ensures isRegistered(the_statistic);
   public void register(final /*@ non_null @*/ Statistic the_statistic) {
-    super.register(the_statistic);
-    reset(the_statistic);
+	super.register(the_statistic);
+	reset(the_statistic);
   }
 
   /**
@@ -155,7 +152,7 @@ public class SimpleCollect extends AbstractCollect
     final Iterator keys = my_data.keySet().iterator();
 
     while (keys.hasNext()) {
-      result_full_report = result_full_report + report((Statistic)keys.next()) + "\n";
+      result_full_report = result_full_report + report((Statistic)keys.next()) + "\n"; //@ nowarn;
     }
     return result_full_report;
   }
@@ -224,6 +221,8 @@ public class SimpleCollect extends AbstractCollect
    */
   //@ also
   //@ assignable collectorObjectState;
+  //@ requires isRegistered( the_statistic);
+  //@ ensures isRegistered( the_statistic);
   public double reset(final /*@ non_null @*/ Statistic the_statistic) {
     final double oldValue = currentValue(the_statistic);
 

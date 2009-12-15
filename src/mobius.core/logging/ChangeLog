@@ -1,3 +1,8 @@
+2009-12-15  Viliam Holub  <viliam.holub@ucd.ie>
+
+    * A lot of thing has been done.
+    * Package has been included into mobius
+
 2001-06-24  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* Makefile: Corrected reference to test suite package so that

@@ -89,10 +89,10 @@ import java.util.HashMap;
   /**
    * <p> Construct a new <code>Collect</code> class. </p>
    */
-  //@ assignable my_statistics;
-  //@ ensures my_statistics.keyType == \type(Statistic);
-  //@ ensures my_statistics.elementType == \type(Statistic);
-  //@ ensures my_statistics.containsNull == false;
+  // @ assignable my_statistics;
+  // @ ensures my_statistics.keyType == \type(Statistic);
+  // @ ensures my_statistics.elementType == \type(Statistic);
+  // @ ensures my_statistics.containsNull == false;
   public AbstractCollect() {
     my_statistics = new HashMap();
     //@ set my_statistics.keyType = \type(Statistic);
@@ -119,8 +119,9 @@ import java.util.HashMap;
 
   /** {@inheritDoc} */
   //@ also
-  //@ requires my_statistics.keyType == \type(Statistic);
-  //@ requires my_statistics.elementType == \type(Statistic);
+  //@ public normal_behavior
+  //@   assignable collectorObjectState;
+  //@   ensures isRegistered(a_statistic);
   public void register(final /*@ non_null @*/ Statistic a_statistic) {
     my_statistics.put(a_statistic, a_statistic);
   }
@@ -167,6 +168,9 @@ import java.util.HashMap;
   public abstract double decrement(/*@ non_null @*/ Statistic the_statistic);
 
   /** {@inheritDoc} */
+  //@ also
+  //@ public normal_behavior
+  //@   assignable collectorObjectState;
   public abstract double reset(/*@ non_null @*/ Statistic the_statistic);
 
   /** {@inheritDoc} */

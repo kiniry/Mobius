@@ -154,17 +154,17 @@ running, so they "tune" the system and watch its behavior.
 Filling the Holes
 
 Given the requirements of this system, we have chosen to use the
-IDebug framework as the "backend" for the monitoring system.
+mobius.logging framework as the "backend" for the monitoring system.
 
-IDebug has been designed to "fill the holes in Java".  It is a
+mobius.logging has been designed to "fill the holes in Java".  It is a
 debugging framework composed of a set of JavaBeans and other classes
 that provide fundamental debugging constructs like assertions, error
 messages, logging, and more.  Applications and/or components using
-IDebug have a unified, manageable, flexible and extendible interface
+mobius.logging have a unified, manageable, flexible and extendible interface
 to debugging as well as a complementary testing process.
 
 Thus, most of the debugging system is already written, as it is part
-of IDebug.
+of mobius.logging.
 
 4. Dictionary
 =============

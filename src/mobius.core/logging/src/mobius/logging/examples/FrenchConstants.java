@@ -46,7 +46,7 @@ import mobius.logging.DebugConstants;
 /**
  * <p> FrenchConstants is an interface that collects the various constants
  * of the debugging package including debug level ranges, standard
- * debugging messages, etc.  It is a subtype of DebugConstants and is used
+ * debugging messages, etc.  It is a sub-type of DebugConstants and is used
  * as an example of how to modify the semantics (customize) the debug
  * package. </p>
  *
@@ -54,7 +54,7 @@ import mobius.logging.DebugConstants;
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see DebugConstants
  *
- * @note An example extension to the IDebug package.
+ * @note An example extension to the mobius.logging package.
  */
 //+@ nullable_by_default
 public interface FrenchConstants extends DebugConstants {
@@ -115,8 +115,8 @@ public interface FrenchConstants extends DebugConstants {
    * Failures or Assertions should be tagged as Critical.  The
    * user/system must be information of such problems but the object
    * in question need not shut down immediately and can potentially
-   * recover.  Typical examples of Critial errors are resource-related
-   * errors (out of memory, disk space, cpu time, etc.).</td>
+   * recover.  Typical examples of Critical errors are resource-related
+   * errors (out of memory, disk space, CPU time, etc.).</td>
    * </tr>
    * <tr>
    * <td> ERREUR </td>

@@ -80,7 +80,7 @@ package mobius.logging.testsuite;
  * such method returns a value we didn't expect, we would be and-ing
  * with a false and the final value would be a false.
  *
- * @note The top-level class of the IDebug test suite.
+ * @note The top-level class of the mobius.logging test suite.
  */
 public final class TestSuite {
   // Attributes
@@ -210,8 +210,8 @@ public final class TestSuite {
     for (int i = 0; i < the_arguments.length; i++) {
       if (the_arguments[i].equals("--help")) {
         System.out.println("Usage: TestSuite [TESTOPTION]...");
-        System.out.println("Test the IDebug debugging framework according to TESTOPTION.");
-        System.out.println("Example: java idebughc.testsuite.TestSuite --window\n");
+        System.out.println("Test the mobius.logging debugging framework according to TESTOPTION.");
+        System.out.println("Example: java mobius.logging.testsuite.TestSuite --window\n");
         System.out.println("TESTOPTION is exactly one of the following:");
         System.out.println("  --console      " +
                            "exercise the ConsoleOutput implementation of the");

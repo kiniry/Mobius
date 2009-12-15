@@ -62,7 +62,7 @@ import javax.swing.JTextArea;
 
 /**
  * <p> The primary class used to send messages to a window created by
- * the IDebug framework. </p>
+ * the mobius.logging framework. </p>
  *
  * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
@@ -153,7 +153,7 @@ public class WindowOutput extends AbstractDebugOutputBase
    */
   private void createUI() {
     // Create the top-level container and add contents to it.
-    my_frame = new JFrame("IDebug Output");
+    my_frame = new JFrame("mobius.logging Output");
 
     // Create the text area to write into and a surrounding scrollpane so
     // that the user can look back at text that has scrolled by.
@@ -196,13 +196,13 @@ public class WindowOutput extends AbstractDebugOutputBase
             if (file.isDirectory()) {
               JOptionPane.showMessageDialog(null,
                                             filename + " is not a file!",
-                                            "IDebug Error", JOptionPane.ERROR_MESSAGE);
+                                            "mobius.logging Error", JOptionPane.ERROR_MESSAGE);
               return;
             }
             if (file.exists() && !file.canWrite()) {
               JOptionPane.showMessageDialog(null,
                                             filename + " is not a writable file!",
-                                            "IDebug Error", JOptionPane.ERROR_MESSAGE);
+                                            "mobius.logging Error", JOptionPane.ERROR_MESSAGE);
               return;
             }
             try {
@@ -212,7 +212,7 @@ public class WindowOutput extends AbstractDebugOutputBase
             } catch (IOException ioe) {
               JOptionPane.showMessageDialog(null,
                                             "Error while writing debug log to file " + filename,
-                                            "IDebug Error", JOptionPane.ERROR_MESSAGE);
+                                            "mobius.logging Error", JOptionPane.ERROR_MESSAGE);
             }
           }
         }
@@ -228,7 +228,7 @@ public class WindowOutput extends AbstractDebugOutputBase
             JOptionPane.showConfirmDialog(null,
                                           "Are you sure you want to close the log window?\n" +
                                           "You cannot open it again without restarting.",
-                                          "IDebug Warning", JOptionPane.YES_NO_OPTION);
+                                          "mobius.logging Warning", JOptionPane.YES_NO_OPTION);
           if (result == JOptionPane.YES_OPTION)
             my_frame.hide();
         }

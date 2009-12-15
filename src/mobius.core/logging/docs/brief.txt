@@ -10,7 +10,7 @@
 
 Abstract
 
-The IDebug debugging package is an advanced debugging framework for
+The mobius.logging debugging package is an advanced debugging framework for
 Java. This package provides the standard core debugging and specification
 constructs such as assertions, debug levels, call stacks, and specialized
 exceptions.
@@ -72,9 +72,9 @@ A framework is a collection of classes that provide a unified model and
 interface to a specific piece of functionality. A framework in Java is
 typically implemented as a collection of classes organized into a package.
 
-The IDebug Debugging Framework
+The mobius.logging Debugging Framework
 
-The IDebug debugging framework is implemented as a set of javabeans
+The mobius.logging debugging framework is implemented as a set of javabeans
 (Java components) collected into the package
 edu.caltech.cs.infospheres.debug. These classes can be used either (a) as
 ``normal'' classes with standard manual debugging techniques, or (b) as
@@ -86,7 +86,7 @@ stack, and specialized exceptions. Debug levels permit a developer to
 assign a ``depth'' to debug statements; a lattice of information that can
 be pruned at runtime according to the demands of the current
 execution. Call stack introspection is provided as part of the Java
-language specification. The IDebug framework uses the call stack to support
+language specification. The mobius.logging framework uses the call stack to support
 a runtime user-configurable filter for debug messages based upon the
 current execution context of a thread. Finally, a set of specialized
 exceptions are provided for fine-tuning the debug process.
@@ -95,24 +95,24 @@ Additionally, we are working support for debugging distributed systems. One
 problem typical of debugging distributed systems is a loss of context when
 communication between two non-local entities takes place. E.g. when object
 A invokes a method m on object B, the thread within m does not have access
-to the call stack from the calling thread in A.  Thus, the IDebug package
+to the call stack from the calling thread in A.  Thus, the mobius.logging package
 will support what we call "call-stack currying". Information such as source
 object identity, calling thread call stack, and more is available to the
 debugging framework on both sides of a communication. Such information can
 be curried across arbitrary communication mediums (sockets, RMI, etc.).
 
-The IDebug package will also soon support debugging mobile agent
+The mobius.logging package will also soon support debugging mobile agent
 systems. Mobile agent architectures can support disconnected computing. For
 example, an object O can migrate from machine A to machine B, which might
 then becomes disconnected from the network (i.e. absolutely no
 communication can take place between B and A). Since B cannot communicate
 with A, and printing debugging information on B's display might not be
 useful or possible, B must log debugging information for later
-inspection. To support this functionality, the IDebug package will provide
+inspection. To support this functionality, the mobius.logging package will provide
 serializable debug logs. These logs can be carried around by a mobile
 object and inspected at a later time by the object's owner or developer.
 
-The IDebug package is very configurable. First, debugging functionality can
+The mobius.logging package is very configurable. First, debugging functionality can
 be fine-tuned on a per-thread basis. Each thread can have its own debugging
 context. The context states the classes of interest to that particular
 thread. I.e. if a thread T specifies that it is interested in a class C but

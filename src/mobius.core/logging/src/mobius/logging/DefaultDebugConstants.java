@@ -43,7 +43,7 @@ package mobius.logging;
 import java.util.Map;
 
 /**
- * <p> The default implementation of debug semantics for the IDebug
+ * <p> The default implementation of debug semantics for the mobius.logging
  * framework. </p>
  *
  * @version alpha_1

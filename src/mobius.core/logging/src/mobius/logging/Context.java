@@ -90,7 +90,7 @@ import java.util.Vector;
  * @design Most of this class used to be called PerDebugElement and
  * was used in package versions 0.01 through 0.17.
  * @design changeonly{} specifications are not used here because the
- * clone() method is part of the IDebug context design and is not
+ * clone() method is part of the mobius.logging context design and is not
  * implemented for change only semantics.
  */
 //+@ nullable_by_default
@@ -221,9 +221,11 @@ public class Context
     my_category_map = new HashMap();
     //@ set my_category_map.keyType = \type(String);
     //@ set my_category_map.elementType = \type(Integer);
+    //@ set my_category_map.removeSupported = true;
     my_class_map = new HashMap();
     //@ set my_class_map.keyType = \type(String);
     //@ set my_class_map.elementType = \type(Boolean);
+    //@ set my_class_map.removeSupported = true;
     my_class_map.put("*", Boolean.TRUE);
     my_debug_constants = some_debug_constants;
     my_debug_constants.initCategories(my_category_map);

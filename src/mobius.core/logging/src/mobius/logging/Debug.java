@@ -244,8 +244,8 @@ import java.util.WeakHashMap;
    * specification of classes.
    * </p>
    */
-  //@ constraint \old(my_classes_map) == my_classes_map;
-  protected /*@ non_null @*/ Map my_classes_map /*#guarded_by this*/;
+  //@ constraint \old(my_class_map) == my_class_map;
+  protected /*@ non_null @*/ Map my_class_map /*#guarded_by this*/;
 
   /**
    * <p>
@@ -344,7 +344,7 @@ import java.util.WeakHashMap;
    * </p>
    */
   //@ ensures my_thread_map != null;
-  //@ ensures my_classes_map != null;
+  //@ ensures my_class_map != null;
   //@ ensures getAssert() != null;
   //@ ensures my_debug_utilities != null;
   //@ ensures my_categories_map != null;
@@ -377,7 +377,7 @@ import java.util.WeakHashMap;
    * @see mobius.logging.examples.SimpleCollect
    */
   //@ ensures my_thread_map != null;
-  //@ ensures my_classes_map != null;
+  //@ ensures my_class_map != null;
   //@ ensures my_categories_map != null;
   //@ ensures getAssert() != null;
   //@ ensures getCollect() == a_collect;
@@ -400,11 +400,11 @@ import java.util.WeakHashMap;
     my_debug_constants = some_constants;
     my_debug_constants.initCategories(my_categories_map);
 
-    my_classes_map = new HashMap();
-    //@ set my_classes_map.keyType = \type(String);
-    //@ set my_classes_map.elementType = \type(Boolean);
-    //@ set my_classes_map.removeSupported = true;
-    my_classes_map.put("*", Boolean.TRUE);
+    my_class_map = new HashMap();
+    //@ set my_class_map.keyType = \type(String);
+    //@ set my_class_map.elementType = \type(Boolean);
+    //@ set my_class_map.removeSupported = true;
+    my_class_map.put("*", Boolean.TRUE);
 
     // Note that we need to actually initialize our own debugging context!
     my_assert = new Assert(this);
@@ -695,7 +695,7 @@ import java.util.WeakHashMap;
    *            debugging enabled.
    */
   public synchronized void addClass(final /*@ non_null @*/ Class a_class_ref) {
-    Utilities.addClassToMap(my_classes_map, a_class_ref.getName());
+    Utilities.addClassToMap(my_class_map, a_class_ref.getName());
   }
 
   /**
@@ -714,7 +714,7 @@ import java.util.WeakHashMap;
    */
   //@ requires 0 < a_class_name.length();
   public synchronized void addClass(final /*@ non_null @*/ String a_class_name) {
-    Utilities.addClassToMap(my_classes_map, a_class_name);
+    Utilities.addClassToMap(my_class_map, a_class_name);
   }
 
   /**
@@ -729,7 +729,7 @@ import java.util.WeakHashMap;
    *            the class to remove.
    */
   public synchronized void removeClass(final /*@ non_null @*/ Class a_class_ref) {
-    Utilities.removeClassFromMap(my_classes_map, a_class_ref.getName());
+    Utilities.removeClassFromMap(my_class_map, a_class_ref.getName());
   }
 
   /**
@@ -747,7 +747,7 @@ import java.util.WeakHashMap;
    */
   //@ requires 0 < a_class_name.length();
   public synchronized void removeClass(final /*@ non_null @*/ String a_class_name) {
-    Utilities.removeClassFromMap(my_classes_map, a_class_name);
+    Utilities.removeClassFromMap(my_class_map, a_class_name);
   }
 
   /**
@@ -830,7 +830,7 @@ import java.util.WeakHashMap;
    *         class database).
    */
   public synchronized /*@ pure non_null @*/ Vector listClasses() {
-    return new Vector( my_classes_map.values());
+    return new Vector( my_class_map.values());
   }
 
   /**

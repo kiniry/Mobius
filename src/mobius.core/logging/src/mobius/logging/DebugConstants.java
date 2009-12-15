@@ -48,10 +48,10 @@ import java.util.Map;
  * standard debugging messages, statistics definitions, etc. </p>
  *
  * <p> This interface can be implemented or the default implementation of
- * it can be subtyped to modify the various values contained herein for
- * specific debugging subpackages, applications, etc. </p>
+ * it can be sub-typed to modify the various values contained herein for
+ * specific debugging sub-packages, applications, etc. </p>
  *
- * <p> An example of such a subtype is included as
+ * <p> An example of such a sub-type is included as
  * <code>FrenchConstants</code>. </p>
  *
  * <p> The default categories are specified in the following table.
@@ -86,8 +86,8 @@ import java.util.Map;
  * or Assertions should be tagged as Critical.  The user/system must be
  * information of such problems but the object in question need not shut
  * down immediately and can potentially recover.  Typical examples of
- * Critial errors are resource-related errors (out of memory, disk space,
- * cpu time, etc.).</td>
+ * Critical errors are resource-related errors (out of memory, disk space,
+ * CPU time, etc.).</td>
  * </tr>
  * <tr>
  * <td> ERROR </td>
@@ -188,8 +188,8 @@ public interface DebugConstants extends Cloneable {
    * or Assertions should be tagged as Critical.  The user/system must be
    * information of such problems but the object in question need not shut
    * down immediately and can potentially recover.  Typical examples of
-   * Critial errors are resource-related errors (out of memory, disk space,
-   * cpu time, etc.). </p>
+   * Critical errors are resource-related errors (out of memory, disk space,
+   * CPU time, etc.). </p>
    */
 
   int CRITICAL_LEVEL = 7;
@@ -245,8 +245,8 @@ public interface DebugConstants extends Cloneable {
    * or Assertions should be tagged as Critical.  The user/system must be
    * information of such problems but the object in question need not shut
    * down immediately and can potentially recover.  Typical examples of
-   * Critial errors are resource-related errors (out of memory, disk space,
-   * cpu time, etc.). </p>
+   * Critical errors are resource-related errors (out of memory, disk space,
+   * CPU time, etc.). </p>
    */
 
   String CRITICAL = "CRITICAL";
@@ -278,7 +278,7 @@ public interface DebugConstants extends Cloneable {
 
   /**
    * <p> Indicates that an invalid thread was passed to a thread-related
-   * method in idebug.Debug. </p>
+   * method in mobius.logging.Debug. </p>
    */
 
   int INVALID_THREAD = -1;
@@ -328,108 +328,6 @@ public interface DebugConstants extends Cloneable {
   /*@ pure @*/ String getFailedAssertionString();
 
   /**
-   * <p>Get the assertion level. </p>
-   *
-   * @see ASSERTION_LEVEL
-   * @return the assertion level
-   */
-  /*@ pure @*/ int getAssertionLevel();
-
-  /**
-   * <p> Get the failure level. </p>
-   *
-   * @see FAILURE_LEVEL
-   * @return the failure level
-   */
-  /*@ pure @*/ int getFailureLevel();
-
-  /**
-   * <p> Get the critical level. </p>
-   *
-   * @see CRITICAL_LEVEL
-   * @return the critical level
-   */
-  /*@ pure @*/ int getCriticalLevel();
-
-  /**
-   * <p> Get the error level. </p>
-   *
-   * @see ERROR_LEVEL
-   * @return the error level
-   */
-  /*@ pure @*/ int getErrorLevel();
-
-  /**
-   * <p> Get the warning level. </p>
-   *
-   * @see WARNING_LEVEL
-   * @return the warning level
-   */
-  /*@ pure @*/ int getWarningLevel();
-
-  /**
-   * <p> Get the notice level. </p>
-   *
-   * @see NOTICE_LEVEL
-   * @return the notice level
-   */
-  /*@ pure @*/ int getNoticeLevel();
-
-  /**
-   * Get the "assertion" text representation.
-   *
-   * @see ASSERTION
-   * @return the "assertion" text representation
-   */
-
-  /*@ pure @*/ String getAssertion();
-
-  /**
-   * <p> Get the "failure" text representation. </p>
-   *
-   * @see FAILURE
-   * @return the "failure" text representation
-   */
-
-  /*@ pure @*/ String getFailure();
-
-  /**
-   * <p> Get the "critical" text representation. </p>
-   *
-   * @see CRITICAL
-   * @return the "critical" text representation
-   */
-
-  /*@ pure @*/ String getCritical();
-
-  /**
-   * <p> Get the "error" text representation. </p>
-   *
-   * @see ERROR
-   * @return the "error" text representation
-   */
-
-  /*@ pure @*/ String getError();
-
-  /**
-   * <p> Get the "warning" text representation. </p>
-   *
-   * @see WARNING
-   * @return the "warning" text representation
-   */
-
-  /*@ pure @*/ String getWarning();
-
-  /**
-   * <p> Get the "notice" text representation. </p>
-   *
-   * @see NOTICE
-   * @return the "notice" text representation
-   */
-
-  /*@ pure @*/ String getNotice();
-
-  /**
    * <p> Initializes default categories of debugging facilities. </p>
    *
    * @concurrency CONCURRENT
@@ -438,7 +336,7 @@ public interface DebugConstants extends Cloneable {
    * the default implementation of <code>DebugConstants</code>.
    * @param the_initial_categories is the map to initialize.
    */
-  // @ ensures 6 <= the_initial_categories.size(); XXX
+  //@ ensures 6 <= the_initial_categories.size();
   void initCategories(/*@ non_null @*/ Map the_initial_categories);
 
   /**
