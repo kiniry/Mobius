@@ -2,7 +2,7 @@
 <feature
       id="mobius.provereditor"
       label="Prover Editor"
-      version="1.0.12"
+      version="1.0.13"
       provider-name="Mobius">
 
    <description>
