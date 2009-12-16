@@ -2,7 +2,7 @@
 <feature
       id="mobius.bml"
       label="BML"
-      version="0.0.14"
+      version="0.0.16"
       provider-name="EU Mobius IST-15905 Project &amp; Warsaw University">
 
    <description>
@@ -191,13 +191,11 @@ Library.
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.ui.console"/>
-      <import feature="mobius.required" version="1.0.0"/>
+      <import feature="mobius.required"/>
       <import plugin="org.objectweb.asm" version="3.1.0" match="greaterOrEqual"/>
       <import plugin="mobius.freeboogie"/>
       <import plugin="bcel.plugin" version="5.2.0" match="greaterOrEqual"/>
       <import plugin="org.junit4" version="4.3.1" match="greaterOrEqual"/>
-      <import plugin="JavaVerifier" version="0.0.1" match="greaterOrEqual"/>
-      <import plugin="mobius.freeboogie" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
