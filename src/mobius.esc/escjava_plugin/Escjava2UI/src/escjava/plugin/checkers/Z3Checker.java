@@ -17,7 +17,6 @@ public class Z3Checker extends Checker {
 //    inputs.add("z3");
     inputs.add("-svcg");
     inputs.add("z3");
-    System.out.println(Z3Editor.getZ3Location());
     System.setProperty("z3", Z3Editor.getZ3Location());
     return super.addOptions(inputs);
   }

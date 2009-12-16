@@ -160,7 +160,7 @@ public class Check extends AEscjavaAction implements IWorkbenchWindowPulldownDel
     }
   }
 
-  private void setEnabled(boolean b) {
+  protected void setEnabled(boolean b) {
     if (b) {
       setEnabled();
     }
@@ -315,6 +315,10 @@ public class Check extends AEscjavaAction implements IWorkbenchWindowPulldownDel
   public Menu getMenu(final Control parent) {
     final Menu m = new Menu(parent);
     for (final Prover p: Prover.values()) {
+      if (p.equals(Prover.cvc3) && 
+          !System.getProperty("os.name").startsWith("Linux")) {
+        continue;
+      }
       final MenuItem item = new MenuItem(m, SWT.PUSH);
       item.setText("Check with " + p);
       item.setImage(p.getImageDescriptor().createImage());

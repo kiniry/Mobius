@@ -188,7 +188,7 @@
             visible="false"
             id="mobius.escjava2.actions">
          <menu
-               id="JMLMenu"
+               id="ESCMenu"
                label="ESC/Java2">
             <separator
                   name="EscjavaGroup">
@@ -201,7 +201,7 @@
                icon="icons/disable.gif"
                id="mobius.escjava2.ui.EscjavaAction.DisableESC"
                label="Disable auto ESC/Java2 checking"
-               menubarPath="JMLMenu/EscjavaGroup"
+               menubarPath="ESCMenu/EscjavaGroup"
                state="false"
                style="push"
                toolbarPath="mobius.escjava2.actions"
@@ -213,7 +213,7 @@
                icon="icons/enable.gif"
                id="mobius.escjava2.ui.EscjavaAction.EnableESC"
                label="Enable auto ESC/Java2 checking"
-               menubarPath="JMLMenu/EscjavaGroup"
+               menubarPath="ESCMenu/EscjavaGroup"
                state="false"
                style="push"
                toolbarPath="mobius.escjava2.actions"
@@ -225,7 +225,7 @@
                icon="icons/goto.gif"
                id="mobius.escjava2.ui.GoToDeclAction"
                label="Go to associated declaration"
-               menubarPath="JMLMenu/EscjavaGroup"
+               menubarPath="ESCMenu/EscjavaGroup"
                state="false"
                style="push"
                toolbarPath="mobius.escjava2.actions"
@@ -237,7 +237,7 @@
                icon="icons/cross.png"
                id="mobius.escjava2.ui.ClearMarkerAction"
                label="Clear ESC/Java2 Markers"
-               menubarPath="JMLMenu/EscjavaGroup"
+               menubarPath="ESCMenu/EscjavaGroup"
                state="false"
                style="push"
                toolbarPath="mobius.escjava2.actions"
@@ -260,7 +260,7 @@
                icon="icons/z3.png"
                id="mobius.escjava2.ui.EscjavaAction.CheckWithZ3"
                label="Run ESC/Java2 with Z3"
-               menubarPath="JMLMenu/EscjavaGroup"
+               menubarPath="ESCMenu/EscjavaGroup"
                state="false"
                style="push"
                tooltip="Runs ESC/Java2 static checks using Z3">
@@ -271,7 +271,7 @@
                icon="icons/cvc3.png"
                id="mobius.escjava2.ui.EscjavaAction.CheckWithCvc3"
                label="Run ESC/Java2 with Cvc3"
-               menubarPath="JMLMenu/EscjavaGroup"
+               menubarPath="ESCMenu/EscjavaGroup"
                state="false"
                style="push"
                tooltip="Runs ESC/Java2 static checks using Cvc3">
@@ -283,7 +283,7 @@
                icon="icons/esc.png"
                id="mobius.escjava2.ui.EscjavaAction.CheckWithSimplify"
                label="Run ESC/Java2 with Simplify"
-               menubarPath="JMLMenu/EscjavaGroup"
+               menubarPath="ESCMenu/EscjavaGroup"
                state="false"
                style="push"
                tooltip="Runs ESC/Java2 static checks using Simplify">
@@ -302,13 +302,13 @@
                label="Test Information"
                tooltip="Experimental information"
                class="org.jmlspecs.JMLPlugin.actions.TestInfo"
-               menubarPath="JMLMenu/JMLTest"
+               menubarPath="ESCMenu/JMLTest"
                id="org.jmlspecs.JMLPlugin.actions.TestInfo">
          </action> 
 -->
          <menu
                label="Setup"
-               path="JMLMenu/JMLSetupGroup"
+               path="ESCMenu/JMLSetupGroup"
                id="JMLSetup"
                >
                <separator name="JMLSetupSubmenu"/>
@@ -318,7 +318,7 @@
                definitionId="mobius.escjava2.ui.commands.DisableEscjava"
                id="mobius.escjava2.ui.EscjavaAction.DisableEscjava"
                label="Disable ESC/Java Nature, remove Builder in SELECTED projects"
-               menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
+               menubarPath="ESCMenu/JMLSetup/JMLSetupSubmenu"
                state="false"
                tooltip="Removes the ESC/Java Nature from the project and the ESC/Java Builder from the Incremental builder">
          </action> 
@@ -327,7 +327,7 @@
                definitionId="mobius.escjava2.ui.commands.EnableEscjava"
                id="mobius.escjava2.ui.EscjavaAction.EnableJML"
                label="Enable ESC/Java Nature, add Builder in SELECTED projects"
-               menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
+               menubarPath="ESCMenu/JMLSetup/JMLSetupSubmenu"
                state="false"
                tooltip="Adds the ESC/Java Nature to the project and the ESC/Java Builder to the Incremental builder">
          </action> 

@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ESC/Java2 plug-in
 Bundle-SymbolicName: mobius.escjava2.ui;singleton:=true
-Bundle-Version: 2.0.29
+Bundle-Version: 2.0.32
 Bundle-Vendor: David R. Cok and EU MOBIUS IST-15905 Project
 Bundle-Activator: escjava.plugin.EscjavaPlugin
-Require-Bundle: mobius.atp.cvc3;bundle-version="1.5.1",
+Require-Bundle: mobius.atp.cvc3,
  org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -19,7 +19,7 @@ Require-Bundle: mobius.atp.cvc3;bundle-version="1.5.1",
  mobius.escjava2.esctools,
  mobius.atp.simplify,
  simplify.editor,
- z3.editor;bundle-version="0.0.5"
+ z3.editor
 Export-Package: escjava.plugin,
  escjava.plugin.actions
 Bundle-ClassPath: bin/,
