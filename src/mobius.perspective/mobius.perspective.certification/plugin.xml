@@ -17,4 +17,20 @@
       <actionSet id="mobius.umbra.actions"/>
     </perspectiveExtension>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="mobius.perspective.design.DesignPerspectiveFactory"
+            id="Design.perspective"
+            icon="icons/design.png"
+            name="Design">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension 
+       targetID="Design.perspective">
+      <actionSet id="jml-plugin.toolbar"/>
+    </perspectiveExtension>
+   </extension>
 </plugin>
