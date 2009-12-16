@@ -8,7 +8,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-Classpath: antlr-3.1.3.jar, antlr-runtime-3.1.3.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: antlr,
  antlr.ASdebug,
  antlr.actions.cpp,
@@ -42,3 +41,4 @@ Export-Package: antlr,
  org.antlr.stringtemplate.misc,
  org.antlr.stringtemplate.test,
  org.antlr.tool
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
