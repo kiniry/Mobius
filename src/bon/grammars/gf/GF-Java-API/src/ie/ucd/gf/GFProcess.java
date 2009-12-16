@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class AProcess {
+public class GFProcess {
   private static final String LINE_SEPARATOR = System.getProperty ("line.separator");
   private static final int WAIT_TIME = 10;
 
@@ -15,7 +15,7 @@ public class AProcess {
   private final BufferedReader bir;
   private final BufferedReader ber;
 
-  public AProcess(String cmd) throws IOException {
+  public GFProcess(String cmd) throws IOException {
     process = new ProcessBuilder(cmd).start();
     bow = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
     bir = new BufferedReader(new InputStreamReader(process.getInputStream()));

@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 
 import org.apache.commons.lang.SystemUtils;
 
-public class Proc {
+public class GF {
  
   private static final String BINARY_PATH = "binaries/";
   private static final String OSX_BINARY = "gf-3.0-mac-noreadline";
@@ -15,7 +15,7 @@ public class Proc {
   private static final String WINDOWS_BINARY = "gf.exe";
   
   public static void main(String[] args) throws IOException {
-    AProcess proc = createPlatformSpecificProcess();
+    GFProcess proc = createPlatformSpecificProcess();
     if (proc != null) {
       proc.blockUntilOutputReady(); //There should be some output immediately
       System.out.print(proc.getAllBufferedOutput());
@@ -25,12 +25,11 @@ public class Proc {
         String line = reader.readLine();
         String response = proc.enterCommand(line);
         System.out.print(response);
-      }
-      
+      }      
     }
   }
   
-  public static AProcess createPlatformSpecificProcess() {
+  public static GFProcess createPlatformSpecificProcess() {
     if (SystemUtils.IS_OS_WINDOWS) {
       return createProcess(WINDOWS_BINARY);
     } else if (SystemUtils.IS_OS_MAC) {
@@ -43,15 +42,15 @@ public class Proc {
     }
   }
 
-  public static AProcess createProcess(String binaryName) {
+  public static GFProcess createProcess(String binaryName) {
     try {
       File f = File.createTempFile(binaryName, Long.toString(System.nanoTime()));
-      if (!FileUtil.copyResourceToExternalFile(BINARY_PATH + binaryName, f, Proc.class)) {
+      if (!FileUtil.copyResourceToExternalFile(BINARY_PATH + binaryName, f, GF.class)) {
         return null;
       }
       f.setExecutable(true);
       f.deleteOnExit();
-      return new AProcess(f.getAbsolutePath());
+      return new GFProcess(f.getAbsolutePath());
     } catch (IOException ioe) {
       System.out.println(ioe);
       ioe.printStackTrace();
