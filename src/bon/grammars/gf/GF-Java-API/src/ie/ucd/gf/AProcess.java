@@ -23,9 +23,7 @@ public class AProcess {
   }
 
   public String getAllBufferedOutput() {
-    System.out.println("Getting buffered output");
     String read = readAll(bir);
-    System.out.println("Read: " + read);
     return read;
   }
 

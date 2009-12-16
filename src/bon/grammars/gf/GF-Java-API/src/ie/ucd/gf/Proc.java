@@ -11,12 +11,13 @@ public class Proc {
  
   private static final String BINARY_PATH = "binaries/";
   private static final String OSX_BINARY = "gf-3.0-mac-noreadline";
-  private static final String LINUX_BINARY = "gf";
+  private static final String LINUX_BINARY = "gf-linux";
   private static final String WINDOWS_BINARY = "gf.exe";
   
   public static void main(String[] args) throws IOException {
     AProcess proc = createPlatformSpecificProcess();
     if (proc != null) {
+      proc.blockUntilOutputReady(); //There should be some output immediately
       System.out.print(proc.getAllBufferedOutput());
       
       BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
