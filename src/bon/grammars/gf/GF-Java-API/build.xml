@@ -1,0 +1,61 @@
+<!-- 
+###
+# Copyright (c) 2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+# See LICENCE.TXT for details.
+###
+-->
+
+<project name="GF" default="compile" basedir=".">
+  <description>GF Build File</description>
+
+  <property file="gf.properties"/>
+
+  <path id="compile.path">
+    <filelist dir="${lib}" files="commons-lang-2.4.jar"/>
+  </path>
+
+  <target name="init">
+    <echo message="Creating timestamp"/>
+    <tstamp/>
+    <mkdir dir="${build}"/>
+  </target>
+  
+  <target name="compile" depends="init" description="compile the source">
+	<javac srcdir="${src-java}" destdir="${build}" target="${java-target-version}" classpathref="compile.path"/>
+  </target>
+
+  <target name="javadocs" depends="init" description="Generate javadocs">
+    <javadoc packagenames="*" sourcepath="${src-java}" defaultexcludes="yes" destdir="docs/api"
+             author="true" version="true" use="true" windowtitle="GF API" classpathref="compile.path"/>
+  </target>
+
+  <target name="dist" depends="compile" description="Generate the distribution">
+    <mkdir dir="${dist}/lib"/>
+    <mkdir dir="${build}/binaries"/>
+    <copy todir="${build}/binaries">
+      <fileset dir="${binaries}" includes="*"/> 
+    </copy>
+
+    <copy todir="${dist}/lib">
+      <fileset dir="${lib}/" includes="commons-lang-2.4.jar"/>
+    </copy>
+
+    
+    <jar jarfile="${dist}/lib/GF.jar" basedir="${build}">
+      <manifest>
+        <attribute name="Main-Class" value="ie.ucd.gf.Proc" />
+        <attribute name="Class-Path" value="commons-lang-2.4.jar"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="clean-build" description="Clean up the build">
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+    <delete dir="${docs}"/>
+  </target>
+  
+  <target name="all" depends="clean,init,compile,dist"/>
+  <target name="clean" depends="clean-build"/>
+
+</project>
