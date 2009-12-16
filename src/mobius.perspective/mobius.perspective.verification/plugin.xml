@@ -17,4 +17,23 @@
       <actionSet id="mobius.escjava2.actions"/>
     </perspectiveExtension>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="mobius.perspective.verification.PerspectiveExpertFactory"
+            id="Verification.expert.perspective"
+            icon="icons/expert.gif"
+            name="Verification (Expert)">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension 
+       targetID="Verification.expert.perspective">
+      <actionSet id="canapa.actionSet"/>
+      <actionSet id="mobius.escjava2.actions"/>
+      <actionSet id="mobius.rcc.actions"/>
+      <actionSet id="mobius.umbra.actions"/>
+    </perspectiveExtension>
+   </extension>
 </plugin>
