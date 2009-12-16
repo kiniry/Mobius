@@ -2,17 +2,17 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: mobius.directvcgen
 Bundle-SymbolicName: mobius.directvcgen
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Bundle-Activator: mobius.directvcgen.Activator
 Bundle-Vendor: UCD
 Require-Bundle: 
  org.eclipse.ui,
  org.eclipse.core.runtime,
- mobius.escjava2.esctools;bundle-version="2.0.9",
- bcel.plugin;bundle-version="5.2.0",
- mobius.bico;bundle-version="1.0.1",
- ClopsRuntime;bundle-version="0.2.1",
- mobius.javafe.plugin;bundle-version="2.0.9"
+ mobius.escjava2.esctools,
+ bcel.plugin,
+ mobius.bico,
+ ClopsRuntime,
+ mobius.javafe.plugin
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/DirectVCGen.jar, .
 Export-Package: mobius.directVCGen.bico,
