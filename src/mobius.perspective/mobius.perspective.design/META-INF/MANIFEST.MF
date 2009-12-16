@@ -2,15 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Design
 Bundle-SymbolicName: mobius.perspective.design;singleton:=true
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2
 Bundle-Activator: mobius.perspective.design.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.jdt.ui;bundle-version="3.5.0",
- org.eclipse.ui.console;bundle-version="3.4.0",
- ie.ucd.bon.bonc;bundle-version="0.1.6",
- ch.ethz.inf.pm.jml.plugin.help;bundle-version="1.0.3",
- ch.ethz.inf.pm.jml.plugin.resources;bundle-version="1.1.1",
- ch.ethz.inf.pm.jml.plugin;bundle-version="1.1.1"
+ org.eclipse.jdt.ui,
+ org.eclipse.ui.console,
+ ie.ucd.bon.bonc,
+ ch.ethz.inf.pm.jml.plugin.help,
+ ch.ethz.inf.pm.jml.plugin.resources,
+ ch.ethz.inf.pm.jml.plugin
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
