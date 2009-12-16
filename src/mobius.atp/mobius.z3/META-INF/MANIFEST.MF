@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Z3
 Bundle-SymbolicName: mobius.atp.z3
-Bundle-Version: 1.0.3
+Bundle-Version: 2.0.4
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui,
