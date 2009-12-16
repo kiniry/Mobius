@@ -33,4 +33,19 @@
       <actionSet id="jml-plugin.toolbar"/>
     </perspectiveExtension>
    </extension>
+   
+  <extension point="org.eclipse.ui.perspectives">
+      <perspective
+            class="mobius.perspective.AnalysisPerspectiveFactory"
+            id="Analysis.perspective"
+            icon="icons/analysis.jpg"
+            name="Analysis">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension 
+       targetID="Analysis.perspective">
+      
+    </perspectiveExtension>
+   </extension> 
 </plugin>
