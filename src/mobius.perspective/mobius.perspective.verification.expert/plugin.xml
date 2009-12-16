@@ -16,6 +16,7 @@
       <actionSet id="canapa.actionSet"/>
       <actionSet id="mobius.escjava2.actions"/>
       <actionSet id="mobius.rcc.actions"/>
+      <actionSet id="mobius.umbra.actions"/>
     </perspectiveExtension>
    </extension>
 </plugin>
