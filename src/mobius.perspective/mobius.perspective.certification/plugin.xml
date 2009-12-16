@@ -21,7 +21,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="mobius.perspective.design.DesignPerspectiveFactory"
+            class="mobius.perspective.DesignPerspectiveFactory"
             id="Design.perspective"
             icon="icons/design.png"
             name="Design">
