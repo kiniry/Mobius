@@ -2,14 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Canapa Plug-in
 Bundle-SymbolicName: mobius.canapa; singleton=true
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.3
 Bundle-Activator: canapa.CanapaPlugin 
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.console,
  org.eclipse.core.resources,
  org.eclipse.jdt.core,
- mobius.escjava2.esctools;bundle-version="2.0.10"
+ mobius.escjava2.esctools
 Eclipse-LazyStart: true
 Bundle-ClassPath: .,
  libs/esctools2.jar,
