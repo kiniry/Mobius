@@ -12,10 +12,16 @@
             default="true"
       />
    </extension>
-   <extension point="org.eclipse.ui.editorActions">
-      <editorContribution
+   <extension
+         point="org.eclipse.ui.actionSets">
+         <actionSet
+            label="Umbra"
+            visible="false"
+            id="mobius.umbra.actions">
+   
+      <!--editorContribution
             targetID="org.eclipse.jdt.ui.CompilationUnitEditor"
-            id="umbra.javaEditorContribution">
+            id="umbra.javaEditorContribution"-->
          <menu
                label="&amp;Bytecode"
                id="umbra.bytecodeMenu">
@@ -52,8 +58,10 @@
                label="Combine Changes with Bytecode"
                menubarPath="umbra.bytecodeMenu/showGroup"
                toolbarPath="showGroup"/>
-      </editorContribution>
-      <editorContribution
+         </actionSet>
+      </extension>
+      <extension point="org.eclipse.ui.editorActions">
+        <editorContribution
             targetID="umbra.BytecodeEditor"
             id="umbra.bytecodeEditorContribution">
          <menu

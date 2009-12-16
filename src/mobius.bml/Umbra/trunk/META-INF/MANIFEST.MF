@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Umbra Plug-in
 Bundle-SymbolicName: mobius.umbra;singleton:=true
-Bundle-Version: 1.0.9
+Bundle-Version: 1.0.11
 Require-Bundle: mobius.jml2bml,
  JavaVerifier,
- bcel.plugin;bundle-version="5.2.0",
+ bcel.plugin,
  mobius.freeboogie,
  org.eclipse.ui,
  org.eclipse.core.resources,
@@ -17,8 +17,8 @@ Require-Bundle: mobius.jml2bml,
  org.eclipse.jface.text,
  org.eclipse.jdt.ui,
  org.eclipse.ui.editors,
- mobius.bmllib;bundle-version="1.1.9",
- mobius.b2bpl;bundle-version="0.0.1"
+ mobius.bmllib,
+ mobius.b2bpl
 Bundle-ClassPath: umbra.jar
 Eclipse-LazyStart: true
 Bundle-Activator: umbra.UmbraPlugin
