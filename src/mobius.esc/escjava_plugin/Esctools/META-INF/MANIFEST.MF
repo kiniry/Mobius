@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mobius ESCJava2 API plugin
 Bundle-SymbolicName: mobius.escjava2.esctools
-Bundle-Version: 2.0.20
+Bundle-Version: 2.0.22
 Bundle-Vendor: David R. Cok and EU MOBIUS IST-15905 project
 Eclipse-JREBundle: true
 Export-Package: escjava,
@@ -47,6 +47,6 @@ Bundle-ClassPath: esctools2.jar,
 Require-Bundle: mobius.javafe.plugin,
  org.eclipse.ui,
  org.eclipse.core.runtime,
- mobius.atp.cvc3;bundle-version="1.5.1",
- mobius.pluginlib;bundle-version="1.0.7"
+ mobius.atp.cvc3,
+ mobius.pluginlib
 Bundle-Activator: mobius.escjava2.EscToolsActivator
