@@ -7,7 +7,7 @@ Class-Path: Jml2Bml.jar,
 Bundle-ManifestVersion: 2
 Bundle-Name: Jml2Bml
 Bundle-SymbolicName: mobius.jml2bml;singleton:=true
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2
 Bundle-ClassPath: Jml2Bml.jar,
  lib/jmlruntime.jar,
  lib/jmlspecs.jar,
@@ -27,7 +27,7 @@ Require-Bundle: mobius.bmllib,
  org.junit4,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- bcel.plugin;bundle-version="5.2.0",
+ bcel.plugin,
  org.eclipse.jdt.core
 Bundle-Vendor: Mobius & Warsaw University
 Bundle-ActivationPolicy: lazy
