@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SimplifyEditor
 Bundle-SymbolicName: simplify.editor;singleton:=true
-Bundle-Version: 0.0.5
+Bundle-Version: 0.0.6
 Bundle-Activator: mobius.prover.simplify.SimplifyEditor
 Bundle-Vendor: Mobius project
 Require-Bundle: prover.editor,
@@ -19,6 +19,6 @@ Require-Bundle: prover.editor,
  org.eclipse.jdt.core,
  org.eclipse.ui.views,
  mobius.pluginlib,
- mobius.atp.simplify;bundle-version="1.5.9"
+ mobius.atp.simplify
 Bundle-ActivationPolicy: lazy
 Export-Package: mobius.prover.simplify
