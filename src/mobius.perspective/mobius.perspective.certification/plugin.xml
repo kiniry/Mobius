@@ -14,6 +14,7 @@
     <perspectiveExtension 
        targetID="Certification.perspective">
       <actionSet id="MobiusDirectVCGenUI.actions"/>
+      <actionSet id="mobius.umbra.actions"/>
     </perspectiveExtension>
    </extension>
 </plugin>
