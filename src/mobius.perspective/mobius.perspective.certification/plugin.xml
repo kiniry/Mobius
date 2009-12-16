@@ -48,4 +48,21 @@
       
     </perspectiveExtension>
    </extension> 
+   
+     <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="mobius.perspective.ValidationPerspectiveFactory"
+            id="Validation.perspective"
+            icon="icons/validation.jpg"
+            name="Validation">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension 
+       targetID="Validation.perspective">
+      <actionSet id="jml-plugin.toolbar"/>
+      <actionSet id="com.mountainminds.eclemma.ui.CoverageActionSet"/>
+    </perspectiveExtension>
+   </extension>
 </plugin>
