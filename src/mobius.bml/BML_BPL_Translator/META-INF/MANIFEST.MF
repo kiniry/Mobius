@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BML to BPL Translator
 Bundle-SymbolicName: mobius.b2bpl
-Bundle-Version: 0.0.1
+Bundle-Version: 0.0.2
 Export-Package: b2bpl;uses:="b2bpl.bytecode,b2bpl.bytecode.bml",
  b2bpl.bpl;uses:="b2bpl.bpl.ast",
  b2bpl.bpl.analysis;uses:="b2bpl.graph,b2bpl.bpl.ast",
@@ -41,4 +41,4 @@ Export-Package: b2bpl;uses:="b2bpl.bytecode,b2bpl.bytecode.bml",
 Bundle-Vendor: Mobius & ETH Zürich
 Bundle-ClassPath: bin/,
  .
-Require-Bundle: org.objectweb.asm;bundle-version="3.1.0"
+Require-Bundle: org.objectweb.asm
