@@ -27,6 +27,8 @@ import javax.imageio.ImageIO;
 
 public final class FileUtil {
 
+  private final static boolean IS_ECLIPSE_PLUGIN = FileUtil.class.getClassLoader().toString().contains("eclipse");
+  
   /**
    * Private constructor, cannot be instantiated.
    */
@@ -56,6 +58,9 @@ public final class FileUtil {
   }
 
   public static InputStream getInputStream(String filePath) {
+    if (IS_ECLIPSE_PLUGIN) {
+      filePath = '/' + filePath;
+    }
     return FileUtil.class.getClassLoader().getResourceAsStream(filePath);
   }
 

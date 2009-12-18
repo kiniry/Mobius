@@ -67,9 +67,6 @@ public class NewHtmlPrinter {
     int work = getTotalWork();
     monitor.begin("Generating BON html documentation", work);
     
-    //TODO copy relevant javascript files
-    monitor.setInfo("Doing new html printing " + outputDirectory);
-    
     if (!setupOutputDirectory()) {
       monitor.finishWithErrorMessage("Unable to setup files in " + outputDirectory);
       return;
@@ -195,6 +192,7 @@ public class NewHtmlPrinter {
   }
 
   private boolean setupOutputDirectory() {
+    //System.out.println("Setting up directories in " + outputDirectory);
     for (String dir : dirs) {
       if (!checkDirectory(dir)) {
         return false;
@@ -203,6 +201,7 @@ public class NewHtmlPrinter {
 
     for (String path : filePaths) {
       if (!FileUtil.copyResourceToExternalFile("templates/newhtml/" + path, relativeFile(path))) {
+        System.out.println("Unable to copy templates/newhtml/" + path + " to " + relativeFile(path));
         return false;
       }
     }

@@ -40,7 +40,6 @@ public class ExecUtil {
       pathString += File.pathSeparator;
     }
     if (useAdditionalPaths) {
-      System.out.println("Old path: " + pathString);
       pathString += StringUtil.appendWithSeparator(additionalPaths, File.pathSeparator);
     }
     pathFiles = getPathAsFiles(pathString);
@@ -77,7 +76,6 @@ public class ExecUtil {
         }
       }
     }
-    System.out.println("Path: " + StringUtil.appendWithSeparator(pathFiles, ":"));
     return ImmutableList.copyOf(pathFiles);
   }
 
