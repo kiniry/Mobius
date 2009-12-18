@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BONc
 Bundle-SymbolicName: ie.ucd.bon.bonc;singleton:=true
-Bundle-Version: 0.2.8
+Bundle-Version: 0.2.9
 Bundle-ClassPath: bonc.jar,
  lib/clops-0.2.2-runtime.jar,
  lib/antlr-runtime-3.1.3.jar,
@@ -10,7 +10,7 @@ Bundle-ClassPath: bonc.jar,
  lib/freemarker.jar,
  lib/prefuse.jar
 Bundle-Vendor: Fintan Fairmichael
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.google.common.annotations,
  com.google.common.base,
  com.google.common.base.internal,

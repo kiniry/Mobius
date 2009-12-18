@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BONc Plugin
 Bundle-SymbolicName: ie.ucd.bon.plugin;singleton:=true
-Bundle-Version: 0.3.8
+Bundle-Version: 0.3.9
 Bundle-Activator: ie.ucd.bon.plugin.BONPlugin
 Bundle-Vendor: Fintan Fairmichael, University College Dublin
 Require-Bundle: org.eclipse.ui,
@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.ui,
  ie.ucd.bon.bonc;bundle-version="0.2.0",
  org.eclipse.ui.views;bundle-version="3.4.0",
  org.eclipse.jdt.ui
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/miglayout-3.7.1-swt.jar

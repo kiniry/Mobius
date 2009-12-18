@@ -66,7 +66,7 @@ public class ExecUtil {
     String[] parts = pathString.split(File.pathSeparator);
     Collection<File> pathFiles = new ArrayList<File>();
     for (String pathEntry : parts) {
-      if (!pathEntry.isEmpty()) {
+      if (pathEntry.length() > 0) {
         try {
           File file = new File(pathEntry);
           if (file.isDirectory()) {
