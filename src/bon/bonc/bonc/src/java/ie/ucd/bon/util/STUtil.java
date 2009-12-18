@@ -16,11 +16,11 @@ import java.util.TreeSet;
 public class STUtil {
 
   public static String getQualifiedClassString(String c, BONST st) {
-    Cluster cluster = st.classClusterMap.get(c);
-    if (cluster == null) {
+    Collection<Cluster> cluster = st.classClusterMap.get(c);
+    if (cluster.isEmpty()) {
       return c;
     } else {
-      return getQualifiedClusterString(cluster.name, st) + '.' + c;
+      return getQualifiedClusterString(cluster.iterator().next().name, st) + '.' + c;
     }
   }
 
@@ -34,8 +34,8 @@ public class STUtil {
   }
   
   public static String getQualifiedClusterStringForClass(Clazz c, BONST st) {
-    Cluster cluster = st.classClusterMap.get(c.name.name);
-    return cluster == null ? "" : getQualifiedClusterString(cluster.name, st);
+    Collection<Cluster> cluster = st.classClusterMap.get(c.name.name);
+    return cluster.isEmpty() ? "" : getQualifiedClusterString(cluster.iterator().next().name, st);
   }
 
   public static Collection<Clazz> getAllDescendants(Clazz clazz, BONST st) {

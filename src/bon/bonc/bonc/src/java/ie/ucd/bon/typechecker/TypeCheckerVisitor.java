@@ -307,8 +307,13 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
   }
 
   private boolean isClassInCluster(String className, String clusterName) {
-    Cluster cluster = st.classClusterMap.get(className);
-    return cluster != null && clusterName.equals(cluster.name);
+    Collection<Cluster> clusters = st.classClusterMap.get(className);
+    for (Cluster cluster : clusters) {
+      if (cluster.name.equals(clusterName)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private boolean isClusterInCluster(String containee, String containing) {

@@ -26,12 +26,19 @@ import java.util.Map;
 
 public class BONST {
 
+  /** A map from cluster name (String) to the corresponding Cluster AST Node. */
   public final Map<String,Cluster> clusters = new HashMap<String,Cluster>();
+
+  /** A map from class name (String) to the corresponding Clazz AST Node. */
   public final Map<String,Clazz> classes = new HashMap<String,Clazz>();
 
   public final Graph<String,Type> classInheritanceGraph = new Graph<String,Type>();
+  /** Inheritance graph with generics elided. Nodes are class names, edges go from a subclass to the parent class. */
   public final Graph<String,String> simpleClassInheritanceGraph = new Graph<String,String>();
-  public final Map<String,Cluster> classClusterMap = new HashMap<String,Cluster>();
+  
+  /** A map from class name (String) to the Cluster AST node that contains the class */
+  public final Graph<String,Cluster> classClusterMap = new Graph<String,Cluster>();
+  /** A map from cluster name (String) to the Cluster AST node that contains the cluster. */
   public final Graph<String,Cluster> clusterClusterGraph = new Graph<String,Cluster>();
 
   public final TwoDimensionalMap<Clazz, String, FeatureSpecification> featuresMap = new TwoDimensionalMap<Clazz,String,FeatureSpecification>();
@@ -43,7 +50,9 @@ public class BONST {
   public final Map<Clazz,List<FormalGeneric>> genericsMap = new HashMap<Clazz,List<FormalGeneric>>();
   public final TwoDimensionalMap<Clazz, String, FormalGeneric> genericNamesMap = new TwoDimensionalMap<Clazz, String, FormalGeneric>();
 
+  /** Maps individual AST nodes to their corresponding indexing clause. */
   public final Map<AstNode,Indexing> indexing = new HashMap<AstNode,Indexing>();
+  /** All the client relations defined in the input. */
   public final Collection<ClientRelation> clientRelations = new ArrayList<ClientRelation>();
 
   public final Map<AstNode,Type> typeMap = new HashMap<AstNode,Type>();

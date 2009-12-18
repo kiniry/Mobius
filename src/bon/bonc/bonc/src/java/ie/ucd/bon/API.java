@@ -37,6 +37,15 @@ public final class API {
   /**
    * Parse the provided input.
    * @param files the files to parse.
+   * @return the ParsingTracker storing the results of the parse.
+   */
+  public static ParsingTracker parse(final Collection<File> files) {
+    return parse(files, false, false);
+  }
+  
+  /**
+   * Parse the provided input.
+   * @param files the files to parse.
    * @param readFromStdIn a boolean indicating whether to also read input from stdin.
    * @param printTiming a boolean indicating whether timing information should be printed to stdout.
    * @return the ParsingTracker storing the results of the parse.
@@ -77,7 +86,7 @@ public final class API {
   }
   
   public static ParseResult parse(String bonText) {
-    return Parser.parse(null, new ByteArrayInputStream(bonText.getBytes()));
+    return parse(new ByteArrayInputStream(bonText.getBytes()));
   }
 
   /**
