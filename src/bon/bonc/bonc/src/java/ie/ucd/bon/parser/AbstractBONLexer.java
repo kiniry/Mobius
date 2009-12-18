@@ -99,7 +99,6 @@ public abstract class AbstractBONLexer extends Lexer {
     } else {
       problem = new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg);
     }
-
     problems.addProblem(problem);
   }
 

@@ -37,9 +37,9 @@ public class ParseResult {
     this.file = file;
     this.parseProblems = problems;
     if (lexerProblems == null) {
-      this.lexerProblems = lexerProblems;
-    } else {
       this.lexerProblems = new Problems("Lexer");
+    } else {
+      this.lexerProblems = lexerProblems;
     }
     this.stProblems = new Problems("ST");
     this.severeProblemCount = countSevere(problems);
