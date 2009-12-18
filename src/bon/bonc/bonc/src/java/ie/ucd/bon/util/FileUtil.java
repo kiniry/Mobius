@@ -128,7 +128,6 @@ public final class FileUtil {
   
   public static FilenameFilter getSuffixFilenameFilter(final String suffix) {
     return new FilenameFilter() {
-      @Override
       public boolean accept(File dir, String name) {
         return name.endsWith(suffix);
       }

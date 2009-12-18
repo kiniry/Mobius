@@ -2,7 +2,7 @@
 <feature
       id="ie.ucd.bon.plugin"
       label="BONc Feature"
-      version="0.3.5"
+      version="0.3.8"
       provider-name="Fintan Fairmichael, University College Dublin">
 
    <description url="http://kind.ucd.ie/products/opensource/BONc/">
@@ -50,6 +50,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <import plugin="org.eclipse.ui.editors" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.core" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.views" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.ui"/>
    </requires>
 
    <plugin
