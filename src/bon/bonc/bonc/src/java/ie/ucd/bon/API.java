@@ -29,6 +29,9 @@ import java.util.Collection;
  */
 public final class API {
 
+  /** The plugin is used when this forms an Eclipse plugin.  */
+  public static final String PLUGIN_ID = "ie.ucd.bon.bonc";
+  
   /**
    * Private constructor - cannot be instantiated.
    */

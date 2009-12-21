@@ -1,7 +1,13 @@
 package ie.ucd.bon.plugin;
 
+import freemarker.template.Configuration;
+import ie.ucd.bon.API;
 import ie.ucd.bon.plugin.editor.BONCodeScanner;
 import ie.ucd.bon.plugin.editor.BONColourProvider;
+import ie.ucd.bon.plugin.util.EclipsePluginInputStreamProvider;
+import ie.ucd.bon.plugin.util.EclipsePluginURLTemplateLoader;
+import ie.ucd.bon.printer.template.FreeMarkerTemplate;
+import ie.ucd.bon.util.FileUtil;
 
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -12,7 +18,7 @@ import org.osgi.framework.BundleContext;
  */
 public class BONPlugin extends AbstractUIPlugin {
 
-	// The plug-in ID
+  // The plug-in ID
 	public static final String PLUGIN_ID = "ie.ucd.bon.plugin";
 	public static final String NATURE_ID = PLUGIN_ID + ".boncnature";
 	
@@ -36,6 +42,11 @@ public class BONPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		FileUtil.inputStreamProvider = new EclipsePluginInputStreamProvider(API.PLUGIN_ID);
+		Configuration config = new Configuration();
+		config.setTemplateLoader(new EclipsePluginURLTemplateLoader(API.PLUGIN_ID, "templates/"));
+		FreeMarkerTemplate.setConfiguration(config);
 	}
 
 	/*

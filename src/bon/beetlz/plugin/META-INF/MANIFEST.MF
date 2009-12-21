@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Beetlz Plug-in
 Bundle-SymbolicName: ie.ucd.bon.beetlz.plugin;singleton:=true
-Bundle-Version: 1.2.5
+Bundle-Version: 1.2.6
 Bundle-Activator: beetlzplugin.Activator
 Bundle-Vendor: Evka Darulova et al.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -12,8 +12,8 @@ Bundle-Localization: plugin
 Require-Bundle: ie.ucd.bon.beetlz;bundle-version="1.2.4",
  ie.ucd.bon.bonc;bundle-version="0.2.0",
  ie.ucd.bon.plugin;bundle-version="0.3.1",
- org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.core.resources,
+ org.eclipse.ui.console,
+ org.eclipse.ui,
  org.eclipse.jdt.core,
- org.eclipse.ui.console
+ org.eclipse.core.resources

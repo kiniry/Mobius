@@ -45,6 +45,10 @@ public class FreeMarkerTemplate {
     }
     return config;
   }
+  
+  public static void setConfiguration(Configuration conf) {
+    config = conf;
+  }
 
   public static boolean writeTemplate(Writer out, String templateName, Map<String,Object> dataModel) {
     try {

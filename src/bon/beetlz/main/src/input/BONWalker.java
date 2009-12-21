@@ -4,9 +4,11 @@ import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.ClientRelation;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.TypeMark;
+import ie.ucd.bon.graph.Graph;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.typechecker.BONST;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,11 +43,12 @@ public class BONWalker {
     final UserProfile profile = Beetlz.getProfile();
     final BONST the_st = the_tracker.getSymbolTable();
     
-    final Map<String,Cluster> clusterList = the_st.classClusterMap;
+    final Graph<String,Cluster> clusterMap = the_st.classClusterMap;
 
     for (final Clazz c : the_st.classes.values()) {
       if (!profile.isBONIgnored(c.name.name)) {
-        Cluster clusterInfo = clusterList.get(c.name.name);
+        Collection<Cluster> cluster = clusterMap.get(c.name.name);
+        Cluster clusterInfo = cluster.size() > 0 ? cluster.iterator().next() : null;
         final ClassStructure temp = BONParser.parseClass(the_st, c, clusterInfo);
         my_classes.put(temp.getSimpleName(), temp);
       }

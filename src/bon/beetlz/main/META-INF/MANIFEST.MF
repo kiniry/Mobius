@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Beetlz
 Bundle-SymbolicName: ie.ucd.bon.beetlz
-Bundle-Version: 1.2.5
+Bundle-Version: 1.2.6
 Bundle-ClassPath: Beetlz.jar,
  lib/openjml.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
