@@ -13,33 +13,30 @@
   <!-- Paths -->
   <path id="base.path">
     <filelist dir="${lib}">
-      <file name="stringtemplate.jar"/>
-      <file name="CommandlineParser.jar"/>
-      <file name="antlr-2.7.7.jar"/>
-      <file name="prefuse.jar"/>
-      <file name="google-collect-1.0-rc2.jar"/>
+      <file name="${lib-prefuse}"/>
+      <file name="${lib-google-collect}"/>
     </filelist>
   </path>
 
   <path id="antlr.path">
     <path refid="base.path"/>
-    <filelist dir="${lib}" files="antlr-3.1.3.jar"/>
+    <filelist dir="${lib}" files="${lib-antlr}"/>
   </path>
  
   <path id="antlr-mod.path">
     <path refid="base.path"/>
-    <filelist dir="${lib}" files="antlr-3.1.3-mod.jar antlr-3.1.3.jar"/>
+    <filelist dir="${lib}" files="${lib-antlr-mod} ${lib-antlr}"/>
   </path>
  
   <path id="test.path">
     <path refid="base.path"/>
-    <filelist dir="${lib}" files="antlr-runtime-3.1.3.jar ${clops-runtime-lib} freemarker.jar"/>
+    <filelist dir="${lib}" files="${lib-antlr-runtime} ${lib-clops-runtime} ${lib-freemarker}"/>
     <pathelement location="${build}"/>
   </path>
   
   <path id="test-interface.path">
     <path refid="test.path"/>
-    <filelist dir="${lib}" files="${clops-lib} junit-4.6.jar"/>
+    <filelist dir="${lib}" files="${lib-clops} ${lib-junit}"/>
   </path>
  
   <path id="compile.path">
@@ -50,8 +47,8 @@
     <fileset dir="${dist}/lib" includes="*.jar"/>
   </path>
  
-  <taskdef resource="org/vafer/jdeb/ant/antlib.xml" classpath="${jdeb-lib}"/>
-  <taskdef resource="org/apache/tools/ant/antlr/antlib.xml" classpath="${antlr-task-lib}"/>
+  <taskdef resource="org/vafer/jdeb/ant/antlib.xml" classpath="${lib-jdeb}"/>
+  <taskdef resource="org/apache/tools/ant/antlr/antlib.xml" classpath="${lib-antlr-task}"/>
 
   <target name="init">
     <echo message="Creating timestamp"/>
@@ -100,13 +97,13 @@
     <jar jarfile="${dist}/lib/BON.jar" basedir="${build}">
       <manifest>
         <attribute name="Main-Class" value="ie.ucd.bon.Main" />
-        <attribute name="Class-Path" value="antlr-runtime-3.1.3.jar prefuse.jar clops-0.2.2-runtime.jar google-collect-1.0-rc2.jar freemarker.jar"/>
+        <attribute name="Class-Path" value="${lib-antlr-runtime} ${lib-prefuse} clops-0.2.2-runtime.jar ${lib-google-collect} ${lib-freemarker}"/>
       </manifest>
     </jar>
    
     <mkdir dir="${dist}/lib"/>
     <copy todir="${dist}/lib">
-      <fileset dir="${lib}/" includes="antlr-runtime-3.1.3.jar,antlr-2.7.7.jar,${clops-runtime-lib},stringtemplate.jar,prefuse.jar,google-collect-1.0-rc2.jar,freemarker.jar"/>
+      <fileset dir="${lib}/" includes="${lib-antlr-runtime},${lib-clops-runtime},stringtemplate.jar,${lib-prefuse},${lib-google-collect},${lib-freemarker}"/>
     </copy>
    
     <chmod perm="a+x">
@@ -124,16 +121,16 @@
  
   <target name="release" depends="dist,docs,debian-release" description="Generate a release">
     <copy todir="${dist}">
-      <fileset dir="doc-src/" includes="README.txt,INSTALLATION.txt,FAQ.txt,LICENCE.txt,RELEASE_NOTES.txt"/>
-      <fileset dir="${doc-src}/changelog/" includes="changelog"/>
+      <fileset dir="${src-doc}" includes="README.txt,INSTALLATION.txt,FAQ.txt,LICENCE.txt,RELEASE_NOTES.txt"/>
+      <fileset dir="${src-doc}/changelog/" includes="changelog"/>
     </copy>
    
     <exec executable="${src-script}/release.sh" dir=".">
       <arg value="${release-name}-${release-version}"/>
     </exec>
     <copy todir="${release}">
-      <fileset dir="${doc-src}" includes="README.txt,FAQ.txt,INSTALLATION.txt,LICENCE.txt,RELEASE_NOTES.txt"/>
-      <fileset dir="${doc-src}/changelog/" includes="changelog"/>
+      <fileset dir="${src-doc}" includes="README.txt,FAQ.txt,INSTALLATION.txt,LICENCE.txt,RELEASE_NOTES.txt"/>
+      <fileset dir="${src-doc}/changelog/" includes="changelog"/>
       <fileset file="update"/>
     </copy>
     <chmod perm="a+x" file="${release}/update"/>
@@ -142,12 +139,12 @@
  
   <target name="actual-release" depends="release" description="Do a final release.">
     <!-- Do a release, move changelogs to old changelogs, and clear latest-changes -->
-    <delete file="${doc-src}/changelog/old-changelog"/>
-    <delete file="${doc-src}/changelog/old-changelog.Debian"/>
-    <move file="${doc-src}/changelog/changelog" tofile="${doc-src}/changelog/old-changelog"/>
-    <move file="${doc-src}/changelog/changelog.Debian" tofile="${doc-src}/changelog/old-changelog.Debian"/>
-    <delete file="${doc-src}/changelog/latest-changes"/>
-    <touch file="${doc-src}/changelog/latest-changes"/>
+    <delete file="${src-doc}/changelog/old-changelog"/>
+    <delete file="${src-doc}/changelog/old-changelog.Debian"/>
+    <move file="${src-doc}/changelog/changelog" tofile="${src-doc}/changelog/old-changelog"/>
+    <move file="${src-doc}/changelog/changelog.Debian" tofile="${src-doc}/changelog/old-changelog.Debian"/>
+    <delete file="${src-doc}/changelog/latest-changes"/>
+    <touch file="${src-doc}/changelog/latest-changes"/>
   </target>
  
   <!-- Antlr targets -->
@@ -173,13 +170,13 @@
   </target>
  
   <target name="docs" depends="manpage,changelogs" description="Generate all documentation">
-    <delete file="${doc-src}/README.txt"/>
-    <copy tofile="${doc-src}/README.txt" file="${doc-src}/README.txt.start"/>
-    <java fork="yes" classname="ie.ucd.bon.Main" output="${doc-src}/README.txt" append="true" classpathref="dist.path">
+    <delete file="${src-doc}/README.txt"/>
+    <copy tofile="${src-doc}/README.txt" file="${src-doc}/README.txt.start"/>
+    <java fork="yes" classname="ie.ucd.bon.Main" output="${src-doc}/README.txt" append="true" classpathref="dist.path">
       <arg value="--print-readme"/>
     </java>
-    <concat destfile="${doc-src}/README.txt" append="true">
-      <fileset file="${doc-src}/README.txt.end"/>
+    <concat destfile="${src-doc}/README.txt" append="true">
+      <fileset file="${src-doc}/README.txt.end"/>
     </concat>
   </target>
  
@@ -190,8 +187,8 @@
   <target name="clean" depends="clean-build,clean-release,clean-debian-release"/>
 
   <target name="clean-changelogs">
-    <delete file="${doc-src}/changelog/changelog"/>
-    <delete file="${doc-src}/changelog/changelog.Debian"/> 
+    <delete file="${src-doc}/changelog/changelog"/>
+    <delete file="${src-doc}/changelog/changelog.Debian"/> 
   </target>
  
   <target name="changelogs" depends="clean-changelogs">
@@ -203,7 +200,7 @@
 
     <!-- ****** changelog.Debian ****** -->
     <!-- Add new entry -->
-    <copy tofile="${doc-src}/changelog/changelog.Debian" file="${doc-src}/changelog/changelog.Debian-entryformat">
+    <copy tofile="${src-doc}/changelog/changelog.Debian" file="${src-doc}/changelog/changelog.Debian-entryformat">
       <filterset begintoken="[[" endtoken="]]">
         <filter token="version" value="${release-version}"/>
         <filter token="name" value="${release-name}"/>
@@ -212,12 +209,12 @@
       </filterset>
     </copy>
     <!-- Append changes for this entry -->
-    <concat destfile="${doc-src}/changelog/changelog.Debian" append="true" fixlastline="true">
-      <fileset file="${doc-src}/changelog/latest-changes"/>
+    <concat destfile="${src-doc}/changelog/changelog.Debian" append="true" fixlastline="true">
+      <fileset file="${src-doc}/changelog/latest-changes"/>
     </concat>
     <!-- Add developer info and date/time -->
-    <concat destfile="${doc-src}/changelog/changelog.Debian" append="true" fixlastline="true">
-      <fileset file="${doc-src}/changelog/changelog.Debian-develtimeformat"/>
+    <concat destfile="${src-doc}/changelog/changelog.Debian" append="true" fixlastline="true">
+      <fileset file="${src-doc}/changelog/changelog.Debian-develtimeformat"/>
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
           <param type="token" name="developer" value="Fintan Fairmichael"/>
@@ -227,13 +224,13 @@
       </filterchain>
     </concat>
     <!-- Append all previous entries -->
-    <concat destfile="${doc-src}/changelog/changelog.Debian" append="true" fixlastline="true">
-      <fileset file="${doc-src}/changelog/old-changelog.Debian"/>
+    <concat destfile="${src-doc}/changelog/changelog.Debian" append="true" fixlastline="true">
+      <fileset file="${src-doc}/changelog/old-changelog.Debian"/>
     </concat>  
   
     <!-- ****** changelog ****** -->
     <!-- Add entry -->
-    <copy tofile="${doc-src}/changelog/changelog" file="${doc-src}/changelog/changelog-entryformat">
+    <copy tofile="${src-doc}/changelog/changelog" file="${src-doc}/changelog/changelog-entryformat">
       <filterset begintoken="[[" endtoken="]]">
         <filter token="version" value="${release-version}"/>
         <filter token="name" value="${release-name}"/>
@@ -241,26 +238,26 @@
       </filterset>
     </copy>
     <!-- Append changes for this entry -->
-    <concat destfile="${doc-src}/changelog/changelog" append="true" fixlastline="true">
-      <fileset file="${doc-src}/changelog/latest-changes"/>
+    <concat destfile="${src-doc}/changelog/changelog" append="true" fixlastline="true">
+      <fileset file="${src-doc}/changelog/latest-changes"/>
     </concat> 
     <!-- Two blank lines -->
-    <echo file="${doc-src}/changelog/changelog" append="true" message="${line.separator}${line.separator}"/>
+    <echo file="${src-doc}/changelog/changelog" append="true" message="${line.separator}${line.separator}"/>
     <!-- Append all previous entries -->
-    <concat destfile="${doc-src}/changelog/changelog" append="true" fixlastline="true">
-      <fileset file="${doc-src}/changelog/old-changelog"/>
+    <concat destfile="${src-doc}/changelog/changelog" append="true" fixlastline="true">
+      <fileset file="${src-doc}/changelog/old-changelog"/>
     </concat>
   
   </target>
  
   <target name="manpage" depends="dist">
-    <delete file="${doc-src}/bonc.1"/>
-    <copy tofile="${doc-src}/bonc.1" file="${doc-src}/bonc.1.start"/>
-    <java fork="yes" classname="ie.ucd.bon.Main" output="${doc-src}/bonc.1" append="true" classpathref="dist.path">
+    <delete file="${src-doc}/bonc.1"/>
+    <copy tofile="${src-doc}/bonc.1" file="${src-doc}/bonc.1.start"/>
+    <java fork="yes" classname="ie.ucd.bon.Main" output="${src-doc}/bonc.1" append="true" classpathref="dist.path">
       <arg value="--print-man"/>
     </java>
-    <concat destfile="${doc-src}/bonc.1" append="true">
-      <fileset file="${doc-src}/bonc.1.end"/>
+    <concat destfile="${src-doc}/bonc.1" append="true">
+      <fileset file="${src-doc}/bonc.1.end"/>
     </concat>
   </target>
 
@@ -286,10 +283,10 @@
       <fileset dir="${dist}/lib/" includes="*.jar"/>
     </copy>
    
-    <gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.Debian.gz" src="${doc-src}/changelog/changelog.Debian"/>
-    <gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.gz" src="${doc-src}/changelog/changelog"/>
-    <gzip destfile="${debian}/src/usr/share/man/man1/bonc.1.gz" src="${doc-src}/bonc.1"/>
-    <copy tofile="${debian}/src/usr/share/doc/bonc/copyright" file="${doc-src}/copyright.Debian"/>
+    <gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.Debian.gz" src="${src-doc}/changelog/changelog.Debian"/>
+    <gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.gz" src="${src-doc}/changelog/changelog"/>
+    <gzip destfile="${debian}/src/usr/share/man/man1/bonc.1.gz" src="${src-doc}/bonc.1"/>
+    <copy tofile="${debian}/src/usr/share/doc/bonc/copyright" file="${src-doc}/copyright.Debian"/>
     <copy tofile="${debian}/src/usr/share/mime/packages/bon.xml" file="${aux-src}/bon.xml"/>
     <copy tofile="${debian}/src/usr/share/gtksourceview-2.0/language-specs/bon.lang" file="${aux-src}/bon.lang"/>
    
@@ -309,7 +306,7 @@
     <!-- Create release tar file -->
     <exec executable="${src-script}/build-deb-release-tar.sh" dir="."/>
 
-    <jdeb destfile="${release}/${release-name}_${release-version}_all.deb" control="${debian}/control" changesIn="${doc-src}/changelog/latest-changes" changesOut="${debian}/${release-name}.changes">
+    <jdeb destfile="${release}/${release-name}_${release-version}_all.deb" control="${debian}/control" changesIn="${src-doc}/changelog/latest-changes" changesOut="${debian}/${release-name}.changes">
       <data src="${debian}/src/deb-release.tgz"/>
     </jdeb>
    
@@ -330,12 +327,6 @@
   </target>
   
   <!-- CLOPS -->
-  <path id="clops.path">
-    <filelist dir="${lib}" files="${clops-lib}"/>
-    <file name="velocity-1.6.2.jar"/>
-    <file name="velocity-1.6.2-dep.jar"/>
-  </path>
-
   <target name="update-interface" depends="init" description="Clops generations">
     <echo message="Using ${clops-file}"/>
     <java fork="yes" jar="lib/clops-0.2.2.jar">
