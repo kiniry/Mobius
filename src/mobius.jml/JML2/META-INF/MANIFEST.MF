@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JML2 Plug-in
 Bundle-SymbolicName: ch.ethz.inf.pm.jml.plugin;singleton:=true
-Bundle-Version: 1.1.1.mobius
+Bundle-Version: 1.1.3.mobius
 Bundle-Activator: ch.ethz.inf.pm.jml.plugin.internal.core.JmlPlugin
 Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime,org.eclipse.jd
  t.core,org.eclipse.jdt.launching,org.eclipse.debug.ui,org.eclipse.jdt

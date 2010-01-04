@@ -50,7 +50,7 @@
       </key>
    </extension>
 
-   <extension
+   <!-- extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="false"
@@ -104,7 +104,7 @@
             <separator name="jml-plugin.jml-tool-separator"/>
          </menu>
       </objectContribution>
-   </extension>
+   </extension -->
    <extension
          point="org.eclipse.ui.views">
       <view
@@ -227,28 +227,37 @@
             id="jml-plugin.toolbar"
             label="JML2 plug-in toolbar"
             visible="false">
-            
+         <menu
+               id="JMLMenu"
+               label="JML2">
+            <separator
+                  name="JMLGroup">
+            </separator>
+         </menu>   
          <action
                class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlExecAction"
                definitionId="jml-plugin.runExec"
                icon="icons/jml_exec.gif"
                id="jml-plugin.runjmlexec.action"
                label="Run JML2 exec"
-               toolbarPath="Normal/additions"/>
+               toolbarPath="Normal/additions"
+               menubarPath="JMLMenu/JMLGroup"/>
          <action
                class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlCompilerAction"
                definitionId="jml-plugin.runCompiler"
                icon="icons/jml_compiler.gif"
                id="jml-plugin.runjmlcompiler.action"
                label="Run JML2 compiler"
-               toolbarPath="Normal/additions"/>
+               toolbarPath="Normal/additions"
+               menubarPath="JMLMenu/JMLGroup"/>
          <action
                class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlCheckerAction"
                definitionId="jml-plugin.runChecker"
                icon="icons/jml_checker.gif"
                id="jml-plugin.runjmlchecker.action"
                label="Run JML2 checker"
-               toolbarPath="Normal/additions"/>
+               toolbarPath="Normal/additions"
+               menubarPath="JMLMenu/JMLGroup"/>
          <menu
                id="jml-plugin.toolbar"
                label="JML2 plug-in toolbar"
