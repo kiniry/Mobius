@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Inferring and Propagating Annotations</TITLE>
+<META NAME="description" CONTENT="Inferring and Propagating Annotations">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node82.html">
+<LINK REL="previous" HREF="node80.html">
+<LINK REL="up" HREF="node80.html">
+<LINK REL="next" HREF="node82.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html1265"
+  HREF="node82.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1261"
+  HREF="node80.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1255"
+  HREF="node80.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html1263"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html1266"
+  HREF="node82.html">State Diagrams and Navigation</A>
+<B> Up:</B> <A NAME="tex2html1262"
+  HREF="node80.html">Annotation generation</A>
+<B> Previous:</B> <A NAME="tex2html1256"
+  HREF="node80.html">Annotation generation</A>
+ &nbsp; <B>  <A NAME="tex2html1264"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00910000000000000000"></A>
+<A NAME="sec:inferr-prop-annot"></A>
+<BR>
+Inferring and Propagating Annotations
+</H1>
+<P>
+<BIG CLASS="LARGE">Error messages produced by a program analysis tool, which indicate
+failed verification attempts, can be used to automate the
+generation and propagation of program annotations in code.  
+This approach is pursued in the <SPAN  CLASS="textsf">CANAPA</SPAN> tool [<A
+ HREF="node86.html#CieleckiFJJCSK06">CFJ<SUP>+</SUP>06</A>]:
+<SPAN  CLASS="textsf">CANAPA</SPAN> uses the error messages of <SPAN  CLASS="textsf">ESC/Java2</SPAN> to infer and propagate
+non-null annotations.  <SPAN  CLASS="textsf">CANAPA</SPAN> comes with an Eclipse plug-in.  
+</BIG>
+<P>
+<BIG CLASS="LARGE">In an attempt to further reduce the burden of annotation writing
+further, we have implemented an algorithm dedicated to the generation
+of ``obvious'' minimal preconditions to avoid not only null-pointer,
+but also array-out-of-bounds exceptions
+(see&nbsp;[<A
+ HREF="node86.html#BartheBCGHLPR07:FMCO">BBC<SUP>+</SUP>07a</A>]).  This algorithm re-uses the
+implementation of the wp-calculus. A possibility to improve the
+algorithm is to apply a simple analysis to identify possible class
+invariants.
+</BIG>
+<P>
+<BIG CLASS="LARGE">It is important to be able to determine the effectiveness of a particular
+method of specification generator. In order to be able to do that
+a CodeStatistics tool has been developed which allows to gather statistics
+on code fragments that enjoy particular property (e.g. for which an
+annotation that guarantees certain property can be generated).
+This has been used in a case study to generate <SPAN  CLASS="textsf">JML</SPAN> <TT>decreases</TT>
+clauses that guarantee termination of <TT>for</TT> loops [<A
+ HREF="node86.html#FularaJ09">FJ09</A>].
+</BIG>
+<P>
+<BIG CLASS="LARGE">For the type system for enforcing immutability of objects developed in
+Task 3.3 [<A
+ HREF="node86.html#HaackPSS07">HPSS07</A>] we developed an system to infer the
+necessary annotations, reported in [<A
+ HREF="node86.html#HaackPoll2009a">HP09b</A>]. Our aim was
+to only require annotations for immutability that could be handled
+with the new JSR 308 annotation syntax.  The type system for
+immutability was considerably generalised and streamlined in the
+process, as reported in [<A
+ HREF="node86.html#HaackPoll2009">HP09a</A>], but unfortunately this
+meant that implementation of the type system (as JSR 308 pluggable
+checker) and the implementation of the inference algorithm have not
+been finished yet.
+</BIG>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1265"
+  HREF="node82.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1261"
+  HREF="node80.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1255"
+  HREF="node80.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html1263"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html1266"
+  HREF="node82.html">State Diagrams and Navigation</A>
+<B> Up:</B> <A NAME="tex2html1262"
+  HREF="node80.html">Annotation generation</A>
+<B> Previous:</B> <A NAME="tex2html1256"
+  HREF="node80.html">Annotation generation</A>
+ &nbsp; <B>  <A NAME="tex2html1264"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

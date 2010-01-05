@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Overview of the Program Verification Environment</TITLE>
+<META NAME="description" CONTENT="Overview of the Program Verification Environment">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node5.html">
+<LINK REL="previous" HREF="node3.html">
+<LINK REL="up" HREF="deliverableD3_10.html">
+<LINK REL="next" HREF="node5.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html204"
+  HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html200"
+  HREF="deliverableD3_10.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html194"
+  HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html202"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html205"
+  HREF="node5.html">Subsystems of the MOBIUS</A>
+<B> Up:</B> <A NAME="tex2html201"
+  HREF="deliverableD3_10.html">deliverableD3_10</A>
+<B> Previous:</B> <A NAME="tex2html195"
+  HREF="node3.html">Contents</A>
+ &nbsp; <B>  <A NAME="tex2html203"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00400000000000000000"></A>
+<A NAME="chapter:overv-progr-verif"></A>
+<BR>
+Overview of the Program Verification Environment
+</H1>
+<P>
+<BIG CLASS="LARGE">Many large software engineering projects have functional
+specifications that are thousands of pages long.  These are usually
+written in a natural language, such as English, and with semi-formal
+notation such as diagrams and tables.  There are often subtle
+ambiguities or internal contradictions within the software
+requirements, which are often not discovered until very late in the
+software development life cycle, simply because the project becomes
+too big for any one developer or analyst to fully understand and
+remember all the relevant details at the same time.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Popular high-level ``modeling'' languages in current use ( e.g., UML) are
+not amenable to formal analysis because of a lack of semantics and
+interoperable tool support.  Even so, high-level representations are
+compelling and useful in modern software engineering practice and
+software engineers regularly struggle with using these inadequate
+languages, even for mission critical applications.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">Mobius PVE</SPAN> is a customized version of the Eclipse platform that
+integrates a set of tools that support software development using
+state-of-the-art formal methods and software engineering techniques.
+The <SPAN  CLASS="textsf">Mobius PVE</SPAN> supports the specification and verification of <SPAN  CLASS="textsf">JML</SPAN>-annotated
+<SPAN  CLASS="textsf">Java</SPAN> programs at the source code level as well as at the bytecode
+level using logic- and type-based techniques and the Proof-Carrying
+Code paradigm.  The properties of particular interest include security
+(e.g., data is secret and never leaked) and resource guarantee
+properties (e.g., this method will never use more than this much memory
+or that much CPU) as well as total functional correctness.  The <SPAN  CLASS="textsf">Mobius PVE</SPAN> 
+is thus, in a sense, a prototype realization of the U.K.&nbsp;Grand
+Challenge 6 Verifying Compiler, specialized to the domain of Java
+programs&nbsp;[<A
+ HREF="node86.html#HoareM05">HM05</A>].
+</BIG>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">Mobius PVE</SPAN> integrates theoretical and technical best-practices,
+leveraging the hard work of many research groups within, as well as
+outside of, the <SPAN  CLASS="textsf">MOBIUS</SPAN> grant consortium.  Many <SPAN  CLASS="textsf">Java</SPAN> software
+engineers use the Eclipse development environment, together with
+plugins such as <SPAN  CLASS="textsf">FindBugs</SPAN> and <SPAN  CLASS="textsf">PMD</SPAN>&nbsp;[<A
+ HREF="node86.html#Eclipse">Ecl</A>].  The <SPAN  CLASS="textsf">Mobius PVE</SPAN> is
+bundled with Eclipse and these well-known third-party plugins so that
+Java developers are presented with a pre-configured development
+environment without the need to manually install each plugin.
+</BIG>
+<P>
+<BIG CLASS="LARGE">For example, a <SPAN  CLASS="textsf">Java</SPAN> developer might use the <SPAN  CLASS="textsf">Mobius PVE</SPAN> to derive a <SPAN  CLASS="textsf">JML</SPAN> 
+specification from a high-level functional specification.  The <SPAN  CLASS="textsf">JML</SPAN> 
+subsystem of <SPAN  CLASS="textsf">MOBIUS</SPAN> might then be used to typecheck the <SPAN  CLASS="textsf">JML</SPAN> 
+specification, and, in a complementary fashion, the <SPAN  CLASS="textsf">ESC/Java2</SPAN> used
+look for inconsistencies in the specification.  A variety of other
+pre-configured subsystems like <SPAN  CLASS="textsf">CheckStyle</SPAN>, <SPAN  CLASS="textsf">FindBugs</SPAN>, <SPAN  CLASS="textsf">PMD</SPAN>, and
+others are executed asynchronously while the developer writes,
+modifies, and evolves their software architecture.  Feedback about the
+completeness and quality of the system's documentation, formal
+specification, and program code are always at the developer's
+fingertips.  Once the <SPAN  CLASS="textsf">Java</SPAN> code has been verified against the <SPAN  CLASS="textsf">JML</SPAN> 
+specification, both statically using <SPAN  CLASS="textsf">ESC/Java2</SPAN> and dynamically using
+hand-written and automatically generated unit tests using <SPAN  CLASS="textsf">JML</SPAN>'s
+runtime assertion checking, then the developer has very high
+confidence that the requirements have been implemented correctly.  At
+this stage, one performs automatic and interactive verification using
+the <SPAN  CLASS="textsf">MOBIUS</SPAN> <SPAN  CLASS="textsf">DirectVCGen</SPAN> and Prover Editor, fully verifying functional and
+non-functional properties.
+</BIG>
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="671"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1.1:</STRONG>
+Schematic overview of the different formats (for code and
+  proof obligations), and the translations between them supported by
+  the PVE and in Coq.  See the key for an explanation of the diagram
+  formatting.</CAPTION>
+<TR><TD></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+<BIG CLASS="LARGE">Recent editions of the <SPAN  CLASS="textsf">Mobius PVE</SPAN> has been used at several tutorials run at
+international conferences including ETAPS, the GLOBAN Summer School
+run by <SPAN  CLASS="textsf">MOBIUS</SPAN> partner UW, in courses taught at UCD, and at the JML
+Spec-a-thon held at the University of Washington, Tacoma in May 2009.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html204"
+  HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html200"
+  HREF="deliverableD3_10.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html194"
+  HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html202"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html205"
+  HREF="node5.html">Subsystems of the MOBIUS</A>
+<B> Up:</B> <A NAME="tex2html201"
+  HREF="deliverableD3_10.html">deliverableD3_10</A>
+<B> Previous:</B> <A NAME="tex2html195"
+  HREF="node3.html">Contents</A>
+ &nbsp; <B>  <A NAME="tex2html203"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

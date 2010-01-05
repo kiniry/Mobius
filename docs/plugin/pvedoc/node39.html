@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Bico and Bico</TITLE>
+<META NAME="description" CONTENT="Bico and Bico">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node40.html">
+<LINK REL="previous" HREF="node38.html">
+<LINK REL="up" HREF="node37.html">
+<LINK REL="next" HREF="node40.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html719"
+  HREF="node40.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html715"
+  HREF="node37.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html709"
+  HREF="node38.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html717"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html720"
+  HREF="node40.html">The Direct Verification Condition</A>
+<B> Up:</B> <A NAME="tex2html716"
+  HREF="node37.html">DirectVCGen Subsystems</A>
+<B> Previous:</B> <A NAME="tex2html710"
+  HREF="node38.html">The Bicolano Plugin</A>
+ &nbsp; <B>  <A NAME="tex2html718"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00518200000000000000"></A>
+<A NAME="sec:bico"></A>
+<BR>
+Bico and Bico<SPAN CLASS="MATH"><IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$ ^+$"></SPAN>
+</H3><BIG CLASS="LARGE">
+For each classfile, <SPAN  CLASS="textsf">Bico</SPAN> generates a type, signature, and
+implementation formalized in <SPAN  CLASS="textsf">Coq</SPAN>.  This generation is modular.  <SPAN  CLASS="textsf">Bico</SPAN> 
+also generates summary files to simplify the use of the definitions.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The main limitation of <SPAN  CLASS="textsf">Bico</SPAN> is due to the size of the <SPAN  CLASS="textsf">Java</SPAN> system
+library. The classes contained in this library are usually not
+generated, because the resolving of the dependencies would make <SPAN  CLASS="textsf">Bico</SPAN> 
+generate the Coq formalisation for all the system libraries (more than
+200 classes). This is not a problem by itself, but loading the
+generated files into <SPAN  CLASS="textsf">Coq</SPAN> uses a large amount of time and
+memory. Therefore, <SPAN  CLASS="textsf">Bico</SPAN> is most useful when applied on user-written
+class files, where this problem tends not to arise.
+</BIG>
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textsf">Bico<SPAN CLASS="MATH"><IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$ ^+$"></SPAN></SPAN> is a tool built upon the top of <SPAN  CLASS="textsf">Bico</SPAN> which permits to generate
+annotations expressed in the <SPAN  CLASS="textsf">Bicolano</SPAN> formalisation. As an input it
+takes annotations specified in a data structure. It is used in two
+fashions: first in the <SPAN  CLASS="textsf">DirectVCGen</SPAN>, with the annotations being translated
+from <SPAN  CLASS="textsf">JML</SPAN>, second in <SPAN  CLASS="textsf">BMLVCGen</SPAN> with the annotations being translated from
+<SPAN  CLASS="textsf">BML</SPAN>.
+</BIG>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html719"
+  HREF="node40.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html715"
+  HREF="node37.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html709"
+  HREF="node38.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html717"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html720"
+  HREF="node40.html">The Direct Verification Condition</A>
+<B> Up:</B> <A NAME="tex2html716"
+  HREF="node37.html">DirectVCGen Subsystems</A>
+<B> Previous:</B> <A NAME="tex2html710"
+  HREF="node38.html">The Bicolano Plugin</A>
+ &nbsp; <B>  <A NAME="tex2html718"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

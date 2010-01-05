@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The JML Folding Editor</TITLE>
+<META NAME="description" CONTENT="The JML Folding Editor">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="previous" HREF="node9.html">
+<LINK REL="up" HREF="node7.html">
+<LINK REL="next" HREF="node11.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html361"
+  HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html357"
+  HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html353"
+  HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html359"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html362"
+  HREF="node11.html">Static Analysis Subsystems for</A>
+<B> Up:</B> <A NAME="tex2html358"
+  HREF="node7.html">Java Modeling Language Subsystems</A>
+<B> Previous:</B> <A NAME="tex2html354"
+  HREF="node9.html">The JML2 Eclipse Plugin</A>
+ &nbsp; <B>  <A NAME="tex2html360"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00511300000000000000"></A>
+<A NAME="sec:jml-folding-editor"></A>
+<BR>
+The JML Folding Editor
+</H3>
+<P>
+<BIG CLASS="LARGE">Folding editors allow one to manually or automatically show or hide
+various structured pieces of a document--for example, hiding the
+contents of a section while only keeping the section title, which is
+similar to hiding the implementation of a method while keeping its
+signature.  The process of hiding and showing a usually larger or
+complex construct behind a concise visual representation is called
+``folding''.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Basic folding editors permit one to manually fold and unfold
+constructs like source code documentation and implementation
+structures like method and loop bodies.  Advanced folding editors
+provide additional features like saving and restoring the state of
+folding when a file is closed and then opened again, or automatically
+folding a set of related constructs.  An example of the latter is the
+``short'' or ``contract'' form supported by IDEs like EiffelStudio,
+whereby the implementations of all features (fields and methods) of a
+class are folded and hidden from the developer--only natural language
+documentation and contracts remain in view.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">JML</SPAN> Folding Editor, known under the development code name as
+``Grok,'' is an Eclipse plugin that has built-in support for folding 
+<SPAN  CLASS="textsf">JML</SPAN> specifications in an intelligent fashion.  It is based upon the
+Open Source http://www.realjenius.com/platform_supportCoffee-Bytes folding pluginCoffee-Bytes folding pluginhttp://www.realjenius.com/platform_support.  
+</BIG>
+<P>
+<BIG CLASS="LARGE">Manual manipulation of folding is supported, as is customizable
+defaults in folding behavior.  For example, when a file is initially
+opened, should loop bodies be folded or unfolded?  Perhaps only all
+private method bodies should be folded?
+</BIG>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">MOBIUS</SPAN> extensions to this plugin focus on support for folding, in
+an intelligent fashion, <SPAN  CLASS="textsf">JML</SPAN> formal specifications.  For example,
+groups of adjacent related specifications written in line comments are
+folded as a unit.  Furthermore, the state of folding within a file is
+saved when the Mylyn subsystem&nbsp;sec:mylyn is in use.  Finally,
+some basic notions of fisheye views&nbsp;[<A
+ HREF="node86.html#Furnas86">Fur86</A>] have been
+included in the subsystem.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Our next steps in the research work focus on further evolving and
+experimenting with fisheye notions of Degree of Interest in the
+context of software systems with formal specifications.  Given the
+numerous syntactic and semantic relationships that exist between code
+constructs and specification constructs, and observing the ways in
+which verification-centric software development and verification takes
+place, there are many fertile opportunities for good computer-human
+interaction research.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html361"
+  HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html357"
+  HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html353"
+  HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html359"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html362"
+  HREF="node11.html">Static Analysis Subsystems for</A>
+<B> Up:</B> <A NAME="tex2html358"
+  HREF="node7.html">Java Modeling Language Subsystems</A>
+<B> Previous:</B> <A NAME="tex2html354"
+  HREF="node9.html">The JML2 Eclipse Plugin</A>
+ &nbsp; <B>  <A NAME="tex2html360"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

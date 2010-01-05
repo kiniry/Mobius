@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="MOBIUS Program Verification Environment"  topic="html/toc.html">
+	<link toc="toc.xml" />
+    <topic label="JML2 Plug-in Table of Contents" topic="html/toc.html">
+	   <link toc="../ch.ethz.inf.pm.jml.plugin.help/toc.xml" />
+	</topic>
+	<link toc="../mobius.escjava2.ui/escjavaHelp.xml" /> 
+    <topic label="Umbra Guide" href="../mobius.umbra/help/overview.html">
+      <link toc="../mobius.umbra/help/index.xml" />
+    </topic>
+</toc>

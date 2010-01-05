@@ -1,0 +1,1 @@
+ latex2html -noaddress -local_icons deliverableD3_10.tex 

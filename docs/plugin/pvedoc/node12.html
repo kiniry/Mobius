@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>ESCJava2</TITLE>
+<META NAME="description" CONTENT="ESCJava2">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node13.html">
+<LINK REL="previous" HREF="node11.html">
+<LINK REL="up" HREF="node11.html">
+<LINK REL="next" HREF="node13.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html389"
+  HREF="node13.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html385"
+  HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html379"
+  HREF="node11.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html387"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html390"
+  HREF="node13.html">Javafe: The Original DEC-SRC</A>
+<B> Up:</B> <A NAME="tex2html386"
+  HREF="node11.html">Static Analysis Subsystems for</A>
+<B> Previous:</B> <A NAME="tex2html380"
+  HREF="node11.html">Static Analysis Subsystems for</A>
+ &nbsp; <B>  <A NAME="tex2html388"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00512100000000000000"></A>
+<A NAME="sec:escjava2"></A>
+<BR>
+ESCJava2
+</H3>
+<P>
+<BIG CLASS="LARGE">The Extended Static Checker for Java version 2 (<SPAN  CLASS="textsf">ESC/Java2</SPAN>) is a
+programming tool that attempts to find common run-time errors in
+<SPAN  CLASS="textsf">JML</SPAN>-annotated <SPAN  CLASS="textsf">Java</SPAN> programs by static analysis of the program code
+and its formal annotations.  Users control the amount and kinds of
+checking that <SPAN  CLASS="textsf">ESC/Java2</SPAN> performs by annotating their programs with
+specially formatted comments called pragmas.
+</BIG>
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textsf">ESC/Java2</SPAN> is a large-scale subsystem within the <SPAN  CLASS="textsf">Mobius PVE</SPAN>.  Its
+architecture relies upon several of the other subsystems described in
+this document including the original DEC-SRC Java Frontend and the
+Simplify theorem prover, both of which are described in this section,
+and several other new <SPAN  CLASS="textsf">MOBIUS</SPAN> subsystems, most of which are described
+in later sections of this chapter.
+</BIG>
+<P>
+<BIG CLASS="LARGE">In a nutshell, <SPAN  CLASS="textsf">ESC/Java2</SPAN> translates <SPAN  CLASS="textsf">JML</SPAN>-annotated <SPAN  CLASS="textsf">Java</SPAN> source code
+into verification conditions that are passed to an automated theorem
+prover.  Responses from the prover are translated back into
+informational messages useful to a normal programmer.  
+</BIG>
+<P>
+<BIG CLASS="LARGE">To implement these features, <SPAN  CLASS="textsf">ESC/Java2</SPAN> uses a combination of <SPAN  CLASS="textsf">Javafe</SPAN> 
+to lex and parse <SPAN  CLASS="textsf">Java</SPAN> sourcecode, an internal bytecode subsystem to
+parse <SPAN  CLASS="textsf">Java</SPAN> bytecode, and its own <SPAN  CLASS="textsf">JML</SPAN> lexer and parser, all of which
+produce a <SPAN  CLASS="textsf">JML</SPAN>-annotated <SPAN  CLASS="textsf">Java</SPAN> AST.  This representation is then
+translated into a semantically equivalent guarded command, dynamic
+single assignment-based representation, which is then used to generate
+a verification condition with either a weakest precondition or a
+strongest postcondition VC generator.  This VC is represented in one
+of two forms, the original DEC-SRC VC AST, or the new <SPAN  CLASS="textsf">MOBIUS</SPAN> sorted
+VC AST.  This VC is passed to an automated theorem prover via one of
+two mechanisms, either the original DEC-SRC Simplify-specific
+interface, or the new <SPAN  CLASS="textsf">MOBIUS</SPAN> automated prover backend.  Likewise,
+responses from the automated prover flow back through these same
+interfaces.
+</BIG>
+<P>
+<BIG CLASS="LARGE">In summary, <SPAN  CLASS="textsf">ESC/Java2</SPAN> uses more <SPAN  CLASS="textsf">MOBIUS</SPAN> subsystems than any other
+component, except the <SPAN  CLASS="textsf">Mobius PVE</SPAN> itself.  It represents the core system used
+to perform research on, and evolve existing, generic verification
+functionality, as well as exercise and extend various other <SPAN  CLASS="textsf">Mobius PVE</SPAN> 
+subsystems.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textsf">ESC/Java2</SPAN> is available in two forms:
+</BIG>
+<UL>
+<LI><SPAN  CLASS="textsf">ESC/Java2</SPAN> as a command-line tool with a simple Swing GUI
+  front-end, or
+</LI>
+<LI><SPAN  CLASS="textsf">ESC/Java2</SPAN> as an Eclipse 3.3 (Europa) plugin.
+</LI>
+</UL>
+<P>
+<BIG CLASS="LARGE">This latter, plugin-based version of this subsystem has several
+features that deeply integrate it into the <SPAN  CLASS="textsf">MOBIUS</SPAN> PVE.
+</BIG>
+<P>
+<BIG CLASS="LARGE">With respect to environment configuration, its preferences system is
+integrated into the <SPAN  CLASS="textsf">Mobius PVE</SPAN> at the IDE-level and at the project-level.
+The former supports configuration at the systems-level, the latter
+settings specific to a project that are saved with the project.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Focusing on use, the integration with development is transparent.  Each
+time a file is saved the extended static checker is run in the
+background asynchronously.  Thus, from the developer point of view,
+warnings and errors appear as regular Eclipse markers on lines of code
+and as red underlines within program code and specifications.
+Likewise, all developer feedback appears within the appropriate
+Eclipse ``Warning'' and ``Error'' panes.  The extended static checker
+is also executed manually on a variety of different constructs (on a
+package, a class, a method, etc.) with a single mouse action.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html389"
+  HREF="node13.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html385"
+  HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html379"
+  HREF="node11.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html387"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html390"
+  HREF="node13.html">Javafe: The Original DEC-SRC</A>
+<B> Up:</B> <A NAME="tex2html386"
+  HREF="node11.html">Static Analysis Subsystems for</A>
+<B> Previous:</B> <A NAME="tex2html380"
+  HREF="node11.html">Static Analysis Subsystems for</A>
+ &nbsp; <B>  <A NAME="tex2html388"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The Logging API</TITLE>
+<META NAME="description" CONTENT="The Logging API">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="previous" HREF="node30.html">
+<LINK REL="up" HREF="node29.html">
+<LINK REL="next" HREF="node32.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html619"
+  HREF="node32.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html615"
+  HREF="node29.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html611"
+  HREF="node30.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html617"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html620"
+  HREF="node32.html">Java Bytecode Subsystems</A>
+<B> Up:</B> <A NAME="tex2html616"
+  HREF="node29.html">Core Application Programmer Interfaces</A>
+<B> Previous:</B> <A NAME="tex2html612"
+  HREF="node30.html">The Rich Client Platform</A>
+ &nbsp; <B>  <A NAME="tex2html618"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00516200000000000000"></A>
+<A NAME="sec:logging-api"></A>
+<BR>
+The Logging API
+</H3>
+<P>
+<BIG CLASS="LARGE">The https://mobius.ucd.ie/browser/src/logging<SPAN  CLASS="textsf">MOBIUS</SPAN> 
+  Logging subsystem<SPAN  CLASS="textsf">MOBIUS</SPAN> 
+  Logging subsystemhttps://mobius.ucd.ie/browser/src/logging(or M<SMALL>OB</SMALL>L<SMALL>OG</SMALL> for short) is an API used by
+programmers to make assertions, and emit log messages, about a
+software system.  At its core, it combines Java and JML's
+<SPAN  CLASS="textit">assert</SPAN> statements with functionality akin to that found in the
+Java logging framework (via the <TT>java.util.logging</TT> package)
+and the Apache Foundation's http://logging.apache.org/log4j/log4jlog4jhttp://logging.apache.org/log4j/logging service.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The original design for the Logging subsystem predates not only the
+<SPAN  CLASS="textsf">MOBIUS</SPAN> project, but the existence of Java's logging package and
+log4j&nbsp;[<A
+ HREF="node86.html#Kiniry98">Kin98</A>].  But, even though this framework is
+about a decade old, it still has several features not found in log4j
+or similar frameworks including first-class logging contexts,
+integrated statistics collection, logging categories, and more.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Within this project, it has been updated and extended for
+incorporation into the <SPAN  CLASS="textsf">Mobius PVE</SPAN> for several reasons.
+</BIG>
+<P>
+<BIG CLASS="LARGE">First, as it was designed and written with formal specifications
+(initially written in Jass, now in JML), it represents a case study in
+verification and thus will be used to test various other <SPAN  CLASS="textsf">MOBIUS</SPAN> 
+subsystems.  All classes are annotated with lightweight JML
+assertions, and a high-level BON&nbsp;[<A
+ HREF="node86.html#WaldenN95">WN95</A>] specification is also
+included with the release.  Moreover, the entire software system has
+been updated and analyzed within the <SPAN  CLASS="textsf">Mobius PVE</SPAN> itself, passing all static
+checkers, including <SPAN  CLASS="textsf">ESC/Java2</SPAN>.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Additionally, the M<SMALL>OB</SMALL>L<SMALL>OG</SMALL> framework supports complex
+concurrent and distributed systems' development, like that found in
+the <SPAN  CLASS="textsf">Mobius PVE</SPAN>.  Tracing the execution of, and understanding the behavior
+of, multiple concurrent threads requires a thread-aware logging
+framework.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Finally, its availability under <SPAN  CLASS="textsf">MOBIUS</SPAN> control provides an
+opportunity to unify the several disparate logging subsystems found
+within other <SPAN  CLASS="textsf">MOBIUS</SPAN> components.  Thus, it is our aim that all <SPAN  CLASS="textsf">Mobius PVE</SPAN> 
+logging, tracing, and statistics-gathering is performed via this
+single unified subsystem.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html619"
+  HREF="node32.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html615"
+  HREF="node29.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html611"
+  HREF="node30.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html617"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html620"
+  HREF="node32.html">Java Bytecode Subsystems</A>
+<B> Up:</B> <A NAME="tex2html616"
+  HREF="node29.html">Core Application Programmer Interfaces</A>
+<B> Previous:</B> <A NAME="tex2html612"
+  HREF="node30.html">The Rich Client Platform</A>
+ &nbsp; <B>  <A NAME="tex2html618"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

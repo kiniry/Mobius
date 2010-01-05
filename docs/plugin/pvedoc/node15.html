@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>FreeBoogie</TITLE>
+<META NAME="description" CONTENT="FreeBoogie">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="previous" HREF="node14.html">
+<LINK REL="up" HREF="node11.html">
+<LINK REL="next" HREF="node16.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html423"
+  HREF="node16.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html419"
+  HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html415"
+  HREF="node14.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html421"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html424"
+  HREF="node16.html">Static Analysis Subsystems using</A>
+<B> Up:</B> <A NAME="tex2html420"
+  HREF="node11.html">Static Analysis Subsystems for</A>
+<B> Previous:</B> <A NAME="tex2html416"
+  HREF="node14.html">The Universes Typecheckers</A>
+ &nbsp; <B>  <A NAME="tex2html422"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00512400000000000000"></A>
+<A NAME="sec:freeboogie"></A>
+<BR>
+FreeBoogie
+</H3>
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textsf">FreeBoogie</SPAN> aims to be a backend for verification tools such as
+Spec<SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="20" ALIGN="BOTTOM" BORDER="0"
+ SRC="img6.png"
+ ALT="$ ^\char93 $"></SPAN> and future versions of <SPAN  CLASS="textsf">ESC/Java</SPAN> and similar tools.  It takes
+as input a <SPAN  CLASS="textsf">BoogiePL</SPAN> (Boogie Programming Language) file, generates
+verification conditions, calls provers such as <SPAN  CLASS="textsf">Simplify</SPAN> and <SPAN  CLASS="textsf">Z3</SPAN>,
+and reports the errors in a way that relates to the <SPAN  CLASS="textsf">BoogiePL</SPAN> source.  It
+is a work in progress. 
+</BIG>
+<P>
+<BIG CLASS="LARGE">Version <SPAN CLASS="MATH"><IMG
+ WIDTH="27" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img7.png"
+ ALT="$ 0.0$"></SPAN> supports parsing, name resolution,
+flowgraphs, and typechecking, but no verification condition
+generation. Version <SPAN CLASS="MATH"><IMG
+ WIDTH="27" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img8.png"
+ ALT="$ 0.1$"></SPAN> handles the first version of
+<SPAN  CLASS="textsf">BoogiePL</SPAN>. Version <SPAN CLASS="MATH"><IMG
+ WIDTH="27" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$ 0.2$"></SPAN> will handle the second version of the
+Boogie language. More information can be found on the
+http://kind.ucd.ie/products/opensource/FreeBoogie/<SPAN  CLASS="textsf">FreeBoogie</SPAN> website<SPAN  CLASS="textsf">FreeBoogie</SPAN> websitehttp://kind.ucd.ie/products/opensource/FreeBoogie/.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The Spec<SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="20" ALIGN="BOTTOM" BORDER="0"
+ SRC="img6.png"
+ ALT="$ ^\char93 $"></SPAN> system from Microsoft Research generates <SPAN  CLASS="textsf">BoogiePL</SPAN> from the
+Spec<SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="20" ALIGN="BOTTOM" BORDER="0"
+ SRC="img6.png"
+ ALT="$ ^\char93 $"></SPAN> language, which is a variant of Microsoft's C<SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="20" ALIGN="BOTTOM" BORDER="0"
+ SRC="img6.png"
+ ALT="$ ^\char93 $"></SPAN>
+programming language with annotations.  Another way of obtaining <SPAN  CLASS="textsf">BoogiePL</SPAN> 
+from a higher level language is via JACK&nbsp;[<A
+ HREF="node86.html#BartheBCGHLPR07:FMCO">BBC<SUP>+</SUP>07a</A>],
+which translates Java with <SPAN  CLASS="textsf">JML</SPAN> annotations into a variant of <SPAN  CLASS="textsf">BML</SPAN>,
+and <SPAN  CLASS="textsf">B2BPL</SPAN>, which was developed at ETH under the <SPAN  CLASS="textsf">MOBIUS</SPAN> project
+and translates <SPAN  CLASS="textsf">BML</SPAN> into <SPAN  CLASS="textsf">BoogiePL</SPAN>.  In fact, one design goal of <SPAN  CLASS="textsf">BoogiePL</SPAN> was
+to be used as an intermediate language by multiple verification tools,
+thereby reducing the implementation effort needed to support multiple
+high-level languages and multiple static analyzes at the same time.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html423"
+  HREF="node16.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html419"
+  HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html415"
+  HREF="node14.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html421"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html424"
+  HREF="node16.html">Static Analysis Subsystems using</A>
+<B> Up:</B> <A NAME="tex2html420"
+  HREF="node11.html">Static Analysis Subsystems for</A>
+<B> Previous:</B> <A NAME="tex2html416"
+  HREF="node14.html">The Universes Typecheckers</A>
+ &nbsp; <B>  <A NAME="tex2html422"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

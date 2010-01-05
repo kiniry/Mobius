@@ -1,0 +1,407 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{BBC{\etalchar{+}}07b}
+
+\bibitem[BBC{\etalchar{+}}07a]{BartheBCGHLPR07:FMCO}
+G.~Barthe, L.~Burdy, J.~Charles, B.~Gr{\'e}goire, M.~Huisman, J.-L. Lanet,
+  M.~Pavlova, and A.~Requet.
+\newblock {JACK}: A tool for validation of security and behaviour of {Java}
+  applications.
+\newblock In {\em Formal Methods for Components and Objects: Revised Lectures
+  from the 5th International Symposium FMCO~2006}, number 4709 in Lecture Notes
+  in Computer Science, pages 152--174. Springer-Verlag, 2007.
+
+\bibitem[BBC{\etalchar{+}}07b]{BartheBCGHMPPSV06}
+Gilles Barthe, Lennart Beringer, Pierre Cr{\'e}gut, Benjamin Gr{\'e}goire,
+  Martin Hofmann, Peter M{\"u}ller, Erik Poll, Germ{\'a}n Puebla, Ian Stark,
+  and Eric V{\'e}tillard.
+\newblock {MOBIUS}: Mobility, ubiquity, security --- objectives and progress
+  report.
+\newblock In \emph{TGC~2006} \cite{TGC06}.
+
+\bibitem[BT07]{BarrettT07}
+C.~Barrett and C.~Tinelli.
+\newblock {CVC3}.
+\newblock In {\em Conference on Computer Aided Verification}, volume 4590 of
+  {\em Lecture Notes in Computer Science}, pages 298--302. Springer, 2007.
+
+\bibitem[CA05]{CregutA05}
+P.~Cr{\'e}gut and C.~Alvarado.
+\newblock Improving the security of downloadable {Java} applications with
+  static analysis.
+\newblock In {\em Bytecode Semantics, Verification, Analysis and
+  Transformation}, volume 141 of {\em Electronic Notes in Theoretical Computer
+  Science}. Elsevier, 2005.
+
+\bibitem[CFJ{\etalchar{+}}06]{CieleckiFJJCSK06}
+M.~Cielecki, J.~Fulara, K.~Jakubczyk, {\L}.~Jancewicz, J.~Chrz{\k a}szcz,
+  A.~Schubert, and {\L}.~Kami{\'n}ski.
+\newblock Propagation of {JML} non-null annotations in {Java} programs.
+\newblock In {\em Principles and Practices of Programming in Java}, 2006.
+
+\bibitem[CHK05]{ChalinHK05}
+P.~Chalin, C.~Hurlin, and J.~R. Kiniry.
+\newblock Integrating static checking and interactive verification: Supporting
+  multiple theories and provers in verification.
+\newblock In {\em Verified Software: Tools, Technologies, and Experiences
+  ({VSTTE})}, 2005.
+
+\bibitem[CHS{\etalchar{+}}08]{ChrzaszczHSKPP08}
+J.~Chrzaszcz, M.~Huisman, A.~Schubert, J.~Kiniry, M.~Pavlova, and E.~Poll.
+\newblock {\em {BML} Reference Manual}, December 2008.
+\newblock In Progress. Available from {\url{http://bml.mimuw.edu.pl}}.
+
+\bibitem[CHS09]{ChrzaszczHS09}
+J.~Chrz{\k a}szcz, M.~Huisman, and A.~Schubert.
+\newblock {BML} and related tools.
+\newblock In {\em Formal Methods for Components and Objects}, number 5751 in
+  Lecture Notes in Computer Science, pages 278--297. Springer-Verlag, 2009.
+
+\bibitem[Con04]{JMMTestCases}
+The JSR~133 Consortium.
+\newblock The {Java} memory model causality test cases, 2004.
+\newblock
+  \url{http://www.cs.umd.edu/~pugh/java/memoryModel/CausalityTestCases.html}.
+
+\bibitem[Cr{\'e}06]{Cregut06}
+Pierre Cr{\'e}gut.
+\newblock Midlet navigation graphs.
+\newblock Unpublished draft, 2006.
+
+\bibitem[Cr{\'e}08]{Cregut08}
+Pierre Cr{\'e}gut.
+\newblock Extracting control from data: User interfaces of {MIDP} applications.
+\newblock In \emph{TGC~2007} \cite{TGC07}, pages 41--56.
+
+\bibitem[CS08]{CzarnikS08}
+P.~Czarnik and A.~Schubert.
+\newblock Extending operational semantics of the java bytecode.
+\newblock In \emph{TGC~2007} \cite{TGC07}, pages 57--72.
+
+\bibitem[dB08]{deMouraB08}
+L.~{de Moura} and N.~Bj{\o}rner.
+\newblock {Z3}: An efficient {SMT} solver.
+\newblock In {\em Tools and Algorithms for the Construction and Analysis of
+  Systems}, 2008.
+
+\bibitem[Ecl]{Eclipse}
+Eclipse website.
+\newblock www.
+\newblock See \href{http://www.eclipse.org/}{http://www.eclipse.org/}.
+
+\bibitem[\em07]{TGC06}
+{\em Trustworthy Global Computing: Revised Selected Papers from the Second
+  Symposium TGC~2006, Lucca, Italy, November 7--9, 2006}, number 4661 in
+  Lecture Notes in Computer Science. Springer-Verlag, 2007.
+
+\bibitem[\em08]{TGC07}
+{\em Trustworthy Global Computing: Revised Selected Papers from the Third
+  Symposium TGC~2007, Sophia-Antipolis, France, November 5--6, 2007}, number
+  4912 in Lecture Notes in Computer Science. Springer-Verlag, 2008.
+
+\bibitem[FF00]{FlanaganF00}
+C.~Flanagan and S.~N. Freund.
+\newblock Type-based race detection for {Java}.
+\newblock In {\em Programming Languages Design and Implementation}, pages
+  219--232, New York, NY, USA, 2000. ACM Press.
+
+\bibitem[FJ09]{FularaJ09}
+J.~Fulara and K.~Jakubczyk.
+\newblock Practically applicable formal methods.
+\newblock In
+  \url{http://www.mimuw.edu.pl/~fulara/CodeStatistics/loopconditions.pdf}, June
+  2009.
+
+\bibitem[FJS08]{FularaJS08}
+J.~Fulara, K.~Jakubczyk, and A.~Schubert.
+\newblock Supplementing java bytecode with specifications.
+\newblock In T.~Hru\v{s}ka, L.~Madeyski, and M.~Ochodek, editors, {\em Software
+  Engineering Techniques in Progress}, pages 215--228. Oficyna Wydawnicza
+  Politechniki Wroclawskiej, 2008.
+
+\bibitem[FL00]{FlanaganL00}
+C.~Flanagan and K.R.M. Leino.
+\newblock {Houdini}, an annotation assistant for {ESC/Java}.
+\newblock Technical Report 2000-003, DEC-SRC, December 2000.
+
+\bibitem[Fur86]{Furnas86}
+G.W. Furnas.
+\newblock Generalized fisheye views.
+\newblock {\em {ACM SIGCHI Bulletin}}, 17(4):16--23, April 1986.
+
+\bibitem[GCFK09]{GrigoreCFK09}
+R.~Grigore, J.~Charles, F.~Fairmichael, and J.R. Kiniry.
+\newblock {S}trongest {P}ostcondition of {U}nstructured {P}rograms.
+\newblock In {\em Workshop on Formal Techniques for Java Programs}, 2009.
+
+\bibitem[GJSB05]{JLSTE}
+J.~Gosling, B.~Joy, G.~Steele, and G.~Bracha.
+\newblock {\em The {Java} Language Specification, Third Edition}, chapter~17.
+\newblock Sun Microsystems, 2005.
+\newblock http://java.sun.com/docs/books/jls/.
+
+\bibitem[GM07]{GrigoreM07}
+R.~Grigore and M.~Moskal.
+\newblock Edit and verify.
+\newblock In {\em Workshop on First-Order Theorem Proving}, September 2007.
+
+\bibitem[HM05]{HoareM05}
+C.~A.~R. Hoare and J.~Misra.
+\newblock Verified software: Theories, tools, experiments vision of a grand
+  challenge project.
+\newblock A companion paper for VSTTE 2005, held in Z{\"u}ich, Switzerland.,
+  July 2005.
+
+\bibitem[HO03]{HubbersO03}
+E.~Hubbers and M.~Oostdijk.
+\newblock Generating {JML} specifications from {UML} state diagrams.
+\newblock In {\em Forum on specification \& Design Languages}, pages 263--273.
+  University of Frankfurt, 2003.
+\newblock Proceedings appeared as CD-Rom with ISSN 1636-9874.
+
+\bibitem[HP09a]{HaackPoll2009}
+C.~Haack and E.~Poll.
+\newblock Type-based object immutability with flexible initialization.
+\newblock In {\em European Conference on Object-Oriented Programming}, volume
+  5653 of {\em Lecture Notes in Computer Science}, pages 520--545. Springer,
+  2009.
+
+\bibitem[HP09b]{HaackPoll2009a}
+C.~Haack and E.~Poll.
+\newblock Type-based object immutability with flexible initialization (long
+  version).
+\newblock Technical Report ICIS--R09001, Radboud University Nijmegen, 2009.
+
+\bibitem[HPSS07]{HaackPSS07}
+C.~Haack, E.~Poll, J.~Sch{\"a}fer, and A.~Schubert.
+\newblock Immutable objects for a {Java}-like language.
+\newblock In R.~De Nicola, editor, {\em ESOP'07}, volume 4421 of {\em Lecture
+  Notes in Computer Science}, pages 347--362. Springer-Verlag, 2007.
+
+\bibitem[HT09]{HuismanT09}
+M.~Huisman and A.~Tamalet.
+\newblock A formal connection between security automata and {JML} annotations.
+\newblock In {\em Fundamental Approaches to Software Engineering}, volume 5503
+  of {\em Lecture Notes in Computer Science}, pages 340--354. Springer-Verlag,
+  2009.
+
+\bibitem[Hui09]{Huisman09}
+M.~Huisman.
+\newblock On the interplay between the semantics of java's finally clauses and
+  the jml run-time checker.
+\newblock In A.~Banerjee, editor, {\em Workshop on Formal Techniques for Java
+  Programs}. ACM, 2009.
+
+\bibitem[Ini06]{UTC21}
+Unified~Testing Initiative.
+\newblock Unified testing criteria for {Java} technology-based applications for
+  mobile devices.
+\newblock Technical report, Sun Microsystems, Motorola, Nokia, Siemens, Sony
+  Ericsson, May 2006.
+\newblock Version 2.1.
+
+\bibitem[Jan07]{Janota07}
+M.~Janota.
+\newblock Assertion-based loop invariant generation.
+\newblock In {\em Workshop on Invariant Generation}, 2007.
+\newblock Workshop at {CALCULEMUS} 2007.
+
+\bibitem[JC08]{CharlesK08}
+J.~Kiniry J.~Charles.
+\newblock A lightweight theorem prover interface for eclipse.
+\newblock In {\em User Interfaces for Theorem Proving}, 2008.
+
+\bibitem[JGM07]{JanotaGM07}
+M.~Janota, R.~Grigore, and M.~Moska{\/l}.
+\newblock Reachability analysis for annotated code.
+\newblock In {\em Specification and Verification of Component-Based Systems},
+  Dubrovnik, Croatia, 2007.
+\newblock Workshop at {ESEC/FSE} 2007.
+
+\bibitem[JK07]{JanotaK07}
+M.~Janota and J.~Kiniry.
+\newblock Reasoning about feature models in higher-order logic.
+\newblock In {\em Proceedings of the 11th International Conference, {SPL}},
+  2007.
+
+\bibitem[KCT07]{KiniryCT07}
+J.R. Kiniry, D.~Cochran, and P.~Tierney.
+\newblock A verification-centric realization of e-voting.
+\newblock In {\em International Workshop on Electronic Voting Technologies},
+  Boston, Massachusetts, 2007.
+\newblock Workshop at {USENIX/ACCURATE} 2007.
+
+\bibitem[KF09]{KiniryF09}
+J.R. Kiniry and F.~Fairmichael.
+\newblock Ensuring consistency between designs, documentation, formal
+  speciﬁcations, and implementations.
+\newblock In {\em International Symposium on Component Based Software
+  Engineering}, 2009.
+
+\bibitem[Kin98]{Kiniry98}
+J.~R. Kiniry.
+\newblock {IDebug}: An advanced debugging framework for {Java}.
+\newblock Technical Report CaltechCSTR:1998.cs-tr-98-16, California Institute
+  of Technology, 1998.
+
+\bibitem[Kin04]{Kiniry04}
+J.R. Kiniry.
+\newblock Formalizing the user's context to support user interfaces for
+  integrated mathematical environments.
+\newblock {\em Electronic Notes in Theoretical Computer Science}, 103, 2004.
+
+\bibitem[Kin07]{Kiniry07}
+J.~R. Kiniry.
+\newblock Formally counting electronic votes (but still only trusting paper).
+\newblock In {\em IEEE International Conference on Engineering of Complex
+  Computer Systems}, Auckland, New Zealand, 2007.
+
+\bibitem[KMC{\etalchar{+}}07]{KiniryMCFCOH07}
+Joseph~R. Kiniry, Alan~E. Morkan, Dermot Cochran, Fintan Fairmichael, Patrice
+  Chalin, Martijn Oostdijk, and Engelbert Hubbers.
+\newblock The {KOA} remote voting system: A summary of work to date.
+\newblock In \emph{TGC~2006} \cite{TGC06}, pages 244--262.
+
+\bibitem[KMD06]{KiniryMD06}
+J.~R. Kiniry, A.~Morkan, and B.~Denby.
+\newblock Soundness and completeness warnings in {ESC/Java2}.
+\newblock In {\em Specification and Verification of Component-Based Systems},
+  2006.
+
+\bibitem[KO03]{KiniryO03}
+J.R. Kiniry and S.~Owre.
+\newblock Improving the {PVS} user interface.
+\newblock In {\em User Interfaces for Theorem Proving}, September 2003.
+
+\bibitem[KZ08]{KiniryZ08}
+J.R. Kiniry and D.M. Zimmerman.
+\newblock Secret ninja formal methods.
+\newblock In {\em Formal Methods}, 2008.
+
+\bibitem[LM07]{LehnerM07}
+H.~Lehner and P.~M{\"u}ller.
+\newblock Formal translation of bytecode into {BoogiePL}.
+\newblock In M.~Huisman and F.~Spoto, editors, {\em Bytecode Semantics,
+  Verification, Analysis and Transformation}, Electronic Notes in Theoretical
+  Computer Science, 2007.
+
+\bibitem[LPC{\etalchar{+}}05]{LeavensPCCRCK05}
+G.~T. Leavens, E.~Poll, C.~Clifton, Y.~Cheon, C.~Ruby, D.~Cok, and J.~Kiniry.
+\newblock {\em {JML} Reference Manual}, July 2005.
+\newblock In Progress. Department of Computer Science, Iowa State University.
+  Available from {\url{http://www.jmlspecs.org}}.
+
+\bibitem[mC06a]{MobiusDeliverable1.2}
+\mobius Consortium.
+\newblock Deliverable~1.2: Framework-specific and application-specific security
+  requirements, 2006.
+\newblock Available online from \url{http://mobius.inria.fr}.
+
+\bibitem[mC06b]{MobiusDeliverable3.1}
+\mobius Consortium.
+\newblock Deliverable~3.1: Bytecode specification language and program logic,
+  2006.
+\newblock Available online from \url{http://mobius.inria.fr}.
+
+\bibitem[mC07a]{MobiusDeliverable4.2}
+\mobius Consortium.
+\newblock Deliverable~4.2: Certificates, 2007.
+\newblock Available online from \url{http://mobius.inria.fr}.
+
+\bibitem[mC07b]{MobiusDeliverable4.3}
+\mobius Consortium.
+\newblock Deliverable~4.3: Intermediate report on proof-transforming compiler,
+  2007.
+\newblock Available online from \url{http://mobius.inria.fr}.
+
+\bibitem[mC07c]{MobiusDeliverable5.1}
+\mobius Consortium.
+\newblock Deliverable~5.1: Selection of case studies, 2007.
+\newblock Available online from \url{http://mobius.inria.fr}.
+
+\bibitem[mC09]{MobiusDeliverable5.2}
+\mobius Consortium.
+\newblock Deliverable~5.2: Evaluation of type based and logical verification
+  technology, 2009.
+
+\bibitem[ML06]{MoskalL06}
+M.~Moskal and J.~Lopusza{\'n}ski.
+\newblock Fast quantifier reasoning with lazy proof explication.
+\newblock http://nemerle.org/~malakith/smt/smt-tr-1.pdf, 2006.
+\newblock Available via \myhref{http://nemerle.org/}{http://nemerle.org/}.
+
+\bibitem[M{\L}K07]{MoskalLK07}
+M.~Moska{\/{l}}, J.~{\L}opusza{\'n}ski, and J.~Kiniry.
+\newblock E-matching for fun and profit.
+\newblock In {\em The 5th International Workshop on Satisfiability Modulo
+  Theories ({SMT})}, Berlin, Germany, July 2007.
+
+\bibitem[MP09]{MostowskiP09}
+Wojciech {Mostowski} and Erik {Poll}.
+\newblock {Midlet Navigation Graphs in JML}.
+\newblock Technical Report ICIS--R09004, Radboud University Nijmegen, August
+  2009.
+\newblock Available at
+  \url{https://pms.cs.ru.nl/iris-diglib/src/getContent.php?id=2009-Mostowski-M%
+idletGraphs}.
+
+\bibitem[MR07a]{MuellerR07}
+P.~M\"uller and A.~Rudich.
+\newblock Formalization of ownership transfer in universe types.
+\newblock Technical Report 556, ETH Zurich, 2007.
+
+\bibitem[MR07b]{MuellerR07b}
+P.~M\"uller and A.~Rudich.
+\newblock Ownership transfer in universe types.
+\newblock In {\em ACM Conference on Object-Oriented Programming Systems,
+  Languages, and Applications}, 2007.
+\newblock To appear.
+
+\bibitem[PBB{\etalchar{+}}04]{PavlovaBBHL04}
+M.~Pavlova, G.~Barthe, L.~Burdy, M.~Huisman, and J.-L. Lanet.
+\newblock Enforcing high-level security properties for applets.
+\newblock In P.~Paradinas and J.-J. Quisquater, editors, {\em Smart Card
+  Research and Advanced Application}. Kluwer Academic Publishing, 2004.
+
+\bibitem[Pic06]{Pichardie06}
+D.~Pichardie.
+\newblock {Bicolano -- Byte Code Language in Coq}.
+\newblock {\url{http://mobius.inria.fr/bicolano}. Summary appears in
+  \cite{MobiusDeliverable3.1}}, 2006.
+
+\bibitem[PR08]{PollRavelo08}
+E.~Poll and J.~N. Ravelo.
+\newblock Generalised navigation graphs, their refinement, and their use for
+  midp applications, 2008.
+\newblock Manuscript. 48 pages.
+
+\bibitem[PS07]{PollS07}
+E.~Poll and A.~Schubert.
+\newblock Verifying an implementation of {SSH}.
+\newblock In {\em Workshop on Issues in the Theory of Security}, pages
+  164--177. IFIP WG1.7, 2007.
+
+\bibitem[SC06]{SchubertC06}
+A.~Schubert and J.~Chrz{\k a}szcz.
+\newblock {ESC/Java2} as a tool to ensure security in the source code of {Java}
+  applications.
+\newblock In {\em Software Engineering Techniques: Design for Quality}, IFIP,
+  Warsaw, 2006. Springer-Verlag.
+
+\bibitem[SCB{\etalchar{+}}08]{SchubertCBPW08}
+A.~Schubert, J.~Chrz{\k a}szcz, T.~Batkiewicz, J.~Paszek, and W.~W{\k a}s.
+\newblock Technical aspects of class specification in the byte code of java
+  language.
+\newblock In {\em To be published in Bytecode'08 proceedings}, Electronic Notes
+  in Theoretical Computer Science. Elsevier, 2008.
+
+\bibitem[win08]{Wine08}
+The {Wine} user guide.
+\newblock Available via http://www.winehq.org/, 2008.
+
+\bibitem[WN95]{WaldenN95}
+K.~Wald{\'e}n and J.-M. Nerson.
+\newblock {\em Seamless Object-Oriented Software Architecture - Analysis and
+  Design of Reliable Systems}.
+\newblock Prentice Hall, 1995.
+
+\end{thebibliography}

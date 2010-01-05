@@ -1,0 +1,261 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Subsystems Developed within MOBIUS </TITLE>
+<META NAME="description" CONTENT="Subsystems Developed within MOBIUS ">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node42.html">
+<LINK REL="previous" HREF="node5.html">
+<LINK REL="up" HREF="node5.html">
+<LINK REL="next" HREF="node7.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html277"
+  HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html273"
+  HREF="node5.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html267"
+  HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html275"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html278"
+  HREF="node7.html">Java Modeling Language Subsystems</A>
+<B> Up:</B> <A NAME="tex2html274"
+  HREF="node5.html">Subsystems of the MOBIUS</A>
+<B> Previous:</B> <A NAME="tex2html268"
+  HREF="node5.html">Subsystems of the MOBIUS</A>
+ &nbsp; <B>  <A NAME="tex2html276"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00510000000000000000"></A>
+<A NAME="section:subsyst-devel-with"></A>
+<BR>
+Subsystems Developed within <SPAN  CLASS="textsf">MOBIUS</SPAN> 
+</H1>
+<P>
+<BIG CLASS="LARGE">This section summarizes in some detail all of the subsystems that ship
+as part of the current ``epsilon'' release of the <SPAN  CLASS="textsf">Mobius PVE</SPAN>.  Most of
+these subsystems are still under development and are evolving to match
+the needs of <SPAN  CLASS="textsf">Mobius PVE</SPAN> users and <SPAN  CLASS="textsf">MOBIUS</SPAN> partners and their research and
+industry collaborators.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Information about these components (their description, status,
+location in the source repository, etc.) is also summarized in the
+http://mobius.ucd.ie/<SPAN  CLASS="textsf">MOBIUS</SPAN> Trac wiki<SPAN  CLASS="textsf">MOBIUS</SPAN> Trac wikihttp://mobius.ucd.ie/via the
+https://mobius.ucd.ie/wiki/ComponentsComponentsComponentshttps://mobius.ucd.ie/wiki/Componentswiki page.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Many <SPAN  CLASS="textsf">MOBIUS</SPAN> subsystems are developed by <SPAN  CLASS="textsf">MOBIUS</SPAN> partners working in
+collaboration with non-<SPAN  CLASS="textsf">MOBIUS</SPAN> researchers throughout North America
+and Europe.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Many subsystems have interdependencies, many of which grew
+organically over several years of development, as one plugin will
+depend upon the availability of another.  In fact, teasing out,
+documenting, and formalizing these dependencies in plugin descriptors
+has been a main organizational effort in <SPAN  CLASS="textsf">Mobius PVE</SPAN> development.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Subsystems are of in several ``flavors'':
+</BIG>
+<UL>
+<LI>First, there are the Java Modeling Language (JML) subsystems,
+  containing all the tools used to type check the annotations, ease
+  the use of JML from within Eclipse, and support runtime assertion
+  checking.
+</LI>
+<LI>Second, there are the static analysis subsystems, namely the
+  extended static checkers (like ESC/Java2 or FreeBoogie) and some
+  annotations generators, like Houdini.
+</LI>
+<LI>Third, we define the automated theorem prover subsytems, which is
+  a packaging of different theorem provers, as well as an Application
+  Programming Interface for some of them.
+</LI>
+<LI>There is also the ProverEditor subsystem which gives a graphical
+  user interface for the prover Coq.
+</LI>
+</UL><BIG CLASS="LARGE">
+As this set of subsystems are related to static verification, they can
+be easily used outside the <SPAN  CLASS="textsf">MOBIUS</SPAN> project and, for the most part, are
+actually used.  There are two other subsystems that were developed
+expressly for the PCC framework.
+</BIG>
+<UL>
+<LI>The Bytecode Modelling Language (BML) subsystems, which offer
+  facilities to annotate Java-bytecode with similar annotations as the
+  Java Modeling Language, and manipulate these annotations.
+</LI>
+<LI>The DirectVCGen subsystems, which are a series of subsystems
+  that implement a verification condition generator over source code
+  and bytecode.  This subsystem is designed such that one is able to
+  reuse a proof done over the source code to solve the verification
+  condition generated from its bytecode.
+</LI>
+</UL>
+<P>
+<BIG CLASS="LARGE">Some subsystems lie along multiple facets of these dimensions.  For
+example, many subsytems are interactive, but also have APIs.  Others,
+tie together every facet.  For example, in the case of <SPAN  CLASS="textsf">ESC/Java2</SPAN>, it
+reasons about Java source code, bytecode, and JML, contains several
+different ASTs, provides several APIs, uses many backends, and
+finally, is also an interactive plugin.
+</BIG>
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html279"
+  HREF="node7.html">Java Modeling Language Subsystems</A>
+<UL>
+<LI><A NAME="tex2html280"
+  HREF="node8.html">The OpenJML Plugin</A>
+<LI><A NAME="tex2html281"
+  HREF="node9.html">The JML2 Eclipse Plugin</A>
+<LI><A NAME="tex2html282"
+  HREF="node10.html">The JML Folding Editor</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html283"
+  HREF="node11.html">Static Analysis Subsystems for Extended Static Checking</A>
+<UL>
+<LI><A NAME="tex2html284"
+  HREF="node12.html">ESCJava2</A>
+<LI><A NAME="tex2html285"
+  HREF="node13.html">Javafe: The Original DEC-SRC Java Frontend</A>
+<LI><A NAME="tex2html286"
+  HREF="node14.html">The Universes Typecheckers</A>
+<LI><A NAME="tex2html287"
+  HREF="node15.html">FreeBoogie</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html288"
+  HREF="node16.html">Static Analysis Subsystems using Annotation Generation</A>
+<UL>
+<LI><A NAME="tex2html289"
+  HREF="node17.html">Race Condition Checker</A>
+<LI><A NAME="tex2html290"
+  HREF="node18.html">Houdini</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html291"
+  HREF="node19.html">Automated Theorem Prover Subsystems</A>
+<UL>
+<LI><A NAME="tex2html292"
+  HREF="node20.html">The Automated Prover API</A>
+<LI><A NAME="tex2html293"
+  HREF="node21.html">Simplify</A>
+<LI><A NAME="tex2html294"
+  HREF="node22.html">Fx7</A>
+<LI><A NAME="tex2html295"
+  HREF="node23.html">Z3</A>
+<LI><A NAME="tex2html296"
+  HREF="node24.html">CVC3</A>
+<LI><A NAME="tex2html297"
+  HREF="node25.html">Yices</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html298"
+  HREF="node26.html">Prover Editor Subsystems</A>
+<UL>
+<LI><A NAME="tex2html299"
+  HREF="node27.html">Prover Editor's Core Component</A>
+<LI><A NAME="tex2html300"
+  HREF="node28.html">The Coq Language Support</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html301"
+  HREF="node29.html">Core Application Programmer Interfaces Subsystems</A>
+<UL>
+<LI><A NAME="tex2html302"
+  HREF="node30.html">The Rich Client Platform Plugin and Library</A>
+<LI><A NAME="tex2html303"
+  HREF="node31.html">The Logging API</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html304"
+  HREF="node32.html">Java Bytecode Subsystems</A>
+<UL>
+<LI><A NAME="tex2html305"
+  HREF="node33.html">The Umbra Bytecode Editor</A>
+<LI><A NAME="tex2html306"
+  HREF="node34.html"><SPAN  CLASS="textsf">JML2BML</SPAN> Compiler</A>
+<LI><A NAME="tex2html307"
+  HREF="node35.html"><SPAN  CLASS="textsf">BMLVCgen</SPAN> Condition Generator</A>
+<LI><A NAME="tex2html308"
+  HREF="node36.html">Certificate Generation</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html309"
+  HREF="node37.html">DirectVCGen Subsystems</A>
+<UL>
+<LI><A NAME="tex2html310"
+  HREF="node38.html">The Bicolano Plugin</A>
+<LI><A NAME="tex2html311"
+  HREF="node39.html">Bico and Bico<SPAN CLASS="MATH"><IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$ ^+$"></SPAN></A>
+<LI><A NAME="tex2html312"
+  HREF="node40.html">The Direct Verification Condition Generator (DirectVCGen)</A>
+<LI><A NAME="tex2html313"
+  HREF="node41.html">DirectVCGenUI</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html277"
+  HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html273"
+  HREF="node5.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html267"
+  HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html275"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html278"
+  HREF="node7.html">Java Modeling Language Subsystems</A>
+<B> Up:</B> <A NAME="tex2html274"
+  HREF="node5.html">Subsystems of the MOBIUS</A>
+<B> Previous:</B> <A NAME="tex2html268"
+  HREF="node5.html">Subsystems of the MOBIUS</A>
+ &nbsp; <B>  <A NAME="tex2html276"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -2,8 +2,6 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="MOBIUS Table of Contents">
-	<topic label="Main Topic"  href="html/maintopic.html"> 
-		<topic label="Sub Topic" href="html/subtopic.html"/> 
+	<topic label="Program Verification Environment Guide"  href="pvedoc/index.html"> 
 	</topic>
-	<topic label="Main Topic 2"/>
 </toc>

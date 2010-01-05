@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>CheckStyle</TITLE>
+<META NAME="description" CONTENT="CheckStyle">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node46.html">
+<LINK REL="previous" HREF="node44.html">
+<LINK REL="up" HREF="node42.html">
+<LINK REL="next" HREF="node46.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html799"
+  HREF="node46.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html795"
+  HREF="node42.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html789"
+  HREF="node44.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html797"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html800"
+  HREF="node46.html">FindBugs</A>
+<B> Up:</B> <A NAME="tex2html796"
+  HREF="node42.html">Subsystems Used within MOBIUS</A>
+<B> Previous:</B> <A NAME="tex2html790"
+  HREF="node44.html">Version Control</A>
+ &nbsp; <B>  <A NAME="tex2html798"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00523000000000000000"></A>
+<A NAME="sec:checkstyle"></A>
+<BR>
+CheckStyle
+</H2>
+<P>
+<BIG CLASS="LARGE">CheckStyle is a plugin that performs source code style checking.
+Style checking involves statically analyzing both documentation and
+source code against simple, <SPAN  CLASS="textit">syntactic</SPAN> rules.  At this time
+CheckStyle does not check JML annotations.  Thus, beyond providing
+example coding styles codified for checking with this plugin, no
+special configuration of the CheckStyle plugin has taken place.
+</BIG>
+<P>
+<BIG CLASS="LARGE">As described in chapter:mobi-softw-devel, a major part of
+the <SPAN  CLASS="textsf">MOBIUS</SPAN> process is ensuring that source code is of a certain
+quality, measured in terms of the number of errors and warnings
+produced by several static checkers working in tandem.  The first of
+these checkers is CheckStyle.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">Mobius PVE</SPAN> comes with several example coding styles: a <SPAN  CLASS="textit">basic</SPAN>
+style that promotes readable code, a <SPAN  CLASS="textit">moderate</SPAN> style developed
+by <SPAN  CLASS="textsf">MOBIUS</SPAN> partner Warsaw University that focuses on dependable code,
+and a <SPAN  CLASS="textit">rigorous</SPAN> style developed by <SPAN  CLASS="textsf">MOBIUS</SPAN> partner University
+College Dublin that focuses on verifiable code.  Additionally, all
+non-<SPAN  CLASS="textit">basic</SPAN> styles inherit from the <SPAN  CLASS="textit">basic</SPAN> style, thus all
+checks in the <SPAN  CLASS="textit">basic</SPAN> style are also contained in the
+<SPAN  CLASS="textit">moderate</SPAN> and <SPAN  CLASS="textit">rigorous</SPAN> styles.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Style checkers work hand-in-hand with code generators.  In Eclipse,
+there are three basic kinds of code generators: code templates and
+skeletons, the results of refactoring, and writing new code
+``by-hand'' while using Eclipse's built-in code formatter.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Consequently, each of these mechanisms for <SPAN  CLASS="textit">generating</SPAN> code must
+be ``tuned'' to match the expected structures of the tool that
+<SPAN  CLASS="textit">checks</SPAN> code.  As such, the <SPAN  CLASS="textsf">Mobius PVE</SPAN> comes with appropriate code
+templates and a code formatting specifications to match each coding
+style.  Refactoring need not be ``tuned'' as refactored code is
+automatically styled according to the active code formatting style.
+</BIG>
+<P>
+<BIG CLASS="LARGE">In summary, the <SPAN  CLASS="textsf">Mobius PVE</SPAN> assists developers in writing clear, readable,
+maintainable documentation and program code by both generating code to
+a particular per-project style and checking that code conforms to said
+style.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The next level of rigor in static checking uses not just
+<SPAN  CLASS="textit">syntactic</SPAN> checks, but some lightweight <SPAN  CLASS="textit">semantic</SPAN> checks
+as well.  The two main plugins used in the <SPAN  CLASS="textsf">Mobius PVE</SPAN> for such are FindBugs
+and PMD, covered in the following two sections.
+</BIG>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html799"
+  HREF="node46.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html795"
+  HREF="node42.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html789"
+  HREF="node44.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html797"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html800"
+  HREF="node46.html">FindBugs</A>
+<B> Up:</B> <A NAME="tex2html796"
+  HREF="node42.html">Subsystems Used within MOBIUS</A>
+<B> Previous:</B> <A NAME="tex2html790"
+  HREF="node44.html">Version Control</A>
+ &nbsp; <B>  <A NAME="tex2html798"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

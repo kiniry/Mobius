@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The Automated Prover API</TITLE>
+<META NAME="description" CONTENT="The Automated Prover API">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node21.html">
+<LINK REL="previous" HREF="node19.html">
+<LINK REL="up" HREF="node19.html">
+<LINK REL="next" HREF="node21.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html489"
+  HREF="node21.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html485"
+  HREF="node19.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html479"
+  HREF="node19.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html487"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html490"
+  HREF="node21.html">Simplify</A>
+<B> Up:</B> <A NAME="tex2html486"
+  HREF="node19.html">Automated Theorem Prover Subsystems</A>
+<B> Previous:</B> <A NAME="tex2html480"
+  HREF="node19.html">Automated Theorem Prover Subsystems</A>
+ &nbsp; <B>  <A NAME="tex2html488"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00514100000000000000"></A>
+<A NAME="sec:automated-prover-api"></A>
+<BR>
+The Automated Prover API
+</H3>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">MOBIUS</SPAN> Automated Prover API provides a generic programming
+interface to automated theorem provers.  The initial version of this
+API was designed by <SPAN  CLASS="textsf">MOBIUS</SPAN> partners working in tandem with leaders in
+the SMT-LIB community.  The intention is to have some future variant
+of this API be the standard API for all automated theorem provers, at
+least within the SMT-LIB community.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The API was developed by performing an analysis of the core operations
+provides by all major automated provers: prover initialization and
+shutdown, hinting to a prover about resource utilization bounds
+(primarily, time and space), declaration of new theories (via
+axiomatic definitions), making and retracting assumptions (as part of,
+e.g., a background predicate of a theory), and checking the validity of
+formulae.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The initial version of this API was designed with a formal
+specification written in JML, and example implementations were
+provided in Java, C, and OCaml.  Communication with theorem provers is
+supported via pipes/sockets, native methods, and an XML-RPC-based
+messaging interface.  This API is now used by <SPAN  CLASS="textsf">ESC/Java2</SPAN> and the CVC3
+prover, and interfaces with the Z3 and Simplify theorem provers as
+well&nbsp;[<A
+ HREF="node86.html#BarrettT07">BT07</A>].
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html489"
+  HREF="node21.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html485"
+  HREF="node19.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html479"
+  HREF="node19.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html487"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html490"
+  HREF="node21.html">Simplify</A>
+<B> Up:</B> <A NAME="tex2html486"
+  HREF="node19.html">Automated Theorem Prover Subsystems</A>
+<B> Previous:</B> <A NAME="tex2html480"
+  HREF="node19.html">Automated Theorem Prover Subsystems</A>
+ &nbsp; <B>  <A NAME="tex2html488"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

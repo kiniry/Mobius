@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Executive Summary:
+Final Report on Program Verification Environment and Annotation Generation</TITLE>
+<META NAME="description" CONTENT="Executive Summary:
+Final Report on Program Verification Environment and Annotation Generation">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node3.html">
+<LINK REL="previous" HREF="node1.html">
+<LINK REL="up" HREF="deliverableD3_10.html">
+<LINK REL="next" HREF="node3.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html139"
+  HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html135"
+  HREF="deliverableD3_10.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html129"
+  HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html137"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html140"
+  HREF="node3.html">Contents</A>
+<B> Up:</B> <A NAME="tex2html136"
+  HREF="deliverableD3_10.html">deliverableD3_10</A>
+<B> Previous:</B> <A NAME="tex2html130"
+  HREF="node1.html">Contributions</A>
+ &nbsp; <B>  <A NAME="tex2html138"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00200000000000000000"></A>
+<A NAME="chapter:executive-summary"></A>
+<BR>
+Executive Summary:
+<BR><BIG CLASS="XLARGE">Final Report on Program Verification Environment and Annotation Generation</BIG>
+</H1>
+<P>
+<BIG CLASS="LARGE">This document describes the results of Tasks 3.6 and 3.7 of project
+FP6-015905 (<SPAN  CLASS="textsf">MOBIUS</SPAN>), co-funded by the European Commission within the
+Sixth Framework Programme.  The focus of these tasks is the design and
+development of an integrated program verification environment (PVE),
+which is colloquially called the <SPAN  CLASS="textsf">MOBIUS</SPAN> PVE.  Full information on
+this project, including the contents of this deliverable, is available
+online at http://mobius.inria.fr/http://mobius.inria.fr/http://mobius.inria.fr/http://mobius.inria.fr/.
+More information on the <SPAN  CLASS="textsf">MOBIUS</SPAN> PVE is available online at
+http://mobius.ucd.ie/http://mobius.ucd.ie/http://mobius.ucd.ie/http://mobius.ucd.ie/.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Task&nbsp;3.6 develops a program verification environment for the automatic
+and interactive verification of Java programs, integrating the
+techniques developed in WP3.  Such an environment is needed to tackle
+the realistic case studies in WP5, and, more generally, is crucial if
+we are to seriously evaluate the <SPAN  CLASS="textsf">MOBIUS</SPAN> PCC infrastructure.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">MOBIUS</SPAN> verification environment supports the development of
+specifications, programs, and proofs of their security properties.  It
+supports both source code and bytecode level verification, and is
+able to produce the output necessary for the generation of PCC
+certificates.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The result of this task in the four years of the project has been five
+releases (called the <SPAN  CLASS="textit">alpha</SPAN>, <SPAN  CLASS="textit">beta</SPAN>, <SPAN  CLASS="textit">gamma</SPAN>,
+<SPAN  CLASS="textit">delta</SPAN>, and <SPAN  CLASS="textit">epsilon</SPAN> releases) of the platform, as well as
+dozens of independent releases of its various subsystems.  These
+initial releases support reasoning about source code and bytecode and
+focus on single-threaded Java only.  The PVE also generates proof
+obligations for a single proof generation tool.  The environment also
+interfaces to several automated theorem provers and interactive proof
+assistants.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Task&nbsp;3.7 focus on generating JML annotations for existing source code
+and bytecode.  Automata or state machines are a convenient and
+accessible specification formalism for many properties.  The techniques
+developed focus on generating JML annotations from a simple
+automaton that specifies security properties.  If a program that is
+monitored by the automaton does not go ``wrong,'' then the generated
+annotations will not be violated during any execution of the
+program.  The algorithm and its correctness proof are formalised with a
+theorem prover.  The generated annotations are then propagated, to
+assist static verification.  A simple version of the propagation
+algorithm has been implemented.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html139"
+  HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html135"
+  HREF="deliverableD3_10.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html129"
+  HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html137"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html140"
+  HREF="node3.html">Contents</A>
+<B> Up:</B> <A NAME="tex2html136"
+  HREF="deliverableD3_10.html">deliverableD3_10</A>
+<B> Previous:</B> <A NAME="tex2html130"
+  HREF="node1.html">Contributions</A>
+ &nbsp; <B>  <A NAME="tex2html138"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

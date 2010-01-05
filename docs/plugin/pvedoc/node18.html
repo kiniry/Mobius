@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Houdini</TITLE>
+<META NAME="description" CONTENT="Houdini">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="previous" HREF="node17.html">
+<LINK REL="up" HREF="node16.html">
+<LINK REL="next" HREF="node19.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html459"
+  HREF="node19.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html455"
+  HREF="node16.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html451"
+  HREF="node17.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html457"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html460"
+  HREF="node19.html">Automated Theorem Prover Subsystems</A>
+<B> Up:</B> <A NAME="tex2html456"
+  HREF="node16.html">Static Analysis Subsystems using</A>
+<B> Previous:</B> <A NAME="tex2html452"
+  HREF="node17.html">Race Condition Checker</A>
+ &nbsp; <B>  <A NAME="tex2html458"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00513200000000000000"></A>
+<A NAME="sec:houdini"></A>
+<BR>
+Houdini
+</H3>
+<P>
+<BIG CLASS="LARGE">Like the Race Condition Checker (<SPAN  CLASS="textsf">RCC</SPAN>), <SPAN  CLASS="textsf">Houdini</SPAN> was also originally
+developed by researchers at the Digital Systems Research Lab (DEC-SRC)
+in the late 1990s&nbsp;[<A
+ HREF="node86.html#FlanaganL00">FL00</A>].  Its source code was released to
+the general public along with the source for <SPAN  CLASS="textsf">Simplify</SPAN>, <SPAN  CLASS="textsf">Javafe</SPAN>,
+<SPAN  CLASS="textsf">ESC/Java</SPAN>, and <SPAN  CLASS="textsf">RCC</SPAN>.
+</BIG>
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textsf">Houdini</SPAN> automatically generates specifications written in JML for a
+Java module by statically analyzing the program code's structure.  It
+has a number of built-in heuristics and performs some lightweight
+syntactic and semantic reasoning about method bodies to ``guess''
+potential method preconditions, for example.  These guesses are then
+fed to <SPAN  CLASS="textsf">ESC/Java2</SPAN> to see whether or not they are valid.  If a
+specification seems to be valid (recall that ESC/Java is neither sound
+nor complete), then the specification is retained, otherwise it is
+discarded.
+</BIG>
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textsf">Houdini</SPAN> generates reports of its behavior in HTML.  <SPAN  CLASS="textsf">Houdini</SPAN> is also
+capable of taking a snapshot of its state for increasing the
+reliability of long runs (as running <SPAN  CLASS="textsf">Houdini</SPAN> on a large code base can
+take hours, or even days).  Finally, <SPAN  CLASS="textsf">Houdini</SPAN> can run in a
+client-server mode, utilizing a (potentially larger, and more
+powerful) remote compute server.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html459"
+  HREF="node19.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html455"
+  HREF="node16.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html451"
+  HREF="node17.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html457"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html460"
+  HREF="node19.html">Automated Theorem Prover Subsystems</A>
+<B> Up:</B> <A NAME="tex2html456"
+  HREF="node16.html">Static Analysis Subsystems using</A>
+<B> Previous:</B> <A NAME="tex2html452"
+  HREF="node17.html">Race Condition Checker</A>
+ &nbsp; <B>  <A NAME="tex2html458"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

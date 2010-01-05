@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>EclEmma</TITLE>
+<META NAME="description" CONTENT="EclEmma">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node52.html">
+<LINK REL="previous" HREF="node48.html">
+<LINK REL="up" HREF="node42.html">
+<LINK REL="next" HREF="node52.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html871"
+  HREF="node52.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html867"
+  HREF="node42.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html861"
+  HREF="node50.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html869"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html872"
+  HREF="node52.html">BCEL</A>
+<B> Up:</B> <A NAME="tex2html868"
+  HREF="node42.html">Subsystems Used within MOBIUS</A>
+<B> Previous:</B> <A NAME="tex2html862"
+  HREF="node50.html">Metrics</A>
+ &nbsp; <B>  <A NAME="tex2html870"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00527000000000000000"></A>
+<A NAME="sec:eclemma"></A>
+<BR>
+EclEmma
+</H2>
+<P>
+<BIG CLASS="LARGE">The following external plugin integrated into the <SPAN  CLASS="textsf">Mobius PVE</SPAN> focuses on code
+coverage analysis.  The code coverage plugin chosen for use within the
+<SPAN  CLASS="textsf">Mobius PVE</SPAN> is called <SPAN  CLASS="textsf">EclEmma</SPAN>.
+</BIG>
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textsf">Emma</SPAN> is a code coverage analysis tool that, during program execution
+(typically during unit testing), automatically instruments program
+bytecode to gather information about various kinds of standard code
+coverage measures, including branch and statement coverage.  <SPAN  CLASS="textsf">Emma</SPAN> 
+reports such analysis back to the programmer through a series of
+reports.
+</BIG>
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textsf">EclEmma</SPAN> wraps <SPAN  CLASS="textsf">Emma</SPAN> into an Eclipse plugin with a rich user
+interface.  Coverage data is summarized to the user in a simple
+graphical fashion where program source is highlighted in various ways
+to indicate if a given construct has been executed during a given test
+run.  For example, if a particular method was never executed during
+unit testing, its body is highlighted in red.
+</BIG>
+<P>
+<BIG CLASS="LARGE">No customization has yet taken place for <SPAN  CLASS="textsf">EclEmma</SPAN>.  The main
+customization requested thus far is the ability to perform code
+coverage analysis during runtime assertion checking.  Highlighting the
+program source code <SPAN  CLASS="textit">and executable specifications</SPAN> (in
+particular, method contracts and invariants) executed in a given test
+run will be particularly useful to <SPAN  CLASS="textsf">Mobius PVE</SPAN> users.  Such data will help
+users understand the completeness of their specifications with respect
+to their program code, as well as the completeness of their
+specifications with respect to their unit tests.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Additionally, given <SPAN  CLASS="textsf">EclEmma</SPAN> performs aggregate coverage analysis,
+e.g., a given class's executable statements are 90% covered by the
+current unit tests.  Such data will give a concrete measure that can
+be related to other aggregate measure like those reported by the
+variety of static analysis tools included in the <SPAN  CLASS="textsf">Mobius PVE</SPAN> like <SPAN  CLASS="textsf">FindBugs</SPAN> 
+and <SPAN  CLASS="textsf">ESC/Java2</SPAN>.  A verification ``dashboard'' is planned that succinctly,
+visually, interactively summarizes all of this information for the
+programmer and a development team.
+</BIG>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html871"
+  HREF="node52.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html867"
+  HREF="node42.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html861"
+  HREF="node50.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html869"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html872"
+  HREF="node52.html">BCEL</A>
+<B> Up:</B> <A NAME="tex2html868"
+  HREF="node42.html">Subsystems Used within MOBIUS</A>
+<B> Previous:</B> <A NAME="tex2html862"
+  HREF="node50.html">Metrics</A>
+ &nbsp; <B>  <A NAME="tex2html870"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Z3</TITLE>
+<META NAME="description" CONTENT="Z3">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node24.html">
+<LINK REL="previous" HREF="node22.html">
+<LINK REL="up" HREF="node19.html">
+<LINK REL="next" HREF="node24.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html525"
+  HREF="node24.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html521"
+  HREF="node19.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html515"
+  HREF="node22.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html523"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html526"
+  HREF="node24.html">CVC3</A>
+<B> Up:</B> <A NAME="tex2html522"
+  HREF="node19.html">Automated Theorem Prover Subsystems</A>
+<B> Previous:</B> <A NAME="tex2html516"
+  HREF="node22.html">Fx7</A>
+ &nbsp; <B>  <A NAME="tex2html524"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00514400000000000000"></A>
+<A NAME="sec:z3"></A>
+<BR>
+Z3
+</H3>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">Z3</SPAN> automated theorem prover is developed by Microsoft
+Research in Redmond&nbsp;[<A
+ HREF="node86.html#deMouraB08">dB08</A>].  It and <SPAN  CLASS="textsf">Simplify</SPAN> are the
+primary theorem provers of the Boogie reasoning framework.  <SPAN  CLASS="textsf">Z3</SPAN> is
+released in binary-only form.  The most recent releases are only built
+for the Microsoft Windows operating system.  An older, out-of-date
+release was built for Linux to conform to the SMT-LIB competition's
+rules.
+</BIG>
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textsf">Z3</SPAN> is a very powerful modern prover, thus it has been ``bridged''
+into the <SPAN  CLASS="textsf">MOBIUS</SPAN> Prover API as well.  It supports the <SPAN  CLASS="textsf">Simplify</SPAN> and
+SMT-LIB concrete syntaxes, as well as its own.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Whereas <SPAN  CLASS="textsf">Z3</SPAN> only runs on the Microsoft Windows platform, the <SPAN  CLASS="textsf">Mobius PVE</SPAN> 
+runs on all modern platforms, including Apple's OS X and UNIX variants
+like Linux, Solaris, etc. We wish to support as many modern theorem
+provers as possible within the <SPAN  CLASS="textsf">Mobius PVE</SPAN>, but supporting <SPAN  CLASS="textsf">Z3</SPAN> on
+non-Windows systems is a non-trivial task.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Recently <SPAN  CLASS="textsf">Z3</SPAN> has been tested running within the a Wine
+runtime&nbsp;[<A
+ HREF="node86.html#Wine08">win08</A>] on Intel-based systems running Linux.  This
+mechanism (spawning <SPAN  CLASS="textsf">Z3</SPAN> within Wine, communication via piped
+datastreams, etc.) is now built into the <SPAN  CLASS="textsf">MOBIUS</SPAN> Automated Prover API.
+</BIG>
+<P>
+<BIG CLASS="LARGE">In theory, such a mechanism will work on all Intel-based Wine
+runtimes, like those available for other UNIX variants and OS X.  In
+addition, we plan on experimenting with executing <SPAN  CLASS="textsf">Z3</SPAN> within a
+virtualized Microsoft Windows installation (e.g., using Parallels or
+VMware, both of which are used for <SPAN  CLASS="textsf">Mobius PVE</SPAN> development and testing) on OS
+X on Intel.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html525"
+  HREF="node24.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html521"
+  HREF="node19.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html515"
+  HREF="node22.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html523"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html526"
+  HREF="node24.html">CVC3</A>
+<B> Up:</B> <A NAME="tex2html522"
+  HREF="node19.html">Automated Theorem Prover Subsystems</A>
+<B> Previous:</B> <A NAME="tex2html516"
+  HREF="node22.html">Fx7</A>
+ &nbsp; <B>  <A NAME="tex2html524"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

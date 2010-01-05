@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The Direct Verification Condition Generator (DirectVCGen)</TITLE>
+<META NAME="description" CONTENT="The Direct Verification Condition Generator (DirectVCGen)">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node41.html">
+<LINK REL="previous" HREF="node39.html">
+<LINK REL="up" HREF="node37.html">
+<LINK REL="next" HREF="node41.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html731"
+  HREF="node41.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html727"
+  HREF="node37.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html721"
+  HREF="node39.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html729"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html732"
+  HREF="node41.html">DirectVCGenUI</A>
+<B> Up:</B> <A NAME="tex2html728"
+  HREF="node37.html">DirectVCGen Subsystems</A>
+<B> Previous:</B> <A NAME="tex2html722"
+  HREF="node39.html">Bico and Bico</A>
+ &nbsp; <B>  <A NAME="tex2html730"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00518300000000000000"></A>
+<A NAME="sec:mobi-direct-verif"></A>
+<BR>
+The Direct Verification Condition Generator (DirectVCGen)
+</H3>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">MOBIUS</SPAN> <SPAN  CLASS="textsf">DirectVCGen</SPAN> is a tool built upon <SPAN  CLASS="textsf">Bico</SPAN>, <SPAN  CLASS="textsf">Bicolano</SPAN>, the
+<SPAN  CLASS="textsf">ESC/Java2</SPAN> parser, as well as <SPAN  CLASS="textsf">Mobius PVE</SPAN>'s prover backend. It is built
+around two verification condition generators, one over source code and
+one over bytecode.  
+</BIG>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">MOBIUS</SPAN> <SPAN  CLASS="textsf">DirectVCGen</SPAN> is called ``direct'' because, contrary to the
+other verification condition generators of the <SPAN  CLASS="textsf">Mobius PVE</SPAN>, it uses a simple
+weakest precondition calculi without any use of an intermediate
+language. The source <SPAN  CLASS="textsf">VCGen</SPAN> is written in <SPAN  CLASS="textsf">Java</SPAN> and the bytecode
+<SPAN  CLASS="textsf">VCGen</SPAN> is written in <SPAN  CLASS="textsf">Coq</SPAN>.  It is part of the proof transforming
+compiler scheme, as explained in the deliverable
+4.3&nbsp;[<A
+ HREF="node86.html#MobiusDeliverable4.3">mC07b</A>].
+</BIG>
+<P>
+<BIG CLASS="LARGE">One of the main goals of this tool is to translate the proofs for the
+verification conditions generated from the source code to proofs for
+the verification conditions generated from the bytecode. To allow this
+transformation, both <SPAN  CLASS="textsf">VCGen</SPAN> subsystems have to be reasonably
+similar.  Both weakest precondition calculi have exactly the same
+set of rules. The only thing that differs between the two calculi is
+their way of handling variables.  Of course, bytecode variables can be
+easily programatically deduced from the source code ones.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The background predicates for both verification conditions are found
+in the same theory, that of <SPAN  CLASS="textsf">Bicolano</SPAN>. The tool <SPAN  CLASS="textsf">Bico</SPAN> is used to
+translate a program into the <SPAN  CLASS="textsf">Coq</SPAN> formalization.  The backend for the
+<SPAN  CLASS="textsf">VCGen</SPAN> over source code is a specific <SPAN  CLASS="textsf">Coq</SPAN> backend that uses <SPAN  CLASS="textsf">Bicolano</SPAN> 
+as its memory model.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The mechanisms of the <SPAN  CLASS="textsf">MOBIUS</SPAN> <SPAN  CLASS="textsf">DirectVCGen</SPAN> are used by the bytecode subsystem
+to generate verification conditions based on the bytecode alone and
+<SPAN  CLASS="textsf">BML</SPAN> specifications. The transition between bytecode combined with
+<SPAN  CLASS="textsf">BML</SPAN> annotations and the <SPAN  CLASS="textsf">DirectVCGen</SPAN> is done by a tool called <SPAN  CLASS="textsf">BMLVCGen</SPAN>.
+</BIG>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html731"
+  HREF="node41.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html727"
+  HREF="node37.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html721"
+  HREF="node39.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html729"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html732"
+  HREF="node41.html">DirectVCGenUI</A>
+<B> Up:</B> <A NAME="tex2html728"
+  HREF="node37.html">DirectVCGen Subsystems</A>
+<B> Previous:</B> <A NAME="tex2html722"
+  HREF="node39.html">Bico and Bico</A>
+ &nbsp; <B>  <A NAME="tex2html730"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

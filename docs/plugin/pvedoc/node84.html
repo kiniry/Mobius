@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>From Automata to JML</TITLE>
+<META NAME="description" CONTENT="From Automata to JML">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="previous" HREF="node83.html">
+<LINK REL="up" HREF="node82.html">
+<LINK REL="next" HREF="node85.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html1299"
+  HREF="node85.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1295"
+  HREF="node82.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1291"
+  HREF="node83.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html1297"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html1300"
+  HREF="node85.html">Publications Relating to WP3.6</A>
+<B> Up:</B> <A NAME="tex2html1296"
+  HREF="node82.html">State Diagrams and Navigation</A>
+<B> Previous:</B> <A NAME="tex2html1292"
+  HREF="node83.html">From Java Code to</A>
+ &nbsp; <B>  <A NAME="tex2html1298"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00922000000000000000">
+From Automata to JML</A>
+</H2>
+<P>
+<BIG CLASS="LARGE">Security automata are a convenient way to describe security policies.
+Traditionally they are used to monitor an application at runtime, and
+to interrupt it as soon as it violates the security policy.  However, in
+our setting of PCC, we would like to use security automata as <SPAN  CLASS="textsf">JML</SPAN> 
+specifications, and verify adherence to them statically.  The <SPAN  CLASS="textsf">JML</SPAN> 
+annotations effectively inline the monitor in the application.
+</BIG>
+<P>
+
+<P></P>
+
+<P>
+<BIG CLASS="LARGE">The translation of security automata into program annotations is not
+trivial, and there is the danger that the semantics of the annotations
+is not equivalent to the effect of runtime monitoring. Therefore we
+formalised this translation.
+</BIG>
+<P>
+<BIG CLASS="LARGE">The translation from security automata to program annotations is
+defined in several steps:
+</BIG>
+<OL>
+<LI>complete the security automata, adding a special trap state that
+  should not be reached (whereas partial automata, describing only the
+  allowed transitions are sufficient for monitoring);
+</LI>
+<LI>generate special set-annotations at the level of method
+  specifications, capturing the behavior of the security automata,
+  together with an invariant stating that the error state should not
+  be reached; and
+</LI>
+<LI>inline the annotations into the method body.
+</LI>
+</OL><BIG CLASS="LARGE">
+We have developed a generic program semantics that is instantiated for
+monitoring and run-time annotation checking.  We prove that every
+translation step preserves the program behavior.  In particular this
+means that monitoring will not find a security violation iff run-time
+annotation checking will not find any annotation violation (provided
+that earlier existing annotations are not violated either).
+</BIG>
+<P>
+<BIG CLASS="LARGE">The translation and its correctness proof have been presented
+in&nbsp;[<A
+ HREF="node86.html#HuismanT09">HT09</A>].  The correctness proofs revealed several
+subtleties that have to be considered in the algorithm, and necessary
+assumptions about program behavior. It also revealed a subtle
+interplay between the semantics of <TT>finally</TT> clauses and the
+behaviour of a run-time checker&nbsp;[<A
+ HREF="node86.html#Huisman09">Hui09</A>]: abrupt termination
+of a <TT>finally</TT> clause can discard a <SPAN  CLASS="textsf">JML</SPAN> annotation error.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Using an annotation propagation algorithm (as in&nbsp;[<A
+ HREF="node86.html#PavlovaBBHL04">PBB<SUP>+</SUP>04</A>])
+the generated annotations give rise to pre- and postcondition
+annotations in the whole application, that can be verified statically.
+</BIG>
+<P>
+
+<P></P>
+
+<P>
+<BIG CLASS="LARGE">In the simplest form of security automata, each edge corresponds to
+some unique event, typically some method call, but for convenient
+specifications one can allow richer languages for decorating edges.
+In&nbsp;[<A
+ HREF="node86.html#PollRavelo08">PR08</A>] we define suitable notions of refinement for
+MIDP navigation graphs, and propose a translation of these to <SPAN  CLASS="textsf">JML</SPAN> 
+annotations.
+</BIG>
+<P>
+
+<P></P>
+
+<P>
+<BIG CLASS="LARGE">We have also adapted AutoJML, a tool we developed earlier in
+Nijmegen&nbsp;[<A
+ HREF="node86.html#HubbersO03">HO03</A>] to generate <SPAN  CLASS="textsf">JML</SPAN> annotations from
+automata-like specifications, to cope with richer forms of
+automata.  In&nbsp;[<A
+ HREF="node86.html#PollS07">PS07</A>] this has been used to generate <SPAN  CLASS="textsf">JML</SPAN> 
+annotations to verify that the MIDP-SSH implementation is correct with
+respect to a formal specification of the SSH protocol.  Here our formal
+specification probably goes into much more detail than one would
+typically give in a security automaton.
+</BIG>
+<P>
+
+<P></P>
+
+<P>
+<BIG CLASS="LARGE">Work on case studies in checking midlets against navigation graphs
+is reported in Deliverable 5.2 [<A
+ HREF="node86.html#MobiusDeliverable5.2">mC09</A>] 
+and in [<A
+ HREF="node86.html#MostowskiP09">MP09</A>].
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1299"
+  HREF="node85.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1295"
+  HREF="node82.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1291"
+  HREF="node83.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html1297"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html1300"
+  HREF="node85.html">Publications Relating to WP3.6</A>
+<B> Up:</B> <A NAME="tex2html1296"
+  HREF="node82.html">State Diagrams and Navigation</A>
+<B> Previous:</B> <A NAME="tex2html1292"
+  HREF="node83.html">From Java Code to</A>
+ &nbsp; <B>  <A NAME="tex2html1298"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

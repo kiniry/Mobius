@@ -1,0 +1,18 @@
+No implementation found for style `ifpdf'
+No implementation found for style `ifdraft'
+No implementation found for style `fancyhdr'
+No implementation found for style `graphicx'
+No implementation found for style `a4wide'
+No implementation found for style `hyperref'
+No implementation found for style `fixme'
+No implementation found for style `fontenc'
+No implementation found for style `pdftricks'
+No implementation found for style `pst-all'
+
+Substitution of arg to newlabelxx delayed.
+couldn't convert character aogon into available encodings
+
+ ...set $ACCENT_IMAGES  to get an image 
+couldn't convert character nacute into available encodings
+
+deliverableD3_10.tex is newer than deliverableD3_10.bbl: Please rerun latex and bibtex.

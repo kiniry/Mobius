@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Race Condition Checker</TITLE>
+<META NAME="description" CONTENT="Race Condition Checker">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node18.html">
+<LINK REL="previous" HREF="node16.html">
+<LINK REL="up" HREF="node16.html">
+<LINK REL="next" HREF="node18.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html449"
+  HREF="node18.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html445"
+  HREF="node16.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html439"
+  HREF="node16.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html447"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html450"
+  HREF="node18.html">Houdini</A>
+<B> Up:</B> <A NAME="tex2html446"
+  HREF="node16.html">Static Analysis Subsystems using</A>
+<B> Previous:</B> <A NAME="tex2html440"
+  HREF="node16.html">Static Analysis Subsystems using</A>
+ &nbsp; <B>  <A NAME="tex2html448"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00513100000000000000"></A>
+<A NAME="sec:race-cond-check"></A>
+<BR>
+Race Condition Checker
+</H3>
+<P>
+<BIG CLASS="LARGE">The Race Condition Checker (<SPAN  CLASS="textsf">RCC</SPAN>) was originally developed by
+researchers at the Digital Systems Research Lab (DEC-SRC) in the late
+1990s&nbsp;[<A
+ HREF="node86.html#FlanaganF00">FF00</A>].  Its source code was released to the general
+public along with the source for Simplify, Javafe, ESC/Java, and
+Houdini.
+</BIG>
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textsf">RCC</SPAN>'s purpose is to (conservatively) statically check for the absence
+of race conditions via analysis of (type) annotated Java source code.
+As <SPAN  CLASS="textsf">RCC</SPAN>'s analysis is sound, if an annotated Java program passes <SPAN  CLASS="textsf">RCC</SPAN>,
+then it is guaranteed to have no race conditions.
+</BIG>
+<P>
+<BIG CLASS="LARGE">As the <SPAN  CLASS="textsf">Mobius PVE</SPAN> is meant to eventually support reasoning about concurrent
+Java systems, determining whether a Java module is race-free is a
+critical first step in verifying any other properties.  Unfortunately,
+<SPAN  CLASS="textsf">RCC</SPAN>'s source code release barely compiled, and was completely
+unmaintained.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Consequently, <SPAN  CLASS="textsf">MOBIUS</SPAN> developers have ``revived'' <SPAN  CLASS="textsf">RCC</SPAN> and released <SPAN  CLASS="textsf">RCC</SPAN> 
+version 2.  This updated version of <SPAN  CLASS="textsf">RCC</SPAN> incorporates the evolution of the
+Java language semantics, as expressed within the third revision of the
+JLS&nbsp;[<A
+ HREF="node86.html#JLSTE">GJSB05</A>] and as realized in Java version 5, particularly with
+respect to the the Java Memory Model&nbsp;[<A
+ HREF="node86.html#JMMTestCases">Con04</A>].  Moreover, several
+critical flaws in the original <SPAN  CLASS="textsf">RCC</SPAN> type system and type checker were
+identified and corrected in this release.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html449"
+  HREF="node18.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html445"
+  HREF="node16.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html439"
+  HREF="node16.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html447"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html450"
+  HREF="node18.html">Houdini</A>
+<B> Up:</B> <A NAME="tex2html446"
+  HREF="node16.html">Static Analysis Subsystems using</A>
+<B> Previous:</B> <A NAME="tex2html440"
+  HREF="node16.html">Static Analysis Subsystems using</A>
+ &nbsp; <B>  <A NAME="tex2html448"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

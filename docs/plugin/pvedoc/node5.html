@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Subsystems of the MOBIUS Program Verification Environment</TITLE>
+<META NAME="description" CONTENT="Subsystems of the MOBIUS Program Verification Environment">
+<META NAME="keywords" CONTENT="deliverableD3_10">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="deliverableD3_10.css">
+
+<LINK REL="next" HREF="node55.html">
+<LINK REL="previous" HREF="node4.html">
+<LINK REL="up" HREF="deliverableD3_10.html">
+<LINK REL="next" HREF="node6.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html216"
+  HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html212"
+  HREF="deliverableD3_10.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html206"
+  HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html214"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html217"
+  HREF="node6.html">Subsystems Developed within MOBIUS</A>
+<B> Up:</B> <A NAME="tex2html213"
+  HREF="deliverableD3_10.html">deliverableD3_10</A>
+<B> Previous:</B> <A NAME="tex2html207"
+  HREF="node4.html">Overview of the Program</A>
+ &nbsp; <B>  <A NAME="tex2html215"
+  HREF="node3.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00500000000000000000"></A>
+<A NAME="chapter:subsyst-mobi-progr"></A>
+<BR>
+Subsystems of the <SPAN  CLASS="textsf">MOBIUS</SPAN> Program Verification Environment
+</H1>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">Mobius PVE</SPAN> is built on top of the Eclipse platform.  The primary units
+of software within Eclipse are known as <SPAN  CLASS="textit">features</SPAN>, which are in
+turn composed of one or more <SPAN  CLASS="textit">plugins</SPAN>.  We generally call these
+two kinds of units <SPAN  CLASS="textit">subsystems</SPAN> in the <SPAN  CLASS="textsf">Mobius PVE</SPAN> documentation.  
+</BIG>
+<P>
+<BIG CLASS="LARGE">The following sections summarize all of these subsystems at a high
+level.  More information on each subsystem is available via the
+http://mobius.ucd.ie/<SPAN  CLASS="textsf">MOBIUS</SPAN> Trac server<SPAN  CLASS="textsf">MOBIUS</SPAN> Trac serverhttp://mobius.ucd.ie/(available via
+http://mobius.ucd.ie/http://mobius.ucd.ie/http://mobius.ucd.ie/http://mobius.ucd.ie/), within
+publications related to specific tools cited appropriately, and from
+the original development team, in the case of externally developed
+tools.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+<BIG CLASS="LARGE">The <SPAN  CLASS="textsf">Mobius PVE</SPAN> is a customized version of Eclipse that contains over forty
+subsystems dedicated to reliable, dependable software development.
+Over half of these subsystems were implemented by <SPAN  CLASS="textsf">MOBIUS</SPAN> partners.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Development on some of these subsystems ( e.g., the static checker
+<SPAN  CLASS="textsf">ESC/Java2</SPAN>) began before the project started, but their development
+continued within the project as their capabilities directly
+complemented the goals of the <SPAN  CLASS="textsf">Mobius PVE</SPAN>.  Other subsystems (e.g., the
+<SPAN  CLASS="textsf">Umbra</SPAN> bytecode subsystem) were developed entirely within and for the
+<SPAN  CLASS="textsf">MOBIUS</SPAN> project and the <SPAN  CLASS="textsf">Mobius PVE</SPAN>.
+</BIG>
+<P>
+<BIG CLASS="LARGE">This chapter contains a brief summary of each subsystem in the <SPAN  CLASS="textsf">Mobius PVE</SPAN>.
+There are two forms of subsystems: those (co-)developed by <SPAN  CLASS="textsf">MOBIUS</SPAN> 
+partners (known as ``<SPAN  CLASS="textsf">MOBIUS</SPAN> subsystems''), and those developed
+outside of <SPAN  CLASS="textsf">MOBIUS</SPAN> (known as ``non-<SPAN  CLASS="textsf">MOBIUS</SPAN> subsystems'');
+&nbsp;section:subsyst-devel-with discusses the former, and
+&nbsp;sec:subsyst-used-with the latter.  Subsystems developed
+within <SPAN  CLASS="textsf">MOBIUS</SPAN> are often discussed in more detail unless a non-<SPAN  CLASS="textsf">MOBIUS</SPAN> 
+subsystem has some special interaction with a <SPAN  CLASS="textsf">MOBIUS</SPAN> one.
+</BIG>
+<P>
+<BIG CLASS="LARGE">Some subsystems are exposed to the verification application developer
+via a programmatic API.  Others are full-fledged Eclipse
+<SPAN  CLASS="textit">features</SPAN> and/or <SPAN  CLASS="textit">plugins</SPAN>.  Many subsystems, even those
+that are plugins, also have rich command-line interfaces and are
+executed as normal processes.
+</BIG>
+<P>
+<BIG CLASS="LARGE">In general, all <SPAN  CLASS="textsf">MOBIUS</SPAN> subsystems written in Java and the majority of
+them were developed with various version of the <SPAN  CLASS="textsf">Mobius PVE</SPAN> itself.
+Moreover, some of them have full formal specifications and have been
+partially or fully validated (e.g., extensively unit tested) and/or
+verified (e.g.,, <SPAN  CLASS="textsf">ESC/Java2</SPAN> reports no errors) with the <SPAN  CLASS="textsf">Mobius PVE</SPAN>.  When a subsystem
+has one of these properties, it is highlighted in the text.
+</BIG>
+<P>
+<BIG CLASS="LARGE">As discussed in sec:mobi-coll-devel, the source code,
+documentation, version control logs, and bug and feature tracking
+database of all subsystems is available online via our Trac-based CDE
+located at http://mobius.ucd.ie/http://mobius.ucd.ie/http://mobius.ucd.ie/http://mobius.ucd.ie/.
+All subsystems developed within <SPAN  CLASS="textsf">MOBIUS</SPAN> are Open Source and released
+under one of several license types: the GPLv2, a BSD-style license, or
+the Eclipse Public License.
+</BIG>
+<P>
+<BIG CLASS="LARGE"></BIG>
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html218"
+  HREF="node6.html">Subsystems Developed within <SPAN  CLASS="textsf">MOBIUS</SPAN> </A>
+<UL>
+<LI><A NAME="tex2html219"
+  HREF="node7.html">Java Modeling Language Subsystems</A>
+<UL>
+<LI><A NAME="tex2html220"
+  HREF="node8.html">The OpenJML Plugin</A>
+<LI><A NAME="tex2html221"
+  HREF="node9.html">The JML2 Eclipse Plugin</A>
+<LI><A NAME="tex2html222"
+  HREF="node10.html">The JML Folding Editor</A>
+</UL>
+<LI><A NAME="tex2html223"
+  HREF="node11.html">Static Analysis Subsystems for Extended Static Checking</A>
+<UL>
+<LI><A NAME="tex2html224"
+  HREF="node12.html">ESCJava2</A>
+<LI><A NAME="tex2html225"
+  HREF="node13.html">Javafe: The Original DEC-SRC Java Frontend</A>
+<LI><A NAME="tex2html226"
+  HREF="node14.html">The Universes Typecheckers</A>
+<LI><A NAME="tex2html227"
+  HREF="node15.html">FreeBoogie</A>
+</UL>
+<LI><A NAME="tex2html228"
+  HREF="node16.html">Static Analysis Subsystems using Annotation Generation</A>
+<UL>
+<LI><A NAME="tex2html229"
+  HREF="node17.html">Race Condition Checker</A>
+<LI><A NAME="tex2html230"
+  HREF="node18.html">Houdini</A>
+</UL>
+<LI><A NAME="tex2html231"
+  HREF="node19.html">Automated Theorem Prover Subsystems</A>
+<UL>
+<LI><A NAME="tex2html232"
+  HREF="node20.html">The Automated Prover API</A>
+<LI><A NAME="tex2html233"
+  HREF="node21.html">Simplify</A>
+<LI><A NAME="tex2html234"
+  HREF="node22.html">Fx7</A>
+<LI><A NAME="tex2html235"
+  HREF="node23.html">Z3</A>
+<LI><A NAME="tex2html236"
+  HREF="node24.html">CVC3</A>
+<LI><A NAME="tex2html237"
+  HREF="node25.html">Yices</A>
+</UL>
+<LI><A NAME="tex2html238"
+  HREF="node26.html">Prover Editor Subsystems</A>
+<UL>
+<LI><A NAME="tex2html239"
+  HREF="node27.html">Prover Editor's Core Component</A>
+<LI><A NAME="tex2html240"
+  HREF="node28.html">The Coq Language Support</A>
+</UL>
+<LI><A NAME="tex2html241"
+  HREF="node29.html">Core Application Programmer Interfaces Subsystems</A>
+<UL>
+<LI><A NAME="tex2html242"
+  HREF="node30.html">The Rich Client Platform Plugin and Library</A>
+<LI><A NAME="tex2html243"
+  HREF="node31.html">The Logging API</A>
+</UL>
+<LI><A NAME="tex2html244"
+  HREF="node32.html">Java Bytecode Subsystems</A>
+<UL>
+<LI><A NAME="tex2html245"
+  HREF="node33.html">The Umbra Bytecode Editor</A>
+<LI><A NAME="tex2html246"
+  HREF="node34.html"><SPAN  CLASS="textsf">JML2BML</SPAN> Compiler</A>
+<LI><A NAME="tex2html247"
+  HREF="node35.html"><SPAN  CLASS="textsf">BMLVCgen</SPAN> Condition Generator</A>
+<LI><A NAME="tex2html248"
+  HREF="node36.html">Certificate Generation</A>
+</UL>
+<LI><A NAME="tex2html249"
+  HREF="node37.html">DirectVCGen Subsystems</A>
+<UL>
+<LI><A NAME="tex2html250"
+  HREF="node38.html">The Bicolano Plugin</A>
+<LI><A NAME="tex2html251"
+  HREF="node39.html">Bico and Bico<SPAN CLASS="MATH"><IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$ ^+$"></SPAN></A>
+<LI><A NAME="tex2html252"
+  HREF="node40.html">The Direct Verification Condition Generator (DirectVCGen)</A>
+<LI><A NAME="tex2html253"
+  HREF="node41.html">DirectVCGenUI</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html254"
+  HREF="node42.html">Subsystems Used within <SPAN  CLASS="textsf">MOBIUS</SPAN> but Developed Elsewhere</A>
+<UL>
+<LI><A NAME="tex2html255"
+  HREF="node43.html">Mylyn</A>
+<LI><A NAME="tex2html256"
+  HREF="node44.html">Version Control</A>
+<LI><A NAME="tex2html257"
+  HREF="node45.html">CheckStyle</A>
+<LI><A NAME="tex2html258"
+  HREF="node46.html">FindBugs</A>
+<LI><A NAME="tex2html259"
+  HREF="node47.html">PMD</A>
+<LI><A NAME="tex2html260"
+  HREF="node48.html">Metrics</A>
+<UL>
+<LI><A NAME="tex2html261"
+  HREF="node49.html"><SPAN  CLASS="textsf">NCSS</SPAN> </A>
+<LI><A NAME="tex2html262"
+  HREF="node50.html"><SPAN  CLASS="textsf">Metrics</SPAN> </A>
+</UL>
+<LI><A NAME="tex2html263"
+  HREF="node51.html">EclEmma</A>
+<LI><A NAME="tex2html264"
+  HREF="node52.html">BCEL</A>
+<LI><A NAME="tex2html265"
+  HREF="node53.html">BONc</A>
+<LI><A NAME="tex2html266"
+  HREF="node54.html">Beetlz</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html216"
+  HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html212"
+  HREF="deliverableD3_10.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html206"
+  HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html214"
+  HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html217"
+  HREF="node6.html">Subsystems Developed within MOBIUS</A>
+<B> Up:</B> <A NAME="tex2html213"
+  HREF="deliverableD3_10.html">deliverableD3_10</A>
+<B> Previous:</B> <A NAME="tex2html207"
+  HREF="node4.html">Overview of the Program</A>
+ &nbsp; <B>  <A NAME="tex2html215"
+  HREF="node3.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>
