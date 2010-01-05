@@ -547,7 +547,7 @@
    	-->
    <extension
          point="org.eclipse.help.toc">
-      <toc file="escjavaHelp.xml" primary="true" />
+      <toc file="escjavaHelp.xml" primary="false" />
    </extension>
    <extension
          point="org.eclipse.ui.editors">
