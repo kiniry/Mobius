@@ -96,8 +96,7 @@
          point="org.eclipse.help.toc"
          id="umbra.userGuide">
       <toc
-            file="help/index.xml"
-            primary="true">
+            file="help/index.xml">
       </toc>
    </extension>
 <!-- =============================================== -->
