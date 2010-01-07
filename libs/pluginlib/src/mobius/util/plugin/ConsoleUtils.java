@@ -23,7 +23,18 @@ import org.eclipse.ui.console.IOConsoleOutputStream;
 /**
  * All the utilities associated with the console that is used to output 
  * the result of the tool being run.
- * 
+ * <p>
+ * Use case example: <pre>...
+ * import mobius.util.plugin.ConsoleUtils;
+ * ...
+ * ConsoleOutputWrapper wrapper = new ConsoleOutputWrapper();
+ * wrapper.wrap(); // All the System.out and System.err outputs are redirected 
+ *                 // to an eclipse console
+ * ...
+ * // ... we do something...
+ * ...
+ * wrapper.unwrap(); // ... comes back to normal
+ * </pre>
  * @author J. Charles (julien.charles@gmail.com)
  */
 public final class ConsoleUtils {
