@@ -2,7 +2,7 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="MOBIUS Program Verification Environment"  topic="html/toc.html">
-	<link toc="toc.xml" />
+	<link toc="pvedoc/index.xml" />
     <topic label="JML2 Plug-in Table of Contents" topic="html/toc.html">
 	   <link toc="../ch.ethz.inf.pm.jml.plugin.help/toc.xml" />
 	</topic>

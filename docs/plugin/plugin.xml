@@ -3,9 +3,7 @@
 <plugin>
    <extension
          point="org.eclipse.help.toc">
-      <toc
-            file="toc.xml">
-      </toc>
+      <toc file="pvedoc/index.xml" extradir="pvedoc" />
       <toc
             file="mobiuspve.xml"
             primary="true">
