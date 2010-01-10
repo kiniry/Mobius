@@ -1,8 +1,0 @@
--- Custom file for testing the custom file feature;
-
-feature_mapping asleep@ZEBRA sleeping@debug.Zebraaa;
-
-class_mapping ZEBRA debug.Zebraaa;
-
-ignore_prefix my_ _;
-

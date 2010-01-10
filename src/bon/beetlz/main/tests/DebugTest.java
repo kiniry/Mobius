@@ -9,9 +9,9 @@ public class DebugTest {
 		String[] my_args = {
 						"-source", "both",
 						//"-help",
-		                "-userSettings", "tests/debug/custom.txt",
-		                "-files", "tests/debug"
-		                };
+		        //"-userSettings", "tests/debug/custom.txt",
+		        "-files", "test"
+		        };
 				
 		System.out.println("****************** First run *********************");
 		final Beetlz checker = new Beetlz(my_args, System.err, System.out);

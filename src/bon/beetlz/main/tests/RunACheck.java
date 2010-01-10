@@ -33,7 +33,8 @@ public class RunACheck {
 				
 				System.out.println("****************** First run *********************");
 				final Beetlz checker = new Beetlz(my_args, System.err, System.out);
-			    checker.run();
+				//checker.debugParsing();
+			  //  checker.run();
 			}
 			
 			
@@ -46,7 +47,8 @@ public class RunACheck {
 				
 				System.out.println("****************** Second run *********************");
 				final Beetlz checker = new Beetlz(my_args, System.err, System.out);
-			    checker.run();
+				checker.debugParsing();
+			  checker.run();
 			}
 			
 		} else {

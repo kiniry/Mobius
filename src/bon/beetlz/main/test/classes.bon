@@ -1,0 +1,220 @@
+indexing
+  about:        "Some test classes.";
+  title:        "Test";
+  author:       "evka";
+  copyright:    "none";
+  organisation: "School of Computer Science and Informatics, UCD";
+  date:         "December 2009";
+  version:      "Revision: 1";
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ENCLOSURE cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+static_diagram ZOO           
+component 
+  
+cluster FUNNY_CLUSTER
+component
+
+	class BIG_CLASS
+	indexing
+	 about: "some explanation"
+	feature
+	 make
+	   -> n: STRING
+	 make2
+	   -> n: STRING
+	   -> m: MOOD
+	end
+	
+	BIG_CLASS client :{ DUE
+	BIG_CLASS client :{ MOOD
+    BIG_CLASS client :{ TRE
+    BIG_CLASS client :{ UNO
+    MOOD client :(1) MOOD -- since MOOD's fields are final
+	
+	deferred class SMALL_CLASS
+	feature
+	 deferred hide
+	   -> v: VALUE
+	 deferred vanish
+	 moveTo
+	   -> dx: VALUE
+	   -> dy: VALUE
+	end
+	
+	class MINI_CLASS
+	inherit
+	 SMALL_CLASS; SCALABLE
+	feature
+	 redefined makeBig
+	   -> i: INTEGER
+	 redefined makeSmall
+	   -> i: INTEGER
+	 redefined hide
+	   -> i: VALUE
+	 redefined vanish
+	 redefined compareTo: VALUE
+	   -> arg: SMALL_CLASS
+	end
+	
+	deferred class SCALABLE
+	feature
+	 deferred makeBig
+     -> i: INTEGER
+     deferred makeSmall
+     -> i: INTEGER
+	end
+
+  class MOOD
+  indexing
+    about: "enumerated type, suggested form"  
+  feature
+    happy: MOOD
+      ensure
+        Result = old happy;
+      end
+    sad: MOOD
+      ensure
+        Result = old sad;
+      end
+    dunno: MOOD
+      ensure
+        Result = old dunno;
+      end
+    --getName: STRING
+  feature{NONE}
+    enumeration:SET
+  end
+  
+  class UNO[T] 
+  
+  class DUE[T, S]
+  
+  class TRE[T -> SEQUENCE[STRING]]
+
+end
+
+
+  
+cluster CRAZY_CLUSTER
+component 
+  class BLUE_CLASS
+  feature
+    funny
+      -> i: INTEGER
+    funny1
+      -> i: INTEGER
+      -> s: STRING
+    funny2
+      -> i: INTEGER
+      -> j: INTEGER
+      -> s: STRING
+    funny3
+      -> i: INTEGER
+      -> s: STRING
+      -> r: STRING
+     copy: SEQUENCE[STRING]
+      -> p: SEQUENCE[VALUE]
+      -> i: INTEGER
+      -> d: VALUE
+      -> f: VALUE
+     copyCopy: SEQUENCE[SEQUENCE[STRING]]
+      -> p: SEQUENCE[VALUE]
+      -> q: SEQUENCE[STRING]
+      -> d: VALUE
+      -> f: VALUE
+  end
+  
+  
+  
+  class RED_CLASS
+  feature
+    currentMood: MOOD
+    name: STRING
+    talk
+  feature{CRAZY_CLUSTER}
+    number: VALUE
+  feature{RED_CLASS}
+    secondName: STRING
+    colourMe
+  feature{NONE}
+    sleep
+  end
+  
+  
+  
+  class BLACK_CLASS
+  feature
+    nice: BOOLEAN
+    counter: INTEGER
+    maxcount: INTEGER
+      ensure
+        Result = 23;
+      end
+    name: STRING
+      ensure 
+        Result = "name";
+      end
+    currentColour: STRING
+    colours: SEQUENCE[STRING]
+    numbers: SEQUENCE[VALUE]
+    
+    one: STRING
+      -> eins: STRING
+      -> zwei: STRING
+      require 
+        zwei.length > 5;
+        zwei.length < 15;
+        zwei.length >= 5;
+        zwei.length <= 15;
+        zwei /= Void;
+      ensure
+        delta nice;
+        delta numbers;
+        numbers.item(0) /= 0;
+        numbers.item(1) = 0;
+      end
+      
+    two: INTEGER
+      -> eins: VALUE
+      -> zwei: VALUE
+      -> drei: VALUE
+      require
+        eins + zwei < 100;
+         eins-zwei > 0;
+         eins * 5 = zwei / 3;
+      ensure
+        Result \\ 2 = 0;
+         - (Result) <= 0;
+         eins ^ zwei = Result;
+         Result = old eins + old zwei;
+        delta {colours, counter, currentColour};
+      end
+      
+    three: YELLOW_CLASS
+      -> eins: BOOLEAN
+      -> zwei: BOOLEAN 
+      -> drei: BOOLEAN
+      require
+        not eins;
+        eins and zwei -> drei;
+      ensure 
+        (eins and zwei) or drei <-> drei and nice;
+        not ((nice and zwei) <-> (counter < 0));
+        (Result).find("hallo"); 
+      end
+        
+    end
+    
+    
+    class YELLOW_CLASS
+    feature
+        find: BOOLEAN
+        -> s: STRING        
+    end
+end
+end
+
+
+
+	
