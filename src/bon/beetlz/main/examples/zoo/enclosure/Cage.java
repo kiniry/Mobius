@@ -59,8 +59,8 @@ public class Cage <T extends Animal & Serializable & Comparable> {
   when true;
   accessible _width;
   assignable _height;
-  callable paint;
   captures occupants;
+  callable paint;
   ensures _width < _height;
   signals_only CloneNotSupportedException;
   signals (NullPointerException) occupants == null;
