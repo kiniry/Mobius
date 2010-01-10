@@ -18,24 +18,24 @@ import javax.lang.model.element.Modifier;
 
 import log.CCLevel;
 import log.CCLogRecord;
-import logic.Expression;
+import logic.BeetlzExpression;
 import logic.Operator;
-import logic.Expression.ArithmeticExpression;
-import logic.Expression.ArrayaccessExpression;
-import logic.Expression.EqualityExpression;
-import logic.Expression.EquivalenceExpression;
-import logic.Expression.IdentifierExpression;
-import logic.Expression.ImpliesExpression;
-import logic.Expression.InformalExpression;
-import logic.Expression.Keyword;
-import logic.Expression.LiteralExpression;
-import logic.Expression.LogicalExpression;
-import logic.Expression.MemberaccessExpression;
-import logic.Expression.MethodcallExpression;
-import logic.Expression.Nullity;
-import logic.Expression.RelationalExpression;
-import logic.Expression.UnaryExpression;
-import logic.Expression.Keyword.Keywords;
+import logic.BeetlzExpression.ArithmeticExpression;
+import logic.BeetlzExpression.ArrayaccessExpression;
+import logic.BeetlzExpression.EqualityExpression;
+import logic.BeetlzExpression.EquivalenceExpression;
+import logic.BeetlzExpression.IdentifierExpression;
+import logic.BeetlzExpression.ImpliesExpression;
+import logic.BeetlzExpression.InformalExpression;
+import logic.BeetlzExpression.Keyword;
+import logic.BeetlzExpression.LiteralExpression;
+import logic.BeetlzExpression.LogicalExpression;
+import logic.BeetlzExpression.MemberaccessExpression;
+import logic.BeetlzExpression.MethodcallExpression;
+import logic.BeetlzExpression.Nullity;
+import logic.BeetlzExpression.RelationalExpression;
+import logic.BeetlzExpression.UnaryExpression;
+import logic.BeetlzExpression.Keyword.Keywords;
 import main.Beetlz;
 
 import org.jmlspecs.openjml.JmlSpecs;
@@ -109,8 +109,7 @@ public final class JmlParser {
                                           final JmlTree.JmlCompilationUnit a_cu) {
 
     final SortedSet < ClassModifier > mod       = new TreeSet < ClassModifier > ();
-    Visibility vis                              =
-      new Visibility(VisibilityModifier.PACKAGE_PRIVATE);
+    Visibility vis = new Visibility(VisibilityModifier.PACKAGE_PRIVATE);
     final List < SmartString > generics    = new Vector < SmartString > ();
     final SortedSet < SmartString > interfaces  = new TreeSet < SmartString > ();
     final List < SmartString > pack = new Vector < SmartString > ();
@@ -255,9 +254,11 @@ public final class JmlParser {
                                              final JmlTree.JmlCompilationUnit the_cu) {
 
     final SortedSet < FeatureModifier > mod = new TreeSet < FeatureModifier > ();
-    Visibility vis                          =
-      new Visibility(VisibilityModifier.PACKAGE_PRIVATE);
-    SmartString return_value                 = SmartString.getVoid();
+    Visibility vis = new Visibility(VisibilityModifier.PACKAGE_PRIVATE);
+    if(an_encl_class.isInterface())
+      vis = new Visibility(VisibilityModifier.PUBLIC);
+    
+    SmartString return_value = SmartString.getVoid();
     final Map < String , SmartString > params = new HashMap < String, SmartString > ();
     //Method name
     final FeatureSmartString name = new FeatureSmartString(a_method.getName().toString());
@@ -329,6 +330,7 @@ public final class JmlParser {
         mod.add(FeatureModifier.VOLATILE);
       }
     }
+    
 
     //Return type
     if (a_method.getReturnType() != null) {
@@ -599,18 +601,18 @@ public final class JmlParser {
    * @return parsed class specs
    */
   private static Invariant parseClassSpecs(final TypeSpecs the_specs) {
-    final List < Expression > clauses = new Vector < Expression > ();
-    final List < Expression > history = new Vector < Expression > ();
+    final List < BeetlzExpression > clauses = new Vector < BeetlzExpression > ();
+    final List < BeetlzExpression > history = new Vector < BeetlzExpression > ();
 
     for (final JmlTree.JmlTypeClause c : the_specs.clauses) {
       if (c instanceof JmlTree.JmlTypeClauseExpr) {
         final JmlTree.JmlTypeClauseExpr expr = (JmlTree.JmlTypeClauseExpr) c;
-        final Expression e = parseJCExpression(expr.expression);
+        final BeetlzExpression e = parseExpr(expr.expression);
         clauses.addAll(splitBooleanExpressions(e));
       //end JmlTypeClauseExpr
       } else if (c instanceof JmlTree.JmlTypeClauseConstraint) {
         final JmlTree.JmlTypeClauseConstraint expr = (JmlTree.JmlTypeClauseConstraint) c;
-        final Expression e = parseJCExpression(expr.expression);
+        final BeetlzExpression e = parseExpr(expr.expression);
         history.addAll(splitBooleanExpressions(e));
       } else {
         clauses.add(new InformalExpression(c.toString()));
@@ -624,52 +626,52 @@ public final class JmlParser {
    * @param an_expr expression
    * @return parsed expression
    */
-  private static Expression parseJCExpression(final JCTree.JCExpression an_expr) {
-    Expression new_expr = InformalExpression.EMPTY_COMMENT;
+  private static BeetlzExpression parseExpr(final JCTree.JCExpression an_expr) {
+    BeetlzExpression new_expr = InformalExpression.EMPTY_COMMENT;
     if (an_expr instanceof JCTree.JCBinary) {
       final JCTree.JCBinary bin = (JCTree.JCBinary) an_expr;
       if (bin.getKind() == Kind.GREATER_THAN) {
-        new_expr = new RelationalExpression(parseJCExpression(bin.lhs),
-                                           Operator.GREATER, parseJCExpression(bin.rhs));
+        new_expr = new RelationalExpression(parseExpr(bin.lhs),
+                                           Operator.GREATER, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.GREATER_THAN_EQUAL) {
-        new_expr = new RelationalExpression(parseJCExpression(bin.lhs),
-                                           Operator.GREATER_EQUAL, parseJCExpression(bin.rhs));
+        new_expr = new RelationalExpression(parseExpr(bin.lhs),
+                                           Operator.GREATER_EQUAL, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.LESS_THAN) {
-        new_expr = new RelationalExpression(parseJCExpression(bin.lhs),
-                                           Operator.SMALLER, parseJCExpression(bin.rhs));
+        new_expr = new RelationalExpression(parseExpr(bin.lhs),
+                                           Operator.SMALLER, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.LESS_THAN_EQUAL) {
-        new_expr = new RelationalExpression(parseJCExpression(bin.lhs),
-                                           Operator.SMALLER_EQUAL, parseJCExpression(bin.rhs));
+        new_expr = new RelationalExpression(parseExpr(bin.lhs),
+                                           Operator.SMALLER_EQUAL, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.EQUAL_TO) {
-        new_expr = new EqualityExpression(parseJCExpression(bin.lhs),
-                                         Operator.EQUAL, parseJCExpression(bin.rhs));
+        new_expr = new EqualityExpression(parseExpr(bin.lhs),
+                                         Operator.EQUAL, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.NOT_EQUAL_TO) {
-        new_expr = new EqualityExpression(parseJCExpression(bin.lhs),
-                                         Operator.NOT_EQUAL, parseJCExpression(bin.rhs));
+        new_expr = new EqualityExpression(parseExpr(bin.lhs),
+                                         Operator.NOT_EQUAL, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.MULTIPLY) {
-        new_expr = new ArithmeticExpression(parseJCExpression(bin.lhs),
-                                           Operator.MULTIPLE, parseJCExpression(bin.rhs));
+        new_expr = new ArithmeticExpression(parseExpr(bin.lhs),
+                                           Operator.MULTIPLE, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.DIVIDE) {
-        new_expr = new ArithmeticExpression(parseJCExpression(bin.lhs),
-                                           Operator.DIVIDE, parseJCExpression(bin.rhs));
+        new_expr = new ArithmeticExpression(parseExpr(bin.lhs),
+                                           Operator.DIVIDE, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.MINUS) {
-        new_expr = new ArithmeticExpression(parseJCExpression(bin.lhs),
-                                           Operator.MINUS, parseJCExpression(bin.rhs));
+        new_expr = new ArithmeticExpression(parseExpr(bin.lhs),
+                                           Operator.MINUS, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.PLUS) {
-        new_expr = new ArithmeticExpression(parseJCExpression(bin.lhs),
-                                           Operator.PLUS, parseJCExpression(bin.rhs));
+        new_expr = new ArithmeticExpression(parseExpr(bin.lhs),
+                                           Operator.PLUS, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.REMAINDER) { //guess this is modulo
-        new_expr = new ArithmeticExpression(parseJCExpression(bin.lhs),
-                                           Operator.MODULO, parseJCExpression(bin.rhs));
+        new_expr = new ArithmeticExpression(parseExpr(bin.lhs),
+                                           Operator.MODULO, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.CONDITIONAL_AND) {
-        new_expr = new LogicalExpression(parseJCExpression(bin.lhs),
-                                        Operator.AND, parseJCExpression(bin.rhs));
+        new_expr = new LogicalExpression(parseExpr(bin.lhs),
+                                        Operator.AND, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.CONDITIONAL_OR) {
-        new_expr = new LogicalExpression(parseJCExpression(bin.lhs),
-                                        Operator.OR, parseJCExpression(bin.rhs));
+        new_expr = new LogicalExpression(parseExpr(bin.lhs),
+                                        Operator.OR, parseExpr(bin.rhs));
       } else if (bin.getKind() == Kind.XOR) {
-        new_expr = new LogicalExpression(parseJCExpression(bin.lhs),
-                                        Operator.XOR, parseJCExpression(bin.rhs));
+        new_expr = new LogicalExpression(parseExpr(bin.lhs),
+                                        Operator.XOR, parseExpr(bin.rhs));
       } else {
         new_expr = new InformalExpression(an_expr.toString());
       }
@@ -678,15 +680,15 @@ public final class JmlParser {
       final JmlTree.JmlBinary b = (JmlTree.JmlBinary) an_expr;
       
       if (b.op == JmlToken.IMPLIES) {
-        new_expr = new ImpliesExpression(parseJCExpression(b.lhs), parseJCExpression(b.rhs));
+        new_expr = new ImpliesExpression(parseExpr(b.lhs), parseExpr(b.rhs));
       } else if (b.op == JmlToken.REVERSE_IMPLIES) {
-        new_expr = new ImpliesExpression(parseJCExpression(b.rhs), parseJCExpression(b.lhs));
+        new_expr = new ImpliesExpression(parseExpr(b.rhs), parseExpr(b.lhs));
       } else if (b.op == JmlToken.EQUIVALENCE) {
-        new_expr = new EquivalenceExpression(parseJCExpression(b.rhs), Operator.IFF,
-                                            parseJCExpression(b.lhs));
+        new_expr = new EquivalenceExpression(parseExpr(b.rhs), Operator.IFF,
+                                            parseExpr(b.lhs));
       } else if (b.op == JmlToken.INEQUIVALENCE) {
-        new_expr = new EquivalenceExpression(parseJCExpression(b.rhs), Operator.NOT_IFF,
-                                            parseJCExpression(b.lhs));
+        new_expr = new EquivalenceExpression(parseExpr(b.rhs), Operator.NOT_IFF,
+                                            parseExpr(b.lhs));
       } else {
         new_expr = new InformalExpression(an_expr.toString());
       }
@@ -705,31 +707,32 @@ public final class JmlParser {
       final JCTree.JCUnary un = (JCTree.JCUnary) an_expr;
       if (un.getKind() == Kind.UNARY_MINUS) {
         new_expr = new UnaryExpression(Operator.UNARY_MINUS,
-                                      parseJCExpression(un.getExpression()));
+                                      parseExpr(un.getExpression()));
       } else if (un.getKind() == Kind.UNARY_PLUS) {
         new_expr = new UnaryExpression(Operator.UNARY_PLUS,
-                                      parseJCExpression(un.getExpression()));
+                                      parseExpr(un.getExpression()));
       } else if (un.getKind() == Kind.LOGICAL_COMPLEMENT) {
-        new_expr = new UnaryExpression(Operator.NOT, parseJCExpression(un.getExpression()));
+        new_expr = new UnaryExpression(Operator.NOT, parseExpr(un.getExpression()));
       } else {
         new_expr = new InformalExpression(an_expr.toString());
       }
       //end JCUnary
     } else if (an_expr instanceof JCTree.JCArrayAccess) {
       final JCTree.JCArrayAccess a = (JCTree.JCArrayAccess) an_expr;
-      new_expr = new ArrayaccessExpression(parseJCExpression(a.indexed),
-                                          parseJCExpression(a.index));
+      new_expr = new ArrayaccessExpression(parseExpr(a.indexed),
+                                          parseExpr(a.index));
       //end JCArrayAccess
     } else if (an_expr instanceof JCTree.JCFieldAccess) {
       final JCTree.JCFieldAccess f = (JCTree.JCFieldAccess) an_expr;
-      new_expr = new MemberaccessExpression(parseJCExpression(f.selected),
+      new_expr = new MemberaccessExpression(parseExpr(f.selected),
                                            new IdentifierExpression(f.name.toString()));
       //end JCFieldAccess
     } else if (an_expr instanceof JmlTree.JmlMethodInvocation) {
+      
       final JmlTree.JmlMethodInvocation m = (JmlTree.JmlMethodInvocation) an_expr;
-      final java.util.List < Expression > list = new Vector < Expression > ();
+      final java.util.List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
       for (final JCTree.JCExpression e : m.getArguments()) {
-        list.add(parseJCExpression(e));
+        list.add(parseExpr(e));
       }
       if (m.token == JmlToken.BSOLD) {
         new_expr =
@@ -741,11 +744,11 @@ public final class JmlParser {
       //end JCMethodInvocation
     } else if (an_expr instanceof JCTree.JCMethodInvocation) {
       final JCTree.JCMethodInvocation m = (JCTree.JCMethodInvocation) an_expr;
-      final java.util.List < Expression > list = new Vector < Expression > ();
+      final java.util.List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
       for (final JCTree.JCExpression e : m.getArguments()) {
-        list.add(parseJCExpression(e));
+        list.add(parseExpr(e));
       }
-      new_expr = new MethodcallExpression(parseJCExpression(m.getMethodSelect()),
+      new_expr = new MethodcallExpression(parseExpr(m.getMethodSelect()),
                                          list);
     } else  if (an_expr instanceof JCTree.JCIdent) {
       new_expr = new IdentifierExpression(an_expr.toString());
@@ -765,7 +768,7 @@ public final class JmlParser {
       //end JCLiteral
     } else if (an_expr instanceof JCTree.JCParens) {
       final JCTree.JCParens p = (JCTree.JCParens) an_expr;
-      final Expression e = parseJCExpression(p.expr);
+      final BeetlzExpression e = parseExpr(p.expr);
       e.setParenthesised();
       new_expr = e;
     } else {
@@ -796,28 +799,31 @@ public final class JmlParser {
     for (final JmlTree.JmlSpecificationCase s : some_specs.cases.cases) {
       if (s.token == null || s.token == JmlToken.NORMAL_BEHAVIOR ||
           s.token == JmlToken.BEHAVIOR) {
-        final List < Expression > pre = new Vector < Expression > ();
-        final List < Expression > post = new Vector < Expression > ();
-        final SortedSet < FeatureSmartString > frame = new TreeSet < FeatureSmartString > ();
+        final List < BeetlzExpression > pre = new Vector < BeetlzExpression > ();
+        final List < BeetlzExpression > post = new Vector < BeetlzExpression > ();
+        final List < BeetlzExpression > frame = new Vector < BeetlzExpression > ();
         final String constant = null;
         FeatureType type;
         for (final JmlTree.JmlMethodClause c : s.clauses) {
           if (c instanceof JmlTree.JmlMethodClauseStoreRef) {
             final JmlTree.JmlMethodClauseStoreRef ass =
               (JmlTree.JmlMethodClauseStoreRef) c;
-            for (final JCTree t : ass.list) {
-              if (t.getKind() == Kind.IDENTIFIER) {
-                frame.add(new FeatureSmartString(t.toString()));
-              } else if (t.getKind() == Kind.OTHER && t.toString().equals(BConst.NOTHING)) {
-                frame.add(FeatureSmartString.nothing());
-              } else if (t.getKind() == Kind.OTHER && t.toString().equals(BConst.EVERYTHING)) {
-                frame.add(FeatureSmartString.everything());
-              } else {
-                final int first = t.toString().indexOf("["); //$NON-NLS-1$
-                if (first != -1) {
-                  frame.add(new FeatureSmartString(t.toString().substring(0, first)));
+            //ignore captures and accesible clauses
+            if(ass.token == JmlToken.ASSIGNABLE) {
+              for (final JCTree t : ass.list) {
+                if (t.getKind() == Kind.IDENTIFIER) {
+                  frame.add(new IdentifierExpression(t.toString()));
+                } else if (t.getKind() == Kind.OTHER && t.toString().equals(BConst.NOTHING)) {
+                  frame.add(new Keyword(Keywords.NOTHING));
+                } else if (t.getKind() == Kind.OTHER && t.toString().equals(BConst.EVERYTHING)) {
+                  frame.add(new Keyword(Keywords.EVERYTHING));
                 } else {
-                  frame.add(new FeatureSmartString(t.toString()));
+                  final int first = t.toString().indexOf("["); //$NON-NLS-1$
+                  if (first != -1) {
+                    frame.add(new IdentifierExpression(t.toString().substring(0, first)));
+                  } else {
+                    frame.add(new IdentifierExpression(t.toString()));
+                  }
                 }
               }
             }
@@ -825,10 +831,10 @@ public final class JmlParser {
           } else if (c instanceof JmlTree.JmlMethodClauseExpr) {
             final JmlTree.JmlMethodClauseExpr expr = (JmlTree.JmlMethodClauseExpr) c;
             if (expr.token == JmlToken.REQUIRES) {
-              final Expression e = parseJCExpression(expr.expression);
+              final BeetlzExpression e = parseExpr(expr.expression);
               pre.addAll(splitBooleanExpressions(e));
             } else if (expr.token == JmlToken.ENSURES) {
-              final Expression e = parseJCExpression(expr.expression);
+              final BeetlzExpression e = parseExpr(expr.expression);
               post.addAll(splitBooleanExpressions(e));
             }
             //ignore all other clauses
@@ -839,18 +845,19 @@ public final class JmlParser {
         if (a_return_value.equals(SmartString.getVoid())) {
           type = FeatureType.COMMAND;
           if (frame.size() == 0) {
-            frame.add(FeatureSmartString.everything());
+            frame.add(new Keyword(Keywords.EVERYTHING));
           }
-        } else if (a_pure || (frame.size() == 1 && frame.first().
-            equals(FeatureSmartString.nothing()))) {
+        //} else if (a_pure || (frame.size() == 1 && frame.get(0).
+        } else if (a_pure || (frame.size() > 0 && 
+            frame.get(0).compareToTyped(new Keyword(Keywords.NOTHING)) == 0)) {
           type = FeatureType.QUERY;
-          frame.add(FeatureSmartString.nothing());
+          frame.add(new Keyword(Keywords.NOTHING));
         } else {
           if (frame.size() == 0 && an_encl_class_pure) {
             type = FeatureType.QUERY;
-            frame.add(FeatureSmartString.nothing());
+            frame.add(new Keyword(Keywords.NOTHING));
           } else if (frame.size() == 0) {
-            frame.add(FeatureSmartString.everything());
+            frame.add(new Keyword(Keywords.EVERYTHING));
             type = FeatureType.MIXED;
           } else {
             type = FeatureType.MIXED;
@@ -862,31 +869,31 @@ public final class JmlParser {
 
     //No Specs:
     if (specCases.isEmpty()) {
-      final SortedSet < FeatureSmartString > frame = new TreeSet < FeatureSmartString > ();
+      final List < BeetlzExpression > frame = new Vector < BeetlzExpression > ();
       FeatureType type;
       //Query or Command ?!
       if (a_return_value.equals(SmartString.getVoid())) {
         type = FeatureType.COMMAND;
         if (frame.size() == 0) {
-          frame.add(FeatureSmartString.everything());
+          frame.add(new Keyword(Keywords.EVERYTHING));
         }
       } else if (a_pure || (frame.size() == 1 &&
-          frame.first().equals(FeatureSmartString.nothing()))) {
+          frame.get(0).equals(new Keyword(Keywords.NOTHING)))) {
         type = FeatureType.QUERY;
-        frame.add(FeatureSmartString.nothing());
+        frame.add(new Keyword(Keywords.NOTHING));
       } else {
         if (frame.size() == 0 && an_encl_class_pure) {
           type = FeatureType.QUERY;
-          frame.add(FeatureSmartString.nothing());
+          frame.add(new Keyword(Keywords.NOTHING));
         } else if (frame.size() == 0) {
-          frame.add(FeatureSmartString.everything());
+          frame.add(new Keyword(Keywords.EVERYTHING));
           type = FeatureType.MIXED;
         } else {
           type = FeatureType.MIXED;
         }
       }
-      specCases.add(new Spec(new Vector < Expression > (),
-                             new Vector < Expression > (),
+      specCases.add(new Spec(new Vector < BeetlzExpression > (),
+                             new Vector < BeetlzExpression > (),
                              frame, null, type, ClassType.JAVA));
     }
     return specCases;
@@ -899,8 +906,8 @@ public final class JmlParser {
    * @param an_expr expression to split
    * @return split expression, put into a list
    */
-  private static List < Expression > splitBooleanExpressions(final Expression an_expr) {
-    final List < Expression > list = new Vector < Expression > ();
+  private static List < BeetlzExpression > splitBooleanExpressions(final BeetlzExpression an_expr) {
+    final List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
     if (an_expr instanceof LogicalExpression) {
       final LogicalExpression and = (LogicalExpression) an_expr;
       if (and.getOperator() == Operator.AND) {
@@ -921,19 +928,19 @@ public final class JmlParser {
    */
   private static Spec parseVariableSpecs(final VarSymbol a_var,
                                          final FieldSpecs a_spec) {
-    final SortedSet < FeatureSmartString > frame = new TreeSet < FeatureSmartString > ();
-    frame.add(FeatureSmartString.nothing()); //all variables are pure...
+    final List < BeetlzExpression > frame = new Vector < BeetlzExpression > ();
+    frame.add(new Keyword(Keywords.NOTHING)); //all variables are pure...
     //Constant, initialiser is non-null?
     if (a_var.getConstantValue() != null) {
-      return new Spec(new Vector < Expression > (), new Vector < Expression > (),
+      return new Spec(new Vector < BeetlzExpression > (), new Vector < BeetlzExpression > (),
                       frame, a_var.getConstantValue().toString(),
                       FeatureType.QUERY, ClassType.JAVA);
     } else if (a_var.getModifiers().contains(Modifier.STATIC) &&
         a_var.getModifiers().contains(Modifier.FINAL)) {
-      return new Spec(new Vector < Expression > (), new Vector < Expression > (),
+      return new Spec(new Vector < BeetlzExpression > (), new Vector < BeetlzExpression > (),
                       frame, Spec.UNKNOWN_VALUE, FeatureType.QUERY, ClassType.JAVA);
     } else {
-      return new Spec(new Vector < Expression > (), new Vector < Expression > (),
+      return new Spec(new Vector < BeetlzExpression > (), new Vector < BeetlzExpression > (),
                       frame, null, FeatureType.QUERY, ClassType.JAVA);
     }
   }

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import log.CCLogManager;
-import logic.Expression;
+import logic.BeetlzExpression;
 import main.Beetlz;
 import main.UserProfile;
 import structure.ClassStructure;
@@ -82,13 +82,13 @@ public class JMLClassTranslator {
     if (srcInv != null && trgInv == null) {
       my_logger.logMissingInvariant(my_src, my_trgName);
     } else if (srcInv != null && trgInv != null) {
-      final List < Expression > srcCond = srcInv.getNonTrivialPredicates();
-      final List < Expression > trgCond = trgInv.getNonTrivialPredicates();
+      final List < BeetlzExpression > srcCond = srcInv.getNonTrivialPredicates();
+      final List < BeetlzExpression > trgCond = trgInv.getNonTrivialPredicates();
 
       for (int i = 0; i < trgCond.size(); i++) {
         for (int j = 0; j < srcCond.size(); j++) {
-          final Expression src = srcCond.get(j);
-          final Expression trg = trgCond.get(i);
+          final BeetlzExpression src = srcCond.get(j);
+          final BeetlzExpression trg = trgCond.get(i);
           if (trg.compareToTyped(src) == 0) {
             trgCond.remove(i);
             srcCond.remove(j);
@@ -121,15 +121,15 @@ public class JMLClassTranslator {
    */
   private double relateHistoryConstraints() {
     final double success = 1;
-    final List < Expression > history =
-      new Vector < Expression > (my_srcCls.getInvariant().getHistoryConstraints());
+    final List < BeetlzExpression > history =
+      new Vector < BeetlzExpression > (my_srcCls.getInvariant().getHistoryConstraints());
     if (history.size() > 0) my_logger.logHistoryConstraints();
 
-    for (final Expression e : history) {
+    for (final BeetlzExpression e : history) {
       boolean found = false;
       for (final FeatureStructure feat : my_trgCls.getFeatures()) {
         if (!feat.getSpec().isEmpty()) {
-          for (final Expression post : feat.getSpec().get(0).getPostconditions()) {
+          for (final BeetlzExpression post : feat.getSpec().get(0).getPostconditions()) {
             if (post.compareToTyped(e) == 0) {
               found = true;
               continue;
@@ -139,7 +139,7 @@ public class JMLClassTranslator {
       }
       for (final FeatureStructure feat : my_trgCls.getConstructors()) {
         if (!feat.getSpec().isEmpty()) {
-          for (final Expression post : feat.getSpec().get(0).getPostconditions()) {
+          for (final BeetlzExpression post : feat.getSpec().get(0).getPostconditions()) {
             if (post.compareToTyped(e) == 0) {
               found = true;
               continue;

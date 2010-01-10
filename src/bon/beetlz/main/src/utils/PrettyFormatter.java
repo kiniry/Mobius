@@ -5,7 +5,7 @@ package utils;
 
 import java.util.List;
 
-import logic.Expression.Nullity;
+import logic.BeetlzExpression.Nullity;
 import main.Beetlz;
 import main.UserProfile;
 import structure.ClassStructure;

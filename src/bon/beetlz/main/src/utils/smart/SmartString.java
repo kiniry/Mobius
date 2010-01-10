@@ -3,7 +3,7 @@
  */
 package utils.smart;
 
-import logic.Expression.Nullity;
+import logic.BeetlzExpression.Nullity;
 import main.Beetlz;
 import utils.BConst;
 import utils.BasicTypesDictionary;

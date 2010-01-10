@@ -8,7 +8,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import logic.Expression.Nullity;
+import logic.BeetlzExpression.Nullity;
 import utils.BConst;
 import utils.Helper;
 import utils.BeetlzSourceLocation;

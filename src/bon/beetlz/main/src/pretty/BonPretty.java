@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import logic.Expression;
-import logic.Expression.Nullity;
+import logic.BeetlzExpression;
+import logic.BeetlzExpression.Nullity;
 import main.Beetlz;
 import structure.ClassCollection;
 import structure.ClassStructure;
@@ -531,10 +531,10 @@ public class BonPretty {
     final Invariant i = the_class.getInvariant();
     if (i.getPredicates().size() > 0) {
       inv.add("invariant" + my_newline); //$NON-NLS-1$
-      for (final Expression e : i.getNonTrivialPredicates()) {
+      for (final BeetlzExpression e : i.getNonTrivialPredicates()) {
         inv.add(my_tab + e.toBonString() + my_semicolon + my_newline);
       }
-      for (final Expression e : i.getInformalPredicates()) {
+      for (final BeetlzExpression e : i.getInformalPredicates()) {
         inv.add(my_tab + "-- " + e.toBonString() + my_semicolon + my_newline); //$NON-NLS-1$
       }
     }
@@ -580,10 +580,10 @@ public class BonPretty {
           }
         }
       }
-      for (final Expression e : s.getNonTrivialPreconditions()) {
+      for (final BeetlzExpression e : s.getNonTrivialPreconditions()) {
         spec.add(my_tab + my_tab + my_tab + e.toBonString() + my_semicolon + my_newline);
       }
-      for (final Expression e : s.getInformalPreconditions()) {
+      for (final BeetlzExpression e : s.getInformalPreconditions()) {
         spec.add(my_tab + my_tab + my_tab + "-- " + //$NON-NLS-1$
                  e.toBonString().replace("\n", " ") + //$NON-NLS-1$//$NON-NLS-2$
                  my_semicolon + my_newline);
@@ -596,6 +596,7 @@ public class BonPretty {
       spec.add(my_tab + my_tab + "ensure" + my_newline); //$NON-NLS-1$
       //frame
       if (!s.defaultFrame() && !s.frameIsKeyword()) {
+        //System.err.println("deafult frame: " + s.defaultFrame() + "  , frame keyword " + s.frameIsKeyword());
         spec.add(my_tab + my_tab + my_tab + "delta " + //$NON-NLS-1$
                  printFrame(s) + my_semicolon + my_newline);
       }
@@ -620,20 +621,20 @@ public class BonPretty {
                  my_semicolon + my_newline);
       }
       //Normal post conditions...
-      for (final Expression e : s.getNonTrivialPostconditions()) {
+      for (final BeetlzExpression e : s.getNonTrivialPostconditions()) {
         spec.add(my_tab + my_tab + my_tab + e.toBonString() + my_semicolon + my_newline);
       }
-      for (final Expression e : s.getInformalPostconditions()) {
+      for (final BeetlzExpression e : s.getInformalPostconditions()) {
         spec.add(my_tab + my_tab + my_tab + "-- " + //$NON-NLS-1$
                  e.toBonString().replace("\n", " ") + //$NON-NLS-1$ //$NON-NLS-2$
                  my_semicolon + my_newline);
       }
       //History constraints
       if (printHistory) {
-        for (final Expression e : the_invariant.getNonTrivialHistoryConstraints()) {
+        for (final BeetlzExpression e : the_invariant.getNonTrivialHistoryConstraints()) {
           spec.add(my_tab + my_tab + my_tab + e.toBonString() + my_semicolon + my_newline);
         }
-        for (final Expression e : the_invariant.getInformalHistoryConstraints()) {
+        for (final BeetlzExpression e : the_invariant.getInformalHistoryConstraints()) {
           spec.add(my_tab + my_tab + my_tab + "-- " + //$NON-NLS-1$
                    e.toBonString().replace("\n", " ") + //$NON-NLS-1$ //$NON-NLS-2$
                    my_semicolon + my_newline);
@@ -739,12 +740,12 @@ public class BonPretty {
   public static String printFrame(final Spec the_spec) {
     String frame = ""; //$NON-NLS-1$
 
-    for (final SmartString str : the_spec.getFrame()) {
-      frame += str + ", "; //$NON-NLS-1$
+    for (final BeetlzExpression str : the_spec.getFrame()) {
+      frame += str.toBonString() + ", "; //$NON-NLS-1$
     }
-    final int two = 2;
-    frame = frame.substring(0, frame.length() - two);
+    final int two = 2;  
     if (the_spec.getFrame().size() > 1) {
+      frame = frame.substring(0, frame.length() - two);
       frame = "{" + frame + "}"; //$NON-NLS-1$ //$NON-NLS-2$
     }
     return frame;

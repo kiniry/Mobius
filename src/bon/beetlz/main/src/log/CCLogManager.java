@@ -5,8 +5,8 @@ import java.util.ResourceBundle;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import logic.Expression;
-import logic.Expression.Nullity;
+import logic.BeetlzExpression;
+import logic.BeetlzExpression.Nullity;
 import main.Beetlz;
 import structure.ClassStructure;
 import structure.FeatureStructure;
@@ -532,9 +532,9 @@ public class CCLogManager {
    */
   public void logMissingInvariantClauses(final BeetlzSourceLocation the_src,
       final SmartString a_class,
-      final List < Expression > the_clauses) {
+      final List < BeetlzExpression > the_clauses) {
     String clauses = ""; //$NON-NLS-1$
-    for (final Expression s : the_clauses) {
+    for (final BeetlzExpression s : the_clauses) {
       if (my_to_bon) {
         clauses += "\n\t" + s.toBonString(); //$NON-NLS-1$
       } else {
@@ -584,9 +584,9 @@ public class CCLogManager {
   public void logMissingPostcondition(final BeetlzSourceLocation the_src,
       final SmartString a_class,
       final SmartString a_feature,
-      final List < Expression > the_post) {
+      final List < BeetlzExpression > the_post) {
     String clauses = ""; //$NON-NLS-1$
-    for (final Expression s : the_post) {
+    for (final BeetlzExpression s : the_post) {
       if (my_to_bon) {
         clauses += "\n\t" + s.toBonString(); //$NON-NLS-1$
       } else {
@@ -611,9 +611,9 @@ public class CCLogManager {
   public void logMissingPrecondition(final BeetlzSourceLocation the_src,
       final SmartString a_class,
       final SmartString a_feature,
-      final List < Expression > the_pre) {
+      final List < BeetlzExpression > the_pre) {
     String clauses = ""; //$NON-NLS-1$
-    for (final Expression s : the_pre) {
+    for (final BeetlzExpression s : the_pre) {
       if (my_to_bon) {
         clauses += "\n\t" + s.toBonString(); //$NON-NLS-1$
       } else {
@@ -656,7 +656,7 @@ public class CCLogManager {
    */
   public void logMissingHistoryContraint(final BeetlzSourceLocation the_src,
       final SmartString the_class,
-      final Expression the_cond) {
+      final BeetlzExpression the_cond) {
     my_records.
     add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
         String.format(Beetlz.getResourceBundle().
@@ -1004,9 +1004,9 @@ public class CCLogManager {
   public void logTooManyPrecondition(final BeetlzSourceLocation the_src,
       final SmartString a_class,
       final SmartString a_feature,
-      final List < Expression > the_pre) {
+      final List < BeetlzExpression > the_pre) {
     String clauses = ""; //$NON-NLS-1$
-    for (final Expression s : the_pre) {
+    for (final BeetlzExpression s : the_pre) {
       if (my_to_bon) {
         clauses += "\n\t" + s.toBonString(); //$NON-NLS-1$
       } else {
@@ -1031,9 +1031,9 @@ public class CCLogManager {
   public void logTooManyPostcondition(final BeetlzSourceLocation the_src,
       final SmartString a_class,
       final SmartString a_feature,
-      final List < Expression > the_post) {
+      final List < BeetlzExpression > the_post) {
     String clauses = ""; //$NON-NLS-1$
-    for (final Expression s : the_post) {
+    for (final BeetlzExpression s : the_post) {
       if (my_to_bon) {
         clauses += "\n\t" + s.toBonString(); //$NON-NLS-1$
       } else {
@@ -1055,9 +1055,9 @@ public class CCLogManager {
    * @param the_inv list of additional invariants
    */
   public void logTooManyInvariant(final BeetlzSourceLocation the_src, final SmartString a_class,
-      final List < Expression > the_inv) {
+      final List < BeetlzExpression > the_inv) {
     String clauses = ""; //$NON-NLS-1$
-    for (final Expression s : the_inv) {
+    for (final BeetlzExpression s : the_inv) {
       if (my_to_bon) {
         clauses += "\n\t" + s.toBonString(); //$NON-NLS-1$
       } else {

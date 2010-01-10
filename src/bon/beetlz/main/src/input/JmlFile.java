@@ -115,6 +115,8 @@ public class JmlFile {
     String[] openjmlArgsArr = openjmlArgs.toArray(new String[openjmlArgs.size()]);
     try {
       PrintWriter jmlComplaints = new PrintWriter(new File("jmlComplaints.txt"));
+      //PrintWriter jmlComplaints = new PrintWriter(System.err);
+      //TODO: filter those messages that concern OUR files, not the JML internal ones...
       API api = new API(jmlComplaints, null, openjmlArgsArr);
 
       List<JmlCompilationUnit> trees = api.parseFiles(my_files.toArray(new File[my_files.size()]));

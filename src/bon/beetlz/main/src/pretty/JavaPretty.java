@@ -16,8 +16,8 @@ import java.util.SortedSet;
 import java.util.Vector;
 
 
-import logic.Expression;
-import logic.Expression.Nullity;
+import logic.BeetlzExpression;
+import logic.BeetlzExpression.Nullity;
 import main.Beetlz;
 
 import structure.ClassCollection;
@@ -494,13 +494,15 @@ public class JavaPretty {
         Beetlz.getProfile().noJml()) return new Vector < String > ();
     final Spec s = the_spec_cases.get(0);
     final List < String > spec = new Vector < String > ();
-    final List < SmartString > frame = new Vector < SmartString > (s.getFrame());
+    final List < BeetlzExpression > frame = new Vector < BeetlzExpression > (s.getFrame());
     String args = ""; //$NON-NLS-1$
     if (frame.size() > 0) {
       for (int i = 0; i < frame.size() - 1; i++) {
-        args += PrettyFormatter.getJavaFrameName(frame.get(i)) + ", "; //$NON-NLS-1$
+        //args += PrettyFormatter.getJavaFrameName(frame.get(i)) + ", "; //$NON-NLS-1$
+        args += frame.get(i).toJavaString();
       }
-      args += PrettyFormatter.getJavaFrameName(frame.get(frame.size() - 1));
+      //args += PrettyFormatter.getJavaFrameName(frame.get(frame.size() - 1));
+      args += frame.get(frame.size() - 1).toJavaString();
     }
 
     if (!s.isEmpty()) spec.add(my_newline);
@@ -508,19 +510,19 @@ public class JavaPretty {
     if (!args.equals("\\everything") && !s.isPure()) { //do not print default //$NON-NLS-1$
       spec.add(my_tab + "//@ assignable " + args + my_semicolon + my_newline); //$NON-NLS-1$
     }
-    for (final Expression e : s.getNonTrivialPreconditions()) {
+    for (final BeetlzExpression e : s.getNonTrivialPreconditions()) {
       spec.add(my_tab + "//@ requires " + e.toJavaString() +
                my_semicolon + my_newline); //$NON-NLS-1$
     }
-    for (final Expression e : s.getInformalPreconditions()) {
+    for (final BeetlzExpression e : s.getInformalPreconditions()) {
       spec.add(my_tab + "//@ requires (* " + e.toJavaString() +
                " *)" + my_semicolon + my_newline); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    for (final Expression e : s.getNonTrivialPostconditions()) {
+    for (final BeetlzExpression e : s.getNonTrivialPostconditions()) {
       spec.add(my_tab + "//@ ensures " + e.toJavaString() +
                my_semicolon + my_newline); //$NON-NLS-1$
     }
-    for (final Expression e : s.getInformalPostconditions()) {
+    for (final BeetlzExpression e : s.getInformalPostconditions()) {
       spec.add(my_tab + "//@ ensures (* " + e.toJavaString() +
                " *)" + my_semicolon + my_newline); //$NON-NLS-1$ //$NON-NLS-2$
     }
@@ -538,11 +540,11 @@ public class JavaPretty {
     if (Beetlz.getProfile().noJml()) return spec;
     if (!the_invariant.isEmpty()) spec.add(my_newline);
 
-    for (final Expression e : the_invariant.getNonTrivialPredicates()) {
+    for (final BeetlzExpression e : the_invariant.getNonTrivialPredicates()) {
       spec.add(my_tab + "//@ invariant " + e.toJavaString() +
                my_semicolon + my_newline); //$NON-NLS-1$
     }
-    for (final Expression e : the_invariant.getInformalPredicates()) {
+    for (final BeetlzExpression e : the_invariant.getInformalPredicates()) {
       spec.add(my_tab + "//@ invariant (* " + e.toJavaString() +
                " *)" + my_semicolon + my_newline); //$NON-NLS-1$ //$NON-NLS-2$
     }

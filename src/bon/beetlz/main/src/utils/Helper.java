@@ -6,6 +6,7 @@ package utils;
 import java.util.Collection;
 import java.util.List;
 
+import logic.BeetlzExpression;
 import main.Beetlz;
 
 import structure.ClassStructure;
@@ -110,7 +111,6 @@ public final class Helper {
    * @return true if type is known in this model
    */
   public static boolean typeKnown(final SmartString the_type) {
-
     for (final String t : Beetlz.getClassMap().bonEntries()) {
       if (the_type.compareToTyped(new TypeSmartString(t)) == 0) {
         return true;
@@ -154,6 +154,16 @@ public final class Helper {
   public static boolean containsTyped(final Collection < FeatureSmartString > a_coll,
                                             final FeatureSmartString a_type) {
     for (final FeatureSmartString s : a_coll) {
+      if (s.compareToTyped(a_type) == 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  public static boolean containsTyped(final Collection < BeetlzExpression > a_coll,
+      final BeetlzExpression a_type) {
+    for (final BeetlzExpression s : a_coll) {
       if (s.compareToTyped(a_type) == 0) {
         return true;
       }

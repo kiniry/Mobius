@@ -384,15 +384,24 @@ public class Beetlz {
   }
   
   public final void debugParsing() {
-	  final ClassCollection jml = my_jmlfile.getClassCollection();
-	  final ClassCollection bon = my_bonfile.getClassCollection();
+	  //final ClassCollection jml = my_jmlfile.getClassCollection();
+	  //final ClassCollection bon = my_bonfile.getClassCollection();
+	  
+	  final OutputStreamWriter out = new OutputStreamWriter(System.out);
 	  
 	  System.out.println("***************** JML classes *************");
-	  jml.printOut();
+	  final JavaPretty prettyJ = new JavaPretty(BConst.TAB);
+    prettyJ.printClassCollection(my_jmlfile.getClassCollection(), out);
 	  
 	  System.out.println("***************** BON classes *************");
-	  bon.printOut();
+	  final BonPretty prettyB = new BonPretty(BConst.TAB);
+    prettyB.printClassCollection(my_bonfile.getClassCollection(), out);
 	  
+    try {
+      out.flush();
+    } catch (final IOException e) {
+      JAVA_LOGGER.severe(my_labels.getString("Beetlz.ioProblem"));
+    }
   }
   
   private void report() {
@@ -750,6 +759,11 @@ public class Beetlz {
         final JavaPretty pretty = new JavaPretty(BConst.TAB);
         final OutputStreamWriter out = new OutputStreamWriter(System.out);
         pretty.printClassCollection(my_bonfile.getClassCollection(), out);
+        try {
+          out.flush();
+        } catch (final IOException e) {
+          JAVA_LOGGER.severe(my_labels.getString("Beetlz.ioProblem"));
+        }
       }
     } else {
       if (my_profile.javaIsSource()) {

@@ -8,7 +8,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import logic.Expression;
+import logic.BeetlzExpression;
+import logic.BeetlzExpression.Keyword;
+import logic.BeetlzExpression.Keyword.Keywords;
 import utils.FeatureType;
 import utils.ModifierManager.ClassType;
 import utils.smart.FeatureSmartString;
@@ -24,11 +26,12 @@ public class Spec {
   /** The type is needed since some defaults are different for BON or Java. */
   private final ClassType my_type;
   /** Precondition. */
-  private final List < Expression > my_precondition;
+  private final List < BeetlzExpression > my_precondition;
   /** Postcondition.  */
-  private final List < Expression > my_postcondition;
+  private final List < BeetlzExpression > my_postcondition;
   /** Frame condition. */
-  private final SortedSet < FeatureSmartString > my_frame;
+  //private final SortedSet < FeatureSmartString > my_frame;
+  private final List < BeetlzExpression > my_frame;
   /** A constant value if the feature/method is constant. */
   private final /*@ nullable @*/ String my_constantValue;
   /** Feature type: field, query, command, mixed, unknown. */
@@ -39,9 +42,9 @@ public class Spec {
    * Dummy specs.
    */
   public Spec() {
-    my_precondition = new Vector < Expression > ();
-    my_postcondition = new Vector < Expression > ();
-    my_frame = new TreeSet < FeatureSmartString > ();
+    my_precondition = new Vector < BeetlzExpression > ();
+    my_postcondition = new Vector < BeetlzExpression > ();
+    my_frame = new Vector < BeetlzExpression > ();
     my_constantValue = null;
     my_featureType = FeatureType.UNKNOWN;
     my_type = ClassType.NOT_SPECIFIED;
@@ -56,9 +59,9 @@ public class Spec {
    * @param a_type feature type (query or command)
    * @param a_clstype class type
    */
-  public Spec(final List < Expression > a_pre,
-              final List < Expression > a_post,
-              final SortedSet < FeatureSmartString > a_frame,
+  public Spec(final List < BeetlzExpression > a_pre,
+              final List < BeetlzExpression > a_post,
+              final List < BeetlzExpression > a_frame,
               /*@ nullable @*/ final String a_const,
               final FeatureType a_type,
               final ClassType a_clstype) {
@@ -75,7 +78,7 @@ public class Spec {
    * Get all preconditions.
    * @return the preconditions
    */
-  public final List < Expression > getPreconditions() {
+  public final List < BeetlzExpression > getPreconditions() {
     return my_precondition;
   }
 
@@ -83,9 +86,9 @@ public class Spec {
    * Get all non informal preconditions.
    * @return non informal preconditions
    */
-  public final List < Expression > getNonTrivialPreconditions() {
-    final List < Expression > list = new Vector < Expression > ();
-    for (final Expression e : my_precondition) {
+  public final List < BeetlzExpression > getNonTrivialPreconditions() {
+    final List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
+    for (final BeetlzExpression e : my_precondition) {
       if (!e.skip()) {
         list.add(e);
       }
@@ -97,9 +100,9 @@ public class Spec {
    * Get informal preconditions.
    * @return all informal preconditions
    */
-  public final List < Expression > getInformalPreconditions() {
-    final List < Expression > list = new Vector < Expression > ();
-    for (final Expression e : my_precondition) {
+  public final List < BeetlzExpression > getInformalPreconditions() {
+    final List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
+    for (final BeetlzExpression e : my_precondition) {
       if (e.skip()) {
         list.add(e);
       }
@@ -111,9 +114,9 @@ public class Spec {
    * Get non informal postconditions.
    * @return non informal postconditions
    */
-  public final List < Expression > getNonTrivialPostconditions() {
-    final List < Expression > list = new Vector < Expression > ();
-    for (final Expression e : my_postcondition) {
+  public final List < BeetlzExpression > getNonTrivialPostconditions() {
+    final List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
+    for (final BeetlzExpression e : my_postcondition) {
       if (!e.skip()) {
         list.add(e);
       }
@@ -125,9 +128,9 @@ public class Spec {
    * Get informal postconditions.
    * @return informal postconditions
    */
-  public final List < Expression > getInformalPostconditions() {
-    final List < Expression > list = new Vector < Expression > ();
-    for (final Expression e : my_postcondition) {
+  public final List < BeetlzExpression > getInformalPostconditions() {
+    final List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
+    for (final BeetlzExpression e : my_postcondition) {
       if (e.skip()) {
         list.add(e);
       }
@@ -139,7 +142,7 @@ public class Spec {
    * Get all postconditions.
    * @return the postcondition
    */
-  public final List < Expression > getPostconditions() {
+  public final List < BeetlzExpression > getPostconditions() {
     return my_postcondition;
   }
 
@@ -147,7 +150,7 @@ public class Spec {
    * Get frame conditions.
    * @return the frame
    */
-  public final SortedSet < FeatureSmartString > getFrame() {
+  public final List < BeetlzExpression > getFrame() {
     return my_frame;
   }
 
@@ -182,10 +185,10 @@ public class Spec {
   public final boolean defaultFrame() {
     if (my_type == ClassType.BON) {
       return my_frame.size() == 1 &&
-      my_frame.first().equals(FeatureSmartString.nothing());
+        (my_frame.get(0).compareToTyped(new Keyword(Keywords.NOTHING)) == 0);
     } else if (my_type == ClassType.JAVA) {
       return my_frame.size() == 1 &&
-      my_frame.first().equals(FeatureSmartString.everything());
+        (my_frame.get(0).compareToTyped(new Keyword(Keywords.EVERYTHING)) == 0);
     } else {
       return false;
     }
@@ -197,8 +200,8 @@ public class Spec {
    */
   public final boolean frameIsKeyword() {
     if (my_frame.size() == 1) {
-      if (my_frame.first().equals(FeatureSmartString.everything()) ||
-          my_frame.first().equals(FeatureSmartString.nothing())) {
+      if ((my_frame.get(0).compareToTyped(new Keyword(Keywords.EVERYTHING)) == 0) ||
+          (my_frame.get(0).compareToTyped(new Keyword(Keywords.NOTHING)) == 0)) {
         return true;
       }
     }
@@ -215,7 +218,7 @@ public class Spec {
     String string = my_featureType + "\n"; //$NON-NLS-1$
     if (my_precondition.size() > 0) {
       string += "\trequires \n"; //$NON-NLS-1$
-      for (final Expression s : my_precondition) {
+      for (final BeetlzExpression s : my_precondition) {
         if (s.skip()) {
           string += "\t (* " + s + " *)\n"; //$NON-NLS-1$ //$NON-NLS-2$
         } else {
@@ -225,7 +228,7 @@ public class Spec {
     }
     if (my_postcondition.size() > 0) {
       string += "\tensures \n\t"; //$NON-NLS-1$
-      for (final Expression s : my_postcondition) {
+      for (final BeetlzExpression s : my_postcondition) {
         if (s.skip()) {
           string += "\t (* " + s + " *)\n"; //$NON-NLS-1$ //$NON-NLS-2$
         } else {

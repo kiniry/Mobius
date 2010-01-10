@@ -1,9 +1,11 @@
 package input;
 
 import ie.ucd.bon.API;
+import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -80,6 +82,13 @@ public class BonFile {
       my_classCollection.addMoreClasses(my_bonWalker.getAllClasses());
     } else {
       System.out.println("BONc parsing failed.");
+      Iterator<BONProblem> i = tracker.getErrorsAndWarnings().getProblems().iterator();
+      while(i.hasNext()) {
+        BONProblem problem = i.next();
+        System.out.println(problem.getLocation());
+        System.out.println(problem.getMessage());
+        
+      }
       parse_success = false;
     }
     return parse_success;

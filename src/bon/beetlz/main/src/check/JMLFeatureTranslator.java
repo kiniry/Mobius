@@ -5,8 +5,8 @@ import java.util.SortedSet;
 import java.util.Vector;
 
 import log.CCLogManager;
-import logic.Expression;
-import logic.Expression.Nullity;
+import logic.BeetlzExpression;
+import logic.BeetlzExpression.Nullity;
 import main.Beetlz;
 import main.UserProfile;
 import structure.ClassStructure;
@@ -45,9 +45,6 @@ public class JMLFeatureTranslator {
   private final CCLogManager my_logger;
   /** User settings.  */
   private final UserProfile my_profile;
-
-  //private SortedSet < ClassStructure > assignable
-
 
   /**
    * Creates a new JMLTranslator.
@@ -110,8 +107,8 @@ public class JMLFeatureTranslator {
    */
   private double relateAssignable() {
     final double success = 1;
-    final SortedSet < FeatureSmartString > trgFrame = my_trgSpec.getFrame();
-    final SortedSet < FeatureSmartString > srcFrame = my_srcSpec.getFrame();
+    final List < BeetlzExpression > trgFrame = my_trgSpec.getFrame();
+    final List < BeetlzExpression > srcFrame = my_srcSpec.getFrame();
     if (srcFrame.contains(FeatureSmartString.everything()) &&
         trgFrame.contains(FeatureSmartString.nothing())) {
       my_logger.logIncorrectFrameDefault(my_src, my_trgCls.getName(), my_trgName,
@@ -125,20 +122,21 @@ public class JMLFeatureTranslator {
         my_logger.logIncorrectFrameCondition(my_src, my_trgCls.getName(), my_trgName,
                                              BConst.EVERYTHING, trgFrame.toString());
       }
-    } else if (srcFrame.size() == 1 && srcFrame.first().equals(FeatureSmartString.nothing())) {
+    } else if (srcFrame.size() == 1 && srcFrame.get(0).equals(FeatureSmartString.nothing())) {
       if (!trgFrame.contains(FeatureSmartString.nothing())) {
         my_logger.logIncorrectFrameCondition(my_src, my_trgCls.getName(), my_trgName,
                                              BConst.NOTHING, trgFrame.toString());
       }
     } else {
-      for (final FeatureSmartString s : my_srcSpec.getFrame()) {
+      for (final BeetlzExpression s : my_srcSpec.getFrame()) {
         if (!Helper.containsTyped(trgFrame, s)) {
           final String map = my_profile.getFeatureMapping(s.toString(),
                                                           my_srcCls.getQualifiedName().
                                                           toString(),
                                                           my_trgCls.getSimpleName());
           if (map == null || !trgFrame.contains(new SmartString(map))) {
-            my_logger.logMissingFrameCondition(my_src, my_trgCls.getName(),  my_trgName, s);
+            //TODO: fix to print correct Java/BON version
+            my_logger.logMissingFrameCondition(my_src, my_trgCls.getName(),  my_trgName, new SmartString(s.toString()));
           }
         }
       }
@@ -170,13 +168,13 @@ public class JMLFeatureTranslator {
    */
   private double relatePrecondition() {
     double success = 1;
-    final List < Expression > srcCond = my_srcSpec.getNonTrivialPreconditions();
-    final List < Expression > trgCond = my_trgSpec.getNonTrivialPreconditions();
+    final List < BeetlzExpression > srcCond = my_srcSpec.getNonTrivialPreconditions();
+    final List < BeetlzExpression > trgCond = my_trgSpec.getNonTrivialPreconditions();
 
     for (int i = 0; i < trgCond.size(); i++) {
       for (int j = 0; j < srcCond.size(); j++) {
-        final Expression src = srcCond.get(j);
-        final Expression trg = trgCond.get(i);
+        final BeetlzExpression src = srcCond.get(j);
+        final BeetlzExpression trg = trgCond.get(i);
         if (trg.compareToTyped(src) == 0) {
           trgCond.remove(i);
           srcCond.remove(j);
@@ -206,12 +204,12 @@ public class JMLFeatureTranslator {
    */
   private double relatePostcondition() {
     double success = 1;
-    final List < Expression > srcCond = my_srcSpec.getNonTrivialPostconditions();
-    final List < Expression > trgCond = my_trgSpec.getNonTrivialPostconditions();
+    final List < BeetlzExpression > srcCond = my_srcSpec.getNonTrivialPostconditions();
+    final List < BeetlzExpression > trgCond = my_trgSpec.getNonTrivialPostconditions();
     for (int i = 0; i < trgCond.size(); i++) {
       for (int j = 0; j < srcCond.size(); j++) {
-        final Expression src = srcCond.get(j);
-        final Expression trg = trgCond.get(i);
+        final BeetlzExpression src = srcCond.get(j);
+        final BeetlzExpression trg = trgCond.get(i);
         if (trg.compareToTyped(src) == 0) {
           trgCond.remove(i);
           srcCond.remove(j);
@@ -222,8 +220,8 @@ public class JMLFeatureTranslator {
     }
     //Check if we can find some of the missing ones in the history constraints
     if (!Beetlz.getProfile().pureBon()) {
-      List < Expression > history =
-        new Vector < Expression > (my_trgCls.getInvariant().getHistoryConstraints());
+      List < BeetlzExpression > history =
+        new Vector < BeetlzExpression > (my_trgCls.getInvariant().getHistoryConstraints());
       for (int j = 0; j < srcCond.size(); j++) {
         for (int i = 0; i < history.size(); i++) {
           if (history.get(i).compareToTyped(srcCond.get(j)) == 0) {
@@ -232,7 +230,7 @@ public class JMLFeatureTranslator {
         }
       }
 
-      history = new Vector < Expression > (my_srcCls.getInvariant().getHistoryConstraints());
+      history = new Vector < BeetlzExpression > (my_srcCls.getInvariant().getHistoryConstraints());
       for (int j = 0; j < trgCond.size(); j++) {
         for (int i = 0; i < history.size(); i++) {
           if (history.get(i).compareToTyped(trgCond.get(j)) == 0) {

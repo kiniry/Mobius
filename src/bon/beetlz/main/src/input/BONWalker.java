@@ -42,31 +42,33 @@ public class BONWalker {
   public final void parseTypingInformation(final ParsingTracker the_tracker) {
     final UserProfile profile = Beetlz.getProfile();
     final BONST the_st = the_tracker.getSymbolTable();
+    final Map<String,Cluster> clusterList = the_st.clusters;
     
-    final Graph<String,Cluster> clusterMap = the_st.classClusterMap;
 
-    for (final Clazz c : the_st.classes.values()) {
-      if (!profile.isBONIgnored(c.name.name)) {
-        Collection<Cluster> cluster = clusterMap.get(c.name.name);
-        Cluster clusterInfo = cluster.size() > 0 ? cluster.iterator().next() : null;
+    final Graph<String,Cluster> clusterMap = the_st.classClusterMap;
+    
+    for (final String c : clusterMap.keySet()) {
+      if (!profile.isBONIgnored(c)) {  
+        Collection<Cluster> clusterInfo = clusterMap.get(c);
         final ClassStructure temp = BONParser.parseClass(the_st, c, clusterInfo);
         my_classes.put(temp.getSimpleName(), temp);
       }
     }
 
-    
     for (final ClientRelation cr : the_st.clientRelations) {
-      if (my_classes.containsKey(cr.getClient().getName().getName()) && 
-          my_classes.containsKey(cr.getSupplier().getName().getName())) {
+      String clientName = cr.getClient().getName().getName();
+      String supplierName = cr.getSupplier().getName().getName();
+      if (my_classes.containsKey(clientName) && 
+          my_classes.containsKey(supplierName)) {
         if (cr.typeMark.mark == TypeMark.Mark.AGGREGATE) {
-          my_classes.get(cr.getClient().getName().getName()).
+          my_classes.get(clientName).
             addAggregation(new TypeSmartString(my_classes.
-                                             get(cr.getSupplier().getName().getName()).
+                                             get(supplierName).
                                              getSimpleName()));
         }
         if (cr.typeMark.mark == TypeMark.Mark.SHAREDMARK) {
-          my_classes.get(cr.getClient().getName().getName()).
-            addSharedAssociation(new TypeSmartString(cr.supplier.name.name));
+          my_classes.get(clientName).
+            addSharedAssociation(new TypeSmartString(supplierName));
         }
       }
     }

@@ -14,7 +14,7 @@ import utils.smart.SmartString;
  * @author Eva Darulova (edarulova@googlemail.com)
  * @version beta-1
  */
-public abstract class Expression {
+public abstract class BeetlzExpression {
   /** Value for equal in comparisons. */
   public static final int EQUAL = 0;
   /** Value for small difference in comparisons. */
@@ -38,7 +38,7 @@ public abstract class Expression {
    * Create new expression.
    * @param the_parens true if expression has parenthesis around it
    */
-  public Expression(final boolean the_parens) {
+  public BeetlzExpression(final boolean the_parens) {
     my_parentheses = the_parens;
   }
 
@@ -51,7 +51,7 @@ public abstract class Expression {
    * @param an_other expression to compare to
    * @return 0 if equal
    */
-  public abstract int compareToTyped(Expression an_other);
+  public abstract int compareToTyped(BeetlzExpression an_other);
 
   /**
    * Whether to skip this expression during comparison.
@@ -89,7 +89,7 @@ public abstract class Expression {
    * @param an_other expression to compare type to
    * @return true if of the same class type
    */
-  public boolean sameType(final Expression an_other) {
+  public boolean sameType(final BeetlzExpression an_other) {
     return an_other.getClass().equals(this.getClass());
   }
 
@@ -125,7 +125,7 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class Keyword extends Expression {
+  public static class Keyword extends BeetlzExpression {
     /** Keywords accepted. */
     public enum Keywords {
       /** Current or this keyword. */
@@ -147,7 +147,7 @@ public abstract class Expression {
       /** Non-null-elements for arrays. */
       NONNULL_ELEMENTS("", "\\nonnullelements"), //$NON-NLS-1$ //$NON-NLS-2$
       /** \nothing. */
-      NOTHING("\\nothing", "\\everything"), //$NON-NLS-1$ //$NON-NLS-2$
+      NOTHING("\\nothing", "\\nothing"), //$NON-NLS-1$ //$NON-NLS-2$
       /** \everything. */
       EVERYTHING("\\everything", "\\everything"), //$NON-NLS-1$ //$NON-NLS-2$
       /** \not_specified. */
@@ -213,28 +213,30 @@ public abstract class Expression {
      * @return 0 if equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof Keyword) {
         final Keyword k = (Keyword) an_other;
         if (my_keyword == k.my_keyword) {
-          return Expression.EQUAL;
+          return BeetlzExpression.EQUAL;
         }
         if (my_keyword == Keywords.VOID && k.my_keyword == Keywords.NULL) {
-          return Expression.EQUAL;
+          return BeetlzExpression.EQUAL;
         }
         if (my_keyword == Keywords.NULL && k.my_keyword == Keywords.VOID) {
-          return Expression.EQUAL;
+          return BeetlzExpression.EQUAL;
         } else {
-          return Expression.DIFF;
+          return BeetlzExpression.DIFF;
         }
       } else {
-        return Expression.VERY_DIFF;
+        return BeetlzExpression.VERY_DIFF;
       }
     }
 
+   
+    
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -254,7 +256,7 @@ public abstract class Expression {
 
     /**
      * Bon type string representation.
-     * @see logic.Expression#toBonString()
+     * @see logic.BeetlzExpression#toBonString()
      * @return string
      */
     @Override
@@ -280,11 +282,11 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class EqualityExpression extends Expression {
+  public static class EqualityExpression extends BeetlzExpression {
     /**  */
-    private final Expression my_left;
+    private final BeetlzExpression my_left;
     /**  */
-    private final Expression my_right;
+    private final BeetlzExpression my_right;
     /**  */
     private final Operator my_op;
 
@@ -294,8 +296,8 @@ public abstract class Expression {
      * @param an_op operator
      * @param a_rhs right operand
      */
-    public EqualityExpression(final Expression a_lhs, final Operator an_op,
-                              final Expression a_rhs) {
+    public EqualityExpression(final BeetlzExpression a_lhs, final Operator an_op,
+                              final BeetlzExpression a_rhs) {
       super(false);
       my_left = a_lhs;
       my_right = a_rhs;
@@ -315,20 +317,20 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof EqualityExpression) {
         final EqualityExpression other = (EqualityExpression) an_other;
         final int one = my_left.compareToTyped(other.my_left) +
           my_op.compareToTyped(other.my_op) + my_right.compareToTyped(other.my_right);
         final int two = my_left.compareToTyped(other.my_right) +
           my_op.compareToTyped(other.my_op) + my_right.compareToTyped(other.my_left);
-        if (one == Expression.EQUAL || two == Expression.EQUAL) {
-          return Expression.EQUAL;
+        if (one == BeetlzExpression.EQUAL || two == BeetlzExpression.EQUAL) {
+          return BeetlzExpression.EQUAL;
         }
         return one;
       }
@@ -344,8 +346,8 @@ public abstract class Expression {
             my_op.compareToTyped(eq_op) + my_right.compareToTyped(eqExpr.my_right);
           final int two = my_left.compareToTyped(eqExpr.my_right) +
             my_op.compareToTyped(eq_op) + my_right.compareToTyped(eqExpr.my_left);
-          if (one == Expression.EQUAL || two == Expression.EQUAL) {
-            return Expression.EQUAL;
+          if (one == BeetlzExpression.EQUAL || two == BeetlzExpression.EQUAL) {
+            return BeetlzExpression.EQUAL;
           }
           return one;
         }
@@ -370,12 +372,12 @@ public abstract class Expression {
           }
         }
       }
-      return Expression.VERY_DIFF;
+      return BeetlzExpression.VERY_DIFF;
     }
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -387,7 +389,7 @@ public abstract class Expression {
      * Get left operand.
      * @return left expression operand
      */
-    public Expression getLeft() {
+    public BeetlzExpression getLeft() {
       return my_left;
     }
 
@@ -395,13 +397,13 @@ public abstract class Expression {
      * Get right operand.
      * @return right expression operand
      */
-    public Expression getRight() {
+    public BeetlzExpression getRight() {
       return my_right;
     }
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toBonString()
+     * @see logic.BeetlzExpression#toBonString()
      * @return string
      */
     @Override
@@ -412,7 +414,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -430,11 +432,11 @@ public abstract class Expression {
    * @version beta-1
    *
    */
-  public static class ArithmeticExpression extends Expression {
+  public static class ArithmeticExpression extends BeetlzExpression {
     /**  */
-    private final Expression my_left;
+    private final BeetlzExpression my_left;
     /**  */
-    private final Expression my_right;
+    private final BeetlzExpression my_right;
     /**  */
     private final Operator my_op;
 
@@ -445,9 +447,9 @@ public abstract class Expression {
      * @param an_op operator
      * @param a_rhs right operand
      */
-    public ArithmeticExpression(final Expression a_lhs,
+    public ArithmeticExpression(final BeetlzExpression a_lhs,
                                 final Operator an_op,
-                                final Expression a_rhs) {
+                                final BeetlzExpression a_rhs) {
       super(false);
       my_left = a_lhs;
       my_right = a_rhs;
@@ -467,12 +469,12 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       final int twoNumber = 2;
       if (an_other instanceof ArithmeticExpression) {
         final ArithmeticExpression other = (ArithmeticExpression) an_other;
@@ -484,7 +486,7 @@ public abstract class Expression {
             my_op.compareToTyped(other.my_op) +
             my_right.compareToTyped(other.my_left);
           if (one == 0 || two == 0) {
-            return Expression.EQUAL;
+            return BeetlzExpression.EQUAL;
           } else {
             return one;
           }
@@ -501,7 +503,7 @@ public abstract class Expression {
             my_op.compareToTyped(other.my_op) +
             my_right.compareToTyped(other.my_left);
           if (one == 0 || two == 0) {
-            return Expression.EQUAL;
+            return BeetlzExpression.EQUAL;
           } else {
             return one;
           }
@@ -532,12 +534,12 @@ public abstract class Expression {
           }
         }
       }
-      return Expression.VERY_DIFF;
+      return BeetlzExpression.VERY_DIFF;
     }
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -547,7 +549,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -558,7 +560,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -585,18 +587,18 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class ArrayaccessExpression extends Expression {
+  public static class ArrayaccessExpression extends BeetlzExpression {
     /** */
-    private final Expression my_array;
+    private final BeetlzExpression my_array;
     /** */
-    private final Expression my_index;
+    private final BeetlzExpression my_index;
 
     /**
      * Create a new array access expression.
      * @param an_array array name
      * @param an_index index expression, does not have to a number
      */
-    public ArrayaccessExpression(final Expression an_array, final Expression an_index) {
+    public ArrayaccessExpression(final BeetlzExpression an_array, final BeetlzExpression an_index) {
       super(false);
       my_array = an_array;
       my_index = an_index;
@@ -604,7 +606,7 @@ public abstract class Expression {
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -614,12 +616,12 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof ArrayaccessExpression) {
         final ArrayaccessExpression other = (ArrayaccessExpression) an_other;
         return  my_array.compareToTyped(other.my_array) +
@@ -636,12 +638,12 @@ public abstract class Expression {
           }
         }
       }
-      return Expression.VERY_DIFF;
+      return BeetlzExpression.VERY_DIFF;
     }
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -651,7 +653,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -662,7 +664,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -678,11 +680,11 @@ public abstract class Expression {
    * @author evka
    *
    */
-  public static class EquivalenceExpression extends Expression {
+  public static class EquivalenceExpression extends BeetlzExpression {
     /**  */
-    private final Expression my_left;
+    private final BeetlzExpression my_left;
     /**  */
-    private final Expression my_right;
+    private final BeetlzExpression my_right;
     /**  */
     private final Operator my_op;
 
@@ -692,9 +694,9 @@ public abstract class Expression {
      * @param an_op operator
      * @param a_rhs right operand
      */
-    public EquivalenceExpression(final Expression a_lhs,
+    public EquivalenceExpression(final BeetlzExpression a_lhs,
                                  final Operator an_op,
-                                 final Expression a_rhs) {
+                                 final BeetlzExpression a_rhs) {
       super(false);
       my_left = a_lhs;
       my_right = a_rhs;
@@ -714,12 +716,12 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof EquivalenceExpression) {
         final EquivalenceExpression other = (EquivalenceExpression) an_other;
         final int one = my_left.compareToTyped(other.my_left) +
@@ -728,8 +730,8 @@ public abstract class Expression {
         final int two = my_left.compareToTyped(other.my_right) +
           my_op.compareToTyped(other.my_op) +
           my_right.compareToTyped(other.my_left);
-        if (one == Expression.EQUAL || two == Expression.EQUAL) {
-          return Expression.EQUAL;
+        if (one == BeetlzExpression.EQUAL || two == BeetlzExpression.EQUAL) {
+          return BeetlzExpression.EQUAL;
         }
         return one;
       }
@@ -744,18 +746,18 @@ public abstract class Expression {
             my_op.compareToTyped(eq_op) + my_right.compareToTyped(eqExpr.my_right);
           final int two = my_left.compareToTyped(eqExpr.my_right) +
             my_op.compareToTyped(eq_op) + my_right.compareToTyped(eqExpr.my_left);
-          if (one == Expression.EQUAL || two == Expression.EQUAL) {
-            return Expression.EQUAL;
+          if (one == BeetlzExpression.EQUAL || two == BeetlzExpression.EQUAL) {
+            return BeetlzExpression.EQUAL;
           }
           return one;
         }
       }
-      return Expression.VERY_DIFF;
+      return BeetlzExpression.VERY_DIFF;
     }
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -765,7 +767,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -781,7 +783,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -798,11 +800,11 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class ImpliesExpression extends Expression {
+  public static class ImpliesExpression extends BeetlzExpression {
     /** */
-    private final Expression my_left;
+    private final BeetlzExpression my_left;
     /** */
-    private final Expression my_right;
+    private final BeetlzExpression my_right;
     /** */
     private final Operator my_op;
 
@@ -811,7 +813,7 @@ public abstract class Expression {
      * @param a_lhs left operand
      * @param a_rhs rigth operand
      */
-    public ImpliesExpression(final Expression a_lhs, final Expression a_rhs) {
+    public ImpliesExpression(final BeetlzExpression a_lhs, final BeetlzExpression a_rhs) {
       super(false);
       my_left = a_lhs;
       my_right = a_rhs;
@@ -831,23 +833,23 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof ImpliesExpression) {
         final ImpliesExpression other = (ImpliesExpression) an_other;
         return my_left.compareToTyped(other.my_left) + my_right.compareToTyped(other.my_right);
       } else {
-        return Expression.VERY_DIFF;
+        return BeetlzExpression.VERY_DIFF;
       }
     }
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -857,7 +859,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -868,7 +870,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -885,7 +887,7 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class InformalExpression extends Expression {
+  public static class InformalExpression extends BeetlzExpression {
     /** An empty informal expression, this happens in JML.*/
     public static final InformalExpression EMPTY_COMMENT =
       new InformalExpression(" ... "); //$NON-NLS-1$
@@ -913,26 +915,26 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof InformalExpression) {
         final InformalExpression a_inf = (InformalExpression) an_other;
         if (my_informal.compareTo(a_inf.my_informal) == 0) {
-          return Expression.EQUAL;
+          return BeetlzExpression.EQUAL;
         } else {
-          return Expression.DIFF;
+          return BeetlzExpression.DIFF;
         }
       }
-      return Expression.VERY_DIFF;
+      return BeetlzExpression.VERY_DIFF;
     }
 
    /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -942,7 +944,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -952,7 +954,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -969,7 +971,7 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class IdentifierExpression extends Expression {
+  public static class IdentifierExpression extends BeetlzExpression {
     /** */
     private final SmartString my_ident;
 
@@ -994,29 +996,29 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof IdentifierExpression) {
         final IdentifierExpression other = (IdentifierExpression) an_other;
         if (my_ident.compareToTyped(other.my_ident) == 0) {
-          return Expression.EQUAL;
+          return BeetlzExpression.EQUAL;
         }
         if (testWithoutMap(other.my_ident.toString()) ||
             testWithMap(other.my_ident.toString())) {
-          return Expression.EQUAL;
+          return BeetlzExpression.EQUAL;
         }
-        return Expression.DIFF;
+        return BeetlzExpression.DIFF;
       }
-      return Expression.VERY_DIFF;
+      return BeetlzExpression.VERY_DIFF;
     }
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -1026,7 +1028,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1036,7 +1038,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1122,7 +1124,7 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class LiteralExpression extends Expression {
+  public static class LiteralExpression extends BeetlzExpression {
     /** */
     private final SmartString my_literal;
 
@@ -1147,26 +1149,26 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof LiteralExpression) {
         final LiteralExpression a_lit = (LiteralExpression) an_other;
         if (my_literal.compareToTyped(a_lit.my_literal) == 0) {
-          return Expression.EQUAL;
+          return BeetlzExpression.EQUAL;
         } else {
-          return Expression.DIFF;
+          return BeetlzExpression.DIFF;
         }
       }
-      return Expression.VERY_DIFF;
+      return BeetlzExpression.VERY_DIFF;
     }
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -1176,7 +1178,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1186,7 +1188,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1203,11 +1205,11 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class LogicalExpression extends Expression {
+  public static class LogicalExpression extends BeetlzExpression {
     /** */
-    private final Expression my_left;
+    private final BeetlzExpression my_left;
     /** */
-    private final Expression my_right;
+    private final BeetlzExpression my_right;
     /** */
     private final Operator my_op;
 
@@ -1217,8 +1219,8 @@ public abstract class Expression {
      * @param an_op operator
      * @param a_rhs right operand
      */
-    public LogicalExpression(final Expression a_lhs, final Operator an_op,
-                             final Expression a_rhs) {
+    public LogicalExpression(final BeetlzExpression a_lhs, final Operator an_op,
+                             final BeetlzExpression a_rhs) {
       super(false);
       my_left = a_lhs;
       my_right = a_rhs;
@@ -1238,12 +1240,12 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof LogicalExpression) {
         final LogicalExpression other = (LogicalExpression) an_other;
         //xor symmetric
@@ -1253,8 +1255,8 @@ public abstract class Expression {
             my_right.compareToTyped(other.my_right);
           final int two = my_left.compareToTyped(other.my_right) +
             my_op.compareToTyped(other.my_op) + my_right.compareToTyped(other.my_left);
-          if (one == Expression.EQUAL || two == Expression.EQUAL) {
-            return Expression.EQUAL;
+          if (one == BeetlzExpression.EQUAL || two == BeetlzExpression.EQUAL) {
+            return BeetlzExpression.EQUAL;
           }
           return one;
         }
@@ -1262,13 +1264,13 @@ public abstract class Expression {
         return my_left.compareToTyped(other.my_left) + my_op.compareToTyped(other.my_op) +
           my_right.compareToTyped(other.my_right);
       } else {
-        return Expression.VERY_DIFF;
+        return BeetlzExpression.VERY_DIFF;
       }
     }
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -1278,7 +1280,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1289,7 +1291,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1302,7 +1304,7 @@ public abstract class Expression {
      * Get the left operand.
      * @return left expression operand
      */
-    public Expression leftExpression() {
+    public BeetlzExpression leftExpression() {
       return my_left;
     }
 
@@ -1310,7 +1312,7 @@ public abstract class Expression {
      * Get right operand.
      * @return right expression operand
      */
-    public Expression rightExpression() {
+    public BeetlzExpression rightExpression() {
       return my_right;
     }
 
@@ -1328,11 +1330,11 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class MemberaccessExpression extends Expression {
+  public static class MemberaccessExpression extends BeetlzExpression {
     /** */
-    private final Expression my_source;
+    private final BeetlzExpression my_source;
     /** */
-    private final Expression my_field;
+    private final BeetlzExpression my_field;
     /** */
     private final Operator my_op;
 
@@ -1341,7 +1343,7 @@ public abstract class Expression {
      * @param a_source member
      * @param a_field field of member
      */
-    public MemberaccessExpression(final Expression a_source, final Expression a_field) {
+    public MemberaccessExpression(final BeetlzExpression a_source, final BeetlzExpression a_field) {
       super(false);
       my_source = a_source;
       my_field = a_field;
@@ -1361,35 +1363,35 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof MemberaccessExpression) {
         final MemberaccessExpression other = (MemberaccessExpression) an_other;
         final int srcScore = my_source.compareToTyped(other.my_source);
         int field_score = my_field.compareToTyped(other.my_field);
-        if (field_score != Expression.EQUAL &&
+        if (field_score != BeetlzExpression.EQUAL &&
             (other.my_field instanceof IdentifierExpression) &&
             my_field instanceof IdentifierExpression) {
           final boolean map = assertionDict.matchTypes(my_field.toString(),
                                                        other.my_field.toString());
-          if (map) field_score = Expression.EQUAL;
+          if (map) field_score = BeetlzExpression.EQUAL;
         }
         return srcScore + field_score;
       }
       if (an_other instanceof MethodcallExpression) {
         return an_other.compareToTyped(this);
       }
-      return Expression.VERY_DIFF;
+      return BeetlzExpression.VERY_DIFF;
 
     }
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -1399,7 +1401,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1416,7 +1418,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1433,19 +1435,19 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class MethodcallExpression extends Expression {
+  public static class MethodcallExpression extends BeetlzExpression {
     /** */
-    private final Expression my_method;
+    private final BeetlzExpression my_method;
     /** */
-    private final List < Expression > my_arguments;
+    private final List < BeetlzExpression > my_arguments;
 
     /**
      * Create a new method call expression.
      * @param a_method method name
      * @param the_arguments call arguments
      */
-    public MethodcallExpression(final Expression a_method,
-                                final List < Expression > the_arguments) {
+    public MethodcallExpression(final BeetlzExpression a_method,
+                                final List < BeetlzExpression > the_arguments) {
       super(false);
       my_method = a_method;
       my_arguments = the_arguments;
@@ -1470,12 +1472,12 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof MethodcallExpression) {
         final MethodcallExpression other = (MethodcallExpression) an_other;
         int sum = my_method.compareToTyped(other.my_method);
@@ -1485,7 +1487,7 @@ public abstract class Expression {
           }
           return sum;
         } else {
-          return Expression.DIFF + sum;
+          return BeetlzExpression.DIFF + sum;
         }
       }
       if (an_other instanceof ArrayaccessExpression) {
@@ -1500,18 +1502,18 @@ public abstract class Expression {
       if (an_other instanceof ArithmeticExpression) {
         return an_other.compareToTyped(this);
       }
-      return Expression.VERY_DIFF;
+      return BeetlzExpression.VERY_DIFF;
     }
 
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
     public boolean skip() {
-      for (final Expression e : my_arguments) {
+      for (final BeetlzExpression e : my_arguments) {
         if (e.skip()) {
           return true;
         }
@@ -1522,7 +1524,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1563,7 +1565,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1590,11 +1592,11 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class RelationalExpression extends Expression {
+  public static class RelationalExpression extends BeetlzExpression {
     /** */
-    private final Expression my_left;
+    private final BeetlzExpression my_left;
     /** */
-    private final Expression my_right;
+    private final BeetlzExpression my_right;
     /** */
     private final Operator my_op;
 
@@ -1604,9 +1606,9 @@ public abstract class Expression {
      * @param an_op operator
      * @param a_rhs right operand
      */
-    public RelationalExpression(final Expression a_lhs,
+    public RelationalExpression(final BeetlzExpression a_lhs,
                                 final Operator an_op,
-                                final Expression a_rhs) {
+                                final BeetlzExpression a_rhs) {
       super(false);
       my_right = a_rhs;
       my_left = a_lhs;
@@ -1626,12 +1628,12 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof RelationalExpression) {
         final RelationalExpression rel = (RelationalExpression) an_other;
         if (my_op == Operator.GREATER) {
@@ -1671,16 +1673,16 @@ public abstract class Expression {
           }
         //smallerequal
         } else {
-          return Expression.VERY_DIFF;
+          return BeetlzExpression.VERY_DIFF;
         }
       } else {
-        return Expression.VERY_DIFF;
+        return BeetlzExpression.VERY_DIFF;
       }
     }
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -1690,7 +1692,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1701,7 +1703,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1717,9 +1719,9 @@ public abstract class Expression {
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
    */
-  public static class UnaryExpression extends Expression {
+  public static class UnaryExpression extends BeetlzExpression {
     /** */
-    private final Expression my_expr;
+    private final BeetlzExpression my_expr;
     /** */
     private final Operator my_op;
 
@@ -1728,7 +1730,7 @@ public abstract class Expression {
      * @param an_op operator
      * @param an_expr expression
      */
-    public UnaryExpression(final Operator an_op, final Expression an_expr) {
+    public UnaryExpression(final Operator an_op, final BeetlzExpression an_expr) {
       super(false);
       my_expr = an_expr;
       my_op = an_op;
@@ -1747,12 +1749,12 @@ public abstract class Expression {
 
     /**
      * Compare expressions based on type.
-     * @see logic.Expression#compareToTyped(logic.Expression)
+     * @see logic.BeetlzExpression#compareToTyped(logic.BeetlzExpression)
      * @param an_other expression to compare to
      * @return 0 if logically equal
      */
     @Override
-    public int compareToTyped(final Expression an_other) {
+    public int compareToTyped(final BeetlzExpression an_other) {
       if (an_other instanceof UnaryExpression) {
         final UnaryExpression other = (UnaryExpression) an_other;
         return my_op.compareToTyped(other.my_op) +
@@ -1764,13 +1766,13 @@ public abstract class Expression {
       if (an_other instanceof EquivalenceExpression) {
         return an_other.compareToTyped(this);
       } else {
-        return Expression.VERY_DIFF;
+        return BeetlzExpression.VERY_DIFF;
       }
     }
 
     /**
      * Does this expression contain an informal expression.
-     * @see logic.Expression#skip()
+     * @see logic.BeetlzExpression#skip()
      * @return true if it is informal
      */
     @Override
@@ -1780,7 +1782,7 @@ public abstract class Expression {
 
     /**
      * Get Bon type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override
@@ -1793,7 +1795,7 @@ public abstract class Expression {
 
     /**
      * Get Java type string.
-     * @see logic.Expression#toJavaString()
+     * @see logic.BeetlzExpression#toJavaString()
      * @return string representation
      */
     @Override

@@ -293,6 +293,7 @@ public class ClassTranslator {
     //What is missing
     for (final SmartString s : src) {
       if (!Helper.containsTyped(trg, s) && Helper.typeKnown(s)) {
+        System.err.println("type " + s + "  " + Helper.typeKnown(s));
         my_logger.logMissingInterface(my_src, my_trg_name, s);
         success = 0;
       }
@@ -318,7 +319,7 @@ public class ClassTranslator {
       new Vector < SmartString > (my_src_class.getKnownSharedAssociations());
     final List < SmartString > trgA =
       new Vector < SmartString > (my_trg_class.getKnownSharedAssociations());
-
+    
     //What is missing
     for (final SmartString s : srcA) {
       if (!Helper.containsTyped(trgA, s)) {

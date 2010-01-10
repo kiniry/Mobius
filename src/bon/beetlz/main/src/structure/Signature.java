@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import logic.Expression.Nullity;
+import logic.BeetlzExpression.Nullity;
 import utils.ModifierManager.ClassType;
 import utils.smart.SmartString;
 

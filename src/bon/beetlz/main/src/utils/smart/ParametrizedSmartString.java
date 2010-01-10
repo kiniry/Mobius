@@ -78,7 +78,7 @@ public class ParametrizedSmartString extends SmartString {
         }
       }
     } else {
-      return my_params.get(0).trimSmartString().compareTo(an_other.trimSmartString());
+      return my_name.trimSmartString().compareTo(an_other.trimSmartString());
     }
     return 0;
   }

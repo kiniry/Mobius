@@ -2,6 +2,7 @@ package input;
 
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
+import ie.ucd.bon.ast.EnumerationElement;
 import ie.ucd.bon.ast.Feature;
 import ie.ucd.bon.ast.FeatureArgument;
 import ie.ucd.bon.ast.FeatureName;
@@ -9,15 +10,28 @@ import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.IndexClause;
 import ie.ucd.bon.ast.Indexing;
+import ie.ucd.bon.ast.SetConstant;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
 import ie.ucd.bon.printer.PrettyPrintVisitor;
 import ie.ucd.bon.typechecker.BONST;
+import ie.ucd.bon.ast.Expression;
+import ie.ucd.bon.ast.BinaryExp;
+import ie.ucd.bon.ast.UnaryExp;
+import ie.ucd.bon.ast.KeywordConstant.Constant;
+import ie.ucd.bon.ast.UnaryExp.Op;
+import ie.ucd.bon.ast.KeywordConstant;
+import ie.ucd.bon.ast.IntegerConstant;
+import ie.ucd.bon.ast.CallExp;
+import ie.ucd.bon.ast.BooleanConstant;
+import ie.ucd.bon.ast.StringConstant;
+import ie.ucd.bon.ast.UnqualifiedCall;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -26,23 +40,23 @@ import java.util.Vector;
 
 import log.CCLevel;
 import log.CCLogRecord;
-import logic.Expression;
+import logic.BeetlzExpression;
 import logic.Operator;
-import logic.Expression.ArithmeticExpression;
-import logic.Expression.EqualityExpression;
-import logic.Expression.EquivalenceExpression;
-import logic.Expression.IdentifierExpression;
-import logic.Expression.ImpliesExpression;
-import logic.Expression.InformalExpression;
-import logic.Expression.Keyword;
-import logic.Expression.LiteralExpression;
-import logic.Expression.LogicalExpression;
-import logic.Expression.MemberaccessExpression;
-import logic.Expression.MethodcallExpression;
-import logic.Expression.Nullity;
-import logic.Expression.RelationalExpression;
-import logic.Expression.UnaryExpression;
-import logic.Expression.Keyword.Keywords;
+import logic.BeetlzExpression.ArithmeticExpression;
+import logic.BeetlzExpression.EqualityExpression;
+import logic.BeetlzExpression.EquivalenceExpression;
+import logic.BeetlzExpression.IdentifierExpression;
+import logic.BeetlzExpression.ImpliesExpression;
+import logic.BeetlzExpression.InformalExpression;
+import logic.BeetlzExpression.Keyword;
+import logic.BeetlzExpression.LiteralExpression;
+import logic.BeetlzExpression.LogicalExpression;
+import logic.BeetlzExpression.MemberaccessExpression;
+import logic.BeetlzExpression.MethodcallExpression;
+import logic.BeetlzExpression.Nullity;
+import logic.BeetlzExpression.RelationalExpression;
+import logic.BeetlzExpression.UnaryExpression;
+import logic.BeetlzExpression.Keyword.Keywords;
 import main.Beetlz;
 import structure.ClassStructure;
 import structure.FeatureStructure;
@@ -72,31 +86,111 @@ import utils.smart.WildcardSmartString;
  * @version beta-1
  */
 public final class BONParser {
-  /** */
-  private BONParser() { }
+  
+  private static List < BeetlzExpression > my_frame = new Vector < BeetlzExpression > ();
+  private static Map < String , SmartString > my_parameters = new HashMap < String, SmartString > ();
+  private static SmartString my_return_value = new SmartString();
+  private static String my_featureName = "";
+  private static String my_const = null;
+  public enum Condition { PRE, POST, INV }
+  
   /**
    * Parse classes.
    * @param the_st symbol table
    * @param a_class class definition
-   * @param a_cluster c cluster the class belongs to
+   * @param the_clusters c cluster the class belongs to
    * @return parsed class
    */
   public static ClassStructure parseClass(final BONST the_st,
-      final Clazz a_class,
-      final Cluster a_cluster) {
-    final int two = 2;
-    final SortedSet  <  ClassModifier  > mod    = new TreeSet < ClassModifier > ();
+                                          final String a_className,
+                                          final Collection<Cluster> the_clusters) {
+    Clazz clazz = the_st.classes.get(a_className);
+    final SortedSet  <  ClassModifier  > mod    = parseClassModifier(clazz);
     final Visibility vis                        = new Visibility(VisibilityModifier.PUBLIC);
-    final List  < SmartString > generics        = new Vector < SmartString > ();
+    final List  < SmartString > generics   		  = new Vector < SmartString > ();
     final SortedSet < SmartString > interfaces  = new TreeSet < SmartString > ();
     Invariant inv                               = null;
     final List < SmartString > clus             = new Vector < SmartString > ();
+    final TypeSmartString name = new TypeSmartString(a_className);
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(clazz.getReportingLocation());
+    
+    //Generics
+    if (!clazz.generics.isEmpty()) {
+      mod.add(ClassModifier.GENERIC);
+      for (final FormalGeneric f : clazz.generics) {
+        generics.add(getFormalGeneric(f));
+      }
+    }
+    
+
+    //Inheritance
+    Collection<Type> superC = the_st.classInheritanceGraph.get(a_className); 
+    if (superC != null) {
+      for (final Type s : superC) {
+        final boolean success = interfaces.add(getType(s));
+        if (!success) {
+          Beetlz.getWaitingRecords().
+          add(new CCLogRecord(CCLevel.JAVA_WARNING, null,
+              String.format(Beetlz.getResourceBundle().
+                  getString("BONParser." + //$NON-NLS-1$
+                  "repeatedInheritanceNotSupported"), //$NON-NLS-1$
+                  s, name)));
+        }
+      }
+    }
+    //Invariant
+    Collection<Expression> invariants = Collections.emptyList();
+    if (clazz.classInterface != null) {
+      invariants = clazz.getClassInterface().getInvariant();
+    } 
+    inv = parseInvariant(invariants);
+    
+    //Cluster
+    if (the_clusters != null && the_clusters.size() > 0) {
+      Iterator iterator = the_clusters.iterator(); 
+      while(iterator.hasNext()) {
+        clus.add(new SmartString(((Cluster)iterator.next()).getName()));
+      }
+    }
+    
+    //Create class
+    final ClassStructure parsedClass =
+      new ClassStructure(ClassType.BON, mod, vis, generics, name,
+          interfaces, clus, src);
+    parseComments(parsedClass, the_st.indexing.get(clazz));
+    parsedClass.setInvariant(inv);
+    
+    //Get the features
+    if (clazz.classInterface != null) {
+
+      for (final Feature feat : clazz.classInterface.features) {
+        for (final FeatureSpecification fSpec : feat.featureSpecifications) {
+          for (final FeatureName fName : fSpec.featureNames) {
+            final FeatureStructure f = parseFeature(the_st, fSpec, fName.name, parsedClass);
+            if (!Beetlz.getProfile().pureBon()) {
+              if (f.getSimpleName().equals(BConst.MAKE) ||
+                  f.getSimpleName().matches(BConst.MAKE + "[0-9]")) { //$NON-NLS-1$
+                parsedClass.addConstructor(f);
+                continue;
+              }
+            }
+            parsedClass.addFeature(f);
+          }
+        }
+      }
+    }
+    return parsedClass;
+  }
+  
+  
+  private static void parseComments(final ClassStructure cls, final Indexing index) {
+    final int two = 2;
     final List < String > about = new Vector < String > ();
     String author = ""; //$NON-NLS-1$
     String version = ""; //$NON-NLS-1$
     String all_else = ""; //$NON-NLS-1$
     //Comments
-    final Indexing index = the_st.indexing.get(a_class);
+    //final Indexing index = the_st.indexing.get(a_class);
     if (index != null) {
       for (final IndexClause i : index.getIndexes()) {
         if (i.getId().equals("about")) { //$NON-NLS-1$
@@ -133,104 +227,24 @@ public final class BONParser {
         }
       }
     }
-    //Modifier
-    switch(a_class.mod) {
-    case DEFERRED:
-      mod.add(ClassModifier.ABSTRACT);
-      break;
-    case EFFECTIVE:
-      mod.add(ClassModifier.EFFECTIVE);
-      break;
-    case ROOT:
-      mod.add(ClassModifier.ROOT);
-      break;
-    }
-
-    if (a_class.interfaced) {
-      mod.add(ClassModifier.INTERFACED);
-    }
-    if (a_class.persistent) {
-      mod.add(ClassModifier.PERSISTENT);
-    }
-    if (a_class.reused) {
-      mod.add(ClassModifier.REUSED);
-    }
-    //Generics
-    if (!a_class.generics.isEmpty()) {
-      mod.add(ClassModifier.GENERIC);
-      for (final FormalGeneric f : a_class.generics) {
-        generics.add(getFormalGeneric(f));
-      }
-    }
-    //Class name
-    final TypeSmartString name = new TypeSmartString(a_class.name.name);
-
-    //Inheritance
-    Collection<Type> superC = the_st.classInheritanceGraph.get(a_class.name.name); 
-
-    if (superC != null) {
-      for (final Type s : superC) {
-        final boolean success = interfaces.add(getType(s));
-        if (!success) {
-          Beetlz.getWaitingRecords().
-          add(new CCLogRecord(CCLevel.JAVA_WARNING, null,
-              String.format(Beetlz.getResourceBundle().
-                  getString("BONParser." + //$NON-NLS-1$
-                  "repeatedInheritanceNotSupported"), //$NON-NLS-1$
-                  s, name)));
-        }
-      }
-    }
-    //Invariant
-    Collection<ie.ucd.bon.ast.Expression> invariants;
-    if (a_class.classInterface != null) {
-      invariants = a_class.classInterface.invariant;
-    } else {
-      invariants = Collections.emptyList();
-    }
-    PrettyPrintVisitor ppv = new PrettyPrintVisitor();
-    Collection<String> invariantStrings = new ArrayList<String>(invariants.size());
-    for (ie.ucd.bon.ast.Expression exp : invariants) {
-      exp.accept(ppv);
-      invariantStrings.add(ppv.getVisitorOutputAsString() + ";");
-      ppv.resetVisitorOutput();
-    }
-    inv = parseInvariant(invariantStrings);
-
-    //Cluster
-    if (a_cluster != null) {
-      clus.add(new SmartString(a_cluster.name));
-    }
-    //Source location
-    final BeetlzSourceLocation src = new BeetlzSourceLocation(a_class.getReportingLocation());
-    //Create class
-    final ClassStructure parsedClass =
-      new ClassStructure(ClassType.BON, mod, vis, generics, name,
-          interfaces, clus, src);
-    parsedClass.setComment(about, author, version, all_else);
-    parsedClass.setInvariant(inv);
-    //Get the features
-    if (a_class.classInterface != null) {
-
-      for (final Feature feat : a_class.classInterface.features) {
-        for (final FeatureSpecification fSpec : feat.featureSpecifications) {
-          for (final FeatureName fName : fSpec.featureNames) {
-            final FeatureStructure f = parseFeature(the_st, fSpec, fName.name, parsedClass);
-            if (!Beetlz.getProfile().pureBon()) {
-              if (f.getSimpleName().equals(BConst.MAKE) ||
-                  f.getSimpleName().matches(BConst.MAKE + "[0-9]")) { //$NON-NLS-1$
-                parsedClass.addConstructor(f);
-                continue;
-              }
-            }
-            parsedClass.addFeature(f);
-          }
-        }
-      }
-    }
-    return parsedClass;
+    cls.setComment(about, author, version, all_else);
   }
 
+  
+  private static SortedSet < ClassModifier > parseClassModifier(Clazz a_class) {
+    final SortedSet  <  ClassModifier  > mod    = new TreeSet < ClassModifier > ();
+    switch(a_class.mod) {
+      case DEFERRED: mod.add(ClassModifier.ABSTRACT); break;
+      case EFFECTIVE: mod.add(ClassModifier.EFFECTIVE); break;
+      case ROOT: mod.add(ClassModifier.ROOT); break;
+    }
+    if (a_class.getInterfaced()) mod.add(ClassModifier.INTERFACED);
+    if (a_class.getPersistent()) mod.add(ClassModifier.PERSISTENT);
+    if (a_class.getReused()) mod.add(ClassModifier.REUSED);
+  
+    return mod;
+  }
+  
   /**
    * Parse a feature.
    * @param a_feature feature to parse
@@ -241,21 +255,23 @@ public final class BONParser {
       final FeatureSpecification fSpec,
       final String f_name,
       final ClassStructure a_encl_class) {
+    
     //full feature
     final SortedSet < FeatureModifier > mod = new TreeSet < FeatureModifier > ();
     Visibility vis                          = new Visibility(VisibilityModifier.PUBLIC);
-    String rename_class                      = null;
-    String rename_feature                    = null;
+    String rename_class                     = null;
+    String rename_feature                   = null;
+    final FeatureSmartString name = new FeatureSmartString(f_name);
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(fSpec.getReportingLocation());
+    
+    
     //Modifier
-    if (fSpec.modifier == FeatureSpecification.Modifier.DEFERRED) {
-      mod.add(FeatureModifier.ABSTRACT);
+    switch(fSpec.modifier) {
+      case DEFERRED: mod.add(FeatureModifier.ABSTRACT); break;
+      case REDEFINED: mod.add(FeatureModifier.REDEFINED); break;
+      case EFFECTIVE: mod.add(FeatureModifier.EFFECTIVE); break;
     }
-    if (fSpec.modifier == FeatureSpecification.Modifier.REDEFINED) {
-      mod.add(FeatureModifier.REDEFINED);
-    }
-    if (fSpec.modifier == FeatureSpecification.Modifier.EFFECTIVE) {
-      mod.add(FeatureModifier.EFFECTIVE);
-    }
+    
     //Visibility
     if (the_st.selectiveExportPrivateMap.get(fSpec)) {
       vis = new Visibility(VisibilityModifier.PRIVATE);
@@ -275,336 +291,251 @@ public final class BONParser {
       }
       vis.setExports(exports);
     }
-    //Feature name
-    final FeatureSmartString name = new FeatureSmartString(f_name);
+    
     //Return type
     SmartString return_value = SmartString.getVoid(); //default is void
     final Map < String , SmartString > params = new HashMap < String, SmartString > ();
-    if (fSpec.hasType != null) {
-      return_value = getType(fSpec.hasType.type);
+    if (fSpec.getHasType() != null) {
+      return_value = getType(fSpec.getHasType().getType());
     }
     //Parameter
-    for (final FeatureArgument a : fSpec.arguments) {
-      params.put(a.identifier, getType(a.getType()));
+    for (final FeatureArgument a : fSpec.getArguments()) {
+      params.put(a.getIdentifier(), getType(a.getType()));
     }
 
-    final Spec spec = BONParser.parseFeatureSpecs(fSpec.contracts.preconditions, fSpec.contracts.postconditions, return_value, name.toString(), params);
+    final Spec spec = BONParser.parseFeatureSpecs(fSpec.getContracts().getPreconditions(), 
+                                                  fSpec.getContracts().getPostconditions(), 
+                                                  return_value, name.toString(), params);
     final List < Spec > specCases = new Vector < Spec > ();
     specCases.add(spec);
     final Signature sign = Signature.getBonSignature(return_value, params);
-    //SourceLocation
-    final BeetlzSourceLocation src = new BeetlzSourceLocation(fSpec.getReportingLocation());
+    
     //Renaming
-    if (fSpec.renaming != null) {
-      rename_class = fSpec.renaming.className.name;
-      rename_feature = fSpec.renaming.featureName.name;
+    if (fSpec.getRenaming() != null) {
+      rename_class = fSpec.getRenaming().getClassName().getName();
+      rename_feature = fSpec.getRenaming().getFeatureName().getName();
     }
     //Client relations
-    if (fSpec.hasType != null && fSpec.hasType.mark.mark == TypeMark.Mark.SHAREDMARK) {
+    if (fSpec.getHasType() != null && fSpec.getHasType().getMark().getMark() == TypeMark.Mark.SHAREDMARK) {
       a_encl_class.addSharedAssociation(return_value);
     }
-    if (fSpec.hasType != null && fSpec.hasType.mark.mark == TypeMark.Mark.AGGREGATE) {
+    if (fSpec.getHasType() != null && fSpec.getHasType().getMark().getMark() == TypeMark.Mark.AGGREGATE) {
       a_encl_class.addAggregation(return_value);
     }
     return new FeatureStructure(mod, vis, name, sign, specCases, src, rename_class, rename_feature, a_encl_class);
   }
 
+  
   /**
    * Parse an invariant.
-   * @param the_invariants invariant clauses to parse.
+   * @param the_invariant invariant clauses to parse.
    * @return parsed invariant
    */
-  private static Invariant parseInvariant(final Collection < String > the_invariants) {
-    final List < Expression > clauses = new Vector < Expression > ();
-    final List < Expression > history = new Vector < Expression > ();
+  private static Invariant parseInvariant(Collection<Expression> the_invariant) {
+    final List < BeetlzExpression > clauses = new Vector < BeetlzExpression > ();
+    final List < BeetlzExpression > history = new Vector < BeetlzExpression > ();
 
-    for (final String invar : the_invariants) {
-      final String[] parts = invar.split(";"); //$NON-NLS-1$
-      for (final String s : parts) {
-        final Expression e = parseExpression(s.trim());
-        clauses.addAll(splitBooleanExpressions(e));
-      }
+    for (final Expression e: the_invariant) {
+      final BeetlzExpression expr = parseExpr(e, Condition.INV);
+      clauses.addAll(splitBooleanExpressions(expr));
     }
     return new Invariant(clauses, history);
   }
-
-  /**
-   * These operators are being recognized.
-   * 1:  [ ]  (array index)  ()method call .member access
-   * 2:  + -    unary plus, minus
-   *     not    boolean (logical) NOT
-   * 3:  * / % //(integer division) binary
-   * 4:  + -   binary
-   *     +    string concatenation (dunno)
-   * 5:  <, <=, >, >=
-   * 6:   ==,  !=
-   * 7: &&  boolean (logical) AND
-   * 8: ||  boolean (logical) OR
-   * 9: -> implication
-   * 10: <-> not<->  equivalent
-   * @param a_string expression to parse
-   * @return parsed expression
-   */
-  private static Expression parseExpression(final String a_string) {
-    final int two = 2;
-    //We need to go bottom up through the precedence hierarchy:
-    final String s = a_string.trim();
-    if (s.startsWith("--")) { //$NON-NLS-1$
-      return new InformalExpression(s.substring(two));
-    }
-    if (s.startsWith("(") && s.endsWith(")")) { //$NON-NLS-1$ //$NON-NLS-2$
-      final Expression e = parseExpression(s.substring(1, s.length() - 1));
-      e.setParenthesised();
-      return e;
-    }
-    if (s.contains("<->")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, "<->"); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.IFF);
-    }
-    if (s.contains("->")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, "->"); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.IMPLIES);
-    }
-    if (s.contains(" or ")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, " or "); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.OR);
-    }
-    if (s.contains(" and ")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, " and "); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.AND);
-    }
-    if (s.contains("xor")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, " xor "); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.XOR);
-    }
-    if (s.contains(" /= ")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, "/="); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.NOT_EQUAL);
-    }
-    if (s.contains(" = ")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, "="); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.EQUAL);
-    }
-
-    if (s.contains(" <= ")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, "<="); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.SMALLER_EQUAL);
-    } else if (s.contains(">=")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, ">="); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.GREATER_EQUAL);
-    } else if (s.contains("<")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, "<"); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.SMALLER);
-    } else if (s.contains(">")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, ">"); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.GREATER);
-    }
-
-    if (s.contains("-")) { //$NON-NLS-1$
-      if (s.indexOf("-") > 0) { //$NON-NLS-1$
-        final String[] parts = mySplit(s, "-"); //$NON-NLS-1$
-        if (parts.length != 0)  return getTwoPartExpression(parts, Operator.MINUS);
+  
+  private static BeetlzExpression parseExpr(Expression e, Condition c) {
+    BeetlzExpression result = InformalExpression.EMPTY_COMMENT;
+   
+    if(e instanceof BinaryExp) {
+      final BinaryExp bin = (BinaryExp) e;
+      BinaryExp.Op op = bin.getOp();
+      switch (op) {
+        case EQUIV: result = new EquivalenceExpression(parseExpr(bin.getLeft(), c), 
+            Operator.IFF, parseExpr(bin.getRight(), c)); break;
+        case IMPLIES: result = new ImpliesExpression(parseExpr(bin.getLeft(), c), 
+            parseExpr(bin.getRight(), c)); break;
+        case GT: result = new RelationalExpression(parseExpr(bin.getLeft(), c), 
+            Operator.GREATER, parseExpr(bin.getRight(), c)); break;    
+        case GE: result = new RelationalExpression(parseExpr(bin.getLeft(), c), 
+            Operator.GREATER_EQUAL, parseExpr(bin.getRight(), c)); break;
+        case LT: result = new RelationalExpression(parseExpr(bin.getLeft(), c), 
+            Operator.SMALLER, parseExpr(bin.getRight(), c)); break;                                 
+        case LE: result = new RelationalExpression(parseExpr(bin.getLeft(), c), 
+            Operator.SMALLER_EQUAL, parseExpr(bin.getRight(), c)); break;   
+        
+        case EQ: 
+          BeetlzExpression right = parseExpr(bin.getRight(), c);
+          BeetlzExpression left = parseExpr(bin.getLeft(), c);
+          List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
+          list.add(new IdentifierExpression(my_featureName));
+          if(left.compareToTyped(new Keyword(Keywords.RESULT)) == 0 && 
+              (right.compareToTyped(new MethodcallExpression(new IdentifierExpression("old"), list)) == 0)) {
+            my_const = Spec.UNKNOWN_VALUE;    //constant
+          } else if(left.compareToTyped(new Keyword(Keywords.RESULT)) == 0 && 
+              (right instanceof LiteralExpression)) {
+            my_const = ((LiteralExpression) right).toString();  //literal constant
+          } else {
+            result = new EqualityExpression(parseExpr(bin.getLeft(), c), 
+                Operator.EQUAL, parseExpr(bin.getRight(), c)); break;
+          }
+          break;
+        case NEQ: 
+          BeetlzExpression rightt = parseExpr(bin.getRight(), c);
+          BeetlzExpression leftt = parseExpr(bin.getLeft(), c);
+          if(rightt.compareToTyped(new Keyword(Keywords.VOID)) == 0) {
+            if(c == Condition.PRE) {
+              for(String s: my_parameters.keySet()) {
+                if(leftt.compareToTyped(new IdentifierExpression(s)) == 0) {
+                  my_parameters.get(s).setNullity(Nullity.NON_NULL); //argument nullity, i.e. non-null
+                }
+              }
+            } else if(c == Condition.POST) {
+              if(leftt.compareToTyped(new Keyword(Keywords.RESULT)) == 0) {
+                my_return_value.setNullity(Nullity.NON_NULL); //return value nullity, i.e. non-null
+              }
+            } else {
+              result = new EqualityExpression(parseExpr(bin.getLeft(), c), 
+                  Operator.NOT_EQUAL, parseExpr(bin.getRight(), c)); 
+            }
+          } else {
+            result = new EqualityExpression(parseExpr(bin.getLeft(), c), 
+                Operator.NOT_EQUAL, parseExpr(bin.getRight(), c)); 
+          }
+          break;                               
+        case XOR: result = new LogicalExpression(parseExpr(bin.getLeft(), c), 
+           Operator.XOR, parseExpr(bin.getRight(), c)); break;
+        case OR: result = new LogicalExpression(parseExpr(bin.getLeft(), c), 
+            Operator.OR, parseExpr(bin.getRight(), c)); break;
+        case AND: result = new LogicalExpression(parseExpr(bin.getLeft(), c), 
+            Operator.AND, parseExpr(bin.getRight(), c)); break;
+        
+        case MUL: result = new ArithmeticExpression(parseExpr(bin.getLeft(), c), 
+            Operator.MULTIPLE, parseExpr(bin.getRight(), c)); break;
+        case ADD: result = new ArithmeticExpression(parseExpr(bin.getLeft(), c), 
+            Operator.PLUS, parseExpr(bin.getRight(), c)); break;
+        case SUB: result = new ArithmeticExpression(parseExpr(bin.getLeft(), c), 
+            Operator.MINUS, parseExpr(bin.getRight(), c)); break;   
+        case DIV: result = new ArithmeticExpression(parseExpr(bin.getLeft(), c), 
+            Operator.DIVIDE, parseExpr(bin.getRight(), c)); break;
+        case MOD: result = new ArithmeticExpression(parseExpr(bin.getLeft(), c), 
+            Operator.MODULO, parseExpr(bin.getRight(), c)); break;
+        case INTDIV: result = new ArithmeticExpression(parseExpr(bin.getLeft(), c), 
+            Operator.INT_DIVIDE, parseExpr(bin.getRight(), c)); break;                                  
+        case POW: result = new ArithmeticExpression(parseExpr(bin.getLeft(), c), 
+            Operator.POWER, parseExpr(bin.getRight(), c)); break;
+            
+        case NOTMEMBEROF: break;//TODO
+        case HASTYPE: break;//TODO
+        case MEMBEROF: break;//TODO
+        default: System.out.println("unknown binary BON operator");break;
       }
-      //else continue, since we have an unary minus.. probably
-
-    }
-    if (s.contains("+")) { //$NON-NLS-1$
-      if (s.indexOf("+") > 0) { //$NON-NLS-1$
-        final String[] parts = mySplit(s, "+"); //$NON-NLS-1$
-        if (parts.length != 0)  return getTwoPartExpression(parts, Operator.PLUS);
+    }//end bin op
+    else if(e instanceof UnaryExp) {
+      final UnaryExp un = (UnaryExp) e;
+      UnaryExp.Op op = un.getOp();
+      switch (op) {
+        case OLD: 
+          final java.util.List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
+          list.add(parseExpr(un.getExpression(), c));
+          result = new MethodcallExpression(new IdentifierExpression("old"), //$NON-NLS-1$
+            list); break;
+        case DELTA:
+          if(un.getExpression() instanceof CallExp) {
+            my_frame.add(parseExpr(un.getExpression(), c));
+          }
+          else if(un.getExpression() instanceof SetConstant) {
+            for(EnumerationElement call: ((SetConstant)un.getExpression()).getEnumerations()) {
+              my_frame.add(parseExpr((Expression)call, c));
+            }
+          }
+          else {
+            System.err.println("WARNING unknown delta expression: " + e);
+          }
+          break; 
+        case SUB: result = new UnaryExpression( 
+            Operator.UNARY_MINUS, parseExpr(un.getExpression(), c)); break;
+        case NOT: result = new UnaryExpression(
+            Operator.NOT, parseExpr(un.getExpression(), c)); break;
+        case ADD: result = new UnaryExpression( 
+            Operator.UNARY_PLUS, parseExpr(un.getExpression(), c)); break;
+        default: System.out.println("unknown unary BON operator");break;
       }
-    }
-    if (s.contains("\\\\")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, "\\\\"); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.MODULO);
-    }
-    if (s.contains("/")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, "/"); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.DIVIDE);
-    }
-    if (s.contains("//")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, "//"); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.DIVIDE);
-    }
-    if (s.contains("*")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, "*"); //$NON-NLS-1$
-      if (parts != null)  return getTwoPartExpression(parts, Operator.MULTIPLE);
-    }
-    if (s.contains("^")) { //$NON-NLS-1$
-      final String[] parts = mySplit(s, "^"); //$NON-NLS-1$
-      if (parts.length != 0)  return getTwoPartExpression(parts, Operator.POWER);
-    }
-    if (s.startsWith("not ")) { //$NON-NLS-1$
-      final String expr = s.replaceFirst("not", ""); //$NON-NLS-1$ //$NON-NLS-2$
-      return new UnaryExpression(Operator.NOT, parseExpression(expr));
-
-    }
-    if (s.contains("+")) { //should be unary now //$NON-NLS-1$
-      final String expr = s.replaceFirst("\\+", ""); //$NON-NLS-1$ //$NON-NLS-2$
-      return new UnaryExpression(Operator.UNARY_PLUS, parseExpression(expr));
-    }
-    if (s.contains("-")) { //should be unary now //$NON-NLS-1$
-      final String expr = s.replaceFirst("-", ""); //$NON-NLS-1$ //$NON-NLS-2$
-      return new UnaryExpression(Operator.UNARY_MINUS, parseExpression(expr));
-    }
-
-    if (s.contains("(") && s.contains(")")) { //$NON-NLS-1$ //$NON-NLS-2$
-      return getMethodcall(s);
-    }
-    if (s.contains(".")) { //$NON-NLS-1$
-      return getMemberaccess(s);
-    }
-    if (s.startsWith("old ")) { //$NON-NLS-1$
-      final String expr = s.replaceFirst("old", ""); //$NON-NLS-1$ //$NON-NLS-2$
-      final List < Expression > list = new Vector < Expression > ();
-      list.add(parseExpression(expr));
-      return new MethodcallExpression(new IdentifierExpression("old"), list); //$NON-NLS-1$
-    }
-
-    //keywords!
-    if (s.equals("Result")) { //$NON-NLS-1$
-      return new Keyword(Keywords.RESULT);
-    }
-    if (s.equals("Void")) { //$NON-NLS-1$
-      return new Keyword(Keywords.VOID);
-    }
-    if (s.equals("Current")) { //$NON-NLS-1$
-      return new Keyword(Keywords.CURRENT);
-    }
-    if (s.equals("true")) { //$NON-NLS-1$
-      return new Keyword(Keywords.TRUE);
-    }
-    if (s.equals("false")) { //$NON-NLS-1$
-      return new Keyword(Keywords.FALSE);
-    }
-
-    if (s.startsWith("\"") && s.endsWith("\"")) { //$NON-NLS-1$ //$NON-NLS-2$
-      return new LiteralExpression(s);
-    }
-    if (s.startsWith("'") && s.endsWith("'")) { //$NON-NLS-1$ //$NON-NLS-2$
-      return new LiteralExpression(s);
-    }
-    if (s.matches("\\d+")) { //only numbers, hopefully //$NON-NLS-1$
-      return new LiteralExpression(s);
-    }
-    if (!s.contains(" ")) { //$NON-NLS-1$
-      return new IdentifierExpression(s);
-    } else {
-      return new InformalExpression(s);
-    }
-
-  }
-
-  /**
-   * Splits a string by an operator.
-   * @param an_expr expression to split
-   * @param an_op operator to split the expression on
-   * @return split expression
-   */
-  private static String[] mySplit(final String an_expr, final String an_op) {
-    final int index;
-    if(an_op.equals(" or ")) { index = an_expr.lastIndexOf(an_op);}
-    else {  	index = an_expr.indexOf(an_op);    }
-    if (index == -1) {
-      return new String[0];
-    }
-
-    if (index < an_expr.length()) {
-      final String first = an_expr.substring(0, index);
-      final String second = an_expr.substring(index + an_op.length());
-      if (numberOfChars('(', first) == numberOfChars(')', first) &&
-          numberOfChars('(', second) == numberOfChars(')', second)) {
-        return new String[] {first, second};
+    }//end unary
+    else if(e instanceof KeywordConstant) {
+      KeywordConstant constant = (KeywordConstant)e;
+      //System.err.println("keyword constant:" + e);
+      switch (constant.getConstant()) {
+      case RESULT: result = new Keyword(Keywords.RESULT); break;
+      case VOID: result = new Keyword(Keywords.VOID); break;
+      case CURRENT: result = new Keyword(Keywords.CURRENT); break;
+      default: System.err.println("unknown BON keywordConstant " + c);break;
       }
     }
-    return new String[0]; //failed to split
-  }
-
-  /**
-   * Get number of occurences of a certain character.
-   * @param a_character character to check
-   * @param a_string string to search
-   * @return count of chars
-   */
-  private static int numberOfChars(final char a_character,
-      final String a_string) {
-    int i = 0;
-    for (final char c : a_string.toCharArray()) {
-      if (a_character == c) i++;
+    else if(e instanceof IntegerConstant) {
+      IntegerConstant constant = (IntegerConstant)e;
+      result = new LiteralExpression(constant.getValue().toString());
     }
-    return i;
-  }
-
-  /**
-   * Create a Expression.
-   * @param the_parts parts to create an expression from
-   * @param the_operator operator
-   * @return parsed expression
-   */
-  private static Expression getTwoPartExpression(final String[] the_parts,
-      final Operator the_operator) {
-    final int two = 2;
-    if (the_parts.length == two) {
-      switch (the_operator) {
-      case MULTIPLE: case DIVIDE: case MODULO: case INT_DIVIDE: case PLUS:
-      case MINUS: case POWER:
-        return new ArithmeticExpression(parseExpression(the_parts[0]),
-            the_operator, parseExpression(the_parts[1]));
-      case GREATER: case SMALLER: case GREATER_EQUAL: case SMALLER_EQUAL:
-        return new RelationalExpression(parseExpression(the_parts[0]),
-            the_operator, parseExpression(the_parts[1]));
-      case EQUAL: case NOT_EQUAL:
-        return new EqualityExpression(parseExpression(the_parts[0]),
-            the_operator, parseExpression(the_parts[1]));
-      case AND: case OR: case XOR:
-        return new LogicalExpression(parseExpression(the_parts[0]),
-            the_operator, parseExpression(the_parts[1]));
-      case IMPLIES:
-        return new ImpliesExpression(parseExpression(the_parts[0]),
-            parseExpression(the_parts[1]));
-      case IFF: case NOT_IFF:
-        return new EquivalenceExpression(parseExpression(the_parts[0]),
-            the_operator, parseExpression(the_parts[1]));
-      default:
-        return new InformalExpression(the_parts[0].trim());
+    else if(e instanceof BooleanConstant) {
+      BooleanConstant constant = (BooleanConstant)e;
+      if(constant.getValue().equals(Boolean.TRUE)) {
+        result = new Keyword(Keywords.TRUE);
+      }
+      else if(constant.getValue().equals(Boolean.FALSE)) {
+        result = new Keyword(Keywords.FALSE);
+      }
+      else 
+         System.err.println("unknown BON boolean constant " + c);
+    }
+    else if(e instanceof StringConstant) {
+      StringConstant constant = (StringConstant) e;
+      result = new LiteralExpression(constant.getValue());
+    }
+    else if(e instanceof CallExp) {
+      CallExp call = (CallExp)e;
+      
+      //get the arguments
+      List < BeetlzExpression > args = new Vector < BeetlzExpression >();
+      int size = call.getCallChain().size();
+      if (size > 0) {
+        for(Expression argument: call.getCallChain().get(size-1).getArgs()) {
+          args.add(parseExpr(argument, c));
+        }
+        //now deal with the call chain recursively
+        if (args.size() == 0) {
+          result = parseMemberAccess(call.getCallChain());
+        }
+        else if(call.getQualifier() != null) {
+          result = 
+            new MethodcallExpression(new MemberaccessExpression(parseExpr(call.getQualifier(), c), 
+                parseMemberAccess(call.getCallChain())), args);
+        }
+        else
+          result = new MethodcallExpression(parseMemberAccess(call.getCallChain()), args);
       }
     }
-    return new InformalExpression(the_parts[0].trim());
-  }
-
-  /**
-   * Parse a method call.
-   * @param a_str string to parse
-   * @return parsed expression
-   */
-  private static Expression getMethodcall(final String a_str) {
-    final int ilast = a_str.lastIndexOf(")"); //$NON-NLS-1$
-    final int ifirst = a_str.indexOf("("); //$NON-NLS-1$
-    final String methodname = a_str.substring(0, ifirst);
-    final String args = a_str.substring(ifirst + 1, ilast);
-
-    final List < Expression > list = new Vector < Expression > ();
-    final String[] parts = args.split(","); //$NON-NLS-1$
-    for (final String a : parts) {
-      list.add(parseExpression(a));
+    else {
+      System.err.println("unknown expression: " + e); 
     }
-
-    return new MethodcallExpression(parseExpression(methodname), list);
+    return result;
   }
-
-  /**
-   * Parse member access.
-   * @param a_str string to parse
-   * @return parsed expression
-   */
-  private static Expression getMemberaccess(final String a_str) {
-    final int dot = a_str.lastIndexOf("."); //$NON-NLS-1$
-    final String source = a_str.substring(0, dot);
-    final String field = a_str.substring(dot + 1);
-    return new MemberaccessExpression(parseExpression(source),
-        parseExpression(field));
+  
+ 
+  private static BeetlzExpression parseMemberAccess(List < UnqualifiedCall > a_callChain) {
+    BeetlzExpression result = new IdentifierExpression("DUMMY");
+    int size = a_callChain.size();
+    if (size == 0) System.err.println("Error: empty call chain.");
+    else if (size == 1) {
+      //System.err.println("size 1: " + a_callChain.get(0).getId());
+      result = new IdentifierExpression(a_callChain.get(0).getId());
+    }
+    else {
+      //System.err.println("size else: " + a_callChain.get(size-1).getId());
+      result = new MemberaccessExpression(parseMemberAccess(a_callChain.subList(0, size - 1)), 
+          new IdentifierExpression(a_callChain.get(size-1).getId()));
+    }
+    return result;
   }
-
+  
+  
   /**
    * Parse feature specs.
    * @param a_pre precondition
@@ -614,128 +545,58 @@ public final class BONParser {
    * @param the_params parameter
    * @return specs
    */
-  public static Spec parseFeatureSpecs(final List<ie.ucd.bon.ast.Expression> a_pre, 
-		  final List<ie.ucd.bon.ast.Expression> a_post,
-		  final SmartString a_return_value,
-		  final String a_feature,
-		  final Map < String , SmartString > the_params) {
-    final List < Expression > preconditions = new Vector < Expression > ();
-    final List < Expression > postconditions = new Vector < Expression > ();
-    SortedSet < FeatureSmartString > frame = new TreeSet < FeatureSmartString > ();
-    FeatureType type;
-    String constant = null;
-
-    for (ie.ucd.bon.ast.Expression a_pre_exp : a_pre) {
-      String a_pre_string = prettyPrintExpression(a_pre_exp).trim();
-      final boolean nul = parseArgumentNullity(a_pre_string, the_params);
-      if (!nul) {
-        final Expression e = parseExpression(a_pre_string);
-        preconditions.addAll(splitBooleanExpressions(e));
-      }
+  public static Spec parseFeatureSpecs(final List<Expression> a_pre, 
+		  final List<Expression> a_post, final SmartString a_return_value,
+		  final String a_feature, final Map < String , SmartString > the_params) {
+    
+    List < BeetlzExpression > my_pre = new Vector < BeetlzExpression > ();
+    List < BeetlzExpression > my_post = new Vector < BeetlzExpression > ();
+    FeatureType my_type;
+    my_parameters = the_params;
+    my_return_value = a_return_value;
+    my_featureName = a_feature;
+    
+    //reset data structures
+    my_frame = new Vector < BeetlzExpression > ();
+    my_const = null;
+    
+    for (Expression a_pre_exp : a_pre) {
+      final BeetlzExpression e = parseExpr(a_pre_exp, Condition.PRE);
+      
+    //check if we have a meaningful expression, if not we had argument nullity expr.
+    if(e.compareToTyped(InformalExpression.EMPTY_COMMENT) != 0)
+      my_pre.addAll(splitBooleanExpressions(e));
+ 
     }
     
-    for (ie.ucd.bon.ast.Expression a_post_exp : a_post) {
-      String a_post_string = prettyPrintExpression(a_post_exp).trim();
-      if (a_post_string.contains("delta")) { //$NON-NLS-1$
-        frame = parseFrameConstraint(a_post_string);
-      } else {
-        final Nullity nul = parseReturnNullity(a_post_string);
-        if (nul != null) {
-          a_return_value.setNullity(nul);
-        } else {
-          constant = parseConstant(a_post_string, a_feature);
-          if (constant == null) {
-            final Expression e = parseExpression(a_post_string);
-            postconditions.addAll(splitBooleanExpressions(e));
-          }
-        }
-      }
+    for (Expression a_post_exp : a_post) {
+      final BeetlzExpression e = parseExpr(a_post_exp, Condition.POST);
+      
+      //check if we have a meaningful expression, if not we had frame constraint, 
+      //return nullity or constant
+      if(e.compareToTyped(InformalExpression.EMPTY_COMMENT) != 0)
+        my_post.addAll(splitBooleanExpressions(e));
     }
-
+    
     //Query or Command ?!
     if (a_return_value.equals(SmartString.getVoid())) {
-      type = FeatureType.COMMAND;
-      if (frame.size() == 0) {
-        frame.add(FeatureSmartString.everything());
+      my_type = FeatureType.COMMAND;
+      if (my_frame.size() == 0) {
+        my_frame.add(new Keyword(Keywords.EVERYTHING));
       }
-    } else if (frame.size() == 0) {
-      type = FeatureType.QUERY;
-      frame.add(FeatureSmartString.nothing());
+    } else if (my_frame.size() == 0) {
+      my_type = FeatureType.QUERY;
+      my_frame.add(new Keyword(Keywords.NOTHING));
     } else {
-      type = FeatureType.MIXED;
+      my_type = FeatureType.MIXED;
     }
-    return new Spec(preconditions, postconditions, frame,
-        constant, type, ClassType.BON);
+     
+    
+    return new Spec(my_pre, my_post, my_frame,
+        my_const, my_type, ClassType.BON);
+   
   }
-
-  /**
-   * Parse a frame constraint.
-   * @param a_frame frame to parse
-   * @return frame
-   */
-  private static SortedSet < FeatureSmartString > parseFrameConstraint(final String a_frame) {
-    final SortedSet < FeatureSmartString > frame = new TreeSet < FeatureSmartString > ();
-    final String[] parts =
-      a_frame.replace("delta", "").split(",");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-    for (final String s : parts) {
-      frame.add(new FeatureSmartString(s.
-          replace("}", "").//$NON-NLS-1$   //$NON-NLS-2$
-          replace("{", "").trim())); //$NON-NLS-1$   //$NON-NLS-2$
-    }
-    return frame;
-  }
-
-  /**
-   * Parse argument nullity.
-   * @param a_str string
-   * @param the_params parameter
-   * @return true if nullity parsed
-   */
-  private static boolean parseArgumentNullity(final String a_str,
-      final Map < String,
-      SmartString > the_params) {
-    for (final String p : the_params.keySet()) {
-      if (a_str.matches(p + "\\s*/=\\s*Void")) { //$NON-NLS-1$
-        the_params.get(p).setNullity(Nullity.NON_NULL);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Parse return type nullity.
-   * @param a_str string
-   * @return nullity
-   */
-  private static Nullity parseReturnNullity (final String a_str) {
-    if (a_str.matches("Result\\s*/=\\s*Void")) { //$NON-NLS-1$
-      return Nullity.NON_NULL;
-    }
-    return null;
-  }
-
-  /**
-   * Parse constant value.
-   * @param a_str potential constant expression
-   * @param a_feature_name feature name
-   * @return constant, if the expression specifies one
-   */
-  private static String parseConstant(final String a_str, final String a_feature_name) {
-    if (a_str.matches("Result\\s*=\\s*old\\s*" + a_feature_name)) { //$NON-NLS-1$
-      return Spec.UNKNOWN_VALUE;
-    }
-    if (a_str.matches("Result\\s*=.*")) { //$NON-NLS-1$
-      String type = a_str.replace("Result", "");  //$NON-NLS-1$//$NON-NLS-2$
-      type = type.replace("=", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$
-      if ((type.startsWith("\"") && type.endsWith("\"")) || //$NON-NLS-1$ //$NON-NLS-2$
-          (type.startsWith("'") && type.endsWith("'")) || //$NON-NLS-1$ //$NON-NLS-2$
-          type.matches("\\d+")) { //$NON-NLS-1$
-        return type;
-      }
-    }
-    return null;
-  }
+  
 
   /**
    * Parse type.
@@ -743,7 +604,6 @@ public final class BONParser {
    * @return parsed type
    */
   private static SmartString getType(final Type a_type) {
-
     if (a_type.actualGenerics == null || a_type.actualGenerics.isEmpty()) {
       return new TypeSmartString(a_type.getIdentifier());
     }
@@ -756,8 +616,10 @@ public final class BONParser {
         params.add(getType(t));
       }
     }
-    return new ParametrizedSmartString(a_type.identifier, name, params);
-  }
+    return new ParametrizedSmartString(a_type.getIdentifier(), name, params);
+ }
+  
+  
 
   /**
    * Parse generic parameters.
@@ -768,20 +630,22 @@ public final class BONParser {
     if (a_generic.getType() != null) {
       final List < SmartString > list = new Vector < SmartString > ();
       list.add(getType(a_generic.getType()));
-      final String name = a_generic.identifier + " -> " +
-      a_generic.getType().identifier; //$NON-NLS-1$
-      return new GenericParameter(name, a_generic.identifier, list);
+      final String name = a_generic.getIdentifier() + " -> " +
+      a_generic.getType().getIdentifier(); //$NON-NLS-1$
+      return new GenericParameter(name, a_generic.getIdentifier(), list);
     }
-    return new GenericParameter(a_generic.identifier, a_generic.identifier, null);
+    return new GenericParameter(a_generic.getIdentifier(), a_generic.getIdentifier(), null);
   }
+  
+  
 
   /**
    * Split a boolean expression based on AND.
    * @param an_expr expression to split
    * @return list of split expressions
    */
-  private static List < Expression > splitBooleanExpressions(final Expression an_expr) {
-    final List < Expression > list = new Vector < Expression > ();
+  private static List < BeetlzExpression > splitBooleanExpressions(final BeetlzExpression an_expr) {
+    final List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
     if (an_expr instanceof LogicalExpression) {
       final LogicalExpression and = (LogicalExpression) an_expr;
       if (and.getOperator() == Operator.AND) {
@@ -793,10 +657,6 @@ public final class BONParser {
     list.add(an_expr);
     return list;
   }
-
-  private static String prettyPrintExpression(ie.ucd.bon.ast.Expression an_exp) {
-    PrettyPrintVisitor ppv = new PrettyPrintVisitor();
-    an_exp.accept(ppv);
-    return ppv.getVisitorOutputAsString(); 
-  }
+  
+  
 }

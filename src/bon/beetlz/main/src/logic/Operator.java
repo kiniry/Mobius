@@ -117,9 +117,9 @@ public enum Operator {
    */
   public final int compareToTyped(final Operator an_other) {
     if (this == an_other) {
-      return Expression.EQUAL;
+      return BeetlzExpression.EQUAL;
     } else {
-      return Expression.DIFF;
+      return BeetlzExpression.DIFF;
     }
   }
 }
