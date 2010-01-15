@@ -1,0 +1,108 @@
+package bonIDE.diagram.part;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.gef.Tool;
+import org.eclipse.gef.palette.PaletteContainer;
+import org.eclipse.gef.palette.PaletteGroup;
+import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.gef.palette.ToolEntry;
+import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeCreationTool;
+
+/**
+ * @generated
+ */
+public class BonidePaletteFactory {
+
+	/**
+	 * @generated
+	 */
+	public void fillPalette(PaletteRoot paletteRoot) {
+		paletteRoot.add(createBonIDE1Group());
+	}
+
+	/**
+	 * Creates "bonIDE" palette tool group
+	 * @generated
+	 */
+	private PaletteContainer createBonIDE1Group() {
+		PaletteGroup paletteContainer = new PaletteGroup(bonIDE.diagram.part.Messages.BonIDE1Group_title);
+		paletteContainer.setId("createBonIDE1Group"); //$NON-NLS-1$
+		paletteContainer.add(createCluster1CreationTool());
+		paletteContainer.add(createBONClass2CreationTool());
+		paletteContainer.add(createFeature3CreationTool());
+		return paletteContainer;
+	}
+
+	/**
+	 * @generated
+	 */
+	private ToolEntry createCluster1CreationTool() {
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(2);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_3001);
+		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.Cluster1CreationTool_title,
+				bonIDE.diagram.part.Messages.Cluster1CreationTool_desc, types);
+		entry.setId("createCluster1CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001));
+		entry.setLargeIcon(entry.getSmallIcon());
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
+	private ToolEntry createBONClass2CreationTool() {
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(2);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_2002);
+		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.BONClass2CreationTool_title,
+				bonIDE.diagram.part.Messages.BONClass2CreationTool_desc, types);
+		entry.setId("createBONClass2CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002));
+		entry.setLargeIcon(entry.getSmallIcon());
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
+	private ToolEntry createFeature3CreationTool() {
+		ToolEntry entry = new ToolEntry(bonIDE.diagram.part.Messages.Feature3CreationTool_title,
+				bonIDE.diagram.part.Messages.Feature3CreationTool_desc, null, null) {
+		};
+		entry.setId("createFeature3CreationTool"); //$NON-NLS-1$
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
+	private static class NodeToolEntry extends ToolEntry {
+
+		/**
+		 * @generated
+		 */
+		private final List elementTypes;
+
+		/**
+		 * @generated
+		 */
+		private NodeToolEntry(String title, String description, List elementTypes) {
+			super(title, description, null, null);
+			this.elementTypes = elementTypes;
+		}
+
+		/**
+		 * @generated
+		 */
+		public Tool createTool() {
+			Tool tool = new UnspecifiedTypeCreationTool(elementTypes);
+			tool.setProperties(getToolProperties());
+			return tool;
+		}
+	}
+}

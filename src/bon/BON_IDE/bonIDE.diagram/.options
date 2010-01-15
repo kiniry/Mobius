@@ -1,0 +1,7 @@
+# Tracing options for the bonIDE.diagram plug-in
+
+# Common issues
+bonIDE.diagram/debug=false
+
+# Visual IDs
+bonIDE.diagram/debug/visualID=false
