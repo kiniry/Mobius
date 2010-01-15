@@ -1,0 +1,132 @@
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
+ */
+package bonIDE.impl;
+
+import bonIDE.*;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+
+import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model <b>Factory</b>.
+ * <!-- end-user-doc -->
+ * @generated
+ */
+public class BonIDEFactoryImpl extends EFactoryImpl implements BonIDEFactory {
+	/**
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static BonIDEFactory init() {
+		try {
+			BonIDEFactory theBonIDEFactory = (BonIDEFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.ucd.ie/bonIDE"); 
+			if (theBonIDEFactory != null) {
+				return theBonIDEFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new BonIDEFactoryImpl();
+	}
+
+	/**
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BonIDEFactoryImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EObject create(EClass eClass) {
+		switch (eClass.getClassifierID()) {
+			case BonIDEPackage.MODEL: return createModel();
+			case BonIDEPackage.CLUSTER: return createCluster();
+			case BonIDEPackage.BON_CLASS: return createBONClass();
+			case BonIDEPackage.FEATURE: return createFeature();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Model createModel() {
+		ModelImpl model = new ModelImpl();
+		return model;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Cluster createCluster() {
+		ClusterImpl cluster = new ClusterImpl();
+		return cluster;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BONClass createBONClass() {
+		BONClassImpl bonClass = new BONClassImpl();
+		return bonClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Feature createFeature() {
+		FeatureImpl feature = new FeatureImpl();
+		return feature;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BonIDEPackage getBonIDEPackage() {
+		return (BonIDEPackage)getEPackage();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @deprecated
+	 * @generated
+	 */
+	@Deprecated
+	public static BonIDEPackage getPackage() {
+		return BonIDEPackage.eINSTANCE;
+	}
+
+} //BonIDEFactoryImpl

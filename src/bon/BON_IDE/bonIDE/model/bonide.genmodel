@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/bonIDE/src"
+    modelPluginID="bonIDE" modelName="Bonide" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false">
+  <foreignModel>bonide.ecore</foreignModel>
+  <genPackages prefix="BonIDE" disposableProviderFactory="true" ecorePackage="bonide.ecore#/">
+    <genClasses ecoreClass="bonide.ecore#//Model">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//Model/abstractions"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bonide.ecore#//Abstraction"/>
+    <genClasses ecoreClass="bonide.ecore#//Cluster">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//Cluster/contents"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Cluster/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Cluster/collapsed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Cluster/expandedHeight"/>
+    </genClasses>
+    <genClasses ecoreClass="bonide.ecore#//BONClass">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//BONClass/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//BONClass/features"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//BONClass/isDeferred"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//BONClass/parents"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bonide.ecore#//StaticAbstraction"/>
+    <genClasses ecoreClass="bonide.ecore#//Feature">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Feature/name"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
