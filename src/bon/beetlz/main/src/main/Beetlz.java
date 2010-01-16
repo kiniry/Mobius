@@ -58,45 +58,6 @@ public class Beetlz {
   /** The path to the built-in jmlspecs for this plugin */
   public static final String JMLSPECS_PATH = "lib/openjml.jar";
   
-  /**
-   * Filter for BON files.
-   * @author Eva Darulova (edarulova@googlemail.com)
-   * @version beta-1
-   */
-  private class BONFilter implements FilenameFilter {
-	  //TODO: remove BONFilter
-    /**
-     * Should the file be accepted.
-     * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
-     * @param a_file file to check
-     * @param a_file_name file name
-     * @return true if file should be accepted
-     */
-    @Override
-    public boolean accept(final File a_file, final String a_file_name) {
-      return a_file_name.endsWith(".bon"); //$NON-NLS-1$
-    }
-  }
-
-  /**
-   * Filter for Java files.
-   * @author Eva Darulova (edarulova@googlemail.com)
-   * @version beta-1
-   */
-  private class JavaFilter implements FilenameFilter {
-	  //TODO: remove JavaFilter
-    /**
-     * Should the file be accepted.
-     * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
-     * @param a_file file to check
-     * @param a_file_name file name
-     * @return true if file should be accepted
-     */
-    @Override
-    public boolean accept(final File a_file, final String a_file_name) {
-      return a_file_name.endsWith(".java"); //$NON-NLS-1$
-    }
-  }
 
   /** Enumeration for status of this tool, mainly used for Eclipse plugin. */
   public enum Status {
@@ -111,8 +72,8 @@ public class Beetlz {
   /** Our Logger for this session.  */
   public static final Logger JAVA_LOGGER = Logger.getLogger(BConst.LOGGER_NAME);
   /** Localisation bundle. */
-  private static ResourceBundle my_labels = ResourceBundle
-      .getBundle("BeetlzMsg", new Locale(System.getProperty("user.language"))); //$NON-NLS-1$
+  //private static ResourceBundle my_labels = ResourceBundle
+  //    .getBundle("BeetlzMsg", new Locale(System.getProperty("user.language"))); //$NON-NLS-1$
   /** Class name mapping. */
   private static TwoWayMap < String, String > my_class_map =
     new TwoWayMap < String, String > ();
@@ -262,31 +223,34 @@ public class Beetlz {
       
       
       //*************** Parse files ***************
-      JAVA_LOGGER.config(my_labels.getString("Beetlz.goingToParse")); //$NON-NLS-1$
+      JAVA_LOGGER.config("Going to parse files..."); //$NON-NLS-1$
       if (my_options_ok) {
         my_parse_ok = parseFiles();
-        if (my_parse_ok)
+        if (my_parse_ok) {
           my_status = Status.PARSING_OK;
+          if (my_profile.verbose()) {
+            System.out.println(my_bonfile.toString());
+            System.out.println(my_jmlfile.toString());
+          }
+            
+        }
         else
           my_status = Status.PARSING_PROBLEM;
 
         my_logger = new CCLogManager();
         my_logger.addRecords(my_records_waiting);
-        JAVA_LOGGER.config(my_labels.getString("Beetlz.finishedParsing")); //$NON-NLS-1$
+        JAVA_LOGGER.config("Finished parsing files."); //$NON-NLS-1$
         my_class_map = createClassTypeMapping();
         //Print some parsing info:
-        JAVA_LOGGER.config(my_labels.getString("Beetlz.foundJavaTypes") + //$NON-NLS-1$
-                           my_jmlfile.getClassCollection().
-                           getAccesibleClassTypes());
-        JAVA_LOGGER.config(my_labels.getString("Beetlz.foundBONTypes") + //$NON-NLS-1$
-                           my_bonfile.getClassCollection().
-                           getAccesibleClassTypes());
-        JAVA_LOGGER
-            .config(my_labels.getString("Beetlz.classMapping") + my_class_map); //$NON-NLS-1$
+        JAVA_LOGGER.config("Found Java types: " + //$NON-NLS-1$
+                           my_jmlfile.getClassCollection().getAccesibleClassTypes());
+        JAVA_LOGGER.config("Found BON types: " + //$NON-NLS-1$
+                           my_bonfile.getClassCollection().getAccesibleClassTypes());
+        JAVA_LOGGER.config("Class mapping: " + my_class_map); //$NON-NLS-1$
         JAVA_LOGGER.config(my_profile.toString());
       } else {
         my_parse_ok = false;
-        JAVA_LOGGER.severe(my_labels.getString("Beetlz.optionsIncorrent")); //$NON-NLS-1$
+        JAVA_LOGGER.severe("The options you have entered are incorrect."); //$NON-NLS-1$
       }
     }
   }
@@ -305,27 +269,27 @@ public class Beetlz {
    */
   public final String getUsage() {
     final String message =
-      my_labels.getString("Beetlz.intro") + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-      my_labels.getString("Beetlz.usage") + //$NON-NLS-1$
-      my_labels.getString("Beetlz.autoRecognized") + //$NON-NLS-1$
-      my_labels.getString("Beetlz.optionsAre") + //$NON-NLS-1$
-      HELP_OPTION + my_labels.getString("Beetlz.printHelp") + //$NON-NLS-1$
-      PUREBON_OPTION + my_labels.getString("Beetlz.pureBonDescription") + //$NON-NLS-1$
-      SOURCE_OPTION + my_labels.getString("Beetlz.sourceDescription") + //$NON-NLS-1$
-      USERSET_OPTION + my_labels.getString("Beetlz.customDescription") + //$NON-NLS-1$
-      SKELETON_OPTION + my_labels.getString("Beetlz.skeletonDescription") + //$NON-NLS-1$
-      SKELETON_ONE_FILE_OPTION + my_labels
-      .getString("Beetlz.skeletonOneFileDescription") + //$NON-NLS-1$
-      VERBOSE_OPTION + my_labels.getString("Beetlz.verboseDescription") + //$NON-NLS-1$
-      NO_JML_OPTION + my_labels.getString("Beetlz.ignoreJmlDescription") + //$NON-NLS-1$
-      NO_JAVA_OPTION + my_labels.getString("Beetlz.ignoreJavaDescription") + //$NON-NLS-1$
-      NO_ERROR_OPTION + my_labels.getString("Beetlz.javaErrorsDescription") + //$NON-NLS-1$
-      NO_WARNING_OPTION + my_labels.getString("Beetlz.javaWarningDescription") + //$NON-NLS-1$
-      NO_BASICS_OPTION + my_labels.getString("Beetlz.basicsDescription") + //$NON-NLS-1$
-      NON_NULL_OPTION + my_labels.getString("Beetlz.nullityDescription") + //$NON-NLS-1$
+      "Beetlz: consistency checker for BON and Java/JML.\n" + //$NON-NLS-1$ //$NON-NLS-2$
+      "Usage: beetlz [<options>] -files <source files or directories>\n" + //$NON-NLS-1$
+      "Automatically recognized source file extensions are:\n.bon, .java, " + //$NON-NLS-1$
+      "specification files are automatically recognised and must NOT be explicitly added\n" + //$NON-NLS-1$
+      "options are: \n" + //$NON-NLS-1$
+      HELP_OPTION + " \t\t\t\t Print this help \n" + //$NON-NLS-1$
+      PUREBON_OPTION + " \t\t\t Only use original, not extended, BON \n" + //$NON-NLS-1$
+      SOURCE_OPTION + " {bon, java} \t\t Which files to use as source \n" + //$NON-NLS-1$
+      USERSET_OPTION + " file \t\t Custom user settings  \n" + //$NON-NLS-1$
+      SKELETON_OPTION + " [dir] \t\t Print skeleton code from source and place into directory \n" + //$NON-NLS-1$
+      SKELETON_ONE_FILE_OPTION + " \t\t Print skeleton code into 1 file.\n" + //$NON-NLS-1$
+      VERBOSE_OPTION + " \t\t\t Generate debugging info  \n" + //$NON-NLS-1$
+      NO_JML_OPTION + " \t\t\t\t Do not check and ignore JML and assertion language  \n" + //$NON-NLS-1$
+      NO_JAVA_OPTION + " \t\t\t Do not print Java related errors and warnings \n" + //$NON-NLS-1$
+      NO_ERROR_OPTION + " \t\t\t Do not print errors  \n" + //$NON-NLS-1$
+      NO_WARNING_OPTION + " \t\t\t Do not print warnings  \n" + //$NON-NLS-1$
+      NO_BASICS_OPTION + " \t\t\t Do not use basic settings \n" + //$NON-NLS-1$
+      NON_NULL_OPTION + " \t\t\t Do not check for correct nullity\n" + //$NON-NLS-1$
       "\n" + //$NON-NLS-1$
-      my_labels.getString("Beetlz.jmlOptionsDescription") + //$NON-NLS-1$
-      SPECS_OPTION + my_labels.getString("Beetlz.specsDescription"); //$NON-NLS-1$
+      "JML options:\n" + //$NON-NLS-1$
+      SPECS_OPTION + "\t\t\t\tSpecifies the directory path to search for specification files"; //$NON-NLS-1$
     return message;
   }
 
@@ -345,9 +309,10 @@ public class Beetlz {
   public final boolean run() {
     boolean success = true;
     if (!my_options_ok) {
+      JAVA_LOGGER.severe("Options could not be parsed successfully, cannot continue."); //$NON-NLS-1$
       success = false;
     } else if (!my_parse_ok) {
-      JAVA_LOGGER.severe(my_labels.getString("Beetlz.couldNotParse")); //$NON-NLS-1$
+      JAVA_LOGGER.severe("Could not parse input files."); //$NON-NLS-1$
       for (final CCLogRecord r : my_records_waiting) {
         JAVA_LOGGER.log(r);
       }
@@ -358,7 +323,7 @@ public class Beetlz {
 
     } else {
       
-      JAVA_LOGGER.config(my_labels.getString(my_profile.javaIsSource() ? "Beetlz.checkingDirJB" : "Beetlz.checkingDirBJ")); //$NON-NLS-1$
+      JAVA_LOGGER.config(my_profile.javaIsSource() ? "Checking direction Java -> BON" : "Checking direction BON -> Java"); //$NON-NLS-1$
       startComparison();      
       report();
       all_records.addAll(my_logger.getRecords());
@@ -366,7 +331,7 @@ public class Beetlz {
       
       //check the other way?
       if(my_profile.checkBothWays()) {
-        JAVA_LOGGER.config(my_labels.getString("Beetlz.checkingDirBJ")); //$NON-NLS-1$
+        JAVA_LOGGER.config("Checking direction BON -> Java"); //$NON-NLS-1$
         my_profile.setSource(false);
         my_logger.setToJava(true);
         startComparison();
@@ -400,7 +365,7 @@ public class Beetlz {
     try {
       out.flush();
     } catch (final IOException e) {
-      JAVA_LOGGER.severe(my_labels.getString("Beetlz.ioProblem"));
+      JAVA_LOGGER.severe("IO problem with pretty printing.");
     }
   }
   
@@ -408,32 +373,28 @@ public class Beetlz {
     for (final CCLogRecord r : my_logger.getErrors()) {
       JAVA_LOGGER.log(r);
     }
-    JAVA_LOGGER.log(CCLevel.GENERAL_NOTE, my_labels
-        .getString("Beetlz.generalNotes")); //$NON-NLS-1$
+    JAVA_LOGGER.log(CCLevel.GENERAL_NOTE, "-> General Notes:"); //$NON-NLS-1$
     for (final CCLogRecord r : my_logger
         .getRecords((CCLevel) CCLevel.GENERAL_NOTE)) {
       JAVA_LOGGER.log(r);
     }
     JAVA_LOGGER
-        .log(CCLevel.JAVA_ERROR, my_labels.getString("Beetlz.javaErrors")); //$NON-NLS-1$
+        .log(CCLevel.JAVA_ERROR, "-> Structure Errors:"); //$NON-NLS-1$
     for (final CCLogRecord r : my_logger
         .getRecords((CCLevel) CCLevel.JAVA_ERROR)) {
       JAVA_LOGGER.log(r);
     }
-    JAVA_LOGGER.log(CCLevel.JAVA_WARNING, my_labels
-        .getString("Beetlz.javaWarnings")); //$NON-NLS-1$
+    JAVA_LOGGER.log(CCLevel.JAVA_WARNING, "-> Structure Warnings:"); //$NON-NLS-1$
     for (final CCLogRecord r : my_logger
         .getRecords((CCLevel) CCLevel.JAVA_WARNING)) {
       JAVA_LOGGER.log(r);
     }
-    JAVA_LOGGER.log(CCLevel.JML_ERROR, my_labels.
-                    getString("Beetlz.jmlErrors")); //$NON-NLS-1$
+    JAVA_LOGGER.log(CCLevel.JML_ERROR, "-> Specification Errors:"); //$NON-NLS-1$
     for (final CCLogRecord r : my_logger
         .getRecords((CCLevel) CCLevel.JML_ERROR)) {
       JAVA_LOGGER.log(r);
     }
-    JAVA_LOGGER.log(CCLevel.JML_WARNING, my_labels
-        .getString("Beetlz.jmlWarnings")); //$NON-NLS-1$
+    JAVA_LOGGER.log(CCLevel.JML_WARNING, "-> Specification Warnings:"); //$NON-NLS-1$
     for (final CCLogRecord r : my_logger
         .getRecords((CCLevel) CCLevel.JML_WARNING)) {
       JAVA_LOGGER.log(r);
@@ -601,21 +562,21 @@ public class Beetlz {
         	  source = "java";//$NON-NLS-1$
           }
         } else {
-          JAVA_LOGGER.severe(my_labels.getString("Beetlz.sourceNeedsArgument")); //$NON-NLS-1$
+          JAVA_LOGGER.severe("-source requires an argument"); //$NON-NLS-1$
           return null;
         }
       } else if (arg.equals(SPECS_OPTION)) {
         if (i < the_args.length) {
           specs = the_args[i++];
         } else {
-          JAVA_LOGGER.severe(my_labels.getString("Beetlz.specsNeedsArgument")); //$NON-NLS-1$
+          JAVA_LOGGER.severe("-specs requires an argument"); //$NON-NLS-1$
           return null;
         }
       } else if (arg.equals(JAVA_JML_CLASSPATH_OPTION)) {
         if (i < the_args.length) {
           classpath = the_args[i++];
         } else {
-          JAVA_LOGGER.severe(my_labels.getString("Beetlz.classpathNeedsArgument")); //$NON-NLS-1$
+          JAVA_LOGGER.severe("-javajmlcp requires an argument"); //$NON-NLS-1$
           return null;
         }
       } else if (arg.equals(SKELETON_OPTION)) {
@@ -629,23 +590,22 @@ public class Beetlz {
         if (i < the_args.length) {
           custom_file = the_args[i++];
         } else {
-          JAVA_LOGGER.severe(my_labels.getString("Beetlz.userNeedsArgument")); //$NON-NLS-1$
+          JAVA_LOGGER.severe("-userSettings requires an argument"); //$NON-NLS-1$
           return null;
         }
       } else if (arg.equals("-files")) { //$NON-NLS-1$
         cont = false;
       } else {
-        JAVA_LOGGER.severe(my_labels.getString("Beetlz.unknownOption") + arg); //$NON-NLS-1$
+        JAVA_LOGGER.severe("Unknown option: " + arg); //$NON-NLS-1$
       }
 
     } //end while
 
     if (cont) {
-      JAVA_LOGGER.severe(my_labels.getString("Beetlz.mustSpecifyFiles")); //$NON-NLS-1$
+      JAVA_LOGGER.severe("You must specify input files with -files <files>"); //$NON-NLS-1$
       return null;
     }
-    final JavaFilter jfilter = new JavaFilter();
-    final BONFilter bfilter = new BONFilter();
+    
     for (int j = i; j < the_args.length; j++) {
       final String s = the_args[j];
       if (s.endsWith(".txt")) { //$NON-NLS-1$
@@ -654,9 +614,10 @@ public class Beetlz {
         final File f = new File(s);
         final List < File > allfiles = getFilesFromDirectory(f);
         for (final File onefile : allfiles) {
-          if (jfilter.accept(null, onefile.getAbsolutePath())) {
+          if (onefile.getAbsolutePath().endsWith(".java")) {
             javaFiles.add(onefile.getAbsolutePath());
-          } else if (bfilter.accept(null, onefile.getAbsolutePath())) {
+          }
+          else if(onefile.getAbsolutePath().endsWith(".bon")) {
             bonFiles.add(onefile.getAbsolutePath());
           }
         }
@@ -704,11 +665,11 @@ public class Beetlz {
     ClassCollection source;
     ClassCollection target;
     if (my_profile.javaIsSource()) {
-      JAVA_LOGGER.info(my_labels.getString("Beetlz.checkingDirJB")); //$NON-NLS-1$
+      JAVA_LOGGER.info("Checking direction Java -> BON"); //$NON-NLS-1$
       source = jml;
       target = bon;
     } else {
-      JAVA_LOGGER.info(my_labels.getString("Beetlz.checkingDirBJ")); //$NON-NLS-1$
+      JAVA_LOGGER.info("Checking direction BON -> Java"); //$NON-NLS-1$
       source = bon;
       target = jml;
     }
@@ -729,7 +690,7 @@ public class Beetlz {
           } else {
             if (my_profile.verbose())
               JAVA_LOGGER
-                  .config(my_labels.getString("Beetlz.comparing") + //$NON-NLS-1$
+                  .config("comparing: " + //$NON-NLS-1$
                           sourceClass.getSimpleName() + " " + //$NON-NLS-1$
                           targetClass.getSimpleName());
             checker.doCheck(sourceClass, targetClass);
@@ -753,7 +714,7 @@ public class Beetlz {
         try {
           out.flush();
         } catch (final IOException e) {
-          JAVA_LOGGER.severe(my_labels.getString("Beetlz.ioProblem"));
+          JAVA_LOGGER.severe("IO problem with pretty printing.");
         }
       } else {
         final JavaPretty pretty = new JavaPretty(BConst.TAB);
@@ -762,7 +723,7 @@ public class Beetlz {
         try {
           out.flush();
         } catch (final IOException e) {
-          JAVA_LOGGER.severe(my_labels.getString("Beetlz.ioProblem"));
+          JAVA_LOGGER.severe("IO problem with pretty printing.");
         }
       }
     } else {
@@ -786,14 +747,6 @@ public class Beetlz {
     return errorStream;
   }
 
-
-  /**
-   * Get the localisation resource bundle.
-   * @return resource bundle with current locale
-   */
-  public static ResourceBundle getResourceBundle() {
-    return my_labels;
-  }
 
   /**
    * Get the class name mappings.

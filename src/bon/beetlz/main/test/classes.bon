@@ -9,7 +9,7 @@ indexing
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- ENCLOSURE cluster classes
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-static_diagram ZOO           
+static_diagram TEST           
 component 
   
 cluster FUNNY_CLUSTER

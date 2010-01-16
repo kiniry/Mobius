@@ -586,8 +586,7 @@ public final class JmlParser {
     if (a_type instanceof ErrorType) {
       Beetlz.getWaitingRecords().
         add(new CCLogRecord(CCLevel.COMPILATION_ERROR, null,
-                          Beetlz.getResourceBundle().
-                          getString("JmlParser.javaComplError") + //$NON-NLS-1$
+                          "Java compilation error:" + //$NON-NLS-1$
                           a_type));
     }
     return new SmartString(a_type.toString());

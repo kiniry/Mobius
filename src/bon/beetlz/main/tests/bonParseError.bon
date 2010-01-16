@@ -1,0 +1,9 @@
+static_diagram DUMMY           
+component 
+
+    class DUMMY_CLASS
+    feature
+     hallo
+      -> m STRING
+    end
+end    

@@ -109,13 +109,13 @@ public class CCLogManager {
         jml_warn++;
       }
     }
-    ResourceBundle rb = Beetlz.getResourceBundle();
-    String java_err_s = rb.getString(java_err == 1 ? "CCLogManager.errorSingular" : "CCLogManager.errorPlural");
-    String jml_err_s = rb.getString(jml_err == 1 ? "CCLogManager.errorSingular" : "CCLogManager.errorPlural");
-    String java_warn_s = rb.getString(java_warn == 1 ? "CCLogManager.warningSingular" : "CCLogManager.warningPlural");
-    String jml_warn_s = rb.getString(jml_warn == 1 ? "CCLogManager.warningSingular" : "CCLogManager.warningPlural");
+    
+    String java_err_s = java_err == 1 ? "error" : "errors";
+    String jml_err_s = jml_err == 1 ? "error" : "errors";
+    String java_warn_s = java_warn == 1 ? "error" : "errors";
+    String jml_warn_s = jml_warn == 1 ? "error" : "errors";
 
-    return String.format(rb.getString("CCLogManager.errorStats"), //$NON-NLS-1$
+    return String.format("%d Structure %s, %d Structure %s, %d Specification %s and %s Specification %s found.", //$NON-NLS-1$
         java_err, java_err_s, java_warn, java_warn_s,
         jml_err, jml_err_s, jml_warn, jml_warn_s);
   }
@@ -146,9 +146,7 @@ public class CCLogManager {
    */
   public void logIncorrectMapping(final BeetlzSourceLocation the_src, final String a_mapping) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "incorrectMappingMsg"), //$NON-NLS-1$
+        String.format("The mapping for %s is not correct.", //$NON-NLS-1$
             a_mapping)));
   }
 
@@ -166,9 +164,7 @@ public class CCLogManager {
       final FeatureType the_expected,
       final FeatureType the_found) {
     my_records.add(new CCLogRecord(CCLevel.JML_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "incorrectFeatureTypeMsg"), //$NON-NLS-1$
+        String.format("%s@%s expected %s but found %s.", //$NON-NLS-1$
             a_feature, a_class,
             the_expected, the_found)));
   }
@@ -206,9 +202,7 @@ public class CCLogManager {
       final SmartString the_expected,
       final SmartString the_found) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "incorrectGenericsMsg"),  //$NON-NLS-1$
+        String.format("%s expected generic parameter %s but found %s",  //$NON-NLS-1$
             a_class, my_pretty.getType(the_expected),
             my_pretty.getType(the_found))));
   }
@@ -224,9 +218,7 @@ public class CCLogManager {
       final SmartString a_class,
       final int the_expected, final int the_found) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "incorrectGenericsNumberMsg"), //$NON-NLS-1$
+        String.format("%s expected number of generic parameters %d but found %d.", //$NON-NLS-1$
             a_class, the_expected, the_found)));
   }
 
@@ -243,9 +235,7 @@ public class CCLogManager {
       final FeatureModifier the_expected,
       final FeatureModifier the_found) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "incorrectModifierMsg"), //$NON-NLS-1$
+        String.format("%s@%s expected %s but found %s.", //$NON-NLS-1$
             a_feature, a_class,
             my_pretty.getFeatMod(the_expected),
             my_pretty.getFeatMod(the_found))));
@@ -265,9 +255,7 @@ public class CCLogManager {
       final VisibilityModifier the_expected,
       final VisibilityModifier the_found) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "incorrectVisibilityMsg"), //$NON-NLS-1$
+        String.format("%s@%s expected %s but found %s.", //$NON-NLS-1$
             a_feature, a_class,
             the_expected, the_found)));
   }
@@ -286,9 +274,7 @@ public class CCLogManager {
       final SmartString the_expected,
       final SmartString the_found) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "incorrectRetrunTypeMsg"), //$NON-NLS-1$
+        String.format("%s@%s expected return type %s but found %s.", //$NON-NLS-1$
             a_feature, a_class,
             my_pretty.getType(the_expected),
             my_pretty.getType(the_found))));
@@ -333,9 +319,7 @@ public class CCLogManager {
       final Nullity the_found) {
     my_records.
     add(new CCLogRecord(CCLevel.JML_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "incorrectReturnTypeNullityMsg"), //$NON-NLS-1$
+        String.format("%s@%s return value expected %s, found %s.", //$NON-NLS-1$
             a_feature, a_class,
             PrettyFormatter.getNullity(the_expected),
             PrettyFormatter.getNullity(the_found))));
@@ -354,9 +338,7 @@ public class CCLogManager {
       final SmartString a_feature) {
     my_records.
     add(new CCLogRecord(CCLevel.JML_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "incorrectParameterNullityMsg"), //$NON-NLS-1$
+        String.format("%s@%s has incorrect formal parameter nullity.", //$NON-NLS-1$
             a_feature, a_class)));
   }
 
@@ -374,17 +356,13 @@ public class CCLogManager {
     if (the_src.isJavaFile()) {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-          String.format(Beetlz.getResourceBundle().
-              getString("CCLogManager." +
-              "incorrectPackageMsgJava"),  //$NON-NLS-1$
+          String.format("%s has incorrect package; expected %s, found %s.",  //$NON-NLS-1$
               a_class, the_expected.toString(),
               the_found.toString())));
     } else {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-          String.format(Beetlz.getResourceBundle().
-              getString("CCLogManager." +
-              "incorrectPackageMsgBon"),  //$NON-NLS-1$
+          String.format("%s has incorrect cluster; expected %s, found %s.",  //$NON-NLS-1$
               a_class, the_expected.toString(),
               the_found.toString())));
     }
@@ -409,16 +387,12 @@ public class CCLogManager {
       if (cS.getSourceLocation().isJavaFile()) {
         my_records.
         add(new CCLogRecord(CCLevel.JAVA_ERROR, cS.getSourceLocation(),
-            String.format(Beetlz.getResourceBundle().
-                getString("CCLogManager." +
-                "missingMethodsMsg"), //$NON-NLS-1$
+            String.format("%s is missing method %s.", //$NON-NLS-1$
                 a_class, fS.getSimpleName())));
       } else {
         my_records.
         add(new CCLogRecord(CCLevel.JAVA_ERROR, cS.getSourceLocation(),
-            String.format(Beetlz.getResourceBundle().
-                getString("CCLogManager." +
-                "missingFeaturesMsg"), //$NON-NLS-1$
+            String.format("%s is missing feature(s) %s.", //$NON-NLS-1$
                 a_class, fS.getSimpleName())));
       }
     }
@@ -433,9 +407,7 @@ public class CCLogManager {
   public void logMissingConstructor(final BeetlzSourceLocation the_src, final SmartString a_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "missingConstructorMsg"),  //$NON-NLS-1$
+        String.format("%s is missing a constructor.",  //$NON-NLS-1$
             a_class)));
   }
 
@@ -450,16 +422,12 @@ public class CCLogManager {
     if (the_src.isJavaFile()) {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-          String.format(Beetlz.getResourceBundle().
-              getString("CCLogManager." +
-              "missingInterfaceSuperclassMsg"), //$NON-NLS-1$
+          String.format("%s is missing interface or super class %s.", //$NON-NLS-1$
               a_class, my_pretty.getClassName(a_missing_cls))));
     } else {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-          String.format(Beetlz.getResourceBundle().
-              getString("CCLogManager." +
-              "missingSuperclassMsg"), //$NON-NLS-1$
+          String.format("%s is missing super class %s.", //$NON-NLS-1$
               a_class, my_pretty.getClassName(a_missing_cls))));
     }
   }
@@ -478,9 +446,7 @@ public class CCLogManager {
       final SmartString the_class,
       final SmartString a_missing_cls) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "missingSharedAssociationMsg"), //$NON-NLS-1$
+        String.format("%s is missing a shared association with %s.", //$NON-NLS-1$
             the_class,
             my_pretty.getClassName(a_missing_cls))));
   }
@@ -496,16 +462,12 @@ public class CCLogManager {
     if (the_src.isJavaFile()) {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-          String.format(Beetlz.getResourceBundle().
-              getString("CCLogManager." +
-              "missingAggregationMsgJava"),  //$NON-NLS-1$
+          String.format("%s is missing member class %s.",  //$NON-NLS-1$
               the_class, my_pretty.getClassName(a_missing_cls))));
     } else {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-          String.format(Beetlz.getResourceBundle().
-              getString("CCLogManager." +
-              "missingAggregationMsgBon"),  //$NON-NLS-1$
+          String.format("%s is missing aggregation class %s.",  //$NON-NLS-1$
               the_class, my_pretty.getClassName(a_missing_cls))));
     }
   }
@@ -518,9 +480,7 @@ public class CCLogManager {
   public void logMissingInvariant(final BeetlzSourceLocation the_src, final SmartString a_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "missingInvariantMsg"), //$NON-NLS-1$
+        String.format("%s is missing an invariant.", //$NON-NLS-1$
             a_class)));
   }
 
@@ -543,9 +503,7 @@ public class CCLogManager {
     }
     my_records.
     add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "missingInvariantClausesMsg"), //$NON-NLS-1$
+        String.format("%s is missing these invariant clauses: %s", //$NON-NLS-1$
             a_class, clauses)));
   }
 
@@ -568,9 +526,7 @@ public class CCLogManager {
     list = list.substring(0, list.length() - two);
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "missingParameterTypesMsg"), //$NON-NLS-1$
+        String.format("%s@%s is missing parameter type(s) %s.", //$NON-NLS-1$
             a_feature, a_class, list)));
   }
 
@@ -595,9 +551,7 @@ public class CCLogManager {
     }
     my_records.
     add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "missingPostconditionMsg"), //$NON-NLS-1$
+        String.format("%s@%s is missing postcondition: %s", //$NON-NLS-1$
             a_feature, a_class, clauses)));
   }
 
@@ -622,9 +576,7 @@ public class CCLogManager {
     }
     my_records.
     add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "missingPreconditionMsg"),  //$NON-NLS-1$
+        String.format("%s@%s is missing precondition: %s",  //$NON-NLS-1$
             a_feature, a_class, clauses)));
   }
 
@@ -641,9 +593,7 @@ public class CCLogManager {
       final SmartString a_frame) {
     my_records.
     add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "missingFrameConditionMsg"), //$NON-NLS-1$
+        String.format("%s@%s is missing a frame condition: %s.", //$NON-NLS-1$
             a_feature, a_class, a_frame)));
   }
 
@@ -659,9 +609,7 @@ public class CCLogManager {
       final BeetlzExpression the_cond) {
     my_records.
     add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "missingHistoryConstraintMsg"), //$NON-NLS-1$
+        String.format("%s is missing a history constraint:\n\t %s.", //$NON-NLS-1$
             the_class, the_cond.toBonString())));
   }
 
@@ -677,9 +625,7 @@ public class CCLogManager {
   public void logClassNotFound(final TypeSmartStringWithLocation a_cls) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, a_cls.getLocation(),
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "classNotFoundMsg"),  //$NON-NLS-1$
+        String.format("No mapping for class %s found.",  //$NON-NLS-1$
             my_pretty.getClassName(a_cls))));
   }
 
@@ -693,16 +639,12 @@ public class CCLogManager {
     if (the_src.isJavaFile()) {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-          String.format(Beetlz.getResourceBundle().
-              getString("CCLogManager." +
-              "expectedPublicMsgJava"), //$NON-NLS-1$
+          String.format("%s: expected all methods public.", //$NON-NLS-1$
               a_class)));
     } else {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-          String.format(Beetlz.getResourceBundle().
-              getString("CCLogManager." +
-              "expectedPublicMsgBon"), //$NON-NLS-1$
+          String.format("%s: expected all features public.", //$NON-NLS-1$
               a_class)));
     }
   }
@@ -717,9 +659,7 @@ public class CCLogManager {
       final ClassModifier the_expected) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "expectedClassModifierMsg"), //$NON-NLS-1$
+        String.format("%s is expected to be %s.", //$NON-NLS-1$
             a_class, my_pretty.getClassMod(the_expected))));
   }
 
@@ -736,9 +676,7 @@ public class CCLogManager {
       final FeatureModifier the_expected) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "expectedFeatureModifierMsg"), //$NON-NLS-1$
+        String.format("%s@%s is expected %s", //$NON-NLS-1$
             a_class, a_feature,
             my_pretty.getFeatMod(the_expected))));
   }
@@ -756,9 +694,7 @@ public class CCLogManager {
       final FeatureModifier the_expected) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "expectedFeatureModifierMsg"), //$NON-NLS-1$
+        String.format("%s@%s is expected %s", //$NON-NLS-1$
             a_class, a_feature,
             my_pretty.getFeatMod(the_expected))));
   }
@@ -771,9 +707,7 @@ public class CCLogManager {
   public void logExpectedEnum(final BeetlzSourceLocation the_src, final SmartString a_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "expectedEnum"), //$NON-NLS-1$
+        String.format("%s is expected to be an enumerated type.", //$NON-NLS-1$
             a_class)));
   }
 
@@ -784,9 +718,7 @@ public class CCLogManager {
   public void logMultipleClasses(final SmartString a_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, null,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "multiplePotentialMatchesMsg"), //$NON-NLS-1$
+        String.format("Error: Multiple potential matches have been found for %s.", //$NON-NLS-1$
             a_class)));
   }
 
@@ -798,9 +730,7 @@ public class CCLogManager {
   public void logNotAccessible(final BeetlzSourceLocation the_src, final SmartString a_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "privateNotAccessibleMsg"), //$NON-NLS-1$
+        String.format("%s is private and not accessible.", //$NON-NLS-1$
             a_class)));
   }
 
@@ -815,9 +745,7 @@ public class CCLogManager {
       final SmartString the_found) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "redundantEnclosingClassMsg"), //$NON-NLS-1$
+        String.format("%s has a redundant enclosing class %s.", //$NON-NLS-1$
             a_class, the_found)));
   }
 
@@ -831,9 +759,7 @@ public class CCLogManager {
       final SmartString a_redundant_cls) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "redundantInterfaceMsg"), //$NON-NLS-1$
+        String.format("%s is a redundant interface for %s.", //$NON-NLS-1$
             a_redundant_cls, a_class)));
   }
 
@@ -846,9 +772,7 @@ public class CCLogManager {
       final SmartString the_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "redundantConstructorMsg"), //$NON-NLS-1$
+        String.format("%s has a redundant constructor.", //$NON-NLS-1$
             the_class)));
   }
 
@@ -863,9 +787,7 @@ public class CCLogManager {
       final SmartString the_redundant_ass) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "redundantSharedAssociationMsg"),  //$NON-NLS-1$
+        String.format("%s has a redundant shared association %s.",  //$NON-NLS-1$
             the_class, the_redundant_ass)));
   }
 
@@ -881,16 +803,12 @@ public class CCLogManager {
     if (the_src.isJavaFile()) {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-          String.format(Beetlz.getResourceBundle().
-              getString("CCLogManager." +
-              "redundantAggregationMsgJava"), //$NON-NLS-1$
+          String.format("%s has a redundant enclosing class %s.", //$NON-NLS-1$
               the_class, the_redundant_ass)));
     } else {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-          String.format(Beetlz.getResourceBundle().
-              getString("CCLogManager." +
-              "redundantAggregationMsgBon"), //$NON-NLS-1$
+          String.format("%s has a redundant aggregation class %s.", //$NON-NLS-1$
               the_class, the_redundant_ass)));
     }
   }
@@ -902,18 +820,10 @@ public class CCLogManager {
    * @param the_features list of redundant features
    */
   public void logRedundantFeature(final SmartString a_class, final List < FeatureStructure > the_features) {
-    //    String list = ""; //$NON-NLS-1$
-    //    final int two = 2;
-    //    for (final FeatureStructure s : the_features) {
-    //      list += s.getSimpleName() + ", "; //$NON-NLS-1$
-    //    }
-    //    if (list.length() > two) list = list.substring(0, list.length() - two);
     for (FeatureStructure fS : the_features) {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_ERROR, fS.getSourceLoc(),
-          String.format(Beetlz.getResourceBundle().
-              getString("CCLogManager." +
-              "redundantFeaturesMsg"), //$NON-NLS-1$
+          String.format("Feature %s in %s has no mapping.", //$NON-NLS-1$
               fS.getSimpleName(), a_class)));
     }
   }
@@ -929,9 +839,7 @@ public class CCLogManager {
       final ClassModifier a_should_not) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "shouldNotClassMsg"), //$NON-NLS-1$
+        String.format("%s should not be %s.", //$NON-NLS-1$
             a_class, my_pretty.getClassMod(a_should_not))));
   }
 
@@ -948,9 +856,7 @@ public class CCLogManager {
       final FeatureModifier a_should_not) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "shouldNotFeatureMsg"), //$NON-NLS-1$
+        String.format("%s@%s should not be %s.", //$NON-NLS-1$
             a_feature, a_class,
             my_pretty.getFeatMod(a_should_not))));
   }
@@ -963,9 +869,7 @@ public class CCLogManager {
   public void logShouldNotEnum(final BeetlzSourceLocation the_src, final SmartString a_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "shouldNotEnum"), //$NON-NLS-1$
+        String.format("%s should not be an enumerated type.", //$NON-NLS-1$
             a_class)));
   }
 
@@ -988,9 +892,7 @@ public class CCLogManager {
     list = list.substring(0, list.length() - two);
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "tooManyParameterMsg"), //$NON-NLS-1$
+        String.format("%s@%s has unexpected arguments %s", //$NON-NLS-1$
             a_feature, a_class, list)));
   }
 
@@ -1015,9 +917,7 @@ public class CCLogManager {
     }
     my_records.
     add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "surplusPreconditionMsg"), //$NON-NLS-1$
+        String.format("%s@%s has a surplus precondition(s): %s", //$NON-NLS-1$
             a_feature, a_class, clauses)));
   }
 
@@ -1042,9 +942,7 @@ public class CCLogManager {
     }
     my_records.
     add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "surplusPostconditionMsg"), //$NON-NLS-1$
+        String.format("%s@%s has a surplus postcondition(s): %s", //$NON-NLS-1$
             a_feature, a_class, clauses)));
   }
 
@@ -1066,9 +964,7 @@ public class CCLogManager {
     }
     my_records.
     add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "surplusInvariantsMsg"), //$NON-NLS-1$
+        String.format("%s has a surplus invariants: %s", //$NON-NLS-1$
             a_class, clauses)));
   }
 
@@ -1087,9 +983,10 @@ public class CCLogManager {
       final SmartString a_feature) {
     my_records.
     add(new CCLogRecord(CCLevel.GENERAL_NOTE, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "redefinedCorrespondenceMsg"), //$NON-NLS-1$
+        String.format("Compatibility warning for %s@%s: " + //$NON-NLS-1$
+        		"@Override and 'redefined' do not correspond exactly. " + //$NON-NLS-1$
+        		"A redefined feature cannot be deferred, " + //$NON-NLS-1$
+        		"whereas an abstract method may have annotation @Override.", //$NON-NLS-1$
             a_class, a_feature)));
   }
 
@@ -1100,9 +997,9 @@ public class CCLogManager {
   public void logAssignableDefaultCorrespondence() {
     my_records.
     add(new CCLogRecord(CCLevel.GENERAL_NOTE, null,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "assignableDefaultMsg")))); //$NON-NLS-1$
+        String.format("BON and Java have different default frame conditions:\n" + //$NON-NLS-1$
+        		"\t\tin BON all queries are automatically pure,\n " + //$NON-NLS-1$
+        		"\t\twhereas in Java the default is 'assignable \\everything'."))); //$NON-NLS-1$
 
   }
 
@@ -1112,9 +1009,9 @@ public class CCLogManager {
   public void logNullityDefaultCorrespondence() {
     my_records.
     add(new CCLogRecord(CCLevel.GENERAL_NOTE, null,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "nullityDefaultMsg")))); //$NON-NLS-1$
+        String.format("BON and Java have different default nullity:\n" + //$NON-NLS-1$
+        		"\t\tin BON all types are automatically nullable,\n" + //$NON-NLS-1$
+        		"\t\twhereas in Java the default is non-null."))); //$NON-NLS-1$
   }
 
   /**
@@ -1128,9 +1025,7 @@ public class CCLogManager {
       final SmartString the_method) {
     my_records.
     add(new CCLogRecord(CCLevel.GENERAL_NOTE, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "genericMethodsNotSupportedMsg"),  //$NON-NLS-1$
+        String.format("%s@%s is generic. BON does not support generic methods.",  //$NON-NLS-1$
             the_method, the_class)));
   }
 
@@ -1140,8 +1035,8 @@ public class CCLogManager {
    */
   public void logHistoryConstraints() {
     my_records.add(new CCLogRecord(CCLevel.GENERAL_NOTE, null,
-        Beetlz.getResourceBundle().
-        getString("CCLogManager." +
-        "historyConstraintMsg"))); //$NON-NLS-1$
+        "Technically history constraints found in Java should be appended to " + //$NON-NLS-1$
+        "EVERY postcondition in BON.\nPlease note, that it is only being " + //$NON-NLS-1$
+        "checked that each constraint appears ONCE somewhere in the class.")); //$NON-NLS-1$
   }
 }

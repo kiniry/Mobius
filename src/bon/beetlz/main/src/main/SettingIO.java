@@ -45,8 +45,7 @@ public final class SettingIO {
       fr = new FileReader(temp);
       br = new BufferedReader(fr);
     } catch (final FileNotFoundException e) {
-      LOGGER.severe(String.format(Beetlz.getResourceBundle()
-          .getString("SettingIO.customSettingsFileNotFound"), //$NON-NLS-1$
+      LOGGER.severe(String.format("Custom setting file %s not found. Please check your input files.", //$NON-NLS-1$
                                   a_filename));
       return false;
     }
@@ -65,13 +64,11 @@ public final class SettingIO {
         }
       }
       if (!line.equals("")) { //$NON-NLS-1$
-        LOGGER.severe(String.format(Beetlz.getResourceBundle()
-            .getString("SettingIO.customFileSyntaxError"), //$NON-NLS-1$
+        LOGGER.severe(String.format("Custom file syntax error. See %s.", //$NON-NLS-1$
                                     line));
       }
     } catch (final IOException exc) {
-      LOGGER.severe(Beetlz.getResourceBundle().
-                    getString("SettingIO.errorReadingFile")); //$NON-NLS-1$
+      LOGGER.severe("Error reading custom setting file.\n"); //$NON-NLS-1$
       exc.printStackTrace();
       return false;
     }
@@ -79,8 +76,7 @@ public final class SettingIO {
     try {
       fr.close();
     } catch (final IOException exc) {
-      LOGGER.severe(Beetlz.getResourceBundle()
-          .getString("SettingIO.cannotCloseSettingsFile")); //$NON-NLS-1$
+      LOGGER.severe("Cannot close input custom setting file, please check"); //$NON-NLS-1$
       return false;
     }
 
@@ -117,8 +113,7 @@ public final class SettingIO {
       } else if (trimmedLine.startsWith("ignore_prefix")) { //$NON-NLS-1$
         processIgnorePrefix(trimmedLine, a_profile);
       } else {
-        LOGGER.severe(String.format(Beetlz.getResourceBundle()
-            .getString("SettingIO.customFileSyntaxError"), //$NON-NLS-1$
+        LOGGER.severe(String.format("Custom file syntax error. See %s.", //$NON-NLS-1$
                                     a_line));
       }
     }
@@ -143,8 +138,7 @@ public final class SettingIO {
         parts.length == three) { //correct beginning
       a_profile.addClassMapping(parts[1], parts[two]);
     } else {
-      LOGGER.severe(String.format(Beetlz.getResourceBundle()
-          .getString("SettingIO.syntaxErrorClassMapping"), //$NON-NLS-1$
+      LOGGER.severe(String.format("Custom file syntax error. A class mapping must have exactly 1 bon name and 1 java name. \nSee %s.", //$NON-NLS-1$
                                   a_line));
     }
   }
@@ -169,8 +163,8 @@ public final class SettingIO {
         parts.length == three) { //correct beginning //$NON-NLS-1$
       a_profile.addFeatureMapping(parts[1], parts[two]);
     } else {
-      LOGGER.severe(String.format(Beetlz.getResourceBundle()
-          .getString("SettingIO.syntaxErrorFeatureMapping"), //$NON-NLS-1$
+      LOGGER.severe(String.format("Custom file syntax error. A feature " + //$NON-NLS-1$
+      		"mapping must have exactly 1 bon name and 1 java name. \nSee %s.", //$NON-NLS-1$
                                   a_line));
     }
   }
@@ -196,14 +190,12 @@ public final class SettingIO {
         a_profile.addTypeMapping(typeAndName[1], bonTypes, javaTypes);
 
       } else {
-        LOGGER.severe(String.format(Beetlz.getResourceBundle()
-            .getString("SettingIO.customFileSyntaxError"), //$NON-NLS-1$
+        LOGGER.severe(String.format("Custom file syntax error. See %s.", //$NON-NLS-1$
                                     a_line));
       }
 
     } else {
-      LOGGER.severe(String.format(Beetlz.getResourceBundle()
-          .getString("SettingIO.customFileSyntaxError"), //$NON-NLS-1$
+      LOGGER.severe(String.format("Custom file syntax error. See %s.", //$NON-NLS-1$
                                   a_line));
     }
   }
@@ -231,8 +223,8 @@ public final class SettingIO {
         parts[two].replaceAll("[{}]", "").split(","); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       a_profile.addIgnoredClasses(ignoreBON, ignoreJava);
     } else {
-      LOGGER.severe(String.format(Beetlz.getResourceBundle()
-          .getString("SettingIO.syntaxErrorIgnoreClasses"), //$NON-NLS-1$
+      LOGGER.severe(String.format("Custom file syntax error. A ignore_class clause must " + //$NON-NLS-1$
+      		"have following format: ignore_classes {...} {...};. \nSee %s.", //$NON-NLS-1$
                                   a_line));
     }
   }
@@ -255,8 +247,9 @@ public final class SettingIO {
         a_profile.getPrefixes().add(parts[i]);
       }
     } else {
-      LOGGER.severe(String.format(Beetlz.getResourceBundle()
-          .getString("SettingIO.syntaxErrorIgnorePrefix"), //$NON-NLS-1$
+      LOGGER.severe(String.format("Custom file syntax error. " + //$NON-NLS-1$
+      		"A ignore_prefix clause must have following format: " + //$NON-NLS-1$
+      		"ignore_prefix my_ a_ the_ ... ;. \nSee %s.", //$NON-NLS-1$
                                   a_line));
     }
   }

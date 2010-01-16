@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import main.Beetlz;
 import structure.ClassCollection;
+import structure.ClassStructure;
 import utils.BConst;
 
 /**
@@ -52,13 +53,11 @@ public class BonFile {
       final File temp = new File(s);
       if (!my_files.contains(temp)) { //ignore duplicate files
         if (temp.exists()) {
-          LOGGER.config(Beetlz.getResourceBundle().
-                        getString("BonFile.addingBonFile") + //$NON-NLS-1$
+          LOGGER.config("Adding BON file " + //$NON-NLS-1$
                         s + ".");  //$NON-NLS-1$
           my_files.add(temp);
         } else {
-          LOGGER.severe(Beetlz.getResourceBundle().
-                        getString("BonFile.cannotFindFile") + s); //$NON-NLS-1$
+          LOGGER.severe("Cannot find file " + s); //$NON-NLS-1$
         }
       }
     }
@@ -77,7 +76,7 @@ public class BonFile {
     ParsingTracker tracker = API.parse(my_files, false, false);
 
     if (tracker.getErrorsAndWarnings().getNumberOfErrors() == 0) {
-      LOGGER.config(Beetlz.getResourceBundle().getString("BonFile.successfullyCompiled")); //$NON-NLS-1$
+      LOGGER.config("Successfully compiled BON files."); //$NON-NLS-1$
       my_bonWalker.parseTypingInformation(tracker);
       my_classCollection.addMoreClasses(my_bonWalker.getAllClasses());
     } else {
@@ -97,11 +96,11 @@ public class BonFile {
   /**
    * Print to std out.
    */
-  public final void printOut() {
-    LOGGER.info(Beetlz.getResourceBundle().getString("BonFile.bonFiles")); //$NON-NLS-1$
+  /*public final void printOut() {
+    LOGGER.info("BON file contents:"); //$NON-NLS-1$
     my_classCollection.printOut();
 
-  }
+  }*/
 
   /**
    * Get classes.
@@ -118,7 +117,13 @@ public class BonFile {
    */
   @Override
   public final String toString() {
-    return my_classCollection.toString();
+    String str = "parsed Bon classes: [";
+    for(ClassStructure c: my_classCollection.getClasses()){
+      str += c.getSimpleName() + ", ";
+    }
+    if(str.length() > 2)
+      str = str.substring(0, str.length() -2) + "]";
+    return str;
   }
 
 
@@ -126,9 +131,9 @@ public class BonFile {
    * String representation.
    * @return string representation
    */
-  public final String toStringVerbose() {
+  /*public final String toStringVerbose() {
     return my_classCollection.toStringVerbose();
-  }
+  }*/
 
   /**
    * Gets the time when the newest file was modified.

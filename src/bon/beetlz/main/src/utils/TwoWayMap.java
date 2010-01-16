@@ -122,7 +122,7 @@ public class TwoWayMap < T, S > {
    */
   @Override
   public final String toString() {
-    String string = Beetlz.getResourceBundle().getString("TwoWayMap.twoWayMap"); //$NON-NLS-1$
+    String string = "two-way-map: \n"; //$NON-NLS-1$
     string += my_bonKeys.toString() + "\n" + my_javaKeys.toString(); //$NON-NLS-1$
     return string;
   }

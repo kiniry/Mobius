@@ -74,12 +74,10 @@ public class JmlFile {
       final File temp = new File(s);
       if (!my_files.contains(temp)) { //ignore duplicate files
         if (temp.exists()) {
-          LOGGER.config(Beetlz.getResourceBundle().getString("JmlFile.fileFound") +
-              temp.getAbsolutePath()); //$NON-NLS-1$
+          LOGGER.config("File found." + temp.getAbsolutePath()); //$NON-NLS-1$
           my_files.add(temp);
         } else {
-          LOGGER.severe(Beetlz.
-              getResourceBundle().getString("JmlFile.cannotFindFile") + //$NON-NLS-1$
+          LOGGER.severe("Cannot find file " + //$NON-NLS-1$
               s);
         }
       }
@@ -135,8 +133,7 @@ public class JmlFile {
               final JmlClassDecl ast = api.getJavaDecl(sym);
               parseClass(ast, sym, api, cu, null); //no enclosing class, top level
             } else {
-              LOGGER.severe(String.format(Beetlz.getResourceBundle().
-                  getString("JmlFile.noClassSymbol"), //$NON-NLS-1$
+              LOGGER.severe(String.format("No class symbol for %s. The class is probably in the default package.", //$NON-NLS-1$
                   cu.sourcefile.getName()));
             }
           }
@@ -145,12 +142,10 @@ public class JmlFile {
     } catch (final NullPointerException e) {
       Beetlz.getWaitingRecords().
       add(new CCLogRecord(CCLevel.COMPILATION_ERROR, new BeetlzSourceLocation(true),
-          String.format(Beetlz.getResourceBundle().
-              getString("JmlFile.compilError")))); //$NON-NLS-1$
+          String.format("Severe Java compilation error, cannot continue."))); //$NON-NLS-1$
       return false;
     } catch (final Exception e) {
-      LOGGER.severe(Beetlz.getResourceBundle().
-          getString("JmlFile.cannotParseJml")); //$NON-NLS-1$
+      LOGGER.severe("Could not parse Java/JML input files."); //$NON-NLS-1$
       e.printStackTrace(Beetlz.getErrorStream());
       return false;
     }
@@ -225,9 +220,8 @@ public class JmlFile {
           my_classCollection.addClass(cls);
           return cls;
         } catch (final Exception e) {
-          LOGGER.severe(String.format(Beetlz.getResourceBundle().
-              getString("JmlFile.problemWithClass"),
-              a_symbol.className()));  //$NON-NLS-1$
+          LOGGER.severe(String.format("There is a problem with class %s. Please check your input.",//$NON-NLS-1$
+              a_symbol.className()));  
         }
       } //end instanceof
     } //end annotation filter
@@ -245,11 +239,10 @@ public class JmlFile {
   /**
    * Print to std out.
    */
-  public final void printOut() {
-    LOGGER.info(Beetlz.getResourceBundle().
-        getString("JmlFile.javaFileContents")); //$NON-NLS-1$
+  /*public final void printOut() {
+    LOGGER.info("Java file contents: "); //$NON-NLS-1$
     my_classCollection.printOut();
-  }
+  }*/
 
   /**
    * String representation.
@@ -257,16 +250,22 @@ public class JmlFile {
    */
   @Override
   public final String toString() {
-    return my_classCollection.toString();
+    String str = "parsed Java classes: [";
+    for(ClassStructure c: my_classCollection.getClasses()){
+      str += c.getSimpleName() + ", ";
+    }
+    if(str.length() > 2)
+      str = str.substring(0, str.length() -2) + "]";
+    return str;
   }
 
   /**
    * String representation.
    * @return string representation
    */
-  public final String toStringVerbose() {
+  /*public final String toStringVerbose() {
     return my_classCollection.toStringVerbose();
-  }
+  }*/
 
   /**
    * Gets the time when the newest file was modified.

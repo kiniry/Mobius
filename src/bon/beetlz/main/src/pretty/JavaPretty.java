@@ -63,14 +63,12 @@ public class JavaPretty {
     final File dir = new File(a_dir);
     if (!dir.exists()) {
       Beetlz.JAVA_LOGGER.
-        severe(Beetlz.getResourceBundle().
-               getString("JavaPretty.directoryDoesNotExist")); //$NON-NLS-1$
+        severe("The directory you specified for your skeleton code does not exists."); //$NON-NLS-1$
       return;
     }
     if (!dir.isDirectory()) {
       Beetlz.JAVA_LOGGER.
-        severe(Beetlz.getResourceBundle().
-               getString("JavaPretty.directoryIsNotDirectory")); //$NON-NLS-1$
+        severe("The directory you specified for the skeleton code is not a directory."); //$NON-NLS-1$
       return;
     }
 
@@ -85,8 +83,7 @@ public class JavaPretty {
       } catch (final IOException e) {
         Beetlz.JAVA_LOGGER.
           severe(String.
-                 format(Beetlz.getResourceBundle().
-                        getString("JavaPretty.errorWritingFile"), //$NON-NLS-1$
+                 format("Error while writing file %s.", //$NON-NLS-1$
                                   dir + "beetlzSkeletonCode.txt")); //$NON-NLS-1$
       }
     //end skeleton file
@@ -113,8 +110,7 @@ public class JavaPretty {
             } catch (final IOException e) {
               Beetlz.JAVA_LOGGER.
                 severe(String.
-                       format(Beetlz.getResourceBundle().
-                              getString("JavaPretty.errorWritingFile"), //$NON-NLS-1$
+                       format("Error while writing file %s.", //$NON-NLS-1$
                               dir + "/" + //$NON-NLS-1$
                               packName + "/" + clsName)); //$NON-NLS-1$
             }

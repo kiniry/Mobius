@@ -62,14 +62,12 @@ public class BonPretty {
     final File dir = new File(a_dir);
     if (!dir.exists()) {
       Beetlz.JAVA_LOGGER.
-      severe(Beetlz.getResourceBundle().
-             getString("BonPretty.directoryDoesNotExist")); //$NON-NLS-1$
+      severe("The directory you specified for your skeleton code does not exists."); //$NON-NLS-1$
       return;
     }
     if (!dir.isDirectory()) {
       Beetlz.JAVA_LOGGER.
-      severe(Beetlz.getResourceBundle().
-             getString("BonPretty.directoryIsNoDirectory")); //$NON-NLS-1$
+      severe("The directory you specified for the skeleton code is not a directory."); //$NON-NLS-1$
     }
 
     final String fileName = "bon_skeleton.bon"; //to fix //$NON-NLS-1$
@@ -82,8 +80,7 @@ public class BonPretty {
       out.close();
     } catch (final IOException e) {
       Beetlz.JAVA_LOGGER.
-      severe(String.format(Beetlz.getResourceBundle().
-                           getString("BonPretty.cannotWriteFile"),  //$NON-NLS-1$
+      severe(String.format("Cannot write file %s/%s.",  //$NON-NLS-1$
                            dir, fileName));
     }
 

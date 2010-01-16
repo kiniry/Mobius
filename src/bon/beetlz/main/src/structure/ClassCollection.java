@@ -207,8 +207,7 @@ public class ClassCollection {
    */
   public final /*@ pure @*/ void printOut() {
     Logger.getLogger(BConst.LOGGER_NAME).
-      info(Beetlz.getResourceBundle().
-           getString("ClassCollection.classCollectionHasClasses")); //$NON-NLS-1$
+      info("The class collection has following classes:"); //$NON-NLS-1$
     for (final ClassStructure dclass : my_classes.values()) {
       Logger.getLogger(BConst.LOGGER_NAME).info(dclass.printFullClass() + "\n"); //$NON-NLS-1$
     }

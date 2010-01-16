@@ -157,8 +157,8 @@ public class UserProfile {
       my_java_is_source = true;
     } else {
       Logger.getLogger(BConst.LOGGER_NAME)
-          .severe(Beetlz.getResourceBundle().
-                  getString("UserProfile.syntaxErrorConfigFile")); //$NON-NLS-1$
+          .severe("Options syntax error: '-source' must be followed " + //$NON-NLS-1$
+          		"by either 'bon' or 'java' or 'both'."); //$NON-NLS-1$
       my_java_is_source = false;
     }
     if (a_use_basics) {

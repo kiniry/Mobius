@@ -131,9 +131,7 @@ public final class BONParser {
         if (!success) {
           Beetlz.getWaitingRecords().
           add(new CCLogRecord(CCLevel.JAVA_WARNING, null,
-              String.format(Beetlz.getResourceBundle().
-                  getString("BONParser." + //$NON-NLS-1$
-                  "repeatedInheritanceNotSupported"), //$NON-NLS-1$
+              String.format("Java does not support repeated inheritance. Repeated parent class %s in class %s will be ignored.", //$NON-NLS-1$
                   s, name)));
         }
       }
