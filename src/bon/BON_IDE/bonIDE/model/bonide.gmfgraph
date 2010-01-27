@@ -11,19 +11,51 @@
           xsi:type="gmfgraph:Rectangle"
           name="BONClassFigure">
         <layout
-            xsi:type="gmfgraph:FlowLayout"/>
+            xsi:type="gmfgraph:FlowLayout"
+            vertical="true"
+            matchMinorSize="true"
+            forceSingleLine="true"
+            minorAlignment="CENTER"
+            majorSpacing="0"
+            minorSpacing="0"/>
         <children
             xsi:type="gmfgraph:Label"
             name="BONClassNameFigure"
-            text="&lt;...>"/>
+            text="&lt;...>">
+          <font
+              xsi:type="gmfgraph:BasicFont"
+              faceName="LucidaSans"/>
+        </children>
         <children
-            xsi:type="gmfgraph:Label"
-            name="BONClassIsDeferredFigure"
-            text="&lt;...>"/>
+            xsi:type="gmfgraph:Rectangle"
+            name="IndexRectangleFigure">
+          <layout
+              xsi:type="gmfgraph:StackLayout"/>
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              red="128"/>
+        </children>
         <children
-            xsi:type="gmfgraph:Label"
-            name="BONClassParentsFigure"
-            text="&lt;...>"/>
+            xsi:type="gmfgraph:Rectangle"
+            name="InheritanceRectangleFigure">
+          <layout
+              xsi:type="gmfgraph:FlowLayout"
+              forceSingleLine="true"
+              majorSpacing="2"
+              minorSpacing="0"/>
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              green="128"/>
+        </children>
+        <children
+            xsi:type="gmfgraph:Rectangle"
+            name="FeatureRectangleFigure">
+          <layout
+              xsi:type="gmfgraph:FlowLayout"/>
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              red="192"/>
+        </children>
       </actualFigure>
       <accessors
           figure="//@figures.0/@descriptors.0/@actualFigure/@children.0"/>
@@ -31,6 +63,8 @@
           figure="//@figures.0/@descriptors.0/@actualFigure/@children.1"/>
       <accessors
           figure="//@figures.0/@descriptors.0/@actualFigure/@children.2"/>
+      <accessors
+          figure="//@figures.0/@descriptors.0/@actualFigure/@children.3"/>
     </descriptors>
     <descriptors
         name="FeatureFigure">
@@ -38,14 +72,52 @@
           xsi:type="gmfgraph:Rectangle"
           name="FeatureFigure">
         <layout
-            xsi:type="gmfgraph:FlowLayout"/>
+            xsi:type="gmfgraph:FlowLayout"
+            majorSpacing="0"
+            minorSpacing="2"/>
+        <children
+            xsi:type="gmfgraph:Rectangle"
+            name="FeatureSignatureRectangleFigure">
+          <layout
+              xsi:type="gmfgraph:FlowLayout"
+              forceSingleLine="true"
+              majorSpacing="0"
+              minorSpacing="2"/>
+          <children
+              xsi:type="gmfgraph:Label"
+              name="FeatureNamesFigure"
+              text="&lt;...>"/>
+          <children
+              xsi:type="gmfgraph:Label"
+              name="FeatureModifierFigure"/>
+          <children
+              xsi:type="gmfgraph:Label"
+              name="FeatureTypeFigure"/>
+        </children>
         <children
             xsi:type="gmfgraph:Label"
-            name="FeatureNameFigure"
-            text="&lt;...>"/>
+            name="FeatureCommentFigure"/>
+        <children
+            xsi:type="gmfgraph:Rectangle"
+            name="FeatureArgumentsRectangleFigure">
+          <layout
+              xsi:type="gmfgraph:FlowLayout"
+              majorSpacing="1"
+              minorSpacing="1"/>
+        </children>
       </actualFigure>
       <accessors
+          figure="//@figures.0/@descriptors.1/@actualFigure/@children.0/@children.0"/>
+      <accessors
           figure="//@figures.0/@descriptors.1/@actualFigure/@children.0"/>
+      <accessors
+          figure="//@figures.0/@descriptors.1/@actualFigure/@children.0/@children.1"/>
+      <accessors
+          figure="//@figures.0/@descriptors.1/@actualFigure/@children.0/@children.2"/>
+      <accessors
+          figure="//@figures.0/@descriptors.1/@actualFigure/@children.1"/>
+      <accessors
+          figure="//@figures.0/@descriptors.1/@actualFigure/@children.2"/>
     </descriptors>
     <descriptors
         name="ClusterFigure">
@@ -73,6 +145,87 @@
       <accessors
           figure="//@figures.0/@descriptors.2/@actualFigure/@children.0"/>
     </descriptors>
+    <descriptors
+        name="IndexFigure">
+      <actualFigure
+          xsi:type="gmfgraph:Rectangle"
+          name="IndexFigure"
+          outline="false">
+        <layout
+            xsi:type="gmfgraph:FlowLayout"
+            forceSingleLine="true"
+            majorSpacing="2"
+            minorSpacing="0"/>
+        <preferredSize
+            dx="-1"
+            dy="12"/>
+        <children
+            xsi:type="gmfgraph:Label"
+            name="IndexIdentifierFigure">
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              blue="200"/>
+          <font
+              xsi:type="gmfgraph:BasicFont"
+              faceName=""
+              height="7"/>
+        </children>
+        <children
+            xsi:type="gmfgraph:Label"
+            name="IndexTermsFigure">
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              blue="128"/>
+          <font
+              xsi:type="gmfgraph:BasicFont"
+              faceName=""
+              height="7"/>
+        </children>
+      </actualFigure>
+      <accessors
+          figure="//@figures.0/@descriptors.3/@actualFigure"/>
+      <accessors
+          figure="//@figures.0/@descriptors.3/@actualFigure/@children.0"/>
+      <accessors
+          figure="//@figures.0/@descriptors.3/@actualFigure/@children.1"/>
+    </descriptors>
+    <descriptors
+        name="InheritanceFigure">
+      <actualFigure
+          xsi:type="gmfgraph:Rectangle"
+          name="InheritanceFigure"
+          outline="false">
+        <layout
+            xsi:type="gmfgraph:FlowLayout"
+            forceSingleLine="true"
+            majorSpacing="2"
+            minorSpacing="0"/>
+        <preferredSize
+            dx="-1"
+            dy="12"/>
+        <children
+            xsi:type="gmfgraph:Label"
+            name="InheritanceTitleLabel"
+            text="Inherits:">
+          <font
+              xsi:type="gmfgraph:BasicFont"
+              height="7"/>
+        </children>
+        <children
+            xsi:type="gmfgraph:Label"
+            name="InheritanceClassListLabel">
+          <font
+              xsi:type="gmfgraph:BasicFont"
+              height="7"/>
+        </children>
+      </actualFigure>
+      <accessors
+          figure="//@figures.0/@descriptors.4/@actualFigure/@children.0"/>
+      <accessors
+          figure="//@figures.0/@descriptors.4/@actualFigure/@children.1"/>
+      <accessors
+          figure="//@figures.0/@descriptors.4/@actualFigure"/>
+    </descriptors>
   </figures>
   <nodes
       name="Cluster"
@@ -83,10 +236,32 @@
   <nodes
       name="Feature"
       figure="FeatureFigure"/>
+  <nodes
+      name="Index"
+      figure="IndexFigure"/>
+  <nodes
+      name="InheritanceList"
+      figure="InheritanceFigure"/>
   <compartments
       name="ClusterCompartment"
       figure="ClusterFigure"
-      collapsible="true"/>
+      collapsible="true"
+      needsTitle="true"/>
+  <compartments
+      name="IndexCompartment"
+      figure="BONClassFigure"
+      collapsible="true"
+      accessor="//@figures.0/@descriptors.0/@accessors.1"/>
+  <compartments
+      name="InheritanceCompartment"
+      figure="BONClassFigure"
+      collapsible="true"
+      accessor="//@figures.0/@descriptors.0/@accessors.2"/>
+  <compartments
+      name="FeatureCompartment"
+      figure="BONClassFigure"
+      collapsible="true"
+      accessor="//@figures.0/@descriptors.0/@accessors.3"/>
   <labels
       name="ClusterName"
       figure="ClusterFigure"
@@ -95,17 +270,46 @@
   <labels
       name="BONClassName"
       figure="BONClassFigure"
+      elementIcon="false"
       accessor="//@figures.0/@descriptors.0/@accessors.0"/>
   <labels
-      name="BONClassIsDeferred"
-      figure="BONClassFigure"
-      accessor="//@figures.0/@descriptors.0/@accessors.1"/>
+      name="IndexTermsLabel"
+      figure="IndexFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.3/@accessors.2"/>
   <labels
-      name="BONClassParents"
-      figure="BONClassFigure"
-      accessor="//@figures.0/@descriptors.0/@accessors.2"/>
+      name="IndexIdentifierLabel"
+      figure="IndexFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.3/@accessors.1"/>
   <labels
-      name="FeatureName"
+      name="InheritanceClassesLabel"
+      figure="InheritanceFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.4/@accessors.1"/>
+  <labels
+      name="InheritanceTitleLabel"
+      figure="InheritanceFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.4/@accessors.0"/>
+  <labels
+      name="FeatureNamesLabel"
       figure="FeatureFigure"
+      elementIcon="false"
       accessor="//@figures.0/@descriptors.1/@accessors.0"/>
+  <labels
+      name="FeatureModifierLabel"
+      figure="FeatureFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.1/@accessors.2"/>
+  <labels
+      name="FeatureTypeLabel"
+      figure="FeatureFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.1/@accessors.3"/>
+  <labels
+      name="FeatureCommentLabel"
+      figure="FeatureFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.1/@accessors.4"/>
 </gmfgraph:Canvas>

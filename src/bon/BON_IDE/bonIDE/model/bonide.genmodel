@@ -6,6 +6,15 @@
     complianceLevel="5.0" copyrightFields="false">
   <foreignModel>bonide.ecore</foreignModel>
   <genPackages prefix="BonIDE" disposableProviderFactory="true" ecorePackage="bonide.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bonide.ecore#//ImplementationStatus">
+      <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//ImplementationStatus/Reused"/>
+      <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//ImplementationStatus/Persistent"/>
+      <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//ImplementationStatus/Deferred"/>
+      <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//ImplementationStatus/Effective"/>
+      <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//ImplementationStatus/Interfaced"/>
+      <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//ImplementationStatus/Root"/>
+      <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//ImplementationStatus/Parameterized"/>
+    </genEnums>
     <genClasses ecoreClass="bonide.ecore#//Model">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//Model/abstractions"/>
     </genClasses>
@@ -20,11 +29,29 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//BONClass/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//BONClass/features"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//BONClass/isDeferred"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//BONClass/parents"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//BONClass/implementationStatus"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//BONClass/indexes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference bonide.ecore#//BONClass/parents"/>
     </genClasses>
     <genClasses image="false" ecoreClass="bonide.ecore#//StaticAbstraction"/>
     <genClasses ecoreClass="bonide.ecore#//Feature">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Feature/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Feature/names"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Feature/modifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Feature/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Feature/comment"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//Feature/arguments"/>
+    </genClasses>
+    <genClasses ecoreClass="bonide.ecore#//IndexClause">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//IndexClause/identifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//IndexClause/terms"/>
+    </genClasses>
+    <genClasses ecoreClass="bonide.ecore#//InheritanceClause">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//InheritanceClause/parentNames"/>
+    </genClasses>
+    <genClasses ecoreClass="bonide.ecore#//FeatureArgument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//FeatureArgument/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//FeatureArgument/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//FeatureArgument/containerType"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

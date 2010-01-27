@@ -11,7 +11,8 @@
       <domainMetaElement
           href="bonide.ecore#//Cluster"/>
       <labelMappings
-          xsi:type="gmfmap:FeatureLabelMapping">
+          xsi:type="gmfmap:FeatureLabelMapping"
+          viewPattern="">
         <diagramLabel
             href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#ClusterName"/>
         <features
@@ -59,6 +60,119 @@
           href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmftool#//@palette/@tools.0/@tools.1"/>
       <diagramNode
           href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#BONClass"/>
+      <children
+          compartment="//@nodes.1/@ownedChild/@compartments.0">
+        <containmentFeature
+            href="bonide.ecore#//BONClass/indexes"/>
+        <ownedChild>
+          <domainMetaElement
+              href="bonide.ecore#//IndexClause"/>
+          <labelMappings
+              xsi:type="gmfmap:FeatureLabelMapping">
+            <diagramLabel
+                href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#IndexIdentifierLabel"/>
+            <features
+                href="bonide.ecore#//IndexClause/identifier"/>
+          </labelMappings>
+          <labelMappings
+              xsi:type="gmfmap:FeatureLabelMapping">
+            <diagramLabel
+                href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#IndexTermsLabel"/>
+            <features
+                href="bonide.ecore#//IndexClause/terms"/>
+          </labelMappings>
+          <tool
+              xsi:type="gmftool:CreationTool"
+              href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmftool#//@palette/@tools.0/@tools.3"/>
+          <diagramNode
+              href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#Index"/>
+        </ownedChild>
+      </children>
+      <children
+          compartment="//@nodes.1/@ownedChild/@compartments.1">
+        <containmentFeature
+            href="bonide.ecore#//BONClass/parents"/>
+        <childrenFeature
+            href="bonide.ecore#//BONClass/parents"/>
+        <ownedChild>
+          <domainMetaElement
+              href="bonide.ecore#//InheritanceClause"/>
+          <labelMappings
+              xsi:type="gmfmap:DesignLabelMapping">
+            <diagramLabel
+                href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#InheritanceTitleLabel"/>
+          </labelMappings>
+          <labelMappings
+              xsi:type="gmfmap:FeatureLabelMapping">
+            <diagramLabel
+                href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#InheritanceClassesLabel"/>
+            <features
+                href="bonide.ecore#//InheritanceClause/parentNames"/>
+          </labelMappings>
+          <tool
+              xsi:type="gmftool:CreationTool"
+              href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmftool#//@palette/@tools.0/@tools.4"/>
+          <diagramNode
+              href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#InheritanceList"/>
+        </ownedChild>
+      </children>
+      <children
+          compartment="//@nodes.1/@ownedChild/@compartments.2">
+        <containmentFeature
+            href="bonide.ecore#//BONClass/features"/>
+        <ownedChild>
+          <domainMetaElement
+              href="bonide.ecore#//Feature"/>
+          <labelMappings
+              xsi:type="gmfmap:FeatureLabelMapping">
+            <diagramLabel
+                href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#FeatureNamesLabel"/>
+            <features
+                href="bonide.ecore#//Feature/names"/>
+          </labelMappings>
+          <labelMappings
+              xsi:type="gmfmap:FeatureLabelMapping">
+            <diagramLabel
+                href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#FeatureModifierLabel"/>
+            <features
+                href="bonide.ecore#//Feature/modifier"/>
+          </labelMappings>
+          <labelMappings
+              xsi:type="gmfmap:FeatureLabelMapping">
+            <diagramLabel
+                href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#FeatureTypeLabel"/>
+            <features
+                href="bonide.ecore#//Feature/type"/>
+          </labelMappings>
+          <labelMappings
+              xsi:type="gmfmap:FeatureLabelMapping">
+            <diagramLabel
+                href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#FeatureCommentLabel"/>
+            <features
+                href="bonide.ecore#//Feature/comment"/>
+          </labelMappings>
+          <tool
+              xsi:type="gmftool:CreationTool"
+              href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmftool#//@palette/@tools.0/@tools.2"/>
+          <diagramNode
+              href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#Feature"/>
+        </ownedChild>
+      </children>
+      <compartments
+          children="//@nodes.1/@ownedChild/@children.0">
+        <compartment
+            href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#IndexCompartment"/>
+      </compartments>
+      <compartments
+          children="//@nodes.1/@ownedChild/@children.1">
+        <compartment
+            href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#InheritanceCompartment"/>
+      </compartments>
+      <compartments
+          children="//@nodes.1/@ownedChild/@children.2">
+        <compartment
+            href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#FeatureCompartment"/>
+      </compartments>
     </ownedChild>
   </nodes>
   <diagram>
