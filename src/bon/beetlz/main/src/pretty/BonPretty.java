@@ -539,6 +539,13 @@ public class BonPretty {
         inv.add(my_tab + "-- " + e.toBonString() + my_semicolon + my_newline); //$NON-NLS-1$
       }
     }
+    //all invariants are comments, so put the invariant section in comments too...
+    if (allInformal) {
+      inv.add("-- invariant" + my_newline); //$NON-NLS-1$
+      for (final BeetlzExpression e : i.getInformalPredicates()) {
+        inv.add(my_tab + "-- " + e.toBonString() + my_semicolon + my_newline); //$NON-NLS-1$
+      }
+    }
     return inv;
   }
 
