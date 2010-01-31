@@ -1,0 +1,251 @@
+indexing
+  about:        "Some test classes.";
+  title:        "Test";
+  author:       "evka";
+  copyright:    "none";
+  organisation: "School of Computer Science and Informatics, UCD";
+  date:         "December 2009";
+  version:      "Revision: 1";
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ENCLOSURE cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+static_diagram TEST           
+component 
+  
+cluster FUNNY_CLUSTER
+component
+
+	effective class BIG_BUGGY_CLASS
+	indexing
+      about:        "A big class.";
+      author:       "Evka";
+      date:         "January 2010";
+      version:      "Revision: 0";
+	feature
+	 make
+	   -> n: STRING
+	 make2
+	   -> n: STRING
+	   -> m: MOOD
+	end
+	
+	BIG_BUGGY_CLASS client :{ DUE
+	--BIG_BUGGY_CLASS client :{ MOOD
+    BIG_BUGGY_CLASS client :{ TRE
+    BIG_BUGGY_CLASS client :{ UNO
+    MOOD client :(1) MOOD -- since MOOD's fields are final
+	
+	deferred class SMALL_BUGGY_CLASS
+	feature
+	 deferred hide
+	   -> v: VALUE
+	 deferred vanish
+	 effective moveTo
+	   -> dx: VALUE
+	   -> dy: VALUE
+	end
+	
+	root class MINI_BUGGY_CLASS
+	inherit
+	 SMALL_BUGGY_CLASS; SMALL_BUGGY_CLASS; SCALABLE_BUGGY
+	feature
+	 redefined makeBig
+	   -> i: INTEGER
+	 redefined makeSmall
+	   -> i: INTEGER
+	 redefined hide
+	   -> i: VALUE
+	 redefined vanish
+	 redefined compareTo: VALUE
+	   -> arg: SMALL_BUGGY_CLASS
+	end
+	
+	deferred class SCALABLE_BUGGY
+	feature
+	 deferred makeBig
+     -> i: INTEGER
+    feature{SCALABLE_BUGGY}
+     deferred makeSmall
+     -> i: INTEGER
+	end
+
+  class MOOD
+  indexing
+    about: "enumerated type, suggested form"  
+  feature
+    happy: MOOD
+      ensure
+        Result = old happy;
+      end
+    sad: MOOD
+      ensure
+        Result = old sad;
+      end
+    dunno: MOOD
+      ensure
+        Result = old dunno;
+      end
+    --getName: STRING
+  feature{NONE}
+    enumeration:SET
+  end
+  
+  class UNO[T] 
+  
+  class DUE[T, S]
+  
+  class TRE[T -> SEQUENCE[STRING]]
+
+
+  class YELLOW_BUGGY_CLASS
+    feature
+        make
+        find: BOOLEAN
+        -> s: STRING        
+  end
+  
+  class DUMMY
+  
+  class MISSING_CLASS
+  
+end
+
+
+  
+cluster CRAZY_CLUSTER
+component 
+
+   
+  class BLUE_BUGGY_CLASS
+  feature
+    funny
+      -> i: INTEGER
+    funny1
+      -> i: INTEGER
+      -> s: STRING
+    funny2
+      -> i: INTEGER
+      -> j: INTEGER
+      -> s: STRING
+    funny3
+      -> i: INTEGER
+      -> s: STRING
+      -> r: STRING
+     copy: SEQUENCE[STRING]
+      -> p: SEQUENCE[VALUE]
+      -> i: INTEGER
+      -> d: VALUE
+      -> f: VALUE
+     copyCopy: SEQUENCE[SEQUENCE[STRING]]
+      -> p: SEQUENCE[VALUE]
+      -> q: SEQUENCE[STRING]
+      -> d: VALUE
+      -> f: VALUE
+  end
+  
+  
+  
+  class RED_BUGGY_CLASS
+  feature
+    currentMood: MOOD
+    name: STRING
+    talk
+  feature{CRAZY_CLUSTER}
+    number: VALUE
+  feature{RED_BUGGY_CLASS}
+    secondName: STRING
+    colourMe
+  feature{NONE}
+    sleep
+  invariant
+    name /= "dummy";
+  end
+  
+  
+  
+  class BLACK_BUGGY_CLASS
+  feature
+    nice: BOOLEAN
+    counter: INTEGER
+    maxcount: INTEGER
+      ensure
+        Result = 23;
+      end
+    name: STRING
+      ensure 
+        Result = "name";
+      end
+    currentColour: STRING
+    colours: SEQUENCE[STRING]
+    numbers: SEQUENCE[VALUE]
+    
+    one: STRING
+      -> eins: STRING
+      -> zwei: STRING
+      require 
+        zwei.length > 5 and zwei.length < 15;
+        zwei.length >= 5 and zwei.length <= 15 and zwei /= Void;
+        eins /= zwei;
+      ensure
+        delta nice;
+        delta numbers;
+        numbers.item(0) /= 0;
+        numbers.item(1) = 0;
+        Result /= Void;
+      end
+      
+    two: INTEGER
+      -> eins: VALUE
+      -> zwei: VALUE
+      -> drei: VALUE
+      require
+        eins + zwei < 100;
+         eins-zwei > 0;
+         eins * 5 = zwei / 3;
+         eins = 1 xor 0;
+      ensure
+        Result \\ 2 = 0;
+         - (Result) <= 0;
+         eins ^ zwei = Result;
+         Result = old eins + old zwei;
+        delta {colours, counter, currentColour};
+      end
+      
+    three: YELLOW_BUGGY_CLASS
+      -> eins: BOOLEAN
+      -> zwei: BOOLEAN 
+      -> drei: BOOLEAN
+      require
+        not eins;
+        eins and zwei -> drei;
+        eins and zwei = true;
+        zwei and drei = false;
+      ensure 
+        (eins and zwei) or drei <-> drei and nice;
+        not ((nice and zwei) <-> (counter < 0));
+        (Result).find("hallo"); 
+      end
+      
+    four: STRING
+      -> uno: REAL
+      -> duo: REAL
+      -> tre: REAL
+      require
+        -- uno // duo = 0; not supported
+        +uno > 0;
+      end
+       
+    invariant
+      counter <= maxcount;
+      counter < 50 -> nice;
+      counter = maxcount <-> nice;   
+    end
+    
+    
+    
+end
+end
+
+
+
+	
