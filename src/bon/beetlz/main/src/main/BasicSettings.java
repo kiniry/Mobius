@@ -11,7 +11,7 @@ import utils.BasicTypesDictionary;
 public final class BasicSettings {
 
   /** */
-  private BasicSettings() { }
+  private BasicSettings() { } 
 
   /**
    * Initialises basic types.

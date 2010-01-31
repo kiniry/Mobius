@@ -1,0 +1,93 @@
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/tests/debug/Debug.java:6: package pus.util does not exist
+ //@ public model instance non_null pus.util.List _list;
+                                            ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/tests/debug/Debug.java:6: package pus.util does not exist
+ //@ public model instance non_null pus.util.List _list;
+                                            ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/lang/reflect/Method.jml):53: warning: A non-pure method is being called where it is not permitted: isStatic(int)
+    //+@ requires !Modifier.isStatic(getModifiers()) ==> obj != null;
+                                    ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):57: warning: A non-pure method is being called where it is not permitted: contains(java.lang.Object)
+      @    requires contains(o);
+                            ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):67: warning: A non-pure method is being called where it is not permitted: contains(java.lang.Object)
+       @   requires contains(o);
+                            ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):70: warning: A non-pure method is being called where it is not permitted: contains(java.lang.Object)
+       @   ensures !contains(o);
+                            ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):89: warning: A non-pure method is being called where it is not permitted: contains(java.lang.Object)
+       @   ensures \old(c.contains(null)) ==> !contains(null);
+                                                       ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):91: warning: A non-pure method is being called where it is not permitted: contains(java.lang.Object)
+                      (\old(contains(o)) && !\old(c.contains(o))));
+                                    ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):92: warning: A non-pure method is being called where it is not permitted: size()
+       @   ensures size() <= \old(size());
+                       ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):92: warning: A non-pure method is being called where it is not permitted: size()
+       @   ensures size() <= \old(size());
+                                      ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):93: warning: A non-pure method is being called where it is not permitted: size()
+       @   ensures \result <==> size() != \old(size());
+                                    ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):93: warning: A non-pure method is being called where it is not permitted: size()
+       @   ensures \result <==> size() != \old(size());
+                                                   ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):106: warning: A non-pure method is being called where it is not permitted: contains(java.lang.Object)
+               ((\forall Object oo; contains(oo) <==> ((Set)o).contains(oo))
+                                            ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):106: warning: A non-pure method is being called where it is not permitted: contains(java.lang.Object)
+               ((\forall Object oo; contains(oo) <==> ((Set)o).contains(oo))
+                                                                       ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):107: warning: A non-pure method is being called where it is not permitted: contains(java.lang.Object)
+             && contains(null) <==> ((Set)o).contains(null));
+                        ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Set.jml):107: warning: A non-pure method is being called where it is not permitted: contains(java.lang.Object)
+             && contains(null) <==> ((Set)o).contains(null));
+                                                     ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Hashtable.jml):75: warning: A non-pure method is being called where it is not permitted: equals(java.lang.Object)
+      @     ensures equals(t);
+                          ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Hashtable.jml):94: warning: A non-pure method is being called where it is not permitted: containsValue(java.lang.Object)
+    //@   ensures \result == containsValue(value);
+                                          ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Properties.jml):87: warning: A non-pure method is being called where it is not permitted: containsKey(java.lang.Object)
+    //@   ensures !containsKey(name) ==> \result == def;
+                              ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Properties.jml):88: warning: A non-pure method is being called where it is not permitted: containsKey(java.lang.Object)
+    //@   ensures containsKey(name) ==> \result == get(name);
+                             ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Properties.jml):88: warning: A non-pure method is being called where it is not permitted: get(java.lang.Object)
+    //@   ensures containsKey(name) ==> \result == get(name);
+                                                      ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Properties.jml):11: warning: A non-pure method is being called where it is not permitted: isEmpty()
+      @                          isEmpty() && defaults == p);
+                                        ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/lang/System.jml):238: warning: A non-pure method is being called where it is not permitted: equals(java.lang.Object)
+      @    ensures systemProperties.equals(nullSystemProperties);
+                                          ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/lang/System.jml):216: warning: A non-pure method is being called where it is not permitted: containsKey(java.lang.Object)
+    //@    initially systemProperties.containsKey("java.home");
+                                                 ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/lang/System.jml):218: warning: A non-pure method is being called where it is not permitted: containsKey(java.lang.Object)
+    //@    initially !systemProperties.containsKey("xxxxxx");
+                                                  ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Arrays.jml):463: warning: A non-pure method is being called where it is not permitted: compare(T,T)
+      @            c.compare(a[i-1],a[i]) <= 0);
+                            ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Arrays.jml):467: warning: A non-pure method is being called where it is not permitted: compare(T,T)
+      @             c.compare(a[j],a[i]) == 0)
+                             ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Arrays.jml):470: warning: A non-pure method is being called where it is not permitted: compare(T,T)
+      @             c.compare(\old(a[k]),a[i]) == 0));
+                             ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Arrays.jml):510: warning: A non-pure method is being called where it is not permitted: compare(T,T)
+      @            c.compare(a[i-1],a[i]) <= 0);
+                            ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Arrays.jml):514: warning: A non-pure method is being called where it is not permitted: compare(T,T)
+      @             c.compare(a[j],a[i]) == 0)
+                             ^
+/Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/util/Arrays.jml):517: warning: A non-pure method is being called where it is not permitted: compare(T,T)
+      @             c.compare(\old(a[k]),a[i]) == 0));
+                             ^

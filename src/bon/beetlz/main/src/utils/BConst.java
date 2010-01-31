@@ -39,6 +39,8 @@ public final class BConst {
   public static final String EVERYTHING = "\\everything"; //$NON-NLS-1$
   /** Nothing keyword. */
   public static final String NOTHING = "\\nothing"; //$NON-NLS-1$
+  /** Not specified keyword. */
+  public static final String NOT_SPECIFIED = "\\not_specified"; //$NON-NLS-1$ 
   /** Indexing keyword. */
   public static final String INDEXING = "indexing"; //$NON-NLS-1$
   /** Author indexing tag. */

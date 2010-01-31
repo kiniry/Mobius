@@ -67,8 +67,10 @@ public class TypeSmartString extends SmartString {
       final TypeSmartString a_string = (TypeSmartString) an_other;
       return new SmartString(getSimpleName()).
       compareToTyped(new SmartString(a_string.getSimpleName()));
-    } else {
-      return trimSmartString().compareTo(an_other.trimSmartString());
+    }
+    else {
+      return an_other.compareToTyped(this);
+      //return trimSmartString().compareTo(an_other.trimSmartString());
     }
   }
 

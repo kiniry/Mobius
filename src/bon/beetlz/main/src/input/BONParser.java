@@ -88,7 +88,7 @@ public final class BONParser {
   private static SmartString my_return_value = new SmartString();
   private static String my_featureName = "";
   private static String my_const = null;
-  public enum Condition { PRE, POST, INV } 
+  public enum Condition { PRE, POST, INV }  
   
   /**
    * Parse classes.

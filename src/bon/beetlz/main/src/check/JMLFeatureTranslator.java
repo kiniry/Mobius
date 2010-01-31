@@ -51,7 +51,7 @@ public class JMLFeatureTranslator {
    * @param a_log Logger for error messages
    * @param a_profile user settings
    */
-  public JMLFeatureTranslator(final CCLogManager a_log, final UserProfile a_profile) {
+  public JMLFeatureTranslator(final CCLogManager a_log, final UserProfile a_profile) { 
     my_logger = a_log;
     my_profile = a_profile;
   }

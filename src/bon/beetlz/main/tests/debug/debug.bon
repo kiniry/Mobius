@@ -6,15 +6,9 @@ component
 
    class DEBUG 
    feature
-     n: INTEGER
+     processArray: SEQUENCE[INTEGER]
         ensure
-          Result >= 0;
-          Result /= Void;
-        end
-     c: VOID 
-        -> i: INTEGER
-        require
-          i /= Void;
+            Result /= Void;
         end
    end
 end   

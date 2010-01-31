@@ -49,7 +49,7 @@ public class FeatureTranslator {
    * @param a_log Logger for error messages
    * @param a_profile user settings
    */
-  public FeatureTranslator(final CCLogManager a_log, final UserProfile a_profile) {
+  public FeatureTranslator(final CCLogManager a_log, final UserProfile a_profile) { 
     my_logger = a_log;
     my_profile = a_profile;
     my_basic_types = my_profile.getBasicDictionary();
@@ -297,7 +297,7 @@ public class FeatureTranslator {
     double success = 1;
     final SmartString srcType = my_src_feature.getSignature().getReturnValue();
     final SmartString trgType = my_trg_feature.getSignature().getReturnValue();
-
+    
     if (!(srcType.equalsTyped(trgType) ||
         my_basic_types.matchTypes(srcType, trgType))) {
       if (!(Helper.isGenericsDummy(srcType.toString(), my_src_feature) &&

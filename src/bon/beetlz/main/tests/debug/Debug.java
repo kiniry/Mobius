@@ -1,17 +1,10 @@
 package debug;
 
-public class Debug {
+/*@ nullable_by_default @*/
+public class Debug { 
 
-  //public String[] array; 
-  //public int width;
-  //public int length;
-  
-  //@ ensures \result >= 0;
-  public /*@ pure @*/ int n() {
-    return 0;
-  }
+ //@ public model instance non_null pus.util.List _list;
 
-  public void c(int i) {  ; }
 
   
 }

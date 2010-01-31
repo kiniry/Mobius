@@ -84,7 +84,9 @@ import com.sun.tools.javac.tree.JCTree;
  * @author Eva Darulova (edarulova@googlemail.com)
  * @version beta-1
  */
-public final class JmlParser { 
+public final class JmlParser {
+  
+  private static SmartString my_return_value = new SmartString();
 
   /**
    * Parses a class, ie takes the information from JML constructs
@@ -291,6 +293,7 @@ public final class JmlParser {
       if (type instanceof JCTree.JCExpression) {
         return_value = getType((JCTree.JCExpression)type);
       } else {
+        //System.err.println(type);
         return_value = new SmartString(type.toString());
       }
     }
@@ -507,11 +510,11 @@ public final class JmlParser {
    * @return parsed expression
    */
   private static SmartString getType(final JCTree.JCExpression an_expr) {
-    if (an_expr.getKind() == Kind.PRIMITIVE_TYPE) {
+    if (an_expr.getKind() == Kind.PRIMITIVE_TYPE) { 
       return new SmartString(an_expr.toString());
     }
     if (an_expr.getKind() == Kind.IDENTIFIER) {
-      return new TypeSmartString(an_expr.toString());
+      return new TypeSmartString(an_expr.toString()); 
     }
     if (an_expr.getKind() == Kind.PARAMETERIZED_TYPE) {
       final JCTree.JCTypeApply type = (JCTree.JCTypeApply) an_expr;
@@ -801,7 +804,7 @@ public final class JmlParser {
                                                  final SmartString a_return_value,
                                                  final boolean an_encl_class_pure) {
     final List < Spec > specCases = new Vector < Spec > ();
-
+    
     for (final JmlTree.JmlSpecificationCase s : some_specs.cases.cases) {
       if (s.token == null || s.token == JmlToken.NORMAL_BEHAVIOR ||
           s.token == JmlToken.BEHAVIOR) {
@@ -823,6 +826,8 @@ public final class JmlParser {
                   frame.add(new Keyword(Keywords.NOTHING));
                 } else if (t.getKind() == Kind.OTHER && t.toString().equals(BConst.EVERYTHING)) {
                   frame.add(new Keyword(Keywords.EVERYTHING));
+                } else if (t.getKind() == Kind.OTHER && t.toString().equals(BConst.NOT_SPECIFIED)) {
+                  //do nothing, keep default
                 } else {
                   final int first = t.toString().indexOf("["); //$NON-NLS-1$
                   if (first != -1) {
@@ -841,7 +846,16 @@ public final class JmlParser {
               pre.addAll(splitBooleanExpressions(e));
             } else if (expr.token == JmlToken.ENSURES) {
               final BeetlzExpression e = parseExpr(expr.expression);
-              post.addAll(splitBooleanExpressions(e));
+              
+              BeetlzExpression resultNonnullExpr = new EqualityExpression(new Keyword(Keywords.RESULT),
+                  Operator.NOT_EQUAL, new Keyword(Keywords.VOID));
+              
+              if (e.compareToTyped(resultNonnullExpr) == 0) {
+                a_return_value.setNullity(Nullity.NON_NULL);
+              }
+              else {
+                post.addAll(splitBooleanExpressions(e));
+              }
             }
             //ignore all other clauses
           } //end JmlMethodClauseExpr
