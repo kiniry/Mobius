@@ -526,7 +526,11 @@ public class BonPretty {
     final List < String > inv = new Vector < String > ();
     if (Beetlz.getProfile().noJml()) return inv;
     final Invariant i = the_class.getInvariant();
-    if (i.getPredicates().size() > 0) {
+    
+    //check whether all invariants are comments
+    boolean allInformal = ((i.getPredicates().size() - i.getInformalPredicates().size()) == 0);
+    
+    if (i.getPredicates().size() > 0 && !allInformal) { 
       inv.add("invariant" + my_newline); //$NON-NLS-1$
       for (final BeetlzExpression e : i.getNonTrivialPredicates()) {
         inv.add(my_tab + e.toBonString() + my_semicolon + my_newline);
