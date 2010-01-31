@@ -11,11 +11,7 @@ package funny;
  */
 public final class MiniClass extends SmallClass implements Scalable, Comparable<SmallClass> {
 
-  
-  
-  
-  
-  
+  public static void main(final String[] some_args) { }
   
   
   @Override

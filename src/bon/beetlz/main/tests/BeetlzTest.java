@@ -10,6 +10,7 @@ public class BeetlzTest extends TestCase {
     System.out.println("****************** test comparison *********************");
     String[] my_args = {
         "-source", "both",
+        //"-verbose",
         //"-userSettings", "tests/debug/custom.txt",
         "-files", "test"
         };
@@ -17,9 +18,25 @@ public class BeetlzTest extends TestCase {
     final Beetlz checker = new Beetlz(my_args, System.err, System.out);
     //checker.debugParsing();
     checker.run();
+    System.gc();
     assertTrue(true);
   }
   
+  public void testBuggyComparison() {
+    System.out.println("************* test comparison with bugs *****************");
+    String[] my_args = {
+        "-source", "both",
+        //"-verbose",
+        //"-userSettings", "tests/debug/custom.txt",
+        "-files", "testBuggy"
+        };
+    
+    final Beetlz checker = new Beetlz(my_args, System.err, System.out);
+    //checker.debugParsing();
+    checker.run();
+    System.gc();
+    assertTrue(true);
+  }
   
   public void testPrettyprintBON() {
     System.out.println("****************** pretty print BON *********************");
@@ -31,6 +48,7 @@ public class BeetlzTest extends TestCase {
     
     final Beetlz checker = new Beetlz(my_args, System.err, System.out);
     checker.run();
+    System.gc();
     assertTrue(true);
   }
   
@@ -44,8 +62,11 @@ public class BeetlzTest extends TestCase {
     
     final Beetlz checker = new Beetlz(my_args, System.err, System.out);
     checker.run();
+    System.gc();
     assertTrue(true);
   }
+  
+  
   
   public void testFileNotFound() {
     System.out.println("****************** File not found *********************");
@@ -56,8 +77,11 @@ public class BeetlzTest extends TestCase {
     
     final Beetlz checker = new Beetlz(my_args, System.err, System.out);
     checker.run();
+    System.gc();
     assertTrue(true);
   }
+  
+  
   
   public void testBonParseError() {
     System.out.println("****************** BON parse error *********************");
@@ -68,8 +92,25 @@ public class BeetlzTest extends TestCase {
     
     final Beetlz checker = new Beetlz(my_args, System.err, System.out);
     checker.run();
+    System.gc();
     assertTrue(true);
   }
+  
+  
+  
+  public void testJavaParseError() {
+    System.out.println("****************** BON parse error *********************");
+    String[] my_args = {
+        "-source", "bon",
+        "-files", "tests/javaParseError.java"
+        };
+    
+    final Beetlz checker = new Beetlz(my_args, System.err, System.out);
+    checker.run();
+    System.gc();
+    assertTrue(true);
+  }
+  
   
   public static Test suite(){
     return new TestSuite(BeetlzTest.class);

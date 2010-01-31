@@ -15,9 +15,12 @@ component
 cluster FUNNY_CLUSTER
 component
 
-	class BIG_CLASS
+	effective class BIG_CLASS
 	indexing
-	 about: "some explanation"
+      about:        "A big class.";
+      author:       "Evka";
+      date:         "January 2010";
+      version:      "Revision: 0";
 	feature
 	 make
 	   -> n: STRING
@@ -37,12 +40,12 @@ component
 	 deferred hide
 	   -> v: VALUE
 	 deferred vanish
-	 moveTo
+	 effective moveTo
 	   -> dx: VALUE
 	   -> dy: VALUE
 	end
 	
-	class MINI_CLASS
+	root class MINI_CLASS
 	inherit
 	 SMALL_CLASS; SCALABLE
 	feature
@@ -163,16 +166,15 @@ component
       -> eins: STRING
       -> zwei: STRING
       require 
-        zwei.length > 5;
-        zwei.length < 15;
-        zwei.length >= 5;
-        zwei.length <= 15;
-        zwei /= Void;
+        zwei.length > 5 and zwei.length < 15;
+        zwei.length >= 5 and zwei.length <= 15 and zwei /= Void;
+        eins /= zwei;
       ensure
         delta nice;
         delta numbers;
         numbers.item(0) /= 0;
         numbers.item(1) = 0;
+        Result /= Void;
       end
       
     two: INTEGER
@@ -183,6 +185,7 @@ component
         eins + zwei < 100;
          eins-zwei > 0;
          eins * 5 = zwei / 3;
+         eins = 1 xor 0;
       ensure
         Result \\ 2 = 0;
          - (Result) <= 0;
@@ -198,12 +201,26 @@ component
       require
         not eins;
         eins and zwei -> drei;
+        eins and zwei = true;
+        zwei and drei = false;
       ensure 
         (eins and zwei) or drei <-> drei and nice;
         not ((nice and zwei) <-> (counter < 0));
         (Result).find("hallo"); 
       end
-        
+      
+    four: STRING
+      -> uno: REAL
+      -> duo: REAL
+      -> tre: REAL
+      require
+       -- uno // duo = 0 (not recognized)
+        +uno > 0;
+      end
+       
+    invariant
+      counter <= maxcount;
+      counter < 50 -> nice;   
     end
     
     

@@ -1,0 +1,21 @@
+static_diagram TEST          
+component 
+
+cluster DEBUG_CLUSTER
+component
+
+   class DEBUG 
+   feature
+     n: INTEGER
+        ensure
+          Result >= 0;
+          Result /= Void;
+        end
+     c: VOID 
+        -> i: INTEGER
+        require
+          i /= Void;
+        end
+   end
+end   
+end
