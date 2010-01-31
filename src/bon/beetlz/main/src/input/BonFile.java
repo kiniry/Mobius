@@ -3,14 +3,11 @@ package input;
 import ie.ucd.bon.API;
 import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
-
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
-
-import main.Beetlz;
 import structure.ClassCollection;
 import structure.ClassStructure;
 import utils.BConst;
@@ -80,12 +77,12 @@ public class BonFile {
       my_bonWalker.parseTypingInformation(tracker);
       my_classCollection.addMoreClasses(my_bonWalker.getAllClasses());
     } else {
-      System.out.println("BONc parsing failed.");
+      LOGGER.severe("BONc parsing failed.");
       Iterator<BONProblem> i = tracker.getErrorsAndWarnings().getProblems().iterator();
       while(i.hasNext()) {
         BONProblem problem = i.next();
-        System.out.println(problem.getLocation());
-        System.out.println(problem.getMessage());
+        LOGGER.severe(problem.getLocation().toString());
+        LOGGER.severe(problem.getMessage());
         
       }
       parse_success = false;
@@ -126,6 +123,9 @@ public class BonFile {
     return str;
   }
 
+  public int size() {
+    return my_classCollection.getNumberClasses();
+  }
 
   /**
    * String representation.

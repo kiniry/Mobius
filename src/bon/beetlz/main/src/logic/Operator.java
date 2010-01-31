@@ -102,13 +102,6 @@ public enum Operator {
     return my_bonName;
   }
 
-  /**
-   * Get the precedence of this operator.
-   * @return value of precedence
-   */
-  public final int getPrecedence() {
-    return my_prec;
-  }
 
   /**
    * Compare two operators.

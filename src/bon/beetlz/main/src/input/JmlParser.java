@@ -84,9 +84,7 @@ import com.sun.tools.javac.tree.JCTree;
  * @author Eva Darulova (edarulova@googlemail.com)
  * @version beta-1
  */
-public final class JmlParser {
-  /**  */
-  private JmlParser() { }
+public final class JmlParser { 
 
   /**
    * Parses a class, ie takes the information from JML constructs
@@ -140,14 +138,18 @@ public final class JmlParser {
       } else if (m == Modifier.FINAL) {
         mod.add(ClassModifier.FINAL);
       } else if (m == Modifier.PRIVATE) {
+        //TODO: test this
         vis = new Visibility(VisibilityModifier.PRIVATE);
       } else if (m == Modifier.PROTECTED) {
+      //TODO: test this
         vis = new Visibility(VisibilityModifier.PROTECTED);
       } else if (m == Modifier.PUBLIC) {
         vis = new Visibility(VisibilityModifier.PUBLIC);
       } else if (m == Modifier.STATIC) {
+      //TODO: test this
         mod.add(ClassModifier.STATIC);
       } else if (m == Modifier.STRICTFP) {
+      //TODO: test this
         mod.add(ClassModifier.STRICTFP);
       }
     }
@@ -174,6 +176,7 @@ public final class JmlParser {
     //Inheritance
     if (a_cls.getExtendsClause() != null) {
       if (a_cls.getExtendsClause().getKind() == Tree.Kind.IDENTIFIER ||
+        //TODO: test this
           a_cls.getExtendsClause().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {
         interfaces.add(getType((JCTree.JCExpression)a_cls.getExtendsClause()));
       }
@@ -232,6 +235,7 @@ public final class JmlParser {
       }
       if (an.getAnnotationType().toString().
           equals("org.jmlspecs.annotation.Pure")) { //$NON-NLS-1$
+      //TODO: test this
         parsedClass.setPure(true);
       }
     }
@@ -257,7 +261,7 @@ public final class JmlParser {
     Visibility vis = new Visibility(VisibilityModifier.PACKAGE_PRIVATE);
     if(an_encl_class.isInterface())
       vis = new Visibility(VisibilityModifier.PUBLIC);
-    
+    //System.err.println(a_method);
     SmartString return_value = SmartString.getVoid();
     final Map < String , SmartString > params = new HashMap < String, SmartString > ();
     //Method name
@@ -265,6 +269,7 @@ public final class JmlParser {
     //Generics
     final List < SmartString > generics    = new Vector < SmartString > ();
     if (a_method.getTypeParameters().size() > 0) {
+    //TODO: test this, never reached
       final List < JCTree.JCTypeParameter > g = a_method.getTypeParameters();
       for (final JCTree.JCTypeParameter ff : g) {
         if (ff.getBounds().size() > 0) {
@@ -279,24 +284,34 @@ public final class JmlParser {
         }
       }
     }
+  
+    //Return type
+    if (a_method.getReturnType() != null) {
+      final JCTree type = a_method.getReturnType();
+      if (type instanceof JCTree.JCExpression) {
+        return_value = getType((JCTree.JCExpression)type);
+      } else {
+        return_value = new SmartString(type.toString());
+      }
+    }
+    
     //Annotations (need annotations first to distinguish model class)
     boolean pure = false;
     boolean encl_pure = false;
     for (final JCTree.JCAnnotation an : a_method.getModifiers().getAnnotations()) {
       if (an.getAnnotationType().toString().equals("Override")) { //$NON-NLS-1$
         mod.add(FeatureModifier.REDEFINED);
-      } else if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotation.Pure")) { //$NON-NLS-1$
+      } else if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.Pure")) { //$NON-NLS-1$
         mod.add(FeatureModifier.PURE);
         pure = true;
-      } else if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotation.NonNull")) { //$NON-NLS-1$
+      } else if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.NonNull")) { //$NON-NLS-1$
         return_value.setNullity(Nullity.NON_NULL);
-      } else if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotation.Nullable")) { //$NON-NLS-1$
+        //System.err.println("nonnull: " + a_method);
+      } else if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.Nullable")) { //$NON-NLS-1$
+      //TODO: test this
         return_value.setNullity(Nullity.NULLABLE);
-      } else if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotation.Model")) { //$NON-NLS-1$
+      } else if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.Model")) { //$NON-NLS-1$
+      //TODO: test this
         mod.add(FeatureModifier.MODEL);
       }
     }
@@ -332,15 +347,7 @@ public final class JmlParser {
     }
     
 
-    //Return type
-    if (a_method.getReturnType() != null) {
-      final JCTree type = a_method.getReturnType();
-      if (type instanceof JCTree.JCExpression) {
-        return_value = getType((JCTree.JCExpression)type);
-      } else {
-        return_value = new SmartString(type.toString());
-      }
-    }
+    
 
     //Arguments
     for (final JCTree.JCVariableDecl v : a_method.getParameters()) {
@@ -841,6 +848,12 @@ public final class JmlParser {
 
         }
         //Query or Command ?!
+        /*
+         * Command: void return type
+         * Query: pure method or assignable \nothing 
+         *        or part of pure class
+         * Mixed: all else
+         */
         if (a_return_value.equals(SmartString.getVoid())) {
           type = FeatureType.COMMAND;
           if (frame.size() == 0) {

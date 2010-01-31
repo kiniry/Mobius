@@ -65,89 +65,60 @@ public class Beetlz {
     HELP, OPTIONS_OK, PARSING_OK, PARSING_PROBLEM, STARTED
   }
   
-  /** Where to print errors. */
-  private static PrintStream errorStream;
+  /** Where to print errors and output. */
+  private static StreamHandler my_errorHandler;
+  private static StreamHandler my_outputHandler;
+  
   /** Command line option. */
   public static final String HELP_OPTION = "-help"; //$NON-NLS-1$
   /** Our Logger for this session.  */
   public static final Logger JAVA_LOGGER = Logger.getLogger(BConst.LOGGER_NAME);
-  /** Localisation bundle. */
-  //private static ResourceBundle my_labels = ResourceBundle
-  //    .getBundle("BeetlzMsg", new Locale(System.getProperty("user.language"))); //$NON-NLS-1$
-  /** Class name mapping. */
-  private static TwoWayMap < String, String > my_class_map =
-    new TwoWayMap < String, String > ();
-
-  /** Only ever one. */
-  private static CCLogManager my_logger;
-
-  /** Command line option. */
-  public static final String NO_BASICS_OPTION = "-noBasics"; //$NON-NLS-1$
-
-  /** Command line option. */
-  public static final String NO_ERROR_OPTION = "-noError"; //$NON-NLS-1$
-
-  /** Command line option. */
-  public static final String NO_JAVA_OPTION = "-noJava"; //$NON-NLS-1$
-
-  /** Command line option. */
-  public static final String NO_JML_OPTION = "-noJML"; //$NON-NLS-1$
-
-  /** Command line option. */
-  public static final String NO_WARNING_OPTION = "-noWarning"; //$NON-NLS-1$
-
-  /** Command line option. */
-  public static final String NON_NULL_OPTION = "-noNullCheck"; //$NON-NLS-1$;
-
-  /** Command line option. */
-  public static final String PUREBON_OPTION = "-pureBON"; //$NON-NLS-1$
-
+  
   /** Storing error messages until we can pass them on to LogManager. */
   private static List < CCLogRecord > my_records_waiting;
   
   /** All records. */
   private static Collection < CCLogRecord > all_records;
+  
+  /** Only ever one. */
+  private static CCLogManager my_logger;
+  
+  /** Class name mapping. */
+  private static TwoWayMap < String, String > my_class_map =
+    new TwoWayMap < String, String > ();
 
-  /** Command line option. */
+ 
+  /** Command line options. */
+  public static final String NO_BASICS_OPTION = "-noBasics"; //$NON-NLS-1$
+  public static final String NO_ERROR_OPTION = "-noError"; //$NON-NLS-1$
+  public static final String NO_JAVA_OPTION = "-noJava"; //$NON-NLS-1$
+  public static final String NO_JML_OPTION = "-noJML"; //$NON-NLS-1$
+  public static final String NO_WARNING_OPTION = "-noWarning"; //$NON-NLS-1$
+  public static final String NON_NULL_OPTION = "-noNullCheck"; //$NON-NLS-1$;
+  public static final String PUREBON_OPTION = "-pureBON"; //$NON-NLS-1$
   public static final String SKELETON_ONE_FILE_OPTION = "-skeletonOneFile"; //$NON-NLS-1$
-
-  /** Command line option. */
   public static final String SKELETON_OPTION = "-skeleton"; //$NON-NLS-1$
-
-  /** Command line option. */
   public static final String SOURCE_OPTION = "-source"; //$NON-NLS-1$
-
-  /** Command line option. */
   public static final String SPECS_OPTION = "-specs"; //$NON-NLS-1$
-
-  /** Command line option. */
   public static final String USERSET_OPTION = "-userSettings"; //$NON-NLS-1$
-
-  /** Command line option. */
   public static final String VERBOSE_OPTION = "-verbose"; //$NON-NLS-1$
-
-  /** Command line option. */
   public static final String JAVA_JML_CLASSPATH_OPTION = "-javajmlcp"; //$NON-NLS-1$
   
   /** Configuration settings. */
   private static UserProfile my_profile;
-
-  /**
-   * Get the user profile.
-   * @return current users settings
-   */
-  public static final UserProfile getProfile() {
-    return my_profile;
-  }
-
+  
   /** BON input. */
-  private final BonFile my_bonfile;
+  private BonFile my_bonfile;
+
   /** Jml and Java input. */
-  private final JmlFile my_jmlfile;
+  private JmlFile my_jmlfile;
+  
   /** Stores the status. */
   private Status my_status;
+  
   /** Command line arguments have been parsed okay.  */
   private boolean my_options_ok;
+  
   /** Files have been parsed okay.  */
   private boolean my_parse_ok;
 
@@ -162,10 +133,17 @@ public class Beetlz {
    */
   public Beetlz(final String[] some_args, final PrintStream an_error_stream,
                 final PrintStream an_out_stream) {
-
-    //***************  Initialisation ***************
+    
+    my_errorHandler = new StreamHandler(an_error_stream, new CCLogFormatter());
+    my_outputHandler = new StreamHandler(an_out_stream, new CCLogFormatter());
+    final ErrorFilter errorFilter = new ErrorFilter();
+    my_errorHandler.setLevel(Level.FINEST);
+    my_errorHandler.setFilter(errorFilter);
+    
+    reset(some_args);
+    
+   /* //***************  Initialisation ***************
     my_status = Status.STARTED;
-    errorStream = an_error_stream;
     my_jmlfile = new JmlFile();
     my_bonfile = new BonFile();
     my_records_waiting = new ArrayList < CCLogRecord > ();
@@ -253,46 +231,93 @@ public class Beetlz {
         JAVA_LOGGER.severe("The options you have entered are incorrect."); //$NON-NLS-1$
       }
     }
+    */
+  }
+  
+  
+  public void reset(final String[] some_args) {
+    
+  //***************  Set up Logger  ***************
+    //remove all old Handlers
+    for(Handler h: JAVA_LOGGER.getHandlers()){
+      JAVA_LOGGER.removeHandler(h);
+    }
+    JAVA_LOGGER.addHandler(my_errorHandler);
+    JAVA_LOGGER.setUseParentHandlers(false);
+    JAVA_LOGGER.setLevel(Level.FINEST);
+    
+   
+    
+    
+  //***************  Initialisation ***************
+    my_status = Status.STARTED;
+    my_jmlfile = new JmlFile();
+    my_bonfile = new BonFile();
+    my_records_waiting = new ArrayList < CCLogRecord > ();
+    all_records = new ArrayList < CCLogRecord >();
+
+  //***************  Parse options ***************
+    my_options_ok = true;
+    my_profile = processOptions(some_args);
+    if (my_profile == null) {
+      my_options_ok = false;
+      my_status = Status.HELP;
+      JAVA_LOGGER.severe(getUsage()); 
+      
+    //*************** Options OK ***************
+    } else {
+      my_status = Status.OPTIONS_OK;
+      if (my_profile.getCustomSettingFile() != null) {
+        SettingIO.readSettings(my_profile, my_profile.getCustomSettingFile());
+      }
+      
+      
+      
+      //*************** Set up rest ***************
+      SmartString.setDictionary(my_profile.getBasicDictionary());
+      FeatureSmartString.setPrefixes(my_profile.getPrefixes());
+      final OutputFilter outputfilter = new OutputFilter(!my_profile.noError(),
+          !my_profile.noWarning(), !my_profile.noJml(), !my_profile.noJava(),
+          true, my_profile.verbose());
+      my_outputHandler.setLevel(Level.FINEST);
+      my_outputHandler.setFilter(outputfilter);
+      JAVA_LOGGER.addHandler(my_outputHandler);
+      
+      
+      //*************** Parse files ***************
+      JAVA_LOGGER.config("Going to parse files..."); //$NON-NLS-1$
+      if (my_options_ok) {
+        my_parse_ok = parseFiles();
+        if (my_parse_ok) {
+          my_status = Status.PARSING_OK;
+          if (my_profile.verbose()) {
+            System.out.println(my_bonfile.toString());
+            System.out.println(my_jmlfile.toString());
+          }
+            
+        }
+        else
+          my_status = Status.PARSING_PROBLEM;
+
+        my_logger = new CCLogManager();
+        my_logger.addRecords(my_records_waiting);
+        JAVA_LOGGER.config("Finished parsing files."); //$NON-NLS-1$
+        my_class_map = createClassTypeMapping();
+        //Print some parsing info:
+        JAVA_LOGGER.config("Found Java types: " + //$NON-NLS-1$
+                           my_jmlfile.getClassCollection().getAccesibleClassTypes());
+        JAVA_LOGGER.config("Found BON types: " + //$NON-NLS-1$
+                           my_bonfile.getClassCollection().getAccesibleClassTypes());
+        JAVA_LOGGER.config("Class mapping: " + my_class_map); //$NON-NLS-1$
+        JAVA_LOGGER.config(my_profile.toString());
+      } else {
+        my_parse_ok = false;
+        JAVA_LOGGER.severe("The options you have entered are incorrect."); //$NON-NLS-1$
+      }
+    }
   }
 
-  /**
-   * Get the status of the tool.
-   * @return status
-   */
-  public Status getStatus() {
-    return my_status;
-  }
-
-  /**
-   * Print information about how to use this application and the options available.
-   * @return string representation of usage
-   */
-  public final String getUsage() {
-    final String message =
-      "Beetlz: consistency checker for BON and Java/JML.\n" + //$NON-NLS-1$ //$NON-NLS-2$
-      "Usage: beetlz [<options>] -files <source files or directories>\n" + //$NON-NLS-1$
-      "Automatically recognized source file extensions are:\n.bon, .java, " + //$NON-NLS-1$
-      "specification files are automatically recognised and must NOT be explicitly added\n" + //$NON-NLS-1$
-      "options are: \n" + //$NON-NLS-1$
-      HELP_OPTION + " \t\t\t\t Print this help \n" + //$NON-NLS-1$
-      PUREBON_OPTION + " \t\t\t Only use original, not extended, BON \n" + //$NON-NLS-1$
-      SOURCE_OPTION + " {bon, java} \t\t Which files to use as source \n" + //$NON-NLS-1$
-      USERSET_OPTION + " file \t\t Custom user settings  \n" + //$NON-NLS-1$
-      SKELETON_OPTION + " [dir] \t\t Print skeleton code from source and place into directory \n" + //$NON-NLS-1$
-      SKELETON_ONE_FILE_OPTION + " \t\t Print skeleton code into 1 file.\n" + //$NON-NLS-1$
-      VERBOSE_OPTION + " \t\t\t Generate debugging info  \n" + //$NON-NLS-1$
-      NO_JML_OPTION + " \t\t\t\t Do not check and ignore JML and assertion language  \n" + //$NON-NLS-1$
-      NO_JAVA_OPTION + " \t\t\t Do not print Java related errors and warnings \n" + //$NON-NLS-1$
-      NO_ERROR_OPTION + " \t\t\t Do not print errors  \n" + //$NON-NLS-1$
-      NO_WARNING_OPTION + " \t\t\t Do not print warnings  \n" + //$NON-NLS-1$
-      NO_BASICS_OPTION + " \t\t\t Do not use basic settings \n" + //$NON-NLS-1$
-      NON_NULL_OPTION + " \t\t\t Do not check for correct nullity\n" + //$NON-NLS-1$
-      "\n" + //$NON-NLS-1$
-      "JML options:\n" + //$NON-NLS-1$
-      SPECS_OPTION + "\t\t\t\tSpecifies the directory path to search for specification files"; //$NON-NLS-1$
-    return message;
-  }
-
+  
   /**
    * Gives information whether the files have been parsed properly.
    * This is mainly used for feedback for the Eclipse plugin.
@@ -302,6 +327,7 @@ public class Beetlz {
     return my_parse_ok;
   }
 
+ 
   /**
    * Run the comparison.
    * @return true if successful
@@ -348,6 +374,7 @@ public class Beetlz {
 
   }
   
+  
   public final void debugParsing() {
 	  //final ClassCollection jml = my_jmlfile.getClassCollection();
 	  //final ClassCollection bon = my_bonfile.getClassCollection();
@@ -369,120 +396,113 @@ public class Beetlz {
     }
   }
   
-  private void report() {
-    for (final CCLogRecord r : my_logger.getErrors()) {
-      JAVA_LOGGER.log(r);
-    }
-    JAVA_LOGGER.log(CCLevel.GENERAL_NOTE, "-> General Notes:"); //$NON-NLS-1$
-    for (final CCLogRecord r : my_logger
-        .getRecords((CCLevel) CCLevel.GENERAL_NOTE)) {
-      JAVA_LOGGER.log(r);
-    }
-    JAVA_LOGGER
-        .log(CCLevel.JAVA_ERROR, "-> Structure Errors:"); //$NON-NLS-1$
-    for (final CCLogRecord r : my_logger
-        .getRecords((CCLevel) CCLevel.JAVA_ERROR)) {
-      JAVA_LOGGER.log(r);
-    }
-    JAVA_LOGGER.log(CCLevel.JAVA_WARNING, "-> Structure Warnings:"); //$NON-NLS-1$
-    for (final CCLogRecord r : my_logger
-        .getRecords((CCLevel) CCLevel.JAVA_WARNING)) {
-      JAVA_LOGGER.log(r);
-    }
-    JAVA_LOGGER.log(CCLevel.JML_ERROR, "-> Specification Errors:"); //$NON-NLS-1$
-    for (final CCLogRecord r : my_logger
-        .getRecords((CCLevel) CCLevel.JML_ERROR)) {
-      JAVA_LOGGER.log(r);
-    }
-    JAVA_LOGGER.log(CCLevel.JML_WARNING, "-> Specification Warnings:"); //$NON-NLS-1$
-    for (final CCLogRecord r : my_logger
-        .getRecords((CCLevel) CCLevel.JML_WARNING)) {
-      JAVA_LOGGER.log(r);
-    }
-    JAVA_LOGGER.info(my_logger.getStats());
+  
 
-  }
-
+  /* ****************************
+   * Private methods
+   ******************************/
+  
+  
   /**
-   * Map classes together.
-   * @return mapping
+   * Here we do the actual comparison.
    */
-  private TwoWayMap < String, String > createClassTypeMapping() {
-    final List < TypeSmartString > bonList = 
-      new ArrayList < TypeSmartString > (my_bonfile.getClassCollection().getAccesibleClassTypesNoLoc());
-    final List < TypeSmartString > jmlList = 
-      new ArrayList < TypeSmartString > (my_jmlfile.getClassCollection().getAccesibleClassTypesNoLoc());
+  private void startComparison() {
+    //First log the missing classes for the appropriate direction
+    if (my_profile.javaIsSource()) {
+      for (final TypeSmartStringWithLocation s : jmlMissing) {
+        my_logger.logClassNotFound(s);
+      }
+    } else {
+      for (final TypeSmartStringWithLocation s : bonMissing) {
+        my_logger.logClassNotFound(s);
+      }
+    }
+    my_logger.setToJava(!my_profile.javaIsSource());
     
-    bonMissing = new ArrayList < TypeSmartStringWithLocation > ();
-    final TwoWayMap < String, String > classMap = new TwoWayMap < String, String > ();
     
-    //BON types are unique, so let's map them to Java types
-    for (final TypeSmartString bonName : bonList) {
-      //check for user mapping first
-      final TypeSmartString jName = new TypeSmartString(my_profile.getClassMapping(bonName.toString()));
-      
-      if (!jName.toString().equals(BConst.NULL_SMARTSTRING)) {
-        final int first = jmlList.indexOf(jName);
-        final int last = jmlList.lastIndexOf(jName);
-        if (first == -1 || first != last) {
-          my_logger.logIncorrectMapping(null, bonName.toString());
-        } else {
-          classMap.put(bonName.toQualifiedString().toString(), jName.toQualifiedString().toString());
-          //simple types must be recognized in return values
-          my_profile.addTypeMapping(bonName.getSimpleName(), jName.getSimpleName());
-          jmlList.remove(jName);
-        }
+    final ClassCollection jml = my_jmlfile.getClassCollection();
+    final ClassCollection bon = my_bonfile.getClassCollection();
 
-      } else {
-        final int first = jmlList.indexOf(bonName);
-        final int last = jmlList.lastIndexOf(bonName);
-        if (first == -1) {
-          //TODO: does this really work?
-          bonMissing.add(new TypeSmartStringWithLocation(bonName, new BeetlzSourceLocation(false)));
-        } else if (first != last) {
-          my_logger.logMultipleClasses(bonName);
+    final ClassTranslator checker = new ClassTranslator(my_logger, my_profile);
+
+    ClassCollection source;
+    ClassCollection target;
+    if (my_profile.javaIsSource()) {
+      JAVA_LOGGER.info("Checking direction Java -> BON"); //$NON-NLS-1$
+      source = jml;
+      target = bon;
+    } else {
+      JAVA_LOGGER.info("Checking direction BON -> Java"); //$NON-NLS-1$
+      source = bon;
+      target = jml;
+    }
+    //System.err.println(my_class_map.toString());
+    for (final ClassStructure sourceClass : source.getClasses()) {
+      
+      final String targetName = (String) my_class_map.get(sourceClass
+          .getQualifiedName().toString());
+      //System.err.println(sourceClass.toString() + " - " + targetName);
+      
+      
+      if (targetName != null) {
+        final ClassStructure targetClass = target.getClass(targetName);
+        if (targetClass != null) {
+          if (targetClass.isPrivate()) {
+            my_logger.logNotAccessible(targetClass.getSourceLocation(),
+                                       targetClass.getQualifiedName());
+          } else {
+            if (my_profile.verbose())
+              JAVA_LOGGER
+                  .config("comparing: " + //$NON-NLS-1$
+                          sourceClass.getSimpleName() + " " + //$NON-NLS-1$
+                          targetClass.getSimpleName());
+            checker.doCheck(sourceClass, targetClass);
+          }
         } else {
-          classMap.put(bonName.toQualifiedString().toString(), jmlList
-              .get(first).toQualifiedString().toString());
-          my_profile.addTypeMapping(bonName.getSimpleName(), jmlList.get(first)
-              .getSimpleName());
-          jmlList.remove(jmlList.get(first));
+          my_logger.logIncorrectMapping(null, sourceClass.toString());
         }
       }
-    } //end for
-
-    jmlMissing = copyToListWithSourceLocation(jmlList);
-    return classMap;
+    }
   }
   
-  private List < TypeSmartStringWithLocation > copyToListWithSourceLocation(List < TypeSmartString > list) {
-    List < TypeSmartStringWithLocation > result = new ArrayList < TypeSmartStringWithLocation >();
-    for(TypeSmartString t: list) {
-      result.add(new TypeSmartStringWithLocation(t, new BeetlzSourceLocation(false)));
-    }
-    
-    return result;
-  }
 
   /**
-   *
-   * @param a_dir directory
-   * @return files
+   * Start pretty printing.
    */
-  private List < File > getFilesFromDirectory(final File a_dir) {
-    final List < File > returnFiles = new Vector < File > ();
-    if (a_dir.isDirectory()) {
-      final File[] files = a_dir.listFiles();
-      for (final File oneFile : files) {
-        returnFiles.addAll(getFilesFromDirectory(oneFile));
+  private void startPrettyPrint() {
+    if (my_profile.getSkeletonDirectory() == null) { //print to std out
+      if (my_profile.javaIsSource()) {
+        final BonPretty pretty = new BonPretty(BConst.TAB);
+        final OutputStreamWriter out = new OutputStreamWriter(System.out);
+        pretty.printClassCollection(my_jmlfile.getClassCollection(), out);
+        try {
+          out.flush();
+        } catch (final IOException e) {
+          JAVA_LOGGER.severe("IO problem with pretty printing.");
+        }
+      } else {
+        final JavaPretty pretty = new JavaPretty(BConst.TAB);
+        final OutputStreamWriter out = new OutputStreamWriter(System.out);
+        pretty.printClassCollection(my_bonfile.getClassCollection(), out);
+        try {
+          out.flush();
+        } catch (final IOException e) {
+          JAVA_LOGGER.severe("IO problem with pretty printing.");
+        }
       }
-      return returnFiles;
     } else {
-      returnFiles.add(a_dir);
-      return returnFiles;
+      if (my_profile.javaIsSource()) {
+        final BonPretty pretty = new BonPretty(BConst.TAB);
+        pretty.printToFiles(my_profile.getSkeletonDirectory(), my_jmlfile
+            .getClassCollection());
+      } else {
+        final JavaPretty pretty = new JavaPretty(BConst.TAB);
+        pretty.printToFiles(my_profile.getSkeletonDirectory(), my_bonfile
+            .getClassCollection());
+      }
     }
   }
-
+  
   /**
    * Parses the Java and BON input files and also sets the
    * checking direction based on the files' timestamp.
@@ -502,7 +522,7 @@ public class Beetlz {
 
     return my_jmlfile.parseAll() && my_bonfile.parseAll();
   }
-
+  
   /**
    * Process the command line options.
    * @param the_args arguments
@@ -559,7 +579,7 @@ public class Beetlz {
           source = the_args[i++];
           if (source == "both") { //$NON-NLS-1$
             check_both = true;
-        	  source = "java";//$NON-NLS-1$
+            source = "java";//$NON-NLS-1$
           }
         } else {
           JAVA_LOGGER.severe("-source requires an argument"); //$NON-NLS-1$
@@ -635,117 +655,137 @@ public class Beetlz {
     return profile;
 
   }
-
-  /* ****************************
-   * Private methods
-   ******************************/
+  
   
   /**
-   * Here we do the actual comparison.
-   */
-  private void startComparison() {
-    //First log the missing classes for the appropriate direction
-    if (my_profile.javaIsSource()) {
-      for (final TypeSmartStringWithLocation s : jmlMissing) {
-        my_logger.logClassNotFound(s);
-      }
-    } else {
-      for (final TypeSmartStringWithLocation s : bonMissing) {
-        my_logger.logClassNotFound(s);
-      }
-    }
-    my_logger.setToJava(!my_profile.javaIsSource());
-    
-    
-    final ClassCollection jml = my_jmlfile.getClassCollection();
-    final ClassCollection bon = my_bonfile.getClassCollection();
+  *
+  * @param a_dir directory
+  * @return files
+  */
+ private List < File > getFilesFromDirectory(final File a_dir) {
+   final List < File > returnFiles = new Vector < File > ();
+   if (a_dir.isDirectory()) {
+     final File[] files = a_dir.listFiles();
+     for (final File oneFile : files) {
+       returnFiles.addAll(getFilesFromDirectory(oneFile));
+     }
+     return returnFiles;
+   } else {
+     returnFiles.add(a_dir);
+     return returnFiles;
+   }
+ }
+ 
+ /**
+  * Map classes together.
+  * @return mapping
+  */
+ private TwoWayMap < String, String > createClassTypeMapping() {
+   final List < TypeSmartString > bonList = 
+     new ArrayList < TypeSmartString > (my_bonfile.getClassCollection().getAccesibleClassTypesNoLoc());
+   final List < TypeSmartString > jmlList = 
+     new ArrayList < TypeSmartString > (my_jmlfile.getClassCollection().getAccesibleClassTypesNoLoc());
+   
+   bonMissing = new ArrayList < TypeSmartStringWithLocation > ();
+   final TwoWayMap < String, String > classMap = new TwoWayMap < String, String > ();
+   
+   //BON types are unique, so let's map them to Java types
+   for (final TypeSmartString bonName : bonList) {
+     //check for user mapping first
+     final TypeSmartString jName = new TypeSmartString(my_profile.getClassMapping(bonName.toString()));
+     
+     if (!jName.toString().equals(BConst.NULL_SMARTSTRING)) {
+       final int first = jmlList.indexOf(jName);
+       final int last = jmlList.lastIndexOf(jName);
+       if (first == -1 || first != last) {
+         my_logger.logIncorrectMapping(null, bonName.toString());
+       } else {
+         classMap.put(bonName.toQualifiedString().toString(), jName.toQualifiedString().toString());
+         //simple types must be recognized in return values
+         my_profile.addTypeMapping(bonName.getSimpleName(), jName.getSimpleName());
+         jmlList.remove(jName);
+       }
 
-    final ClassTranslator checker = new ClassTranslator(my_logger, my_profile);
+     } else {
+       final int first = jmlList.indexOf(bonName);
+       final int last = jmlList.lastIndexOf(bonName);
+       if (first == -1) {
+         //TODO: does this really work?
+         bonMissing.add(new TypeSmartStringWithLocation(bonName, new BeetlzSourceLocation(false)));
+       } else if (first != last) {
+         my_logger.logMultipleClasses(bonName);
+       } else {
+         classMap.put(bonName.toQualifiedString().toString(), jmlList
+             .get(first).toQualifiedString().toString());
+         my_profile.addTypeMapping(bonName.getSimpleName(), jmlList.get(first)
+             .getSimpleName());
+         jmlList.remove(jmlList.get(first));
+       }
+     }
+   } //end for
 
-    ClassCollection source;
-    ClassCollection target;
-    if (my_profile.javaIsSource()) {
-      JAVA_LOGGER.info("Checking direction Java -> BON"); //$NON-NLS-1$
-      source = jml;
-      target = bon;
-    } else {
-      JAVA_LOGGER.info("Checking direction BON -> Java"); //$NON-NLS-1$
-      source = bon;
-      target = jml;
-    }
-    //System.err.println(my_class_map.toString());
-    for (final ClassStructure sourceClass : source.getClasses()) {
-      
-      final String targetName = (String) my_class_map.get(sourceClass
-          .getQualifiedName().toString());
-      //System.err.println(sourceClass.toString() + " - " + targetName);
-      
-      
-      if (targetName != null) {
-        final ClassStructure targetClass = target.getClass(targetName);
-        if (targetClass != null) {
-          if (targetClass.isPrivate()) {
-            my_logger.logNotAccessible(targetClass.getSourceLocation(),
-                                       targetClass.getQualifiedName());
-          } else {
-            if (my_profile.verbose())
-              JAVA_LOGGER
-                  .config("comparing: " + //$NON-NLS-1$
-                          sourceClass.getSimpleName() + " " + //$NON-NLS-1$
-                          targetClass.getSimpleName());
-            checker.doCheck(sourceClass, targetClass);
-          }
-        } else {
-          my_logger.logIncorrectMapping(null, sourceClass.toString());
-        }
-      }
-    }
-  }
+   jmlMissing = copyToListWithSourceLocation(jmlList);
+   return classMap;
+ }
+ 
+ 
+ private List < TypeSmartStringWithLocation > copyToListWithSourceLocation(List < TypeSmartString > list) {
+   List < TypeSmartStringWithLocation > result = new ArrayList < TypeSmartStringWithLocation >();
+   for(TypeSmartString t: list) {
+     result.add(new TypeSmartStringWithLocation(t, new BeetlzSourceLocation(false)));
+   }
+   
+   return result;
+ }
+ 
+ private void report() {
+   for (final CCLogRecord r : my_logger.getErrors()) {
+     JAVA_LOGGER.log(r);
+   }
+   
+   if (my_jmlfile.size() == 0 || my_bonfile.size() == 0) {
+     JAVA_LOGGER.info("No classes to check. Please check your input files.");
+   }
+   else {
+     
+     JAVA_LOGGER.log(CCLevel.GENERAL_NOTE, "-> General Notes:"); //$NON-NLS-1$
+     for (final CCLogRecord r : my_logger
+         .getRecords((CCLevel) CCLevel.GENERAL_NOTE)) {
+       JAVA_LOGGER.log(r);
+     }
+     JAVA_LOGGER
+         .log(CCLevel.JAVA_ERROR, "-> Structure Errors:"); //$NON-NLS-1$
+     for (final CCLogRecord r : my_logger
+         .getRecords((CCLevel) CCLevel.JAVA_ERROR)) {
+       JAVA_LOGGER.log(r);
+     }
+     JAVA_LOGGER.log(CCLevel.JAVA_WARNING, "-> Structure Warnings:"); //$NON-NLS-1$
+     for (final CCLogRecord r : my_logger
+         .getRecords((CCLevel) CCLevel.JAVA_WARNING)) {
+       JAVA_LOGGER.log(r);
+     }
+     JAVA_LOGGER.log(CCLevel.JML_ERROR, "-> Specification Errors:"); //$NON-NLS-1$
+     for (final CCLogRecord r : my_logger
+         .getRecords((CCLevel) CCLevel.JML_ERROR)) {
+       JAVA_LOGGER.log(r);
+     }
+     JAVA_LOGGER.log(CCLevel.JML_WARNING, "-> Specification Warnings:"); //$NON-NLS-1$
+     for (final CCLogRecord r : my_logger
+         .getRecords((CCLevel) CCLevel.JML_WARNING)) {
+       JAVA_LOGGER.log(r);
+     }
+     JAVA_LOGGER.info(my_logger.getStats());
+   }
+ }
+ 
 
-  /**
-   * Start pretty printing.
-   */
-  private void startPrettyPrint() {
-    if (my_profile.getSkeletonDirectory() == null) { //print to std out
-      if (my_profile.javaIsSource()) {
-        final BonPretty pretty = new BonPretty(BConst.TAB);
-        final OutputStreamWriter out = new OutputStreamWriter(System.out);
-        pretty.printClassCollection(my_jmlfile.getClassCollection(), out);
-        try {
-          out.flush();
-        } catch (final IOException e) {
-          JAVA_LOGGER.severe("IO problem with pretty printing.");
-        }
-      } else {
-        final JavaPretty pretty = new JavaPretty(BConst.TAB);
-        final OutputStreamWriter out = new OutputStreamWriter(System.out);
-        pretty.printClassCollection(my_bonfile.getClassCollection(), out);
-        try {
-          out.flush();
-        } catch (final IOException e) {
-          JAVA_LOGGER.severe("IO problem with pretty printing.");
-        }
-      }
-    } else {
-      if (my_profile.javaIsSource()) {
-        final BonPretty pretty = new BonPretty(BConst.TAB);
-        pretty.printToFiles(my_profile.getSkeletonDirectory(), my_jmlfile
-            .getClassCollection());
-      } else {
-        final JavaPretty pretty = new JavaPretty(BConst.TAB);
-        pretty.printToFiles(my_profile.getSkeletonDirectory(), my_bonfile
-            .getClassCollection());
-      }
-    }
-  }
+ 
+ 
+  /* ****************************
+   * Getter methods
+   ******************************/
+ 
 
-  /**
-   * Get the error stream.
-   * @return stream where to print errors
-   */
-  public static PrintStream getErrorStream() {
-    return errorStream;
-  }
 
 
   /**
@@ -755,6 +795,7 @@ public class Beetlz {
   public static TwoWayMap < String, String > getClassMap() {
     return my_class_map;
   }
+  
 
   /**
    * Get records that have been recorded before logger was set up.
@@ -764,6 +805,7 @@ public class Beetlz {
     return my_records_waiting;
   }
   
+  
   /**
    * Get all the records that Beetlz has created in the last run.
    * @return all the records created in the last run.
@@ -771,4 +813,52 @@ public class Beetlz {
   public static Collection < CCLogRecord > getAllRecords() {
     return all_records;
   }
+  
+  /**
+   * Get the user profile.
+   * @return current users settings
+   */
+  public static final UserProfile getProfile() {
+    return my_profile;
+  }
+
+  /**
+   * Get the status of the tool.
+   * @return status
+   */
+  public Status getStatus() {
+    return my_status;
+  }
+
+  
+  /**
+   * Print information about how to use this application and the options available.
+   * @return string representation of usage
+   */
+  public final String getUsage() {
+    final String message =
+      "Beetlz: consistency checker for BON and Java/JML.\n" + //$NON-NLS-1$ //$NON-NLS-2$
+      "Usage: beetlz [<options>] -files <source files or directories>\n" + //$NON-NLS-1$
+      "Automatically recognized source file extensions are:\n.bon, .java, " + //$NON-NLS-1$
+      "specification files are automatically recognised and must NOT be explicitly added\n" + //$NON-NLS-1$
+      "options are: \n" + //$NON-NLS-1$
+      HELP_OPTION + " \t\t\t\t Print this help \n" + //$NON-NLS-1$
+      PUREBON_OPTION + " \t\t\t Only use original, not extended, BON \n" + //$NON-NLS-1$
+      SOURCE_OPTION + " {bon, java} \t\t Which files to use as source \n" + //$NON-NLS-1$
+      USERSET_OPTION + " file \t\t Custom user settings  \n" + //$NON-NLS-1$
+      SKELETON_OPTION + " [dir] \t\t Print skeleton code from source and place into directory \n" + //$NON-NLS-1$
+      SKELETON_ONE_FILE_OPTION + " \t\t Print skeleton code into 1 file.\n" + //$NON-NLS-1$
+      VERBOSE_OPTION + " \t\t\t Generate debugging info  \n" + //$NON-NLS-1$
+      NO_JML_OPTION + " \t\t\t\t Do not check and ignore JML and assertion language  \n" + //$NON-NLS-1$
+      NO_JAVA_OPTION + " \t\t\t Do not print Java related errors and warnings \n" + //$NON-NLS-1$
+      NO_ERROR_OPTION + " \t\t\t Do not print errors  \n" + //$NON-NLS-1$
+      NO_WARNING_OPTION + " \t\t\t Do not print warnings  \n" + //$NON-NLS-1$
+      NO_BASICS_OPTION + " \t\t\t Do not use basic settings \n" + //$NON-NLS-1$
+      NON_NULL_OPTION + " \t\t\t Do not check for correct nullity\n" + //$NON-NLS-1$
+      "\n" + //$NON-NLS-1$
+      "JML options:\n" + //$NON-NLS-1$
+      SPECS_OPTION + "\t\t\t\tSpecifies the directory path to search for specification files"; //$NON-NLS-1$
+    return message;
+  }
+
 }

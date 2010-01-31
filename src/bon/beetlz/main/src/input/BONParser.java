@@ -13,13 +13,10 @@ import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.SetConstant;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
-import ie.ucd.bon.printer.PrettyPrintVisitor;
 import ie.ucd.bon.typechecker.BONST;
 import ie.ucd.bon.ast.Expression;
 import ie.ucd.bon.ast.BinaryExp;
 import ie.ucd.bon.ast.UnaryExp;
-import ie.ucd.bon.ast.KeywordConstant.Constant;
-import ie.ucd.bon.ast.UnaryExp.Op;
 import ie.ucd.bon.ast.KeywordConstant;
 import ie.ucd.bon.ast.IntegerConstant;
 import ie.ucd.bon.ast.CallExp;
@@ -27,7 +24,6 @@ import ie.ucd.bon.ast.BooleanConstant;
 import ie.ucd.bon.ast.StringConstant;
 import ie.ucd.bon.ast.UnqualifiedCall;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -92,7 +88,7 @@ public final class BONParser {
   private static SmartString my_return_value = new SmartString();
   private static String my_featureName = "";
   private static String my_const = null;
-  public enum Condition { PRE, POST, INV }
+  public enum Condition { PRE, POST, INV } 
   
   /**
    * Parse classes.
@@ -128,6 +124,7 @@ public final class BONParser {
     if (superC != null) {
       for (final Type s : superC) {
         final boolean success = interfaces.add(getType(s));
+        //TODO: check if bonc really does not support repeated inheritance
         if (!success) {
           Beetlz.getWaitingRecords().
           add(new CCLogRecord(CCLevel.JAVA_WARNING, null,
@@ -236,6 +233,7 @@ public final class BONParser {
       case EFFECTIVE: mod.add(ClassModifier.EFFECTIVE); break;
       case ROOT: mod.add(ClassModifier.ROOT); break;
     }
+    //TODO: what does this mean?!
     if (a_class.getInterfaced()) mod.add(ClassModifier.INTERFACED);
     if (a_class.getPersistent()) mod.add(ClassModifier.PERSISTENT);
     if (a_class.getReused()) mod.add(ClassModifier.REUSED);
@@ -314,6 +312,8 @@ public final class BONParser {
       rename_feature = fSpec.getRenaming().getFeatureName().getName();
     }
     //Client relations
+    //TODO: find out why these are not covered, although we have shared associations,
+    //maybe we don't this at all...
     if (fSpec.getHasType() != null && fSpec.getHasType().getMark().getMark() == TypeMark.Mark.SHAREDMARK) {
       a_encl_class.addSharedAssociation(return_value);
     }
@@ -391,6 +391,7 @@ public final class BONParser {
                 my_return_value.setNullity(Nullity.NON_NULL); //return value nullity, i.e. non-null
               }
             } else {
+              //TODO: is this reachable at all?!
               result = new EqualityExpression(parseExpr(bin.getLeft(), c), 
                   Operator.NOT_EQUAL, parseExpr(bin.getRight(), c)); 
             }
@@ -446,6 +447,7 @@ public final class BONParser {
             }
           }
           else {
+            //TODO: remove, after check in bonc that we've exhausted all possibilities
             System.err.println("WARNING unknown delta expression: " + e);
           }
           break; 
@@ -456,6 +458,7 @@ public final class BONParser {
         case ADD: result = new UnaryExpression( 
             Operator.UNARY_PLUS, parseExpr(un.getExpression(), c)); break;
         default: System.out.println("unknown unary BON operator");break;
+      //TODO: remove, after check in bonc that we've exhausted all possibilities
       }
     }//end unary
     else if(e instanceof KeywordConstant) {
@@ -466,6 +469,7 @@ public final class BONParser {
       case VOID: result = new Keyword(Keywords.VOID); break;
       case CURRENT: result = new Keyword(Keywords.CURRENT); break;
       default: System.err.println("unknown BON keywordConstant " + c);break;
+    //TODO: remove, after check in bonc that we've exhausted all possibilities
       }
     }
     else if(e instanceof IntegerConstant) {
@@ -482,6 +486,7 @@ public final class BONParser {
       }
       else 
          System.err.println("unknown BON boolean constant " + c);
+    //TODO: remove, after check in bonc that we've exhausted all possibilities
     }
     else if(e instanceof StringConstant) {
       StringConstant constant = (StringConstant) e;
@@ -512,6 +517,7 @@ public final class BONParser {
     }
     else {
       System.err.println("unknown expression: " + e); 
+    //TODO: remove, after check in bonc that we've exhausted all possibilities
     }
     return result;
   }
@@ -520,7 +526,7 @@ public final class BONParser {
   private static BeetlzExpression parseMemberAccess(List < UnqualifiedCall > a_callChain) {
     BeetlzExpression result = new IdentifierExpression("DUMMY");
     int size = a_callChain.size();
-    if (size == 0) System.err.println("Error: empty call chain.");
+    if (size == 0) System.err.println("Error: empty call chain."); //TODO: make logger.sever message
     else if (size == 1) {
       //System.err.println("size 1: " + a_callChain.get(0).getId());
       result = new IdentifierExpression(a_callChain.get(0).getId());
@@ -602,6 +608,10 @@ public final class BONParser {
    * @return parsed type
    */
   private static SmartString getType(final Type a_type) {
+    if (a_type.getIdentifier().equals("VOID")) {
+      return SmartString.getVoid();
+    }
+    
     if (a_type.actualGenerics == null || a_type.actualGenerics.isEmpty()) {
       return new TypeSmartString(a_type.getIdentifier());
     }
@@ -610,6 +620,7 @@ public final class BONParser {
     for (final Type t : a_type.actualGenerics) {
       if (t.getIdentifier().equals("ANY")) { //$NON-NLS-1$
         params.add(WildcardSmartString.getBONWildcard());
+        //TODO: include something with ANY
       } else {
         params.add(getType(t));
       }

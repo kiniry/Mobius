@@ -18,7 +18,7 @@ import utils.BasicTypesDictionary;
  * @author Eva Darulova (edarulova@googlemail.com)
  * @version beta-1
  */
-public class SmartString implements Comparable < SmartString > {
+public class SmartString implements Comparable < SmartString > { 
   /** Dictionary of recognized types.*/
   private static BasicTypesDictionary my_dictionary = new BasicTypesDictionary();
   /**

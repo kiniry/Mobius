@@ -144,6 +144,7 @@ public class CCLogManager {
    * @param the_src source location of error
    * @param a_mapping mapping that is faulty
    */
+//TODO: test this
   public void logIncorrectMapping(final BeetlzSourceLocation the_src, final String a_mapping) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
         String.format("The mapping for %s is not correct.", //$NON-NLS-1$
@@ -158,6 +159,7 @@ public class CCLogManager {
    * @param the_expected expected feature type
    * @param the_found actually found feature type
    */
+//TODO: test this
   public void logIncorrectFeatureType(final BeetlzSourceLocation the_src,
       final SmartString a_class,
       final SmartString a_feature,

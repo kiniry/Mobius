@@ -18,7 +18,7 @@ public final class BasicSettings {
    * @param a_profile where to put settings
    */
   public static void doStuff(final UserProfile a_profile) {
-    a_profile
+    a_profile 
     .addTypeMapping("value", //$NON-NLS-1$
                     new String[]{"VALUE"}, //$NON-NLS-1$
                     new String[]{"int", "double", //$NON-NLS-1$ //$NON-NLS-2$

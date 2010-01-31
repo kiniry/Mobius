@@ -540,7 +540,7 @@ public class BonPretty {
       }
     }
     //all invariants are comments, so put the invariant section in comments too...
-    if (allInformal) {
+    else if (i.getPredicates().size() > 0 && allInformal) {
       inv.add("-- invariant" + my_newline); //$NON-NLS-1$
       for (final BeetlzExpression e : i.getInformalPredicates()) {
         inv.add(my_tab + "-- " + e.toBonString() + my_semicolon + my_newline); //$NON-NLS-1$
@@ -659,6 +659,7 @@ public class BonPretty {
     return spec;
   }
 
+  
   /**
    * Print client relations.
    * @param the_class class to print
@@ -686,6 +687,7 @@ public class BonPretty {
     return rel;
   }
 
+  
   /**
    * Get the name of the innermost package.
    * @param the_class class to print
@@ -704,6 +706,7 @@ public class BonPretty {
     }
   }
 
+ 
   /**
    * Print a feature for external use.
    * @param the_feature feature to print
@@ -740,25 +743,32 @@ public class BonPretty {
     return feature;
   }
 
+  
   /**
    * Print a frame condition, method for external use.
    * @param the_spec spec to print
    * @return string representation
    */
-  public static String printFrame(final Spec the_spec) {
+  public static String printFrame(final Spec the_spec) { 
     String frame = ""; //$NON-NLS-1$
 
     for (final BeetlzExpression str : the_spec.getFrame()) {
       frame += str.toBonString() + ", "; //$NON-NLS-1$
     }
+    
     final int two = 2;  
-    if (the_spec.getFrame().size() > 1) {
+    if (the_spec.getFrame().size() > 0) {
       frame = frame.substring(0, frame.length() - two);
+    }
+    
+    if (the_spec.getFrame().size() > 1) {
       frame = "{" + frame + "}"; //$NON-NLS-1$ //$NON-NLS-2$
     }
+    
     return frame;
   }
 
+  
   /**
    * Need an Object to count number of overloaded features.
    * @author Eva Darulova (edarulova@googlemail.com)

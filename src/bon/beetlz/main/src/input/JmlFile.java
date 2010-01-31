@@ -146,7 +146,7 @@ public class JmlFile {
       return false;
     } catch (final Exception e) {
       LOGGER.severe("Could not parse Java/JML input files."); //$NON-NLS-1$
-      e.printStackTrace(Beetlz.getErrorStream());
+      //e.printStackTrace(Beetlz.getErrorStream());
       return false;
     }
 
@@ -186,6 +186,7 @@ public class JmlFile {
                 if (ms != null) {
                   final FeatureStructure feat = JmlParser.parseMethod(a_main.getJavaDecl((MethodSymbol)member), ms, cls, a_cu);
                   if (Beetlz.getProfile().noJml() && feat.isModel()) {
+                    //TODO: test this
                     continue;
                   }
                   if (member.isConstructor()) { //add constructor elsewhere
@@ -201,6 +202,7 @@ public class JmlFile {
                   final FeatureStructure feat =
                     JmlParser.parseVariable((VarSymbol)member, fs, cls, a_cu);
                   if (Beetlz.getProfile().noJml() && (feat.isModel() || feat.isGhost())) {
+                  //TODO: test this
                     continue;
                   }
                   cls.addFeature(feat);
@@ -236,14 +238,11 @@ public class JmlFile {
     return this.my_classCollection;
   }
 
-  /**
-   * Print to std out.
-   */
-  /*public final void printOut() {
-    LOGGER.info("Java file contents: "); //$NON-NLS-1$
-    my_classCollection.printOut();
-  }*/
-
+  
+  public int size() {
+    return my_classCollection.getNumberClasses();
+  }
+  
   /**
    * String representation.
    * @return string representation
@@ -259,13 +258,6 @@ public class JmlFile {
     return str;
   }
 
-  /**
-   * String representation.
-   * @return string representation
-   */
-  /*public final String toStringVerbose() {
-    return my_classCollection.toStringVerbose();
-  }*/
 
   /**
    * Gets the time when the newest file was modified.
