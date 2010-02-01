@@ -384,7 +384,7 @@ public class Lifter extends EscNodeBuilder
 			
 			FnTerm conv = null;
 			
-			int minpass = 2;
+			int minpass = 1;
 
 			if (p != r) {
 			    if (p == sortValue) {
@@ -406,6 +406,8 @@ public class Lifter extends EscNodeBuilder
 				minpass = 0;
 			    } else if (p == sortRef && r == sortType) {
 				conv = cast(symRefToType, args[i]);
+			    } else if (p == sortType && r == sortRef) {
+				conv = cast(symTypeToRef, args[i]);
 			    } else if (p == sortBool && r == sortPred) {
 				conv = cast(symIsTrue, args[i]);
 				minpass = 1;

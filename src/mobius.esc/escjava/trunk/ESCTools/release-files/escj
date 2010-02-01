@@ -45,7 +45,7 @@ ARGS=""              # extra arguments to be sent to ESCJava
 
 # Default values
 DEFAULT_BCEL_LIB=Utils/BCEL/bcel-5.2/bcel-5.2.jar
-DEFAULT_CVC3_LIB=Utils/libcvc3-20090718.jar
+DEFAULT_CVC3_LIB=Utils/libcvc3-2.2.jar
 DEFAULT_JAVAFE_LIB=Utils/Javafe/Javafe2.0.5d.jar
 DEFAULT_JUNIT_LIB=Utils/junit.jar
 DEFAULT_SIMPLIFY_DIR=Escjava/release/master/bin

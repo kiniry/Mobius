@@ -509,12 +509,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 
 	List vars = Arrays.asList(new Expr[] { y } );
 	Expr eq = prover.eqExpr(prover.funExpr(x2y, prover.funExpr(y2x, y)), y);
-	List triggers = new ArrayList();
-	List trigger1 = new ArrayList();
-	trigger1.add(prover.funExpr(y2x, y));
-	triggers.add(prover.listExpr(trigger1));
-
-	Expr p = prover.forallExpr(vars, eq, triggers);
+	Expr p = prover.forallExpr(vars, eq, prover.funExpr(y2x, y));
 
 	if (printQuery) {
 	    System.out.println("ASSERT (" + p.toString() + ");");
@@ -2100,6 +2095,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		    varExprs.add(getBoundVarExpr(vars[i]).getExpr());
 		}
 
+                /* change to cvc API
 		// triggers: STerm[][]pats
 		// - each list in pats represents a trigger
 		// - each trigger consists of a set of expressions,
@@ -2119,11 +2115,42 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 			for (int j = 0; j < pats[i].length; ++j) {
 			    Cvc3Prover.print("  TRIGGER: " + ((Cvc3Term)pats[i][j]).getExpr());
 			    trigger.add(((Cvc3Term)pats[i][j]).getExpr());
+			    //triggers.add(((Cvc3Term)pats[i][j]).getExpr());
 			}
-			triggers.add(prover.listExpr(trigger));
+			triggers.add(trigger);
 		    }
 		}
-		Expr e = prover.forallExpr(varExprs, body.getExpr(), triggers);
+		Expr e = prover.forallMultiExpr(varExprs, body.getExpr());
+                */
+
+		Expr e = prover.forallExpr(varExprs, body.getExpr());
+
+                // add triggers
+		if (optManualTriggers && pats != null && pats.length > 0) {
+		    Cvc3Prover.print("TRIGGERS: ");
+
+		    for (int i = 0; i < pats.length; ++i) {
+			assert(pats[i].length > 0);
+                        // multi-trigger
+			if (pats[i].length > 1) {
+			    Cvc3Prover.print("MULTI-TRIGGER: ");
+			    if (!optMultiTriggers) continue;
+
+                            List trigger = new ArrayList();
+                            for (int j = 0; j < pats[i].length; ++j) {
+                                Cvc3Prover.print("  TRIGGER: " + ((Cvc3Term)pats[i][j]).getExpr());
+                                trigger.add(((Cvc3Term)pats[i][j]).getExpr());
+                            }
+                            prover.setMultiTrigger(e, trigger);
+			}
+
+                        // single trigger
+                        else if (pats[i].length == 1) {
+                            Cvc3Prover.print("  TRIGGER: " + ((Cvc3Term)pats[i][0]).getExpr());
+                            prover.setTrigger(e, ((Cvc3Term)pats[i][0]).getExpr());
+                        }
+		    }
+		}
 
 		Cvc3Pred node = new Cvc3Pred(e);
 		node.addChild(body);

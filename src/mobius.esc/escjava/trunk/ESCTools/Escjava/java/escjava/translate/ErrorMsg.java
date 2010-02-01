@@ -414,6 +414,11 @@ public final class ErrorMsg
 	    break;
 	case TagConstants.CHKPRECONDITION:
 	    r = ("Precondition possibly not established");
+            // Condition does not always hold, see message
+            // [JMLSpecs-ESCJava] Assertion failure with pre label without	declared precondition
+            // from Alexander Fuchs
+            // on the mailing list jmlspecs-escjava@lists.sourceforge.net
+            // at 10/24/2008 05:18 PM
 	    Assert.notFalse(hasAssocDecl);
 	    break;
 	case TagConstants.CHKSHARING:

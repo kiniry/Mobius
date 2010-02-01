@@ -101,6 +101,9 @@ public class Cvc3Prover extends SortedProver {
     private boolean optManualTriggers = true;
 
     // use multitriggers
+    private int optMaxIL = 999;
+
+    // use multitriggers
     private boolean optMultiTriggers = true;
 
     // eagerly instantiate all triggers
@@ -224,12 +227,14 @@ public class Cvc3Prover extends SortedProver {
 		flags.setFlag("preprocess", optPreprocess);
 		// enable manual triggers
 		flags.setFlag("quant-man-trig", optManualTriggers);
+                // limit instantiation depth
+		flags.setFlag("quant-max-IL", optMaxIL);
                 // enable multi triggers
-		flags.setFlag("quant-inst-mult", optMultiTriggers);
+		//flags.setFlag("quant-inst-mult", optMultiTriggers);
 		// ? true can lead to crash in cvc3
 		//flags.setFlag("quant-polarity", false);
 		// ? eagerly instantiate everything
-		flags.setFlag("quant-inst-all", optInstAll);
+		//flags.setFlag("quant-inst-all", optInstAll);
 		//flags.setFlag("max-quant-inst", 400);
 
 		flags.setFlag("trans-closure", optBuiltinTrans);
@@ -260,6 +265,7 @@ public class Cvc3Prover extends SortedProver {
 	System.out.println("%% CounterExamples: " + optCounterExamples);
 	System.out.println("%% PrintContext   : " + optPrintContext);
 	System.out.println("%% ManualTriggers : " + optManualTriggers);
+	System.out.println("%% MaxIL : "          + optMaxIL);
 	System.out.println("%% MultiTriggers  : " + optMultiTriggers);
 	System.out.println("%% InstAll        : " + optInstAll);
 	System.out.println("%% Nonnullelements: " + optNonnullelements);
@@ -361,6 +367,13 @@ public class Cvc3Prover extends SortedProver {
 								       String.valueOf(optManualTriggers))).booleanValue();
 	} catch (NumberFormatException e) {
 	    ErrorSet.fatal("Invalid input for option " + "ManualTriggers" + " : " + e);
+	    return fail;
+	}
+	try {
+	    optMaxIL = Integer.parseInt(properties.getProperty("MaxIL",
+								       String.valueOf(optMaxIL)));
+	} catch (NumberFormatException e) {
+	    ErrorSet.fatal("Invalid input for option " + "MaxIL" + " : " + e);
 	    return fail;
 	}
 	try {
