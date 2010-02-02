@@ -51,7 +51,7 @@ public class JmlFile {
   /** Fully qualified names of all classes. */
   private final List < String > my_qualifiedNames;
 
-  /** Our Logger for this session.  */
+  /** Our Logger for this session.  */ 
   private static final Logger LOGGER = Logger.getLogger(BConst.LOGGER_NAME);
 
 
@@ -94,10 +94,9 @@ public class JmlFile {
     }
     ArrayList<String> openjmlArgs = new ArrayList<String>();
 
-    String cp = Beetlz.getProfile().getClasspath();
-    if (cp != null) {
+    if (Beetlz.getProfile().getClasspath() != null) {
       openjmlArgs.add("-classpath");
-      openjmlArgs.add(cp);
+      openjmlArgs.add(Beetlz.getProfile().getClasspath());
     }
 
     if (Beetlz.getProfile().verbose()) {
@@ -109,19 +108,15 @@ public class JmlFile {
       openjmlArgs.add("-noInternalSpecs");
     }
 
-
-    String[] openjmlArgsArr = openjmlArgs.toArray(new String[openjmlArgs.size()]);
     try {
       PrintWriter jmlComplaints = new PrintWriter(new File("jmlComplaints.txt"));
       //PrintWriter jmlComplaints = new PrintWriter(System.err);
       //TODO: filter those messages that concern OUR files, not the JML internal ones...
-      API api = new API(jmlComplaints, null, openjmlArgsArr);
-
+      API api = new API(jmlComplaints, null, openjmlArgs.toArray(new String[openjmlArgs.size()]));
       List<JmlCompilationUnit> trees = api.parseFiles(my_files.toArray(new File[my_files.size()]));
       api.enterAndCheck(trees);
       
       for (final JmlCompilationUnit cu : trees) {
-
         final JmlWalker walker = new JmlWalker(cu);
         cu.accept(walker);
         my_qualifiedNames.addAll(walker.getQualifiedNames());
@@ -146,7 +141,6 @@ public class JmlFile {
       return false;
     } catch (final Exception e) {
       LOGGER.severe("Could not parse Java/JML input files."); //$NON-NLS-1$
-      //e.printStackTrace(Beetlz.getErrorStream());
       return false;
     }
 
@@ -187,6 +181,7 @@ public class JmlFile {
                   final FeatureStructure feat = JmlParser.parseMethod(a_main.getJavaDecl((MethodSymbol)member), ms, cls, a_cu);
                   if (Beetlz.getProfile().noJml() && feat.isModel()) {
                     //TODO: test this
+                    //System.err.println("found a model");
                     continue;
                   }
                   if (member.isConstructor()) { //add constructor elsewhere

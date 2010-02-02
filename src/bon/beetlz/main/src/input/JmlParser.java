@@ -44,6 +44,7 @@ import org.jmlspecs.openjml.JmlTree;
 import org.jmlspecs.openjml.JmlSpecs.FieldSpecs;
 import org.jmlspecs.openjml.JmlSpecs.MethodSpecs;
 import org.jmlspecs.openjml.JmlSpecs.TypeSpecs;
+import org.jmlspecs.openjml.JmlTree.JmlTypeClauseDecl;
 
 import structure.ClassStructure;
 import structure.FeatureStructure;
@@ -623,6 +624,8 @@ public final class JmlParser {
         final JmlTree.JmlTypeClauseConstraint expr = (JmlTree.JmlTypeClauseConstraint) c;
         final BeetlzExpression e = parseExpr(expr.expression);
         history.addAll(splitBooleanExpressions(e));
+      } else if (c instanceof JmlTypeClauseDecl) {
+        //TODO e.g. //@ public model instance non_null pus.util.List _list;
       } else {
         clauses.add(new InformalExpression(c.toString()));
       }

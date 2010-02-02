@@ -543,7 +543,7 @@ public class BonPretty {
     else if (i.getPredicates().size() > 0 && allInformal) {
       inv.add("-- invariant" + my_newline); //$NON-NLS-1$
       for (final BeetlzExpression e : i.getInformalPredicates()) {
-        inv.add(my_tab + "-- " + e.toBonString() + my_semicolon + my_newline); //$NON-NLS-1$
+        inv.add(my_tab + "-- " + e.toBonString().replace("\n", "") + my_semicolon + my_newline); //$NON-NLS-1$
       }
     }
     return inv;
