@@ -73,8 +73,15 @@
           name="FeatureFigure">
         <layout
             xsi:type="gmfgraph:FlowLayout"
+            vertical="true"
+            forceSingleLine="true"
             majorSpacing="0"
             minorSpacing="2"/>
+        <foregroundColor
+            xsi:type="gmfgraph:RGBColor"
+            red="255"
+            green="67"
+            blue="226"/>
         <children
             xsi:type="gmfgraph:Rectangle"
             name="FeatureSignatureRectangleFigure">
@@ -83,6 +90,9 @@
               forceSingleLine="true"
               majorSpacing="0"
               minorSpacing="2"/>
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              blue="200"/>
           <children
               xsi:type="gmfgraph:Label"
               name="FeatureNamesFigure"
@@ -104,6 +114,32 @@
               xsi:type="gmfgraph:FlowLayout"
               majorSpacing="1"
               minorSpacing="1"/>
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              red="255"
+              green="255"
+              blue="64"/>
+        </children>
+        <children
+            xsi:type="gmfgraph:Rectangle"
+            name="PreConditionsRectangleFigure">
+          <layout
+              xsi:type="gmfgraph:FlowLayout"/>
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              red="192"
+              green="192"/>
+        </children>
+        <children
+            xsi:type="gmfgraph:Rectangle"
+            name="PostConditionsRectangeFigure">
+          <layout
+              xsi:type="gmfgraph:FlowLayout"/>
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              red="255"
+              green="128"
+              blue="128"/>
         </children>
       </actualFigure>
       <accessors
@@ -118,6 +154,10 @@
           figure="//@figures.0/@descriptors.1/@actualFigure/@children.1"/>
       <accessors
           figure="//@figures.0/@descriptors.1/@actualFigure/@children.2"/>
+      <accessors
+          figure="//@figures.0/@descriptors.1/@actualFigure/@children.3"/>
+      <accessors
+          figure="//@figures.0/@descriptors.1/@actualFigure/@children.4"/>
     </descriptors>
     <descriptors
         name="ClusterFigure">
@@ -226,6 +266,55 @@
       <accessors
           figure="//@figures.0/@descriptors.4/@actualFigure"/>
     </descriptors>
+    <descriptors
+        name="ArgumentFigure">
+      <actualFigure
+          xsi:type="gmfgraph:Rectangle"
+          name="ArgumentFigure">
+        <layout
+            xsi:type="gmfgraph:FlowLayout"
+            forceSingleLine="true"
+            majorSpacing="1"
+            minorSpacing="2"/>
+        <foregroundColor
+            xsi:type="gmfgraph:RGBColor"
+            red="200"/>
+        <children
+            xsi:type="gmfgraph:Label"
+            name="ArgumentArrowFigure"
+            text="->"/>
+        <children
+            xsi:type="gmfgraph:Label"
+            name="ArgumentNameFigure"/>
+        <children
+            xsi:type="gmfgraph:Label"
+            name="ArgumentCollectionFigure"/>
+        <children
+            xsi:type="gmfgraph:Label"
+            name="ArgumentTypeFigure"/>
+      </actualFigure>
+      <accessors
+          figure="//@figures.0/@descriptors.5/@actualFigure/@children.0"/>
+      <accessors
+          figure="//@figures.0/@descriptors.5/@actualFigure/@children.1"/>
+      <accessors
+          figure="//@figures.0/@descriptors.5/@actualFigure/@children.2"/>
+      <accessors
+          figure="//@figures.0/@descriptors.5/@actualFigure/@children.3"/>
+    </descriptors>
+    <descriptors
+        name="PreConditionFigure">
+      <actualFigure
+          xsi:type="gmfgraph:Label"
+          name="PreConditionTextFigure"/>
+    </descriptors>
+    <descriptors
+        name="PostConditionFigure">
+      <actualFigure
+          xsi:type="gmfgraph:Label"
+          name="PostConditionTextFigure"
+          text=""/>
+    </descriptors>
   </figures>
   <nodes
       name="Cluster"
@@ -242,6 +331,9 @@
   <nodes
       name="InheritanceList"
       figure="InheritanceFigure"/>
+  <nodes
+      name="Argument"
+      figure="ArgumentFigure"/>
   <compartments
       name="ClusterCompartment"
       figure="ClusterFigure"
@@ -262,6 +354,18 @@
       figure="BONClassFigure"
       collapsible="true"
       accessor="//@figures.0/@descriptors.0/@accessors.3"/>
+  <compartments
+      name="ArgumentCompartment"
+      figure="FeatureFigure"
+      accessor="//@figures.0/@descriptors.1/@accessors.5"/>
+  <compartments
+      name="PreConditionCompartment"
+      figure="FeatureFigure"
+      accessor="//@figures.0/@descriptors.1/@accessors.6"/>
+  <compartments
+      name="PostConditionCompartment"
+      figure="FeatureFigure"
+      accessor="//@figures.0/@descriptors.1/@accessors.7"/>
   <labels
       name="ClusterName"
       figure="ClusterFigure"
@@ -312,4 +416,30 @@
       figure="FeatureFigure"
       elementIcon="false"
       accessor="//@figures.0/@descriptors.1/@accessors.4"/>
+  <labels
+      name="ArgumentArrowLabel"
+      figure="ArgumentFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.5/@accessors.0"/>
+  <labels
+      name="ArgumentNameLabel"
+      figure="ArgumentFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.5/@accessors.1"/>
+  <labels
+      name="ArgumentCollectionLabel"
+      figure="ArgumentFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.5/@accessors.2"/>
+  <labels
+      name="ArgumentTypeLabel"
+      figure="ArgumentFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.5/@accessors.3"/>
+  <labels
+      name="PreConditionTextLabel"
+      figure="PreConditionFigure"/>
+  <labels
+      name="PostConditionTextLabel"
+      figure="PostConditionFigure"/>
 </gmfgraph:Canvas>

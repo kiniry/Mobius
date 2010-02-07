@@ -40,6 +40,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Feature/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Feature/comment"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//Feature/arguments"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//Feature/postConditions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//Feature/preConditions"/>
     </genClasses>
     <genClasses ecoreClass="bonide.ecore#//IndexClause">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//IndexClause/identifier"/>
@@ -52,6 +54,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//FeatureArgument/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//FeatureArgument/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//FeatureArgument/containerType"/>
+    </genClasses>
+    <genClasses ecoreClass="bonide.ecore#//PreCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//PreCondition/content"/>
+    </genClasses>
+    <genClasses ecoreClass="bonide.ecore#//PostCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//PostCondition/content"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

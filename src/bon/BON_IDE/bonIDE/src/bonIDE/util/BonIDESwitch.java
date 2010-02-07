@@ -128,6 +128,36 @@ public class BonIDESwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case BonIDEPackage.INDEX_CLAUSE: {
+				IndexClause indexClause = (IndexClause)theEObject;
+				T result = caseIndexClause(indexClause);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case BonIDEPackage.INHERITANCE_CLAUSE: {
+				InheritanceClause inheritanceClause = (InheritanceClause)theEObject;
+				T result = caseInheritanceClause(inheritanceClause);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case BonIDEPackage.FEATURE_ARGUMENT: {
+				FeatureArgument featureArgument = (FeatureArgument)theEObject;
+				T result = caseFeatureArgument(featureArgument);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case BonIDEPackage.PRE_CONDITION: {
+				PreCondition preCondition = (PreCondition)theEObject;
+				T result = casePreCondition(preCondition);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case BonIDEPackage.POST_CONDITION: {
+				PostCondition postCondition = (PostCondition)theEObject;
+				T result = casePostCondition(postCondition);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -219,6 +249,81 @@ public class BonIDESwitch<T> {
 	 * @generated
 	 */
 	public T caseFeature(Feature object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Index Clause</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Index Clause</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIndexClause(IndexClause object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Inheritance Clause</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Inheritance Clause</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInheritanceClause(InheritanceClause object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Feature Argument</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Feature Argument</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFeatureArgument(FeatureArgument object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Pre Condition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Pre Condition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePreCondition(PreCondition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Post Condition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Post Condition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePostCondition(PostCondition object) {
 		return null;
 	}
 

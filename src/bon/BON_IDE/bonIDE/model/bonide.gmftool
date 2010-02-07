@@ -47,7 +47,32 @@
       <tools
           xsi:type="gmftool:CreationTool"
           title="Inheritance"
-          description="Create new inheritance">
+          description="Create New Inheritance">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Argument"
+          description="Create New Argument">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="PreCondition">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="PostCondition">
         <smallIcon
             xsi:type="gmftool:DefaultImage"/>
         <largeIcon

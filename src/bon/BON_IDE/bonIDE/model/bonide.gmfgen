@@ -126,7 +126,7 @@
         canonicalEditPolicyClassName="IndexClauseCanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="IndexClauseGraphicalNodeEditPolicy"
         createCommandClassName="IndexClauseCreateCommand"
-        containers="//@diagram/@compartments.2 //@diagram/@compartments.5">
+        containers="//@diagram/@compartments.2 //@diagram/@compartments.8">
       <diagramRunTimeClass
           href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -205,7 +205,7 @@
         canonicalEditPolicyClassName="InheritanceClauseCanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="InheritanceClauseGraphicalNodeEditPolicy"
         createCommandClassName="InheritanceClauseCreateCommand"
-        containers="//@diagram/@compartments.3 //@diagram/@compartments.6">
+        containers="//@diagram/@compartments.3 //@diagram/@compartments.9">
       <diagramRunTimeClass
           href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -277,9 +277,10 @@
         itemSemanticEditPolicyClassName="FeatureItemSemanticEditPolicy"
         notationViewFactoryClassName="FeatureViewFactory"
         canonicalEditPolicyClassName="FeatureCanonicalEditPolicy"
+        compartments="//@diagram/@compartments.5 //@diagram/@compartments.6 //@diagram/@compartments.7"
         graphicalNodeEditPolicyClassName="FeatureGraphicalNodeEditPolicy"
         createCommandClassName="FeatureCreateCommand"
-        containers="//@diagram/@compartments.4 //@diagram/@compartments.7">
+        containers="//@diagram/@compartments.4 //@diagram/@compartments.10">
       <diagramRunTimeClass
           href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -287,9 +288,13 @@
           editHelperClassName="FeatureEditHelper"/>
       <viewmap
           xsi:type="gmfgen:InnerClassViewmap"
-          layoutType="FLOW_LAYOUT"
+          layoutType="TOOLBAR_LAYOUT"
           className="FeatureFigure"
-          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class FeatureFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureNamesFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureSignatureRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureModifierFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureTypeFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureCommentFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureArgumentsRectangleFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public FeatureFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutThis = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(false);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutThis.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutThis.setMajorSpacing(0);&#xA;&#x9;layoutThis.setMinorSpacing(2);&#xA;&#x9;layoutThis.setHorizontal(true);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setLineWidth(1);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureFeatureSignatureRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureSignatureRectangleFigure.setLineWidth(1);&#xA;&#xA;this.add(fFigureFeatureSignatureRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureFeatureSignatureRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setSpacing(0);&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setVertical(false);&#xA;&#xA;&#x9;fFigureFeatureSignatureRectangleFigure.setLayoutManager(layoutFFigureFeatureSignatureRectangleFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureNamesFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureNamesFigure.setText(&quot;&lt;...>&quot;);&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureNamesFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureModifierFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureModifierFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureModifierFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureTypeFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureTypeFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureTypeFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureFeatureCommentFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureCommentFigure.setText(&quot;&quot;);&#xA;&#xA;this.add(fFigureFeatureCommentFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureArgumentsRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureArgumentsRectangleFigure.setLineWidth(1);&#xA;&#xA;this.add(fFigureFeatureArgumentsRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigureFeatureArgumentsRectangleFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMajorSpacing(1);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMinorSpacing(1);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigureFeatureArgumentsRectangleFigure.setLayoutManager(layoutFFigureFeatureArgumentsRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureNamesFigure() {&#xA;&#x9;&#x9;return fFigureFeatureNamesFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureSignatureRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureSignatureRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureModifierFigure() {&#xA;&#x9;&#x9;return fFigureFeatureModifierFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureTypeFigure() {&#xA;&#x9;&#x9;return fFigureFeatureTypeFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureCommentFigure() {&#xA;&#x9;&#x9;return fFigureFeatureCommentFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureArgumentsRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureArgumentsRectangleFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;"/>
+          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class FeatureFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureNamesFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureSignatureRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureModifierFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureTypeFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureCommentFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureArgumentsRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigurePreConditionsRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigurePostConditionsRectangeFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public FeatureFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutThis = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(false);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutThis.setSpacing(0);&#xA;&#x9;layoutThis.setVertical(true);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setLineWidth(1);&#xA;&#x9;this.setForegroundColor(THIS_FORE&#xA;);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureFeatureSignatureRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureSignatureRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureFeatureSignatureRectangleFigure.setForegroundColor(FFIGUREFEATURESIGNATURERECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureFeatureSignatureRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureFeatureSignatureRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setSpacing(0);&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setVertical(false);&#xA;&#xA;&#x9;fFigureFeatureSignatureRectangleFigure.setLayoutManager(layoutFFigureFeatureSignatureRectangleFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureNamesFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureNamesFigure.setText(&quot;&lt;...>&quot;);&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureNamesFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureModifierFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureModifierFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureModifierFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureTypeFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureTypeFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureTypeFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureFeatureCommentFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureCommentFigure.setText(&quot;&quot;);&#xA;&#xA;this.add(fFigureFeatureCommentFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureArgumentsRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureArgumentsRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureFeatureArgumentsRectangleFigure.setForegroundColor(FFIGUREFEATUREARGUMENTSRECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureFeatureArgumentsRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigureFeatureArgumentsRectangleFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMajorSpacing(1);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMinorSpacing(1);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigureFeatureArgumentsRectangleFigure.setLayoutManager(layoutFFigureFeatureArgumentsRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigurePreConditionsRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigurePreConditionsRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigurePreConditionsRectangleFigure.setForegroundColor(FFIGUREPRECONDITIONSRECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigurePreConditionsRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigurePreConditionsRectangleFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMajorSpacing(5);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMinorSpacing(5);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigurePreConditionsRectangleFigure.setLayoutManager(layoutFFigurePreConditionsRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigurePostConditionsRectangeFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigurePostConditionsRectangeFigure.setLineWidth(1);&#xA;&#x9;fFigurePostConditionsRectangeFigure.setForegroundColor(FFIGUREPOSTCONDITIONSRECTANGEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigurePostConditionsRectangeFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigurePostConditionsRectangeFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMajorSpacing(5);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMinorSpacing(5);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigurePostConditionsRectangeFigure.setLayoutManager(layoutFFigurePostConditionsRectangeFigure);&#xA;&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureNamesFigure() {&#xA;&#x9;&#x9;return fFigureFeatureNamesFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureSignatureRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureSignatureRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureModifierFigure() {&#xA;&#x9;&#x9;return fFigureFeatureModifierFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureTypeFigure() {&#xA;&#x9;&#x9;return fFigureFeatureTypeFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureCommentFigure() {&#xA;&#x9;&#x9;return fFigureFeatureCommentFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureArgumentsRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureArgumentsRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigurePreConditionsRectangleFigure() {&#xA;&#x9;&#x9;return fFigurePreConditionsRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigurePostConditionsRectangeFigure() {&#xA;&#x9;&#x9;return fFigurePostConditionsRectangeFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color THIS_FORE = new org.eclipse.swt.graphics.Color(null, 255, 67, 226);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREFEATURESIGNATURERECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 0, 0, 200);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREFEATUREARGUMENTSRECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 255, 255, 64);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREPRECONDITIONSRECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 192, 192, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREPOSTCONDITIONSRECTANGEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 255, 128, 128);&#xA;&#xA;">
+        <attributes
+            xsi:type="gmfgen:StyleAttributes"
+            fixedForeground="true"/>
+      </viewmap>
       <modelFacet>
         <metaClass
             href="bonide.genmodel#//bonIDE/Feature"/>
@@ -371,6 +376,177 @@
         </modelFacet>
       </labels>
     </childNodes>
+    <childNodes
+        visualID="3007"
+        editPartClassName="FeatureArgumentEditPart"
+        itemSemanticEditPolicyClassName="FeatureArgumentItemSemanticEditPolicy"
+        notationViewFactoryClassName="FeatureArgumentViewFactory"
+        canonicalEditPolicyClassName="FeatureArgumentCanonicalEditPolicy"
+        graphicalNodeEditPolicyClassName="FeatureArgumentGraphicalNodeEditPolicy"
+        createCommandClassName="FeatureArgumentCreateCommand"
+        containers="//@diagram/@compartments.7">
+      <diagramRunTimeClass
+          href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+      <elementType
+          xsi:type="gmfgen:MetamodelType"
+          editHelperClassName="FeatureArgumentEditHelper"/>
+      <viewmap
+          xsi:type="gmfgen:InnerClassViewmap"
+          layoutType="TOOLBAR_LAYOUT"
+          className="ArgumentFigure"
+          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class ArgumentFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentArrowFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentNameFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentCollectionFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentTypeFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public ArgumentFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutThis = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(false);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutThis.setSpacing(1);&#xA;&#x9;layoutThis.setVertical(false);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setLineWidth(1);&#xA;&#x9;this.setForegroundColor(THIS_FORE&#xA;);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureArgumentArrowFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentArrowFigure.setText(&quot;->&quot;);&#xA;&#xA;this.add(fFigureArgumentArrowFigure);&#xA;&#xA;&#xA;&#xA;fFigureArgumentNameFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentNameFigure.setText(&quot;&quot;);&#xA;&#xA;this.add(fFigureArgumentNameFigure);&#xA;&#xA;&#xA;&#xA;fFigureArgumentCollectionFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentCollectionFigure.setText(&quot;&quot;);&#xA;&#xA;this.add(fFigureArgumentCollectionFigure);&#xA;&#xA;&#xA;&#xA;fFigureArgumentTypeFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentTypeFigure.setText(&quot;&quot;);&#xA;&#xA;this.add(fFigureArgumentTypeFigure);&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentArrowFigure() {&#xA;&#x9;&#x9;return fFigureArgumentArrowFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentNameFigure() {&#xA;&#x9;&#x9;return fFigureArgumentNameFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentCollectionFigure() {&#xA;&#x9;&#x9;return fFigureArgumentCollectionFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentTypeFigure() {&#xA;&#x9;&#x9;return fFigureArgumentTypeFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color THIS_FORE = new org.eclipse.swt.graphics.Color(null, 200, 0, 0);&#xA;&#xA;">
+        <attributes
+            xsi:type="gmfgen:StyleAttributes"
+            fixedForeground="true"/>
+      </viewmap>
+      <modelFacet>
+        <metaClass
+            href="bonide.genmodel#//bonIDE/FeatureArgument"/>
+        <containmentMetaFeature
+            href="bonide.genmodel#//bonIDE/Feature/arguments"/>
+        <childMetaFeature
+            href="bonide.genmodel#//bonIDE/Feature/arguments"/>
+      </modelFacet>
+      <labels
+          visualID="5015"
+          editPartClassName="FeatureArgumentNameEditPart"
+          itemSemanticEditPolicyClassName="FeatureArgumentNameItemSemanticEditPolicy"
+          notationViewFactoryClassName="FeatureArgumentNameViewFactory">
+        <diagramRunTimeClass
+            href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+        <viewmap
+            xsi:type="gmfgen:ParentAssignedViewmap"
+            getterName="getFigureArgumentArrowFigure"
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+        <modelFacet
+            xsi:type="gmfgen:DesignLabelModelFacet"
+            parser="//@labelParsers/@implementations.1"/>
+      </labels>
+      <labels
+          visualID="5016"
+          editPartClassName="FeatureArgumentContainerTypeEditPart"
+          itemSemanticEditPolicyClassName="FeatureArgumentContainerTypeItemSemanticEditPolicy"
+          notationViewFactoryClassName="FeatureArgumentContainerTypeViewFactory">
+        <diagramRunTimeClass
+            href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+        <viewmap
+            xsi:type="gmfgen:ParentAssignedViewmap"
+            getterName="getFigureArgumentNameFigure"
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+        <modelFacet
+            xsi:type="gmfgen:FeatureLabelModelFacet"
+            parser="//@labelParsers/@implementations.0">
+          <metaFeatures
+              href="bonide.genmodel#//bonIDE/FeatureArgument/name"/>
+        </modelFacet>
+      </labels>
+      <labels
+          visualID="5017"
+          editPartClassName="FeatureArgumentTypeEditPart"
+          itemSemanticEditPolicyClassName="FeatureArgumentTypeItemSemanticEditPolicy"
+          notationViewFactoryClassName="FeatureArgumentTypeViewFactory">
+        <diagramRunTimeClass
+            href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+        <viewmap
+            xsi:type="gmfgen:ParentAssignedViewmap"
+            getterName="getFigureArgumentCollectionFigure"
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+        <modelFacet
+            xsi:type="gmfgen:FeatureLabelModelFacet"
+            parser="//@labelParsers/@implementations.0">
+          <metaFeatures
+              href="bonide.genmodel#//bonIDE/FeatureArgument/containerType"/>
+        </modelFacet>
+      </labels>
+      <labels
+          visualID="5018"
+          editPartClassName="FeatureArgumentType2EditPart"
+          itemSemanticEditPolicyClassName="FeatureArgumentType2ItemSemanticEditPolicy"
+          notationViewFactoryClassName="FeatureArgumentTypeViewFactory">
+        <diagramRunTimeClass
+            href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+        <viewmap
+            xsi:type="gmfgen:ParentAssignedViewmap"
+            getterName="getFigureArgumentTypeFigure"
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+        <modelFacet
+            xsi:type="gmfgen:FeatureLabelModelFacet"
+            parser="//@labelParsers/@implementations.0">
+          <metaFeatures
+              href="bonide.genmodel#//bonIDE/FeatureArgument/type"/>
+        </modelFacet>
+      </labels>
+    </childNodes>
+    <childNodes
+        xsi:type="gmfgen:GenChildLabelNode"
+        visualID="3008"
+        editPartClassName="PreConditionEditPart"
+        itemSemanticEditPolicyClassName="PreConditionItemSemanticEditPolicy"
+        notationViewFactoryClassName="PreConditionViewFactory"
+        canonicalEditPolicyClassName="PreConditionCanonicalEditPolicy"
+        graphicalNodeEditPolicyClassName="PreConditionGraphicalNodeEditPolicy"
+        createCommandClassName="PreConditionCreateCommand"
+        containers="//@diagram/@compartments.6"
+        labelElementIcon="true">
+      <diagramRunTimeClass
+          href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+      <elementType
+          xsi:type="gmfgen:MetamodelType"
+          editHelperClassName="PreConditionEditHelper"/>
+      <viewmap
+          xsi:type="gmfgen:FigureViewmap"
+          figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+      <modelFacet>
+        <metaClass
+            href="bonide.genmodel#//bonIDE/PreCondition"/>
+        <containmentMetaFeature
+            href="bonide.genmodel#//bonIDE/Feature/preConditions"/>
+        <childMetaFeature
+            href="bonide.genmodel#//bonIDE/Feature/preConditions"/>
+      </modelFacet>
+      <labelModelFacet
+          xsi:type="gmfgen:FeatureLabelModelFacet"
+          parser="//@labelParsers/@implementations.0"
+          editPattern="">
+        <metaFeatures
+            href="bonide.genmodel#//bonIDE/PreCondition/content"/>
+      </labelModelFacet>
+    </childNodes>
+    <childNodes
+        xsi:type="gmfgen:GenChildLabelNode"
+        visualID="3009"
+        editPartClassName="PostConditionEditPart"
+        itemSemanticEditPolicyClassName="PostConditionItemSemanticEditPolicy"
+        notationViewFactoryClassName="PostConditionViewFactory"
+        canonicalEditPolicyClassName="PostConditionCanonicalEditPolicy"
+        graphicalNodeEditPolicyClassName="PostConditionGraphicalNodeEditPolicy"
+        createCommandClassName="PostConditionCreateCommand"
+        containers="//@diagram/@compartments.5"
+        labelElementIcon="true">
+      <diagramRunTimeClass
+          href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+      <elementType
+          xsi:type="gmfgen:MetamodelType"
+          editHelperClassName="PostConditionEditHelper"/>
+      <viewmap
+          xsi:type="gmfgen:InnerClassViewmap"
+          className="PostConditionFigure"
+          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class PostConditionFigure extends org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel {&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public PostConditionFigure() {&#xA;&#x9;&#x9;&#x9;&#x9;this.setText(&quot;&quot;);&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;}&#xA;&#xA;"/>
+      <modelFacet>
+        <metaClass
+            href="bonide.genmodel#//bonIDE/PostCondition"/>
+        <containmentMetaFeature
+            href="bonide.genmodel#//bonIDE/Feature/postConditions"/>
+        <childMetaFeature
+            href="bonide.genmodel#//bonIDE/Feature/postConditions"/>
+      </modelFacet>
+      <labelModelFacet
+          xsi:type="gmfgen:FeatureLabelModelFacet"
+          parser="//@labelParsers/@implementations.0">
+        <metaFeatures
+            href="bonide.genmodel#//bonIDE/PostCondition/content"/>
+      </labelModelFacet>
+    </childNodes>
     <topLevelNodes
         visualID="2001"
         editPartClassName="ClusterEditPart"
@@ -423,7 +599,7 @@
         itemSemanticEditPolicyClassName="BONClassItemSemanticEditPolicy"
         notationViewFactoryClassName="BONClassViewFactory"
         canonicalEditPolicyClassName="BONClassCanonicalEditPolicy"
-        compartments="//@diagram/@compartments.5 //@diagram/@compartments.6 //@diagram/@compartments.7"
+        compartments="//@diagram/@compartments.8 //@diagram/@compartments.9 //@diagram/@compartments.10"
         graphicalNodeEditPolicyClassName="BONClassGraphicalNodeEditPolicy"
         createCommandClassName="BONClassCreateCommand">
       <diagramRunTimeClass
@@ -568,6 +744,72 @@
       </viewmap>
     </compartments>
     <compartments
+        visualID="7009"
+        editPartClassName="FeatureArgumentCompartmentEditPart"
+        itemSemanticEditPolicyClassName="FeatureArgumentCompartmentItemSemanticEditPolicy"
+        notationViewFactoryClassName="FeatureArgumentCompartmentViewFactory"
+        canonicalEditPolicyClassName="FeatureArgumentCompartmentCanonicalEditPolicy"
+        childNodes="//@diagram/@childNodes.7"
+        title="PostConditionCompartment"
+        canCollapse="false"
+        needsTitle="false"
+        node="//@diagram/@childNodes.4">
+      <diagramRunTimeClass
+          href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+      <viewmap
+          xsi:type="gmfgen:ParentAssignedViewmap"
+          getterName="getFigurePostConditionsRectangeFigure"
+          figureQualifiedClassName="org.eclipse.draw2d.RectangleFigure">
+        <attributes
+            xsi:type="gmfgen:StyleAttributes"
+            fixedForeground="true"/>
+      </viewmap>
+    </compartments>
+    <compartments
+        visualID="7010"
+        editPartClassName="FeaturePreConditionCompartmentEditPart"
+        itemSemanticEditPolicyClassName="FeaturePreConditionCompartmentItemSemanticEditPolicy"
+        notationViewFactoryClassName="FeaturePreConditionCompartmentViewFactory"
+        canonicalEditPolicyClassName="FeaturePreConditionCompartmentCanonicalEditPolicy"
+        childNodes="//@diagram/@childNodes.6"
+        title="PreConditionCompartment"
+        canCollapse="false"
+        needsTitle="false"
+        node="//@diagram/@childNodes.4">
+      <diagramRunTimeClass
+          href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+      <viewmap
+          xsi:type="gmfgen:ParentAssignedViewmap"
+          getterName="getFigurePreConditionsRectangleFigure"
+          figureQualifiedClassName="org.eclipse.draw2d.RectangleFigure">
+        <attributes
+            xsi:type="gmfgen:StyleAttributes"
+            fixedForeground="true"/>
+      </viewmap>
+    </compartments>
+    <compartments
+        visualID="7011"
+        editPartClassName="FeatureArgumentCompartment2EditPart"
+        itemSemanticEditPolicyClassName="FeatureArgumentCompartment2ItemSemanticEditPolicy"
+        notationViewFactoryClassName="FeatureArgumentCompartmentViewFactory"
+        canonicalEditPolicyClassName="FeatureArgumentCompartment2CanonicalEditPolicy"
+        childNodes="//@diagram/@childNodes.5"
+        title="ArgumentCompartment"
+        canCollapse="false"
+        needsTitle="false"
+        node="//@diagram/@childNodes.4">
+      <diagramRunTimeClass
+          href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+      <viewmap
+          xsi:type="gmfgen:ParentAssignedViewmap"
+          getterName="getFigureFeatureArgumentsRectangleFigure"
+          figureQualifiedClassName="org.eclipse.draw2d.RectangleFigure">
+        <attributes
+            xsi:type="gmfgen:StyleAttributes"
+            fixedForeground="true"/>
+      </viewmap>
+    </compartments>
+    <compartments
         visualID="7004"
         editPartClassName="BONClassIndexCompartment2EditPart"
         itemSemanticEditPolicyClassName="BONClassIndexCompartment2ItemSemanticEditPolicy"
@@ -657,8 +899,21 @@
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Inheritance"
-            description="Create new inheritance"
+            description="Create New Inheritance"
             genNodes="//@diagram/@childNodes.3"/>
+        <entries
+            xsi:type="gmfgen:ToolEntry"
+            title="Argument"
+            description="Create New Argument"
+            genNodes="//@diagram/@childNodes.5"/>
+        <entries
+            xsi:type="gmfgen:ToolEntry"
+            title="PreCondition"
+            genNodes="//@diagram/@childNodes.6"/>
+        <entries
+            xsi:type="gmfgen:ToolEntry"
+            title="PostCondition"
+            genNodes="//@diagram/@childNodes.7"/>
       </groups>
     </palette>
     <preferencePages
@@ -689,6 +944,7 @@
   </diagram>
   <plugin>
     <requiredPlugins>org.eclipse.draw2d</requiredPlugins>
+    <requiredPlugins>org.eclipse.gmf.runtime.draw2d.ui</requiredPlugins>
   </plugin>
   <editor/>
   <navigator>
@@ -703,6 +959,15 @@
     <childReferences
         parent="//@diagram/@childNodes.1"
         child="//@diagram/@childNodes.3"/>
+    <childReferences
+        parent="//@diagram/@childNodes.4"
+        child="//@diagram/@childNodes.5"/>
+    <childReferences
+        parent="//@diagram/@childNodes.4"
+        child="//@diagram/@childNodes.6"/>
+    <childReferences
+        parent="//@diagram/@childNodes.4"
+        child="//@diagram/@childNodes.7"/>
     <childReferences
         parent="//@diagram/@childNodes.1"
         child="//@diagram/@childNodes.4"/>
@@ -757,10 +1022,10 @@
       extensibleViaService="true">
     <implementations
         xsi:type="gmfgen:PredefinedParser"
-        uses="//@diagram/@childNodes.2/@labels.0/@modelFacet //@diagram/@childNodes.2/@labels.1/@modelFacet //@diagram/@childNodes.3/@labels.1/@modelFacet //@diagram/@childNodes.4/@labels.0/@modelFacet //@diagram/@childNodes.4/@labels.1/@modelFacet //@diagram/@childNodes.4/@labels.2/@modelFacet //@diagram/@childNodes.4/@labels.3/@modelFacet //@diagram/@childNodes.1/@labels.0/@modelFacet //@diagram/@childNodes.0/@labels.0/@modelFacet //@diagram/@topLevelNodes.0/@labels.0/@modelFacet //@diagram/@topLevelNodes.1/@labels.0/@modelFacet"/>
+        uses="//@diagram/@childNodes.2/@labels.0/@modelFacet //@diagram/@childNodes.2/@labels.1/@modelFacet //@diagram/@childNodes.3/@labels.1/@modelFacet //@diagram/@childNodes.5/@labels.1/@modelFacet //@diagram/@childNodes.5/@labels.2/@modelFacet //@diagram/@childNodes.5/@labels.3/@modelFacet //@diagram/@childNodes.6/@labelModelFacet //@diagram/@childNodes.7/@labelModelFacet //@diagram/@childNodes.4/@labels.0/@modelFacet //@diagram/@childNodes.4/@labels.1/@modelFacet //@diagram/@childNodes.4/@labels.2/@modelFacet //@diagram/@childNodes.4/@labels.3/@modelFacet //@diagram/@childNodes.1/@labels.0/@modelFacet //@diagram/@childNodes.0/@labels.0/@modelFacet //@diagram/@topLevelNodes.0/@labels.0/@modelFacet //@diagram/@topLevelNodes.1/@labels.0/@modelFacet"/>
     <implementations
         xsi:type="gmfgen:ExternalParser"
-        uses="//@diagram/@childNodes.3/@labels.0/@modelFacet"/>
+        uses="//@diagram/@childNodes.3/@labels.0/@modelFacet //@diagram/@childNodes.5/@labels.0/@modelFacet"/>
   </labelParsers>
   <contextMenus
       context="//@diagram">

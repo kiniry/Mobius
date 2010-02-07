@@ -96,6 +96,26 @@ public class BonIDEAdapterFactory extends AdapterFactoryImpl {
 				return createFeatureAdapter();
 			}
 			@Override
+			public Adapter caseIndexClause(IndexClause object) {
+				return createIndexClauseAdapter();
+			}
+			@Override
+			public Adapter caseInheritanceClause(InheritanceClause object) {
+				return createInheritanceClauseAdapter();
+			}
+			@Override
+			public Adapter caseFeatureArgument(FeatureArgument object) {
+				return createFeatureArgumentAdapter();
+			}
+			@Override
+			public Adapter casePreCondition(PreCondition object) {
+				return createPreConditionAdapter();
+			}
+			@Override
+			public Adapter casePostCondition(PostCondition object) {
+				return createPostConditionAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -196,6 +216,76 @@ public class BonIDEAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createFeatureAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bonIDE.IndexClause <em>Index Clause</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bonIDE.IndexClause
+	 * @generated
+	 */
+	public Adapter createIndexClauseAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bonIDE.InheritanceClause <em>Inheritance Clause</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bonIDE.InheritanceClause
+	 * @generated
+	 */
+	public Adapter createInheritanceClauseAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bonIDE.FeatureArgument <em>Feature Argument</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bonIDE.FeatureArgument
+	 * @generated
+	 */
+	public Adapter createFeatureArgumentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bonIDE.PreCondition <em>Pre Condition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bonIDE.PreCondition
+	 * @generated
+	 */
+	public Adapter createPreConditionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bonIDE.PostCondition <em>Post Condition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bonIDE.PostCondition
+	 * @generated
+	 */
+	public Adapter createPostConditionAdapter() {
 		return null;
 	}
 

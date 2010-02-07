@@ -22,9 +22,44 @@ Package bonIDE <http://www.ucd.ie/bonIDE>
     Attribute name : EString
     Reference features : Feature<<0..*>>
     Attribute isDeferred : EBoolean
-    Attribute parents : EString<<0..*>>
+    Attribute implementationStatus : ImplementationStatus
+    Reference indexes : IndexClause<<0..*>>
+    Reference parents : InheritanceClause
 
   Class StaticAbstraction -> Abstraction
 
   Class Feature
+    Attribute names : EString<<0..*>>
+    Attribute modifier : EString
+    Attribute type : EString
+    Attribute comment : EString
+    Reference arguments : FeatureArgument<<0..*>>
+    Reference postConditions : PostCondition<<0..*>>
+    Reference preConditions : PreCondition<<0..*>>
+
+  Class IndexClause
+    Attribute identifier : EString
+    Attribute terms : EString<<0..*>>
+
+  Class InheritanceClause
+    Attribute parentNames : EString<<0..*>>
+
+  Class FeatureArgument
     Attribute name : EString
+    Attribute type : EString
+    Attribute containerType : EString
+
+  Class PreCondition
+    Attribute content : EString
+
+  Class PostCondition
+    Attribute content : EString
+
+  Enum ImplementationStatus
+    Literal Reused = 0
+    Literal Persistent = 1
+    Literal Deferred = 2
+    Literal Effective = 3
+    Literal Interfaced = 4
+    Literal Root = 5
+    Literal Parameterized = 6

@@ -10,6 +10,10 @@ import bonIDE.BONClass;
 import bonIDE.BonIDEPackage;
 import bonIDE.Feature;
 
+import bonIDE.ImplementationStatus;
+import bonIDE.IndexClause;
+import bonIDE.InheritanceClause;
+import bonIDE.Parent;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -24,6 +28,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -36,6 +41,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link bonIDE.impl.BONClassImpl#getName <em>Name</em>}</li>
  *   <li>{@link bonIDE.impl.BONClassImpl#getFeatures <em>Features</em>}</li>
  *   <li>{@link bonIDE.impl.BONClassImpl#isIsDeferred <em>Is Deferred</em>}</li>
+ *   <li>{@link bonIDE.impl.BONClassImpl#getImplementationStatus <em>Implementation Status</em>}</li>
+ *   <li>{@link bonIDE.impl.BONClassImpl#getIndexes <em>Indexes</em>}</li>
  *   <li>{@link bonIDE.impl.BONClassImpl#getParents <em>Parents</em>}</li>
  * </ul>
  * </p>
@@ -94,14 +101,44 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 	protected boolean isDeferred = IS_DEFERRED_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getParents() <em>Parents</em>}' attribute list.
+	 * The default value of the '{@link #getImplementationStatus() <em>Implementation Status</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getImplementationStatus()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final ImplementationStatus IMPLEMENTATION_STATUS_EDEFAULT = ImplementationStatus.EFFECTIVE;
+
+	/**
+	 * The cached value of the '{@link #getImplementationStatus() <em>Implementation Status</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getImplementationStatus()
+	 * @generated
+	 * @ordered
+	 */
+	protected ImplementationStatus implementationStatus = IMPLEMENTATION_STATUS_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getIndexes() <em>Indexes</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getIndexes()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<IndexClause> indexes;
+
+	/**
+	 * The cached value of the '{@link #getParents() <em>Parents</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getParents()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> parents;
+	protected InheritanceClause parents;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -181,11 +218,75 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getParents() {
-		if (parents == null) {
-			parents = new EDataTypeUniqueEList<String>(String.class, this, BonIDEPackage.BON_CLASS__PARENTS);
-		}
+	public InheritanceClause getParents() {
 		return parents;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetParents(InheritanceClause newParents, NotificationChain msgs) {
+		InheritanceClause oldParents = parents;
+		parents = newParents;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, BonIDEPackage.BON_CLASS__PARENTS, oldParents, newParents);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setParents(InheritanceClause newParents) {
+		if (newParents != parents) {
+			NotificationChain msgs = null;
+			if (parents != null)
+				msgs = ((InternalEObject)parents).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - BonIDEPackage.BON_CLASS__PARENTS, null, msgs);
+			if (newParents != null)
+				msgs = ((InternalEObject)newParents).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - BonIDEPackage.BON_CLASS__PARENTS, null, msgs);
+			msgs = basicSetParents(newParents, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BonIDEPackage.BON_CLASS__PARENTS, newParents, newParents));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<IndexClause> getIndexes() {
+		if (indexes == null) {
+			indexes = new EObjectContainmentEList<IndexClause>(IndexClause.class, this, BonIDEPackage.BON_CLASS__INDEXES);
+		}
+		return indexes;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ImplementationStatus getImplementationStatus() {
+		return implementationStatus;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setImplementationStatus(ImplementationStatus newImplementationStatus) {
+		ImplementationStatus oldImplementationStatus = implementationStatus;
+		implementationStatus = newImplementationStatus == null ? IMPLEMENTATION_STATUS_EDEFAULT : newImplementationStatus;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BonIDEPackage.BON_CLASS__IMPLEMENTATION_STATUS, oldImplementationStatus, implementationStatus));
 	}
 
 	/**
@@ -198,6 +299,10 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 		switch (featureID) {
 			case BonIDEPackage.BON_CLASS__FEATURES:
 				return ((InternalEList<?>)getFeatures()).basicRemove(otherEnd, msgs);
+			case BonIDEPackage.BON_CLASS__INDEXES:
+				return ((InternalEList<?>)getIndexes()).basicRemove(otherEnd, msgs);
+			case BonIDEPackage.BON_CLASS__PARENTS:
+				return basicSetParents(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -216,6 +321,10 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 				return getFeatures();
 			case BonIDEPackage.BON_CLASS__IS_DEFERRED:
 				return isIsDeferred();
+			case BonIDEPackage.BON_CLASS__IMPLEMENTATION_STATUS:
+				return getImplementationStatus();
+			case BonIDEPackage.BON_CLASS__INDEXES:
+				return getIndexes();
 			case BonIDEPackage.BON_CLASS__PARENTS:
 				return getParents();
 		}
@@ -241,9 +350,15 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 			case BonIDEPackage.BON_CLASS__IS_DEFERRED:
 				setIsDeferred((Boolean)newValue);
 				return;
+			case BonIDEPackage.BON_CLASS__IMPLEMENTATION_STATUS:
+				setImplementationStatus((ImplementationStatus)newValue);
+				return;
+			case BonIDEPackage.BON_CLASS__INDEXES:
+				getIndexes().clear();
+				getIndexes().addAll((Collection<? extends IndexClause>)newValue);
+				return;
 			case BonIDEPackage.BON_CLASS__PARENTS:
-				getParents().clear();
-				getParents().addAll((Collection<? extends String>)newValue);
+				setParents((InheritanceClause)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -266,8 +381,14 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 			case BonIDEPackage.BON_CLASS__IS_DEFERRED:
 				setIsDeferred(IS_DEFERRED_EDEFAULT);
 				return;
+			case BonIDEPackage.BON_CLASS__IMPLEMENTATION_STATUS:
+				setImplementationStatus(IMPLEMENTATION_STATUS_EDEFAULT);
+				return;
+			case BonIDEPackage.BON_CLASS__INDEXES:
+				getIndexes().clear();
+				return;
 			case BonIDEPackage.BON_CLASS__PARENTS:
-				getParents().clear();
+				setParents((InheritanceClause)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -287,8 +408,12 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 				return features != null && !features.isEmpty();
 			case BonIDEPackage.BON_CLASS__IS_DEFERRED:
 				return isDeferred != IS_DEFERRED_EDEFAULT;
+			case BonIDEPackage.BON_CLASS__IMPLEMENTATION_STATUS:
+				return implementationStatus != IMPLEMENTATION_STATUS_EDEFAULT;
+			case BonIDEPackage.BON_CLASS__INDEXES:
+				return indexes != null && !indexes.isEmpty();
 			case BonIDEPackage.BON_CLASS__PARENTS:
-				return parents != null && !parents.isEmpty();
+				return parents != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -307,8 +432,8 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 		result.append(name);
 		result.append(", isDeferred: ");
 		result.append(isDeferred);
-		result.append(", parents: ");
-		result.append(parents);
+		result.append(", implementationStatus: ");
+		result.append(implementationStatus);
 		result.append(')');
 		return result.toString();
 	}

@@ -62,6 +62,51 @@ public interface BonIDEFactory extends EFactory {
 	Feature createFeature();
 
 	/**
+	 * Returns a new object of class '<em>Index Clause</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Index Clause</em>'.
+	 * @generated
+	 */
+	IndexClause createIndexClause();
+
+	/**
+	 * Returns a new object of class '<em>Inheritance Clause</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Inheritance Clause</em>'.
+	 * @generated
+	 */
+	InheritanceClause createInheritanceClause();
+
+	/**
+	 * Returns a new object of class '<em>Feature Argument</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Feature Argument</em>'.
+	 * @generated
+	 */
+	FeatureArgument createFeatureArgument();
+
+	/**
+	 * Returns a new object of class '<em>Pre Condition</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Pre Condition</em>'.
+	 * @generated
+	 */
+	PreCondition createPreCondition();
+
+	/**
+	 * Returns a new object of class '<em>Post Condition</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Post Condition</em>'.
+	 * @generated
+	 */
+	PostCondition createPostCondition();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

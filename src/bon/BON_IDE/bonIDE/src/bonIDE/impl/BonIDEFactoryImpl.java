@@ -9,6 +9,7 @@ package bonIDE.impl;
 import bonIDE.*;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -64,8 +65,43 @@ public class BonIDEFactoryImpl extends EFactoryImpl implements BonIDEFactory {
 			case BonIDEPackage.CLUSTER: return createCluster();
 			case BonIDEPackage.BON_CLASS: return createBONClass();
 			case BonIDEPackage.FEATURE: return createFeature();
+			case BonIDEPackage.INDEX_CLAUSE: return createIndexClause();
+			case BonIDEPackage.INHERITANCE_CLAUSE: return createInheritanceClause();
+			case BonIDEPackage.FEATURE_ARGUMENT: return createFeatureArgument();
+			case BonIDEPackage.PRE_CONDITION: return createPreCondition();
+			case BonIDEPackage.POST_CONDITION: return createPostCondition();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object createFromString(EDataType eDataType, String initialValue) {
+		switch (eDataType.getClassifierID()) {
+			case BonIDEPackage.IMPLEMENTATION_STATUS:
+				return createImplementationStatusFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String convertToString(EDataType eDataType, Object instanceValue) {
+		switch (eDataType.getClassifierID()) {
+			case BonIDEPackage.IMPLEMENTATION_STATUS:
+				return convertImplementationStatusToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -107,6 +143,76 @@ public class BonIDEFactoryImpl extends EFactoryImpl implements BonIDEFactory {
 	public Feature createFeature() {
 		FeatureImpl feature = new FeatureImpl();
 		return feature;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IndexClause createIndexClause() {
+		IndexClauseImpl indexClause = new IndexClauseImpl();
+		return indexClause;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InheritanceClause createInheritanceClause() {
+		InheritanceClauseImpl inheritanceClause = new InheritanceClauseImpl();
+		return inheritanceClause;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public FeatureArgument createFeatureArgument() {
+		FeatureArgumentImpl featureArgument = new FeatureArgumentImpl();
+		return featureArgument;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PreCondition createPreCondition() {
+		PreConditionImpl preCondition = new PreConditionImpl();
+		return preCondition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PostCondition createPostCondition() {
+		PostConditionImpl postCondition = new PostConditionImpl();
+		return postCondition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ImplementationStatus createImplementationStatusFromString(EDataType eDataType, String initialValue) {
+		ImplementationStatus result = ImplementationStatus.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertImplementationStatusToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

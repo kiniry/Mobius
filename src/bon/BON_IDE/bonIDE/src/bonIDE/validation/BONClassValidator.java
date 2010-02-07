@@ -6,8 +6,13 @@
  */
 package bonIDE.validation;
 
+import bonIDE.BONClass;
 import bonIDE.Feature;
 
+import bonIDE.ImplementationStatus;
+import bonIDE.IndexClause;
+import bonIDE.InheritanceClause;
+import bonIDE.Parent;
 import org.eclipse.emf.common.util.EList;
 
 /**
@@ -23,4 +28,14 @@ public interface BONClassValidator {
 	boolean validateFeatures(EList<Feature> value);
 	boolean validateIsDeferred(boolean value);
 	boolean validateParents(EList<String> value);
+
+	boolean validateIndexes(EList<IndexClause> value);
+
+	boolean validateParents(InheritanceClause value);
+
+	boolean validateParents(Parent value);
+
+	boolean validateIndexes(IndexClause value);
+
+	boolean validateImplementationStatus(ImplementationStatus value);
 }

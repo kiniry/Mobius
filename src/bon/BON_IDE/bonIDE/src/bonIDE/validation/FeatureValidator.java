@@ -6,6 +6,11 @@
  */
 package bonIDE.validation;
 
+import bonIDE.FeatureArgument;
+import bonIDE.PostCondition;
+import bonIDE.PreCondition;
+import org.eclipse.emf.common.util.EList;
+
 
 /**
  * A sample validator interface for {@link bonIDE.Feature}.
@@ -15,6 +20,20 @@ package bonIDE.validation;
  */
 public interface FeatureValidator {
 	boolean validate();
+
+	boolean validateNames(EList<String> value);
+
+	boolean validateModifier(String value);
+
+	boolean validateType(String value);
+
+	boolean validateComment(String value);
+
+	boolean validateArguments(EList<FeatureArgument> value);
+
+	boolean validatePostConditions(EList<PostCondition> value);
+
+	boolean validatePreConditions(EList<PreCondition> value);
 
 	boolean validateName(String value);
 }

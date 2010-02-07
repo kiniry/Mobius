@@ -19,6 +19,8 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link bonIDE.BONClass#getName <em>Name</em>}</li>
  *   <li>{@link bonIDE.BONClass#getFeatures <em>Features</em>}</li>
  *   <li>{@link bonIDE.BONClass#isIsDeferred <em>Is Deferred</em>}</li>
+ *   <li>{@link bonIDE.BONClass#getImplementationStatus <em>Implementation Status</em>}</li>
+ *   <li>{@link bonIDE.BONClass#getIndexes <em>Indexes</em>}</li>
  *   <li>{@link bonIDE.BONClass#getParents <em>Parents</em>}</li>
  * </ul>
  * </p>
@@ -97,19 +99,75 @@ public interface BONClass extends StaticAbstraction {
 	void setIsDeferred(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Parents</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * Returns the value of the '<em><b>Parents</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parents</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Parents</em>' attribute list.
+	 * @return the value of the '<em>Parents</em>' containment reference.
+	 * @see #setParents(InheritanceClause)
 	 * @see bonIDE.BonIDEPackage#getBONClass_Parents()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<String> getParents();
+	InheritanceClause getParents();
+
+	/**
+	 * Sets the value of the '{@link bonIDE.BONClass#getParents <em>Parents</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Parents</em>' containment reference.
+	 * @see #getParents()
+	 * @generated
+	 */
+	void setParents(InheritanceClause value);
+
+	/**
+	 * Returns the value of the '<em><b>Indexes</b></em>' containment reference list.
+	 * The list contents are of type {@link bonIDE.IndexClause}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Indexes</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Indexes</em>' containment reference list.
+	 * @see bonIDE.BonIDEPackage#getBONClass_Indexes()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<IndexClause> getIndexes();
+
+	/**
+	 * Returns the value of the '<em><b>Implementation Status</b></em>' attribute.
+	 * The default value is <code>"Effective"</code>.
+	 * The literals are from the enumeration {@link bonIDE.ImplementationStatus}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Implementation Status</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Implementation Status</em>' attribute.
+	 * @see bonIDE.ImplementationStatus
+	 * @see #setImplementationStatus(ImplementationStatus)
+	 * @see bonIDE.BonIDEPackage#getBONClass_ImplementationStatus()
+	 * @model default="Effective"
+	 * @generated
+	 */
+	ImplementationStatus getImplementationStatus();
+
+	/**
+	 * Sets the value of the '{@link bonIDE.BONClass#getImplementationStatus <em>Implementation Status</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Implementation Status</em>' attribute.
+	 * @see bonIDE.ImplementationStatus
+	 * @see #getImplementationStatus()
+	 * @generated
+	 */
+	void setImplementationStatus(ImplementationStatus value);
 
 } // BONClass
