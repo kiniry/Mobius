@@ -43,7 +43,7 @@
     
     <jar jarfile="${dist}/lib/GF.jar" basedir="${build}">
       <manifest>
-        <attribute name="Main-Class" value="ie.ucd.gf.Proc" />
+        <attribute name="Main-Class" value="ie.ucd.gf.GF" />
         <attribute name="Class-Path" value="commons-lang-2.4.jar"/>
       </manifest>
     </jar>
