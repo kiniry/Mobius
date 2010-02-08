@@ -1,0 +1,44 @@
+ AtMost o  = mkNP (mkDet that_Quant (mkNum at_most_AdN (mkCard n1_Numeral))) o;
+	
+AtMost o  = mkNP  (mkCard at_most_AdN (mkCard n1_Numeral)) o;
+
+DictEngAbs ** 
+
+DictEng ** 
+
+Name,Sex,Age :Object;
+
+WhatIs i = mkPhr (mkUtt(mkQS (mkQCl i)));
+
+
+           -- Interrogative=IP;
+        
+        --What = whatSg_IP;
+	--Name = mkCN name_N;
+	--Sex = mkCN sex_N;
+	--Age = mkCN age_N;
+	--One = n1_Numeral;
+	--Two = n2_Numeral;
+	--Three = n3_Numeral;
+	
+      --oper
+	--name_N = mkN "name";
+	--sex_N = mkN "sex";
+	--age_N = mkN "age";
+	
+abstract Citizenlib= {
+
+  flags startcat=Phrase;
+
+  cat
+   Phrase;Object; Number;
+   
+    
+  fun
+    
+    --Quest : Interrogative -> Object-> Phrase;
+    AtMost :  Object -> Number -> Phrase;
+    --What:Interrogative;
+    --Name,Sex,Age :Object;
+    --One,Two,Three: Number;
+}
