@@ -30,16 +30,25 @@
             xsi:type="gmfgraph:Rectangle"
             name="IndexRectangleFigure">
           <layout
-              xsi:type="gmfgraph:StackLayout"/>
+              xsi:type="gmfgraph:FlowLayout"
+              vertical="true"
+              matchMinorSize="true"
+              forceSingleLine="true"
+              majorSpacing="2"
+              minorSpacing="0"/>
           <foregroundColor
               xsi:type="gmfgraph:RGBColor"
               red="128"/>
+          <insets
+              bottom="2"/>
         </children>
         <children
             xsi:type="gmfgraph:Rectangle"
             name="InheritanceRectangleFigure">
           <layout
               xsi:type="gmfgraph:FlowLayout"
+              vertical="true"
+              matchMinorSize="true"
               forceSingleLine="true"
               majorSpacing="2"
               minorSpacing="0"/>
@@ -193,12 +202,10 @@
           outline="false">
         <layout
             xsi:type="gmfgraph:FlowLayout"
+            matchMinorSize="true"
             forceSingleLine="true"
             majorSpacing="2"
-            minorSpacing="0"/>
-        <preferredSize
-            dx="-1"
-            dy="12"/>
+            minorSpacing="1"/>
         <children
             xsi:type="gmfgraph:Label"
             name="IndexIdentifierFigure">
@@ -207,7 +214,7 @@
               blue="200"/>
           <font
               xsi:type="gmfgraph:BasicFont"
-              faceName=""
+              faceName="Lucida Sans Unicode"
               height="7"/>
         </children>
         <children
@@ -218,7 +225,7 @@
               blue="128"/>
           <font
               xsi:type="gmfgraph:BasicFont"
-              faceName=""
+              faceName="Lucida Sans Unicode"
               height="7"/>
         </children>
       </actualFigure>
@@ -239,16 +246,14 @@
             xsi:type="gmfgraph:FlowLayout"
             forceSingleLine="true"
             majorSpacing="2"
-            minorSpacing="0"/>
-        <preferredSize
-            dx="-1"
-            dy="12"/>
+            minorSpacing="1"/>
         <children
             xsi:type="gmfgraph:Label"
             name="InheritanceTitleLabel"
             text="Inherits:">
           <font
               xsi:type="gmfgraph:BasicFont"
+              faceName="Lucida Sans Unicode"
               height="7"/>
         </children>
         <children
@@ -256,6 +261,7 @@
             name="InheritanceClassListLabel">
           <font
               xsi:type="gmfgraph:BasicFont"
+              faceName="Lucida Sans Unicode"
               height="7"/>
         </children>
       </actualFigure>

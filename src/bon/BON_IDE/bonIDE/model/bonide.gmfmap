@@ -75,7 +75,8 @@
                 href="bonide.ecore#//IndexClause/identifier"/>
           </labelMappings>
           <labelMappings
-              xsi:type="gmfmap:FeatureLabelMapping">
+              xsi:type="gmfmap:FeatureLabelMapping"
+              viewPattern="">
             <diagramLabel
                 href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#IndexTermsLabel"/>
             <features
