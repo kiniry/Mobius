@@ -54,11 +54,92 @@ public class BonideEditPartFactory implements EditPartFactory {
 			case bonIDE.diagram.edit.parts.BONClassName2EditPart.VISUAL_ID:
 				return new bonIDE.diagram.edit.parts.BONClassName2EditPart(view);
 
+			case bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.IndexClauseEditPart(view);
+
+			case bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart(view);
+
+			case bonIDE.diagram.edit.parts.IndexClauseTermsEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.IndexClauseTermsEditPart(view);
+
+			case bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.InheritanceClauseEditPart(view);
+
+			case bonIDE.diagram.edit.parts.WrappingLabelEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.WrappingLabelEditPart(view);
+
+			case bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeatureEditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeatureNamesEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeatureNamesEditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeatureModifierEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeatureModifierEditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeatureTypeEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeatureTypeEditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeatureCommentEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeatureCommentEditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeatureArgumentEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeatureArgumentEditPart(view);
+
+			case bonIDE.diagram.edit.parts.WrappingLabel2EditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.WrappingLabel2EditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart(view);
+
+			case bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.PreConditionEditPart(view);
+
+			case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.PostConditionEditPart(view);
+
 			case bonIDE.diagram.edit.parts.ClusterClusterCompartmentEditPart.VISUAL_ID:
 				return new bonIDE.diagram.edit.parts.ClusterClusterCompartmentEditPart(view);
 
 			case bonIDE.diagram.edit.parts.ClusterClusterCompartment2EditPart.VISUAL_ID:
 				return new bonIDE.diagram.edit.parts.ClusterClusterCompartment2EditPart(view);
+
+			case bonIDE.diagram.edit.parts.BONClassIndexCompartmentEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.BONClassIndexCompartmentEditPart(view);
+
+			case bonIDE.diagram.edit.parts.BONClassInheritanceCompartmentEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.BONClassInheritanceCompartmentEditPart(view);
+
+			case bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeaturePreConditionCompartmentEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeaturePreConditionCompartmentEditPart(view);
+
+			case bonIDE.diagram.edit.parts.FeatureArgumentCompartmentEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.FeatureArgumentCompartmentEditPart(view);
+
+			case bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart(view);
+
+			case bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart(view);
+
+			case bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart(view);
 			}
 		}
 		return createUnrecognizedEditPart(context, model);

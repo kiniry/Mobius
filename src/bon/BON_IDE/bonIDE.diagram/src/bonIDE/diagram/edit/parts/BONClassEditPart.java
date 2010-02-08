@@ -2,24 +2,37 @@ package bonIDE.diagram.edit.parts;
 
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.StackLayout;
+import org.eclipse.draw2d.ToolbarLayout;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.FlowLayoutEditPolicy;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
-import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConstrainedToolbarLayoutEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @generated
@@ -52,6 +65,7 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected void createDefaultEditPolicies() {
+		installEditPolicy(EditPolicyRoles.CREATION_ROLE, new CreationEditPolicy());
 		super.createDefaultEditPolicies();
 		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
 				new bonIDE.diagram.edit.policies.BONClassItemSemanticEditPolicy());
@@ -65,18 +79,15 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 	 */
 	protected LayoutEditPolicy createLayoutEditPolicy() {
 
-		FlowLayoutEditPolicy lep = new FlowLayoutEditPolicy() {
+		ConstrainedToolbarLayoutEditPolicy lep = new ConstrainedToolbarLayoutEditPolicy() {
 
-			protected Command createAddCommand(EditPart child, EditPart after) {
-				return null;
-			}
-
-			protected Command createMoveChildCommand(EditPart child, EditPart after) {
-				return null;
-			}
-
-			protected Command getCreateCommand(CreateRequest request) {
-				return null;
+			protected EditPolicy createChildEditPolicy(EditPart child) {
+				if (child.getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE) == null) {
+					if (child instanceof ITextAwareEditPart) {
+						return new bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy();
+					}
+				}
+				return super.createChildEditPolicy(child);
 			}
 		};
 		return lep;
@@ -106,6 +117,24 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 					.getFigureBONClassNameFigure());
 			return true;
 		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart) {
+			IFigure pane = getPrimaryShape().getFigureIndexRectangleFigure();
+			setupContentPane(pane); // FIXME each comparment should handle his content pane in his own way 
+			pane.add(((bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart) childEditPart).getFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart) {
+			IFigure pane = getPrimaryShape().getFigureInheritanceRectangleFigure();
+			setupContentPane(pane); // FIXME each comparment should handle his content pane in his own way 
+			pane.add(((bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart) childEditPart).getFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart) {
+			IFigure pane = getPrimaryShape().getFigureFeatureRectangleFigure();
+			setupContentPane(pane); // FIXME each comparment should handle his content pane in his own way 
+			pane.add(((bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart) childEditPart).getFigure());
+			return true;
+		}
 		return false;
 	}
 
@@ -114,6 +143,26 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.BONClassNameEditPart) {
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart) {
+			IFigure pane = getPrimaryShape().getFigureIndexRectangleFigure();
+			setupContentPane(pane); // FIXME each comparment should handle his content pane in his own way 
+			pane.remove(((bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart) childEditPart).getFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart) {
+			IFigure pane = getPrimaryShape().getFigureInheritanceRectangleFigure();
+			setupContentPane(pane); // FIXME each comparment should handle his content pane in his own way 
+			pane
+					.remove(((bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart) childEditPart)
+							.getFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart) {
+			IFigure pane = getPrimaryShape().getFigureFeatureRectangleFigure();
+			setupContentPane(pane); // FIXME each comparment should handle his content pane in his own way 
+			pane.remove(((bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart) childEditPart).getFigure());
 			return true;
 		}
 		return false;
@@ -143,6 +192,15 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected IFigure getContentPaneFor(IGraphicalEditPart editPart) {
+		if (editPart instanceof bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart) {
+			return getPrimaryShape().getFigureIndexRectangleFigure();
+		}
+		if (editPart instanceof bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart) {
+			return getPrimaryShape().getFigureInheritanceRectangleFigure();
+		}
+		if (editPart instanceof bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart) {
+			return getPrimaryShape().getFigureFeatureRectangleFigure();
+		}
 		return getContentPane();
 	}
 
@@ -243,6 +301,26 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
+	public EditPart getTargetEditPart(Request request) {
+		if (request instanceof CreateViewAndElementRequest) {
+			CreateElementRequestAdapter adapter = ((CreateViewAndElementRequest) request).getViewAndElementDescriptor()
+					.getCreateElementRequestAdapter();
+			IElementType type = (IElementType) adapter.getAdapter(IElementType.class);
+			if (type == bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003) {
+				return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
+						.getType(bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart.VISUAL_ID));
+			}
+			if (type == bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005) {
+				return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
+						.getType(bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart.VISUAL_ID));
+			}
+		}
+		return super.getTargetEditPart(request);
+	}
+
+	/**
+	 * @generated
+	 */
 	public class BONClassFigure extends RectangleFigure {
 
 		/**
@@ -252,25 +330,28 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 		/**
 		 * @generated
 		 */
-		private WrappingLabel fFigureBONClassIsDeferredFigure;
+		private RectangleFigure fFigureIndexRectangleFigure;
 		/**
 		 * @generated
 		 */
-		private WrappingLabel fFigureBONClassParentsFigure;
+		private RectangleFigure fFigureInheritanceRectangleFigure;
+
+		/**
+		 * @generated
+		 */
+		private RectangleFigure fFigureFeatureRectangleFigure;
 
 		/**
 		 * @generated
 		 */
 		public BONClassFigure() {
 
-			FlowLayout layoutThis = new FlowLayout();
-			layoutThis.setStretchMinorAxis(false);
-			layoutThis.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			ToolbarLayout layoutThis = new ToolbarLayout();
+			layoutThis.setStretchMinorAxis(true);
+			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
 
-			layoutThis.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP);
-			layoutThis.setMajorSpacing(5);
-			layoutThis.setMinorSpacing(5);
-			layoutThis.setHorizontal(true);
+			layoutThis.setSpacing(0);
+			layoutThis.setVertical(true);
 
 			this.setLayoutManager(layoutThis);
 
@@ -286,17 +367,61 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 			fFigureBONClassNameFigure = new WrappingLabel();
 			fFigureBONClassNameFigure.setText("<...>");
 
+			fFigureBONClassNameFigure.setFont(FFIGUREBONCLASSNAMEFIGURE_FONT);
+
 			this.add(fFigureBONClassNameFigure);
 
-			fFigureBONClassIsDeferredFigure = new WrappingLabel();
-			fFigureBONClassIsDeferredFigure.setText("<...>");
+			fFigureIndexRectangleFigure = new RectangleFigure();
+			fFigureIndexRectangleFigure.setLineWidth(1);
+			fFigureIndexRectangleFigure.setForegroundColor(FFIGUREINDEXRECTANGLEFIGURE_FORE);
 
-			this.add(fFigureBONClassIsDeferredFigure);
+			fFigureIndexRectangleFigure.setBorder(new MarginBorder(getMapMode().DPtoLP(0)
+					, getMapMode().DPtoLP(0)
+					, getMapMode().DPtoLP(2)
+					, getMapMode().DPtoLP(0)));
 
-			fFigureBONClassParentsFigure = new WrappingLabel();
-			fFigureBONClassParentsFigure.setText("<...>");
+			this.add(fFigureIndexRectangleFigure);
 
-			this.add(fFigureBONClassParentsFigure);
+			ToolbarLayout layoutFFigureIndexRectangleFigure = new ToolbarLayout();
+			layoutFFigureIndexRectangleFigure.setStretchMinorAxis(true);
+			layoutFFigureIndexRectangleFigure.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
+
+			layoutFFigureIndexRectangleFigure.setSpacing(2);
+			layoutFFigureIndexRectangleFigure.setVertical(true);
+
+			fFigureIndexRectangleFigure.setLayoutManager(layoutFFigureIndexRectangleFigure);
+
+			fFigureInheritanceRectangleFigure = new RectangleFigure();
+			fFigureInheritanceRectangleFigure.setLineWidth(1);
+			fFigureInheritanceRectangleFigure.setForegroundColor(FFIGUREINHERITANCERECTANGLEFIGURE_FORE);
+
+			this.add(fFigureInheritanceRectangleFigure);
+
+			ToolbarLayout layoutFFigureInheritanceRectangleFigure = new ToolbarLayout();
+			layoutFFigureInheritanceRectangleFigure.setStretchMinorAxis(true);
+			layoutFFigureInheritanceRectangleFigure.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
+
+			layoutFFigureInheritanceRectangleFigure.setSpacing(2);
+			layoutFFigureInheritanceRectangleFigure.setVertical(true);
+
+			fFigureInheritanceRectangleFigure.setLayoutManager(layoutFFigureInheritanceRectangleFigure);
+
+			fFigureFeatureRectangleFigure = new RectangleFigure();
+			fFigureFeatureRectangleFigure.setLineWidth(1);
+			fFigureFeatureRectangleFigure.setForegroundColor(FFIGUREFEATURERECTANGLEFIGURE_FORE);
+
+			this.add(fFigureFeatureRectangleFigure);
+
+			FlowLayout layoutFFigureFeatureRectangleFigure = new FlowLayout();
+			layoutFFigureFeatureRectangleFigure.setStretchMinorAxis(false);
+			layoutFFigureFeatureRectangleFigure.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP);
+
+			layoutFFigureFeatureRectangleFigure.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			layoutFFigureFeatureRectangleFigure.setMajorSpacing(5);
+			layoutFFigureFeatureRectangleFigure.setMinorSpacing(5);
+			layoutFFigureFeatureRectangleFigure.setHorizontal(true);
+
+			fFigureFeatureRectangleFigure.setLayoutManager(layoutFFigureFeatureRectangleFigure);
 
 		}
 
@@ -329,17 +454,43 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 		/**
 		 * @generated
 		 */
-		public WrappingLabel getFigureBONClassIsDeferredFigure() {
-			return fFigureBONClassIsDeferredFigure;
+		public RectangleFigure getFigureIndexRectangleFigure() {
+			return fFigureIndexRectangleFigure;
 		}
 
 		/**
 		 * @generated
 		 */
-		public WrappingLabel getFigureBONClassParentsFigure() {
-			return fFigureBONClassParentsFigure;
+		public RectangleFigure getFigureInheritanceRectangleFigure() {
+			return fFigureInheritanceRectangleFigure;
 		}
 
+		/**
+		 * @generated
+		 */
+		public RectangleFigure getFigureFeatureRectangleFigure() {
+			return fFigureFeatureRectangleFigure;
+		}
 	}
+
+	/**
+	 * @generated
+	 */
+	static final Font FFIGUREBONCLASSNAMEFIGURE_FONT = new Font(Display.getCurrent(), "LucidaSans", 9, SWT.NORMAL);
+
+	/**
+	 * @generated
+	 */
+	static final Color FFIGUREINDEXRECTANGLEFIGURE_FORE = new Color(null, 128, 0, 0);
+
+	/**
+	 * @generated
+	 */
+	static final Color FFIGUREINHERITANCERECTANGLEFIGURE_FORE = new Color(null, 0, 128, 0);
+
+	/**
+	 * @generated
+	 */
+	static final Color FFIGUREFEATURERECTANGLEFIGURE_FORE = new Color(null, 192, 0, 0);
 
 }

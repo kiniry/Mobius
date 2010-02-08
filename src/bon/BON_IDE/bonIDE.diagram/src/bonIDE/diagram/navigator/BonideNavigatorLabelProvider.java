@@ -1,5 +1,6 @@
 package bonIDE.diagram.navigator;
 
+import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
@@ -84,6 +85,24 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 		case bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID:
 			return getImage(
 					"Navigator?Node?http://www.ucd.ie/bonIDE?BONClass", bonIDE.diagram.providers.BonideElementTypes.BONClass_3002); //$NON-NLS-1$
+		case bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID:
+			return getImage(
+					"Navigator?Node?http://www.ucd.ie/bonIDE?IndexClause", bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003); //$NON-NLS-1$
+		case bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID:
+			return getImage(
+					"Navigator?Node?http://www.ucd.ie/bonIDE?InheritanceClause", bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005); //$NON-NLS-1$
+		case bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID:
+			return getImage(
+					"Navigator?Node?http://www.ucd.ie/bonIDE?Feature", bonIDE.diagram.providers.BonideElementTypes.Feature_3006); //$NON-NLS-1$
+		case bonIDE.diagram.edit.parts.FeatureArgumentEditPart.VISUAL_ID:
+			return getImage(
+					"Navigator?Node?http://www.ucd.ie/bonIDE?FeatureArgument", bonIDE.diagram.providers.BonideElementTypes.FeatureArgument_3007); //$NON-NLS-1$
+		case bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID:
+			return getImage(
+					"Navigator?Node?http://www.ucd.ie/bonIDE?PreCondition", bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008); //$NON-NLS-1$
+		case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
+			return getImage(
+					"Navigator?Node?http://www.ucd.ie/bonIDE?PostCondition", bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009); //$NON-NLS-1$
 		}
 		return getImage("Navigator?UnknownElement", null); //$NON-NLS-1$
 	}
@@ -145,6 +164,18 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 			return getCluster_3001Text(view);
 		case bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID:
 			return getBONClass_3002Text(view);
+		case bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID:
+			return getIndexClause_3003Text(view);
+		case bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID:
+			return getInheritanceClause_3005Text(view);
+		case bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID:
+			return getFeature_3006Text(view);
+		case bonIDE.diagram.edit.parts.FeatureArgumentEditPart.VISUAL_ID:
+			return getFeatureArgument_3007Text(view);
+		case bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID:
+			return getPreCondition_3008Text(view);
+		case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
+			return getPostCondition_3009Text(view);
 		}
 		return getUnknownElementText(view);
 	}
@@ -224,6 +255,112 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
 					"Parser was not found for label " + 5001); //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @generated
+	 */
+	private String getIndexClause_3003Text(View view) {
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
+				bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003, view.getElement() != null ? view
+						.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+						.getType(bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart.VISUAL_ID));
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view),
+					ParserOptions.NONE.intValue());
+		} else {
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
+					"Parser was not found for label " + 5005); //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @generated
+	 */
+	private String getInheritanceClause_3005Text(View view) {
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
+				bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005, view.getElement() != null ? view
+						.getElement() : view, CommonParserHint.DESCRIPTION);
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view),
+					ParserOptions.NONE.intValue());
+		} else {
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
+					"Parser was not found for label " + 5009); //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @generated
+	 */
+	private String getFeature_3006Text(View view) {
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
+				bonIDE.diagram.providers.BonideElementTypes.Feature_3006, view.getElement() != null ? view.getElement()
+						: view, bonIDE.diagram.part.BonideVisualIDRegistry
+						.getType(bonIDE.diagram.edit.parts.FeatureNamesEditPart.VISUAL_ID));
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view),
+					ParserOptions.NONE.intValue());
+		} else {
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
+					"Parser was not found for label " + 5011); //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @generated
+	 */
+	private String getFeatureArgument_3007Text(View view) {
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
+				bonIDE.diagram.providers.BonideElementTypes.FeatureArgument_3007, view.getElement() != null ? view
+						.getElement() : view, CommonParserHint.DESCRIPTION);
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view),
+					ParserOptions.NONE.intValue());
+		} else {
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
+					"Parser was not found for label " + 5015); //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @generated
+	 */
+	private String getPreCondition_3008Text(View view) {
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
+				bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008, view.getElement() != null ? view
+						.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+						.getType(bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID));
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view),
+					ParserOptions.NONE.intValue());
+		} else {
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
+					"Parser was not found for label " + 3008); //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @generated
+	 */
+	private String getPostCondition_3009Text(View view) {
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
+				bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009, view.getElement() != null ? view
+						.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+						.getType(bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID));
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view),
+					ParserOptions.NONE.intValue());
+		} else {
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
+					"Parser was not found for label " + 3009); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
 		}
 	}

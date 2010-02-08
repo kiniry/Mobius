@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.emf.ui.services.parser.ISemanticParser;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.notation.impl.FontStyleImpl;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.swt.SWT;
@@ -190,11 +191,7 @@ public class BONClassNameEditPart extends CompartmentEditPart implements ITextAw
 	 * @generated
 	 */
 	protected Image getLabelIcon() {
-		EObject parserElement = getParserElement();
-		if (parserElement == null) {
-			return null;
-		}
-		return bonIDE.diagram.providers.BonideElementTypes.getImage(parserElement.eClass());
+		return null;
 	}
 
 	/**
@@ -504,7 +501,7 @@ public class BONClassNameEditPart extends CompartmentEditPart implements ITextAw
 	 * @generated
 	 */
 	private View getFontStyleOwnerView() {
-		return getPrimaryView();
+		return (View) getModel();
 	}
 
 	/**

@@ -123,6 +123,51 @@ public class BonideVisualIDRegistry {
 				return bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID;
 			}
 			break;
+		case bonIDE.diagram.edit.parts.BONClassIndexCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.BonIDEPackage.eINSTANCE.getIndexClause().isSuperTypeOf(domainElement.eClass())) {
+				return bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.BONClassInheritanceCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.BonIDEPackage.eINSTANCE.getInheritanceClause().isSuperTypeOf(domainElement.eClass())) {
+				return bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.BonIDEPackage.eINSTANCE.getFeature().isSuperTypeOf(domainElement.eClass())) {
+				return bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.BonIDEPackage.eINSTANCE.getPostCondition().isSuperTypeOf(domainElement.eClass())) {
+				return bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.FeaturePreConditionCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.BonIDEPackage.eINSTANCE.getPreCondition().isSuperTypeOf(domainElement.eClass())) {
+				return bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.FeatureArgumentCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.BonIDEPackage.eINSTANCE.getFeatureArgument().isSuperTypeOf(domainElement.eClass())) {
+				return bonIDE.diagram.edit.parts.FeatureArgumentEditPart.VISUAL_ID;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart.VISUAL_ID:
+			if (bonIDE.BonIDEPackage.eINSTANCE.getIndexClause().isSuperTypeOf(domainElement.eClass())) {
+				return bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart.VISUAL_ID:
+			if (bonIDE.BonIDEPackage.eINSTANCE.getInheritanceClause().isSuperTypeOf(domainElement.eClass())) {
+				return bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart.VISUAL_ID:
+			if (bonIDE.BonIDEPackage.eINSTANCE.getFeature().isSuperTypeOf(domainElement.eClass())) {
+				return bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID;
+			}
+			break;
 		case bonIDE.diagram.edit.parts.ModelEditPart.VISUAL_ID:
 			if (bonIDE.BonIDEPackage.eINSTANCE.getCluster().isSuperTypeOf(domainElement.eClass())) {
 				return bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID;
@@ -166,6 +211,15 @@ public class BonideVisualIDRegistry {
 			if (bonIDE.diagram.edit.parts.BONClassNameEditPart.VISUAL_ID == nodeVisualID) {
 				return true;
 			}
+			if (bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
 			break;
 		case bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID:
 			if (bonIDE.diagram.edit.parts.ClusterName2EditPart.VISUAL_ID == nodeVisualID) {
@@ -177,6 +231,68 @@ public class BonideVisualIDRegistry {
 			break;
 		case bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID:
 			if (bonIDE.diagram.edit.parts.BONClassName2EditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.BONClassIndexCompartmentEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.BONClassInheritanceCompartmentEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.IndexClauseTermsEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.WrappingLabelEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.FeatureNamesEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.FeatureModifierEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.FeatureTypeEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.FeatureCommentEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.FeaturePreConditionCompartmentEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.FeatureArgumentCompartmentEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.FeatureArgumentEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.WrappingLabel2EditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			if (bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart.VISUAL_ID == nodeVisualID) {
 				return true;
 			}
 			break;
@@ -193,6 +309,51 @@ public class BonideVisualIDRegistry {
 				return true;
 			}
 			if (bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.BONClassIndexCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.BONClassInheritanceCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.FeaturePreConditionCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.FeatureArgumentCompartmentEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.FeatureArgumentEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID == nodeVisualID) {
 				return true;
 			}
 			break;

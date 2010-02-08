@@ -141,28 +141,30 @@ public class ClusterEditPart extends ShapeNodeEditPart {
 		// ClusterFigure.createContents(), but if it's done here, it's one less method
 		// maintain, and we can leave ClusterFigure.createContents() as '@generated' 
 		this.getPrimaryShape().getFigureClusterNameFigure().setAlignment(PositionConstants.CENTER);
-		
+
 		if (this.collapsedStateChanged == false) {
 			super.refreshBounds();
 		} else {
 			this.collapsedStateChanged = false;
 
-			int width = ((Integer) this.getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Width())).intValue();
-			int height = ((Integer) this.getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue();
+			int width = ((Integer) this.getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Width()))
+					.intValue();
+			int height = ((Integer) this.getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height()))
+					.intValue();
 			int x = ((Integer) this.getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_X())).intValue();
 			int y = ((Integer) this.getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
 			boolean isClusterCollapsed = ((Cluster) (this.getNotationView().getElement())).isCollapsed();
 
 			if (isClusterCollapsed == false) {
 				// expanding
-				height  = ((Cluster) (this.getNotationView().getElement())).getExpandedHeight();				
+				height = ((Cluster) (this.getNotationView().getElement())).getExpandedHeight();
 			} else {
 				// collapsing, need to remember the current (expanded) height
 				setExpandedHeight(height);
 				height = 28;
 			}
 
-			Dimension size = new Dimension(width, height);	
+			Dimension size = new Dimension(width, height);
 			Point location = new Point(x, y);
 
 			SetBoundsCommand boundsCommand = new SetBoundsCommand(
@@ -171,7 +173,7 @@ public class ClusterEditPart extends ShapeNodeEditPart {
 					new EObjectAdapter((View) this.getModel()),
 					new Rectangle(location, size));
 
-			this.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(boundsCommand));				
+			this.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(boundsCommand));
 			this.getPrimaryDragEditPolicy();
 		}
 	}

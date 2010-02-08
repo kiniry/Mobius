@@ -33,6 +33,25 @@ public class BonideModelingAssistantProvider extends ModelingAssistantProvider {
 		IGraphicalEditPart editPart =
 				(IGraphicalEditPart) host.getAdapter(
 				IGraphicalEditPart.class);
+		if (editPart instanceof bonIDE.diagram.edit.parts.BONClassEditPart) {
+			ArrayList types = new ArrayList(2);
+			types.add(bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003);
+			types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005);
+			return types;
+		}
+		if (editPart instanceof bonIDE.diagram.edit.parts.BONClass2EditPart) {
+			ArrayList types = new ArrayList(2);
+			types.add(bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003);
+			types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005);
+			return types;
+		}
+		if (editPart instanceof bonIDE.diagram.edit.parts.FeatureEditPart) {
+			ArrayList types = new ArrayList(3);
+			types.add(bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009);
+			types.add(bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008);
+			types.add(bonIDE.diagram.providers.BonideElementTypes.FeatureArgument_3007);
+			return types;
+		}
 		if (editPart instanceof bonIDE.diagram.edit.parts.ClusterClusterCompartmentEditPart) {
 			ArrayList types = new ArrayList(2);
 			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_3001);
@@ -43,6 +62,16 @@ public class BonideModelingAssistantProvider extends ModelingAssistantProvider {
 			ArrayList types = new ArrayList(2);
 			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_3001);
 			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002);
+			return types;
+		}
+		if (editPart instanceof bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart) {
+			ArrayList types = new ArrayList(1);
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Feature_3006);
+			return types;
+		}
+		if (editPart instanceof bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart) {
+			ArrayList types = new ArrayList(1);
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Feature_3006);
 			return types;
 		}
 		if (editPart instanceof bonIDE.diagram.edit.parts.ModelEditPart) {

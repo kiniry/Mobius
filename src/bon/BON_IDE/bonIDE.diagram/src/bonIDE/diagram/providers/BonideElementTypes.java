@@ -66,6 +66,36 @@ public class BonideElementTypes extends ElementInitializers {
 	/**
 	 * @generated
 	 */
+	public static final IElementType IndexClause_3003 = getElementType("bonIDE.diagram.IndexClause_3003"); //$NON-NLS-1$
+
+	/**
+	 * @generated
+	 */
+	public static final IElementType InheritanceClause_3005 = getElementType("bonIDE.diagram.InheritanceClause_3005"); //$NON-NLS-1$
+
+	/**
+	 * @generated
+	 */
+	public static final IElementType Feature_3006 = getElementType("bonIDE.diagram.Feature_3006"); //$NON-NLS-1$
+
+	/**
+	 * @generated
+	 */
+	public static final IElementType FeatureArgument_3007 = getElementType("bonIDE.diagram.FeatureArgument_3007"); //$NON-NLS-1$
+
+	/**
+	 * @generated
+	 */
+	public static final IElementType PreCondition_3008 = getElementType("bonIDE.diagram.PreCondition_3008"); //$NON-NLS-1$
+
+	/**
+	 * @generated
+	 */
+	public static final IElementType PostCondition_3009 = getElementType("bonIDE.diagram.PostCondition_3009"); //$NON-NLS-1$
+
+	/**
+	 * @generated
+	 */
 	private static ImageRegistry getImageRegistry() {
 		if (imageRegistry == null) {
 			imageRegistry = new ImageRegistry();
@@ -179,6 +209,18 @@ public class BonideElementTypes extends ElementInitializers {
 			elements.put(Cluster_3001, bonIDE.BonIDEPackage.eINSTANCE.getCluster());
 
 			elements.put(BONClass_3002, bonIDE.BonIDEPackage.eINSTANCE.getBONClass());
+
+			elements.put(IndexClause_3003, bonIDE.BonIDEPackage.eINSTANCE.getIndexClause());
+
+			elements.put(InheritanceClause_3005, bonIDE.BonIDEPackage.eINSTANCE.getInheritanceClause());
+
+			elements.put(Feature_3006, bonIDE.BonIDEPackage.eINSTANCE.getFeature());
+
+			elements.put(FeatureArgument_3007, bonIDE.BonIDEPackage.eINSTANCE.getFeatureArgument());
+
+			elements.put(PreCondition_3008, bonIDE.BonIDEPackage.eINSTANCE.getPreCondition());
+
+			elements.put(PostCondition_3009, bonIDE.BonIDEPackage.eINSTANCE.getPostCondition());
 		}
 		return (ENamedElement) elements.get(type);
 	}
@@ -201,6 +243,12 @@ public class BonideElementTypes extends ElementInitializers {
 			KNOWN_ELEMENT_TYPES.add(BONClass_2002);
 			KNOWN_ELEMENT_TYPES.add(Cluster_3001);
 			KNOWN_ELEMENT_TYPES.add(BONClass_3002);
+			KNOWN_ELEMENT_TYPES.add(IndexClause_3003);
+			KNOWN_ELEMENT_TYPES.add(InheritanceClause_3005);
+			KNOWN_ELEMENT_TYPES.add(Feature_3006);
+			KNOWN_ELEMENT_TYPES.add(FeatureArgument_3007);
+			KNOWN_ELEMENT_TYPES.add(PreCondition_3008);
+			KNOWN_ELEMENT_TYPES.add(PostCondition_3009);
 		}
 		return KNOWN_ELEMENT_TYPES.contains(elementType);
 	}
@@ -220,6 +268,18 @@ public class BonideElementTypes extends ElementInitializers {
 			return Cluster_3001;
 		case bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID:
 			return BONClass_3002;
+		case bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID:
+			return IndexClause_3003;
+		case bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID:
+			return InheritanceClause_3005;
+		case bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID:
+			return Feature_3006;
+		case bonIDE.diagram.edit.parts.FeatureArgumentEditPart.VISUAL_ID:
+			return FeatureArgument_3007;
+		case bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID:
+			return PreCondition_3008;
+		case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
+			return PostCondition_3009;
 		}
 		return null;
 	}

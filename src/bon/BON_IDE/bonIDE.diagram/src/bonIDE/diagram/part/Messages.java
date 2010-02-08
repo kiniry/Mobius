@@ -278,12 +278,97 @@ public class Messages extends NLS {
 	/**
 	 * @generated
 	 */
+	public static String Index4CreationTool_title;
+
+	/**
+	 * @generated
+	 */
+	public static String Index4CreationTool_desc;
+
+	/**
+	 * @generated
+	 */
+	public static String Inheritance5CreationTool_title;
+
+	/**
+	 * @generated
+	 */
+	public static String Inheritance5CreationTool_desc;
+
+	/**
+	 * @generated
+	 */
+	public static String Argument6CreationTool_title;
+
+	/**
+	 * @generated
+	 */
+	public static String Argument6CreationTool_desc;
+
+	/**
+	 * @generated
+	 */
+	public static String PreCondition7CreationTool_title;
+
+	/**
+	 * @generated
+	 */
+	public static String PostCondition8CreationTool_title;
+
+	/**
+	 * @generated
+	 */
 	public static String ClusterClusterCompartmentEditPart_title;
 
 	/**
 	 * @generated
 	 */
 	public static String ClusterClusterCompartment2EditPart_title;
+
+	/**
+	 * @generated
+	 */
+	public static String BONClassIndexCompartmentEditPart_title;
+
+	/**
+	 * @generated
+	 */
+	public static String BONClassInheritanceCompartmentEditPart_title;
+
+	/**
+	 * @generated
+	 */
+	public static String BONClassFeatureCompartmentEditPart_title;
+
+	/**
+	 * @generated
+	 */
+	public static String FeaturePostConditionCompartmentEditPart_title;
+
+	/**
+	 * @generated
+	 */
+	public static String FeatureArgumentCompartmentEditPart_title;
+
+	/**
+	 * @generated
+	 */
+	public static String FeaturePreConditionCompartmentEditPart_title;
+
+	/**
+	 * @generated
+	 */
+	public static String BONClassIndexCompartment2EditPart_title;
+
+	/**
+	 * @generated
+	 */
+	public static String BONClassInheritanceCompartment2EditPart_title;
+
+	/**
+	 * @generated
+	 */
+	public static String BONClassFeatureCompartment2EditPart_title;
 
 	/**
 	 * @generated

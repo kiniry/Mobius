@@ -32,6 +32,11 @@ public class BonidePaletteFactory {
 		paletteContainer.add(createCluster1CreationTool());
 		paletteContainer.add(createBONClass2CreationTool());
 		paletteContainer.add(createFeature3CreationTool());
+		paletteContainer.add(createIndex4CreationTool());
+		paletteContainer.add(createInheritance5CreationTool());
+		paletteContainer.add(createArgument6CreationTool());
+		paletteContainer.add(createPreCondition7CreationTool());
+		paletteContainer.add(createPostCondition8CreationTool());
 		return paletteContainer;
 	}
 
@@ -71,10 +76,89 @@ public class BonidePaletteFactory {
 	 * @generated
 	 */
 	private ToolEntry createFeature3CreationTool() {
-		ToolEntry entry = new ToolEntry(bonIDE.diagram.part.Messages.Feature3CreationTool_title,
-				bonIDE.diagram.part.Messages.Feature3CreationTool_desc, null, null) {
-		};
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.Feature_3006);
+		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.Feature3CreationTool_title,
+				bonIDE.diagram.part.Messages.Feature3CreationTool_desc, types);
 		entry.setId("createFeature3CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.Feature_3006));
+		entry.setLargeIcon(entry.getSmallIcon());
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
+	private ToolEntry createIndex4CreationTool() {
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003);
+		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.Index4CreationTool_title,
+				bonIDE.diagram.part.Messages.Index4CreationTool_desc, types);
+		entry.setId("createIndex4CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003));
+		entry.setLargeIcon(entry.getSmallIcon());
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
+	private ToolEntry createInheritance5CreationTool() {
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005);
+		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.Inheritance5CreationTool_title,
+				bonIDE.diagram.part.Messages.Inheritance5CreationTool_desc, types);
+		entry.setId("createInheritance5CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005));
+		entry.setLargeIcon(entry.getSmallIcon());
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
+	private ToolEntry createArgument6CreationTool() {
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.FeatureArgument_3007);
+		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.Argument6CreationTool_title,
+				bonIDE.diagram.part.Messages.Argument6CreationTool_desc, types);
+		entry.setId("createArgument6CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.FeatureArgument_3007));
+		entry.setLargeIcon(entry.getSmallIcon());
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
+	private ToolEntry createPreCondition7CreationTool() {
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008);
+		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.PreCondition7CreationTool_title, null,
+				types);
+		entry.setId("createPreCondition7CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008));
+		entry.setLargeIcon(entry.getSmallIcon());
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
+	private ToolEntry createPostCondition8CreationTool() {
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009);
+		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.PostCondition8CreationTool_title, null,
+				types);
+		entry.setId("createPostCondition8CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009));
+		entry.setLargeIcon(entry.getSmallIcon());
 		return entry;
 	}
 

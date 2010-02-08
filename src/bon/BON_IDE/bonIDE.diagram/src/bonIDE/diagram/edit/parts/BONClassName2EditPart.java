@@ -190,11 +190,7 @@ public class BONClassName2EditPart extends CompartmentEditPart implements ITextA
 	 * @generated
 	 */
 	protected Image getLabelIcon() {
-		EObject parserElement = getParserElement();
-		if (parserElement == null) {
-			return null;
-		}
-		return bonIDE.diagram.providers.BonideElementTypes.getImage(parserElement.eClass());
+		return null;
 	}
 
 	/**
@@ -504,7 +500,7 @@ public class BONClassName2EditPart extends CompartmentEditPart implements ITextA
 	 * @generated
 	 */
 	private View getFontStyleOwnerView() {
-		return getPrimaryView();
+		return (View) getModel();
 	}
 
 	/**

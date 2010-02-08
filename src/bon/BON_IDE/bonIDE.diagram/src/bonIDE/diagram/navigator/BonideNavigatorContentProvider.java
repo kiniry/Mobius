@@ -222,6 +222,27 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 			return result.toArray();
 		}
 
+		case bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID: {
+			Collection result = new ArrayList();
+			Collection connectedViews = getChildrenByType(Collections.singleton(view),
+					bonIDE.diagram.part.BonideVisualIDRegistry
+							.getType(bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart.VISUAL_ID));
+			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart.VISUAL_ID));
+			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart.VISUAL_ID));
+			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			return result.toArray();
+		}
+
 		case bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID: {
 			Collection result = new ArrayList();
 			Collection connectedViews = getChildrenByType(Collections.singleton(view),
@@ -234,6 +255,48 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 					.getType(bonIDE.diagram.edit.parts.ClusterClusterCompartment2EditPart.VISUAL_ID));
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			return result.toArray();
+		}
+
+		case bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID: {
+			Collection result = new ArrayList();
+			Collection connectedViews = getChildrenByType(Collections.singleton(view),
+					bonIDE.diagram.part.BonideVisualIDRegistry
+							.getType(bonIDE.diagram.edit.parts.BONClassIndexCompartmentEditPart.VISUAL_ID));
+			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassInheritanceCompartmentEditPart.VISUAL_ID));
+			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID));
+			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			return result.toArray();
+		}
+
+		case bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID: {
+			Collection result = new ArrayList();
+			Collection connectedViews = getChildrenByType(Collections.singleton(view),
+					bonIDE.diagram.part.BonideVisualIDRegistry
+							.getType(bonIDE.diagram.edit.parts.FeatureArgumentCompartmentEditPart.VISUAL_ID));
+			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.FeatureArgumentEditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.FeaturePreConditionCompartmentEditPart.VISUAL_ID));
+			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart.VISUAL_ID));
+			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
 			return result.toArray();
 		}

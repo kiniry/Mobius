@@ -213,7 +213,7 @@
       <viewProvider class="bonIDE.diagram.providers.BonideViewProvider">
          <Priority name="Lowest"/>
          <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="Bonide"/>
-         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints="2001,2002,3001,3002"/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints="2001,2002,3001,3002,3003,3005,3006,3007,3008,3009"/>
          <context viewClass="org.eclipse.gmf.runtime.notation.Edge" semanticHints=""/>
       </viewProvider>
    </extension>
@@ -226,16 +226,16 @@
             <method name="getType()" value="Bonide"/>
          </object>
          <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-nodes">
-            <method name="getType()" value="2001,2002,3001,3002"/>
+            <method name="getType()" value="2001,2002,3001,3002,3003,3005,3006,3007,3008,3009"/>
          </object>
          <object class="org.eclipse.gmf.runtime.notation.Edge" id="generated-links">
             <method name="getType()" value=""/>
          </object>
          <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-labels">
-            <method name="getType()" value="5003,5004,5002,5001"/>
+            <method name="getType()" value="5003,5004,5002,5001,5005,5006,5009,5010,5011,5012,5013,5014,5015,5016,5017,5018"/>
          </object>
          <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-compartments">
-            <method name="getType()" value="7001,7002"/>
+            <method name="getType()" value="7001,7002,7003,7005,7007,7009,7010,7011,7004,7006,7008"/>
          </object>
          <context views="generated-diagram,generated-nodes,generated-links,generated-labels,generated-compartments"/>
       </editpartProvider>
@@ -316,6 +316,66 @@
             <param name="semanticHint" value="3002"/>
          </metamodelType>
       </metamodel>
+      <metamodel nsURI="http://www.ucd.ie/bonIDE">
+         <metamodelType
+               id="bonIDE.diagram.IndexClause_3003"
+               name="%metatype.name.IndexClause_3003"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="IndexClause"
+               edithelper="bonIDE.diagram.edit.helpers.IndexClauseEditHelper">
+            <param name="semanticHint" value="3003"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.ucd.ie/bonIDE">
+         <metamodelType
+               id="bonIDE.diagram.InheritanceClause_3005"
+               name="%metatype.name.InheritanceClause_3005"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="InheritanceClause"
+               edithelper="bonIDE.diagram.edit.helpers.InheritanceClauseEditHelper">
+            <param name="semanticHint" value="3005"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.ucd.ie/bonIDE">
+         <metamodelType
+               id="bonIDE.diagram.Feature_3006"
+               name="%metatype.name.Feature_3006"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Feature"
+               edithelper="bonIDE.diagram.edit.helpers.FeatureEditHelper">
+            <param name="semanticHint" value="3006"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.ucd.ie/bonIDE">
+         <metamodelType
+               id="bonIDE.diagram.FeatureArgument_3007"
+               name="%metatype.name.FeatureArgument_3007"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="FeatureArgument"
+               edithelper="bonIDE.diagram.edit.helpers.FeatureArgumentEditHelper">
+            <param name="semanticHint" value="3007"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.ucd.ie/bonIDE">
+         <metamodelType
+               id="bonIDE.diagram.PreCondition_3008"
+               name="%metatype.name.PreCondition_3008"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="PreCondition"
+               edithelper="bonIDE.diagram.edit.helpers.PreConditionEditHelper">
+            <param name="semanticHint" value="3008"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.ucd.ie/bonIDE">
+         <metamodelType
+               id="bonIDE.diagram.PostCondition_3009"
+               name="%metatype.name.PostCondition_3009"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="PostCondition"
+               edithelper="bonIDE.diagram.edit.helpers.PostConditionEditHelper">
+            <param name="semanticHint" value="3009"/>
+         </metamodelType>
+      </metamodel>
    </extension>
 
    <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings" id="element-types-bindings">
@@ -333,6 +393,12 @@
          <elementType ref="bonIDE.diagram.BONClass_2002"/>
          <elementType ref="bonIDE.diagram.Cluster_3001"/>
          <elementType ref="bonIDE.diagram.BONClass_3002"/>
+         <elementType ref="bonIDE.diagram.IndexClause_3003"/>
+         <elementType ref="bonIDE.diagram.InheritanceClause_3005"/>
+         <elementType ref="bonIDE.diagram.Feature_3006"/>
+         <elementType ref="bonIDE.diagram.FeatureArgument_3007"/>
+         <elementType ref="bonIDE.diagram.PreCondition_3008"/>
+         <elementType ref="bonIDE.diagram.PostCondition_3009"/>
          <advice ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
       </binding>
    </extension>
@@ -499,6 +565,30 @@
 
    <extension point="org.eclipse.ui.handlers" id="menu-handlers">
       <?gmfgen generated="true"?>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="bonIDE.diagram.actionSet"
+            label="Sample Action Set"
+            visible="true">
+         <menu
+               id="sampleMenu"
+               label="Sample &amp;Menu">
+            <separator
+                  name="sampleGroup">
+            </separator>
+         </menu>
+         <action
+               class="bonIDE.diagram.custom.StaticDiagramAction"
+               icon="icons/sample.gif"
+               id="bonIDE.diagram.custom.StaticDiagramAction"
+               label="&amp;Sample Action"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Hello, Eclipse world">
+         </action>
+      </actionSet>
    </extension>
 
    <!-- optionally, specify keybindings -->
