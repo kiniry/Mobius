@@ -1,4 +1,4 @@
-package funnyBuggy;
+package funny;
 
 /**
  * Here:
@@ -9,9 +9,9 @@ package funnyBuggy;
  *
  */
 
-abstract class SmallBuggyClass {
+abstract class SmallClass {
 
-  public void hide(double howLong) {}
+  abstract public void hide(double howLong);
   
   abstract public void vanish();
   

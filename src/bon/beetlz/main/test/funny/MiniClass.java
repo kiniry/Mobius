@@ -1,4 +1,4 @@
-package funnyBuggy;
+package funny;
 
 /**
  * Here:
@@ -9,16 +9,16 @@ package funnyBuggy;
  * @author evka
  *
  */
-public final class MiniBuggyClass extends SmallBuggyClass implements ScalableBuggy, Comparable<SmallBuggyClass> {
+public final class MiniClass extends SmallClass implements Scalable, Comparable<SmallClass> {
 
   public static void main(final String[] some_args) { }
   
   
   @Override
-  public /*@ pure @*/ int compareTo(SmallBuggyClass arg0) { return 0;}
+  public /*@ pure @*/ int compareTo(SmallClass arg0) { return 0;}
 
   @Override
-  public boolean makeBig(int value) { return false;}
+  public void makeBig(int value) { }
 
   @Override
   public void makeSmall(int value) { }
@@ -29,4 +29,5 @@ public final class MiniBuggyClass extends SmallBuggyClass implements ScalableBug
   @Override
   public void vanish() { }
 
+  public void hello(List<? extends String> list) {}
 }

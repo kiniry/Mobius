@@ -15,7 +15,7 @@ component
 cluster FUNNY_CLUSTER
 component
 
-	effective class BIG_BUGGY_CLASS
+	effective class HUGE_CLASS
 	indexing
       about:        "A big class.";
       author:       "Evka";
@@ -27,15 +27,19 @@ component
 	 make2
 	   -> n: STRING
 	   -> m: MOOD
+	 mappingTwo
+	 mappingFour
 	end
 	
-	BIG_BUGGY_CLASS client :{ DUE
-	--BIG_BUGGY_CLASS client :{ MOOD
-    BIG_BUGGY_CLASS client :{ TRE
-    BIG_BUGGY_CLASS client :{ UNO
+	class TO_BE_IGNORED
+	
+	HUGE_CLASS client :{ DUE
+	HUGE_CLASS client :{ MOOD
+    HUGE_CLASS client :{ TRE
+    HUGE_CLASS client :{ UNO
     MOOD client :(1) MOOD -- since MOOD's fields are final
 	
-	deferred class SMALL_BUGGY_CLASS
+	deferred class SMALL_CLASS
 	feature
 	 deferred hide
 	   -> v: VALUE
@@ -45,9 +49,9 @@ component
 	   -> dy: VALUE
 	end
 	
-	root class MINI_BUGGY_CLASS
+	root class MINI_CLASS
 	inherit
-	 SMALL_BUGGY_CLASS; SMALL_BUGGY_CLASS; SCALABLE_BUGGY
+	 SMALL_CLASS; SCALABLE
 	feature
 	 redefined makeBig
 	   -> i: INTEGER
@@ -57,14 +61,15 @@ component
 	   -> i: VALUE
 	 redefined vanish
 	 redefined compareTo: VALUE
-	   -> arg: SMALL_BUGGY_CLASS
+	   -> arg: SMALL_CLASS
+	 hello
+	   -> list: SEQUENCE[STRING]
 	end
 	
-	deferred class SCALABLE_BUGGY
+	deferred class SCALABLE
 	feature
 	 deferred makeBig
      -> i: INTEGER
-    feature{SCALABLE_BUGGY}
      deferred makeSmall
      -> i: INTEGER
 	end
@@ -96,27 +101,13 @@ component
   
   class TRE[T -> SEQUENCE[STRING]]
 
-
-  class YELLOW_BUGGY_CLASS
-    feature
-        make
-        find: BOOLEAN
-        -> s: STRING        
-  end
-  
-  class DUMMY
-  
-  class MISSING_CLASS
-  
 end
 
 
   
 cluster CRAZY_CLUSTER
 component 
-
-   
-  class BLUE_BUGGY_CLASS
+  class BLUE_CLASS
   feature
     funny
       -> i: INTEGER
@@ -145,25 +136,23 @@ component
   
   
   
-  class RED_BUGGY_CLASS
+  class RED_CLASS
   feature
     currentMood: MOOD
     name: STRING
     talk
   feature{CRAZY_CLUSTER}
     number: VALUE
-  feature{RED_BUGGY_CLASS}
+  feature{RED_CLASS}
     secondName: STRING
     colourMe
   feature{NONE}
     sleep
-  invariant
-    name /= "dummy";
   end
   
   
   
-  class BLACK_BUGGY_CLASS
+  class BLACK_CLASS
   feature
     nice: BOOLEAN
     counter: INTEGER
@@ -211,7 +200,7 @@ component
         delta {colours, counter, currentColour};
       end
       
-    three: YELLOW_BUGGY_CLASS
+    three: YELLOW_CLASS
       -> eins: BOOLEAN
       -> zwei: BOOLEAN 
       -> drei: BOOLEAN
@@ -231,18 +220,21 @@ component
       -> duo: REAL
       -> tre: REAL
       require
-        -- uno // duo = 0; not supported
+       -- uno // duo = 0 (not recognized)
         +uno > 0;
       end
        
     invariant
       counter <= maxcount;
-      counter < 50 -> nice;
-      counter = maxcount <-> nice;   
+      counter < 50 -> nice;   
     end
     
     
-    
+    class YELLOW_CLASS
+    feature
+        find: BOOLEAN
+        -> s: STRING        
+    end
 end
 end
 

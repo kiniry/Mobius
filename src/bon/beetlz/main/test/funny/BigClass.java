@@ -1,4 +1,4 @@
-package funnyBuggy;
+package funny;
 
 import java.util.Vector;
 
@@ -11,19 +11,22 @@ import java.util.Vector;
  * @author evka
  *
  */
-public class BigBuggyClass {
+public class BigClass {
   
   public enum Mood { HAPPY, SAD, DUNNO }
  
   
-  public BigBuggyClass(String n){}
-  public BigBuggyClass(Mood m, String n) {}
+  public BigClass(String n){}
+  public BigClass(Mood m, String n) {}
   
   
-  public class Uno<T, R>{}
+  public class Uno<T>{}
   
-  private class Due<S, T>{}
+  public class Due<S, T>{}
   
   public class Tre<T extends Vector<String>>{}
   
+  public void mappingOne() {}
+  
+  public void mappingThree() {}
 }

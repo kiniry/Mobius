@@ -1,0 +1,9 @@
+-- Custom file for testing the custom file feature;
+feature_mapping mappingTwo@HUGE_CLASS mappingOne@funny.BigClass;
+feature_mapping mappingFour@HUGE_CLASS mappingThree@funny.BigClass;
+
+class_mapping HUGE_CLASS funny.BigClass;
+
+ignore_prefix my_ _;
+
+ignore_classes {TO_BE_IGNORED} {};
