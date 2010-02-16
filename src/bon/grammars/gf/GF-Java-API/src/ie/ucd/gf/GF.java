@@ -22,10 +22,12 @@ public class GF {
       
       BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
       while (proc.isAlive()) {
+        System.out.print(GFProcess.PROMPT);
         String line = reader.readLine();
         String response = proc.enterCommand(line);
         System.out.print(response);
-      }      
+      }
+      System.out.println("Proc is dead.");
     }
   }
   
