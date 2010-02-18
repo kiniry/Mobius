@@ -19,13 +19,6 @@ public class TypeSmartString extends SmartString {
   }
 
   /**
-   * Creates a new empty ClassSmartString.
-   */
-  public TypeSmartString() {
-    super();
-  }
-
-  /**
    * Removes all reduntant information from the string so that only the
    * information necessary for identification is left.
    * @see utils.smart.SmartString#trimSmartString()
@@ -95,16 +88,6 @@ public class TypeSmartString extends SmartString {
       return true;
     }
     return false;
-  }
-
-  /**
-   * Make copy.
-   * @see utils.smart.SmartString#makeCopy()
-   * @return copy
-   */
-  @Override
-  public SmartString makeCopy() {
-    return new TypeSmartString(my_string);
   }
 
   /**

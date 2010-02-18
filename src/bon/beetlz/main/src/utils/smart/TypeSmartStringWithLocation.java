@@ -6,11 +6,6 @@ public class TypeSmartStringWithLocation extends TypeSmartString {
 
   private final BeetlzSourceLocation my_loc;
   
-  public TypeSmartStringWithLocation(BeetlzSourceLocation a_loc) {
-    super();
-    this.my_loc = a_loc;
-  }
-
   public TypeSmartStringWithLocation(String aName, BeetlzSourceLocation a_loc) {
     super(aName);
     this.my_loc = a_loc;

@@ -30,11 +30,4 @@ public enum FeatureType {
     this.my_type = a_type;
   }
 
-  /**
-   * Returns the value of the enum type.
-   * @return string representation of enum type
-   */
-  public String getName() {
-    return my_type;
-  }
 }

@@ -13,8 +13,10 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeKind;
 
 import log.CCLevel;
 import log.CCLogRecord;
@@ -44,6 +46,7 @@ import org.jmlspecs.openjml.JmlTree;
 import org.jmlspecs.openjml.JmlSpecs.FieldSpecs;
 import org.jmlspecs.openjml.JmlSpecs.MethodSpecs;
 import org.jmlspecs.openjml.JmlSpecs.TypeSpecs;
+import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 import org.jmlspecs.openjml.JmlTree.JmlTypeClauseDecl;
 
 import structure.ClassStructure;
@@ -70,9 +73,12 @@ import utils.smart.WildcardSmartString.WildcardType;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTags;
 import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ErrorType;
@@ -86,6 +92,9 @@ import com.sun.tools.javac.tree.JCTree;
  * @version beta-1
  */
 public final class JmlParser {
+  
+  /** Our Logger for this session.  */ 
+  private static final Logger LOGGER = Logger.getLogger(BConst.LOGGER_NAME);
   
   private static SmartString my_return_value = new SmartString();
 
@@ -102,7 +111,7 @@ public final class JmlParser {
    * @param a_cu compilation unit, needed for source locations
    * @return parsed class
    */
-  public static ClassStructure parseClass(final JCTree.JCClassDecl a_cls,
+  public static ClassStructure parseClass(final JmlClassDecl a_cls,
                                           final TypeSpecs the_specs,
                                           final ClassSymbol a_sym,
                                           final String a_flat_name,
@@ -114,8 +123,9 @@ public final class JmlParser {
     final List < SmartString > generics    = new Vector < SmartString > ();
     final SortedSet < SmartString > interfaces  = new TreeSet < SmartString > ();
     final List < SmartString > pack = new Vector < SmartString > ();
+    
     //Class name
-    final TypeSmartString name = new TypeSmartString(a_flat_name);
+    final TypeSmartString name = new TypeSmartString(a_sym.className());
 
     //Package
     if (a_sym.packge() != null) {
@@ -124,98 +134,93 @@ public final class JmlParser {
         pack.add(new SmartString(s));
       }
     }
-    //Enum?
-    if ((a_cls.mods.flags & ENUM) != 0) { //we have enum
+    
+    //Enum
+    if ((a_sym.flags() & ENUM) != 0) { //enum
       mod.add(ClassModifier.ENUM);
     }
-    //Interface?
-    if ((a_cls.mods.flags & INTERFACE) != 0) {
+    
+    //Interface
+    if ((a_sym.flags() & INTERFACE) != 0) {
       mod.add(ClassModifier.ABSTRACT);
       mod.add(ClassModifier.JAVA_INTERFACE);
     }
 
     //Modifier
-    for (final Modifier m : a_cls.getModifiers().getFlags()) {
-      if (m == Modifier.ABSTRACT) {
-        mod.add(ClassModifier.ABSTRACT);
-      } else if (m == Modifier.FINAL) {
-        mod.add(ClassModifier.FINAL);
-      } else if (m == Modifier.PRIVATE) {
-        //TODO: test this
-        vis = new Visibility(VisibilityModifier.PRIVATE);
-      } else if (m == Modifier.PROTECTED) {
-      //TODO: test this
-        vis = new Visibility(VisibilityModifier.PROTECTED);
-      } else if (m == Modifier.PUBLIC) {
-        vis = new Visibility(VisibilityModifier.PUBLIC);
-      } else if (m == Modifier.STATIC) {
-      //TODO: test this
-        mod.add(ClassModifier.STATIC);
-      } else if (m == Modifier.STRICTFP) {
-      //TODO: test this
-        mod.add(ClassModifier.STRICTFP);
+    for (final Modifier m : a_sym.getModifiers()) {
+      switch (m) {
+        case ABSTRACT:  mod.add(ClassModifier.ABSTRACT); break;
+        case FINAL:     mod.add(ClassModifier.FINAL); break;
+        case PRIVATE:   vis = new Visibility(VisibilityModifier.PRIVATE); break; //TODO: test this
+        case PROTECTED: vis = new Visibility(VisibilityModifier.PROTECTED); break;
+        case PUBLIC:    vis = new Visibility(VisibilityModifier.PUBLIC); break;
+        case STATIC:    mod.add(ClassModifier.STATIC); break; //TODO: test this
+        case STRICTFP:  mod.add(ClassModifier.STRICTFP); break; //TODO: test this
+        default: break;
       }
     }
+    
     //Generics
-    if (a_cls.getTypeParameters().size() > 0) {
+    if (a_sym.getTypeParameters().size() > 0) {
       mod.add(ClassModifier.GENERIC);
-
-      final List < JCTree.JCTypeParameter > g = a_cls.getTypeParameters();
-      for (final JCTree.JCTypeParameter f : g) {
+      final List < Symbol.TypeSymbol > g = a_sym.getTypeParameters();
+      for (final Symbol.TypeSymbol f : g) {
         if (f.getBounds().size() > 0) {
           final List < SmartString > list = new Vector < SmartString > ();
-          for (final JCTree.JCExpression e : f.getBounds()) {
-            list.add(getType(e));
+          for (final Type e : f.getBounds()) {
+            if (! e.toString().equals("java.lang.Object")) //implicit
+              list.add(getType(e));
           }
-          generics.add(new GenericParameter(f.toString(), f.getName().toString(), list));
+          generics.add(new GenericParameter(f.toString(), f.getSimpleName().toString(), list));
         } else {
-          generics.add(new GenericParameter(f.toString(),
-                                            f.getName().toString(),
+          generics.add(new GenericParameter(f.toString(), f.getSimpleName().toString(),
                                             new Vector < SmartString > ()));
         }
       }
     }
 
     //Inheritance
-    if (a_cls.getExtendsClause() != null) {
-      if (a_cls.getExtendsClause().getKind() == Tree.Kind.IDENTIFIER ||
-        //TODO: test this
-          a_cls.getExtendsClause().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {
-        interfaces.add(getType((JCTree.JCExpression)a_cls.getExtendsClause()));
-      }
+    Type superClass = a_sym.getSuperclass();
+    if (superClass != null && superClass.getKind() == TypeKind.DECLARED &&
+        !superClass.toString().equals("java.lang.Object")) {
+        interfaces.add(getType(superClass));
     }
 
     //Interfaces
-    if (a_cls.getImplementsClause().length() > 0) {
-      for (final JCTree.JCExpression i : a_cls.getImplementsClause()) {
+    if (a_sym.getInterfaces().length() > 0) {
+      for (final Type i : a_sym.getInterfaces()) {
         interfaces.add(getType(i));
       }
     }
 
     //SourceLocation
-    //TODO use exact position of identifier, but how to do this?
+    //TODO can we do this somehow differently?!
     final File fileName = new File(a_cu.sourcefile.toUri().getPath());
-    //final int startPos = a_cls.getStartPosition();
     int startPos = a_cls.pos().getStartPosition() + a_cls.mods.toString().length();
-    if (!a_cls.mods.toString().contains("interface")) {
-      startPos += 6;
-    }
-    //final int endPos = a_cls.getEndPosition(a_cu.endPositions);
+    if (!a_cls.mods.toString().contains("interface")) startPos += 6;
     final int endPos = startPos + a_cls.name.toString().length();
     final int lineNum = a_cu.getLineMap().getLineNumber(startPos);
     final int posInLine = a_cu.getLineMap().getColumnNumber(startPos);
-    
     final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, posInLine, startPos, endPos, lineNum, true);
+    
     //Create class
-    final ClassStructure parsedClass = new ClassStructure(ClassType.JAVA, mod,
-                                                          vis, generics, name,
-                                                          interfaces,
-                                                          pack, src);
-    if (the_encl_class != null) {
-      the_encl_class.addAggregation(name);
+    final ClassStructure parsedClass = new ClassStructure(ClassType.JAVA, mod, vis, generics, name,
+                                                          interfaces, pack, src);
+    if (the_encl_class != null) the_encl_class.addAggregation(name);
+    if (the_specs != null) parsedClass.setInvariant(JmlParser.parseClassSpecs(the_specs));
+  
+    //Annotations?
+    for (final Compound an : a_sym.getAnnotationMirrors()) {
+      if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.NullableByDefault"))  //$NON-NLS-1$
+        parsedClass.setNullity(Nullity.NULLABLE);
+      
+      if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.Pure")) //$NON-NLS-1$
+        parsedClass.setPure(true);
+      
     }
+    
+    //Comments
     final Map < JCTree, String > docs = a_cu.docComments;
-
     if (docs != null) {
       for (final JCTree t : docs.keySet()) {
         if (t instanceof JCTree.JCClassDecl) {
@@ -223,23 +228,6 @@ public final class JmlParser {
             setComment(parsedClass, docs.get(t));
           }
         }
-      }
-    }
-
-    if (the_specs != null) {
-      parsedClass.setInvariant(JmlParser.parseClassSpecs(the_specs));
-    }
-
-    //Annotations?
-    for (final Compound an : a_sym.getAnnotationMirrors()) {
-      if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotation.NullableByDefault")) { //$NON-NLS-1$
-        parsedClass.setNullity(Nullity.NULLABLE);
-      }
-      if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotation.Pure")) { //$NON-NLS-1$
-      //TODO: test this
-        parsedClass.setPure(true);
       }
     }
 
@@ -255,48 +243,30 @@ public final class JmlParser {
    * @param the_cu compilation unit, needed for source locations
    * @return specs
    */
-  public static FeatureStructure parseMethod(final JmlTree.JmlMethodDecl a_method,
+  public static FeatureStructure parseMethod(final MethodSymbol a_met,
+                                             final JmlTree.JmlMethodDecl a_method,
                                              final JmlSpecs.MethodSpecs the_specs,
                                              final ClassStructure an_encl_class,
                                              final JmlTree.JmlCompilationUnit the_cu) {
-
     final SortedSet < FeatureModifier > mod = new TreeSet < FeatureModifier > ();
-    Visibility vis = new Visibility(VisibilityModifier.PACKAGE_PRIVATE);
-    if(an_encl_class.isInterface())
-      vis = new Visibility(VisibilityModifier.PUBLIC);
-    //System.err.println(a_method);
-    SmartString return_value = SmartString.getVoid();
     final Map < String , SmartString > params = new HashMap < String, SmartString > ();
+    Visibility vis = new Visibility(VisibilityModifier.PACKAGE_PRIVATE);
+    SmartString return_value = SmartString.getVoid();
+    if(an_encl_class.isInterface()) vis = new Visibility(VisibilityModifier.PUBLIC);
+    
     //Method name
     final FeatureSmartString name = new FeatureSmartString(a_method.getName().toString());
-    //Generics
-    final List < SmartString > generics    = new Vector < SmartString > ();
+    
+    //Generics, ignored since can be expanded to class level
     if (a_method.getTypeParameters().size() > 0) {
-    //TODO: test this, never reached
-      final List < JCTree.JCTypeParameter > g = a_method.getTypeParameters();
-      for (final JCTree.JCTypeParameter ff : g) {
-        if (ff.getBounds().size() > 0) {
-          final List < SmartString > list = new Vector < SmartString > ();
-          for (final JCTree.JCExpression e : ff.getBounds()) {
-            list.add(getType(e));
-          }
-          generics.add(new GenericParameter(ff.toString(), ff.getName().toString(), list));
-        } else {
-          generics.add(new GenericParameter(ff.toString(), ff.getName().toString(),
-                                            new Vector < SmartString > ()));
-        }
-      }
+      LOGGER.severe("Generic methods are not being processed by Beetlz. Please expand the generics to class level.");
     }
-  
+    
     //Return type
     if (a_method.getReturnType() != null) {
       final JCTree type = a_method.getReturnType();
-      if (type instanceof JCTree.JCExpression) {
-        return_value = getType((JCTree.JCExpression)type);
-      } else {
-        //System.err.println(type);
-        return_value = new SmartString(type.toString());
-      }
+      if (type instanceof JCTree.JCExpression) return_value = getType((JCTree.JCExpression)type);
+      else return_value = new SmartString(type.toString());
     }
     
     //Annotations (need annotations first to distinguish model class)
@@ -310,81 +280,57 @@ public final class JmlParser {
         pure = true;
       } else if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.NonNull")) { //$NON-NLS-1$
         return_value.setNullity(Nullity.NON_NULL);
-        //System.err.println("nonnull: " + a_method);
       } else if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.Nullable")) { //$NON-NLS-1$
-      //TODO: test this
-        return_value.setNullity(Nullity.NULLABLE);
+        return_value.setNullity(Nullity.NULLABLE);//TODO: test this
       } else if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.Model")) { //$NON-NLS-1$
-      //TODO: test this
-        mod.add(FeatureModifier.MODEL);
+        mod.add(FeatureModifier.MODEL);//TODO: test this
       }
     }
-    if (an_encl_class.isPure()) {
-      encl_pure = true;
-    }
+    if (an_encl_class.isPure())  encl_pure = true;
 
     //Modifier
     for (final Modifier m : a_method.getModifiers().getFlags()) {
-      if (m == Modifier.ABSTRACT) {
-        mod.add(FeatureModifier.ABSTRACT);
-      } else if (m == Modifier.FINAL) {
-        mod.add(FeatureModifier.FINAL);
-      } else if (m == Modifier.PRIVATE) {
-        vis = new Visibility(VisibilityModifier.PRIVATE);
-      } else if (m == Modifier.PROTECTED) {
-        vis = new Visibility(VisibilityModifier.PROTECTED);
-      } else if (m == Modifier.PUBLIC) {
-        vis = new Visibility(VisibilityModifier.PUBLIC);
-      } else if (m == Modifier.STATIC) {
-        mod.add(FeatureModifier.STATIC);
-      } else if (m == Modifier.STRICTFP) {
-        mod.add(FeatureModifier.STRICTFP);
-      } else if (m == Modifier.NATIVE) {
-        mod.add(FeatureModifier.NATIVE);
-      } else if (m == Modifier.SYNCHRONIZED) {
-        mod.add(FeatureModifier.SYNCHRONIZED);
-      } else if (m == Modifier.TRANSIENT) {
-        mod.add(FeatureModifier.TRANSIENT);
-      } else if (m == Modifier.VOLATILE) {
-        mod.add(FeatureModifier.VOLATILE);
+      switch (m) {
+        case ABSTRACT:  mod.add(FeatureModifier.ABSTRACT); break;
+        case FINAL:     mod.add(FeatureModifier.FINAL); break;
+        case PRIVATE:   vis = new Visibility(VisibilityModifier.PRIVATE); break; //TODO: test this
+        case PROTECTED: vis = new Visibility(VisibilityModifier.PROTECTED); break;
+        case PUBLIC:    vis = new Visibility(VisibilityModifier.PUBLIC); break;
+        case STATIC:    mod.add(FeatureModifier.STATIC); break; //TODO: test this
+        case STRICTFP:  mod.add(FeatureModifier.STRICTFP); break; //TODO: test this
+        case NATIVE:    mod.add(FeatureModifier.NATIVE);  break;
+        case SYNCHRONIZED: mod.add(FeatureModifier.SYNCHRONIZED);  break;
+        case TRANSIENT: mod.add(FeatureModifier.TRANSIENT); break;
+        case VOLATILE:  mod.add(FeatureModifier.VOLATILE); break;
+        default: break;
       }
     }
     
-
-    
-
     //Arguments
     for (final JCTree.JCVariableDecl v : a_method.getParameters()) {
       final JCTree type = v.vartype;
       SmartString par;
-      if (type instanceof JCTree.JCExpression) {
-        par = getType((JCTree.JCExpression)type);
-      } else {
-        par = new SmartString(type.toString());
-      }
+      if (type instanceof JCTree.JCExpression) par = getType((JCTree.JCExpression)type);
+      else par = new SmartString(type.toString());
+      
       for (final Compound an : v.sym.getAnnotationMirrors()) {
-        if (an.getAnnotationType().toString().
-            equals("org.jmlspecs.annotation.NonNull")) { //$NON-NLS-1$
+        if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.NonNull"))  //$NON-NLS-1$
           par.setNullity(Nullity.NON_NULL);
-        }
-        if (an.getAnnotationType().toString().
-            equals("org.jmlspecs.annotation.Nullable")) { //$NON-NLS-1$
+        
+        if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.Nullable"))  //$NON-NLS-1$
           par.setNullity(Nullity.NULLABLE);
-        }
       }
       params.put(v.name.toString(), par);
     }
     if (an_encl_class.getNullity() == Nullity.NULLABLE) {
-      if (return_value.getNullity() == null) {
-        return_value.setNullity(Nullity.NULLABLE);
-      }
+      if (return_value.getNullity() == null) return_value.setNullity(Nullity.NULLABLE);
+ 
       for (final SmartString s : params.values()) {
-        if (s.getNullity() == null) {
-          s.setNullity(Nullity.NULLABLE);
-        }
+        if (s.getNullity() == null) s.setNullity(Nullity.NULLABLE);
       }
     }
     final Signature sign = Signature.getJavaSignature(return_value, params);
+    
     //Specs
     final List < Spec > spec =
       JmlParser.parseFeatureSpecs(a_method.methodSpecsCombined, pure, return_value, encl_pure);
@@ -401,12 +347,9 @@ public final class JmlParser {
     
     final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, posInLine, startPos, endPos, lineNum, true);
 
-    final FeatureStructure feat = new FeatureStructure(mod, vis, name, sign, spec,
-                                                       src, null, null, an_encl_class);
-    feat.setGenerics(generics);
-
-    return feat;
+    return new FeatureStructure(mod, vis, name, sign, spec, src, null, null, an_encl_class);
   }
+  
 
   /**
    * Parse a variable.
@@ -422,44 +365,32 @@ public final class JmlParser {
                                                final JmlTree.JmlCompilationUnit the_cu) {
 
     final SortedSet < FeatureModifier > mod = new TreeSet < FeatureModifier > ();
-    Visibility vis                          =
-      new Visibility(VisibilityModifier.PACKAGE_PRIVATE);
+    Visibility vis = new Visibility(VisibilityModifier.PACKAGE_PRIVATE);
     final Map < String , SmartString > args = new HashMap < String, SmartString > ();
-    final FeatureSmartString name =
-      new FeatureSmartString(a_variable.getQualifiedName().toString());
+    final FeatureSmartString name = new FeatureSmartString(a_variable.getQualifiedName().toString());
+    
     //Modifier
     for (final Modifier m : a_variable.getModifiers()) {
-      if (m == Modifier.ABSTRACT) {
-        mod.add(FeatureModifier.ABSTRACT);
-      } else if (m == Modifier.FINAL) {
-        mod.add(FeatureModifier.FINAL);
-      } else if (m == Modifier.PRIVATE) {
-        vis = new Visibility(VisibilityModifier.PRIVATE);
-      } else if (m == Modifier.PROTECTED) {
-        vis = new Visibility(VisibilityModifier.PROTECTED);
-      } else if (m == Modifier.PUBLIC) {
-        vis = new Visibility(VisibilityModifier.PUBLIC);
-      } else if (m == Modifier.STATIC) {
-        mod.add(FeatureModifier.STATIC);
-      } else if (m == Modifier.STRICTFP) {
-        mod.add(FeatureModifier.STRICTFP);
-      } else if (m == Modifier.NATIVE) {
-        mod.add(FeatureModifier.NATIVE);
-      } else if (m == Modifier.SYNCHRONIZED) {
-        mod.add(FeatureModifier.SYNCHRONIZED);
-      } else if (m == Modifier.TRANSIENT) {
-        mod.add(FeatureModifier.TRANSIENT);
-      } else if (m == Modifier.VOLATILE) {
-        mod.add(FeatureModifier.VOLATILE);
-      }
+      switch (m) {
+        case ABSTRACT:  mod.add(FeatureModifier.ABSTRACT); break;
+        case FINAL:     mod.add(FeatureModifier.FINAL); break;
+        case PRIVATE:   vis = new Visibility(VisibilityModifier.PRIVATE); break; //TODO: test this
+        case PROTECTED: vis = new Visibility(VisibilityModifier.PROTECTED); break;
+        case PUBLIC:    vis = new Visibility(VisibilityModifier.PUBLIC); break;
+        case STATIC:    mod.add(FeatureModifier.STATIC); break; //TODO: test this
+        case STRICTFP:  mod.add(FeatureModifier.STRICTFP); break; //TODO: test this
+        case NATIVE:    mod.add(FeatureModifier.NATIVE);  break;
+        case SYNCHRONIZED: mod.add(FeatureModifier.SYNCHRONIZED);  break;
+        case TRANSIENT: mod.add(FeatureModifier.TRANSIENT); break;
+        case VOLATILE:  mod.add(FeatureModifier.VOLATILE); break;
+        default: break;
+      } 
     }
     //Is the spec visibility different?
     final VisibilityModifier specVis = parseSpecVisibility(a_variable);
-
-    if (specVis != null) {
-      vis.setSpecVisibility(specVis);
-    }
-    //Specs:
+    if (specVis != null) vis.setSpecVisibility(specVis);
+    
+    //Specs
     final List < Spec > spec = new Vector < Spec > ();
     spec.add(JmlParser.parseVariableSpecs(a_variable, the_specs));
 
@@ -478,21 +409,17 @@ public final class JmlParser {
     if (a_variable.type != null) {
       return_value = getType(a_variable.type);
       for (final Compound an : a_variable.getAnnotationMirrors()) {
-        if (an.getAnnotationType().toString().
-            equals("org.jmlspecs.annotation.NonNull")) { //$NON-NLS-1$
+        if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.NonNull"))  //$NON-NLS-1$
           return_value.setNullity(Nullity.NON_NULL);
-        }
-        if (an.getAnnotationType().toString().
-            equals("org.jmlspecs.annotation.Nullable")) { //$NON-NLS-1$
-          return_value.setNullity(Nullity.NULLABLE);
-        }
+        
+        if (an.getAnnotationType().toString().equals("org.jmlspecs.annotation.Nullable"))  //$NON-NLS-1$
+          return_value.setNullity(Nullity.NULLABLE);    
       }
     }
-    if (an_encl_class.getNullity() == Nullity.NULLABLE) {
-      if (return_value.getNullity() == null) {
+    
+    if (an_encl_class.getNullity() == Nullity.NULLABLE && return_value.getNullity() == null) 
         return_value.setNullity(Nullity.NULLABLE);
-      }
-    }
+
     final Signature sign = Signature.getJavaSignature(return_value, args);
 
     //SourceLocation
@@ -500,9 +427,9 @@ public final class JmlParser {
     final int lineNum = the_cu.getLineMap().getLineNumber(a_variable.pos);
     final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, true);
 
-    return new FeatureStructure(mod, vis, name, sign, spec,
-                                src, null, null, an_encl_class);
+    return new FeatureStructure(mod, vis, name, sign, spec, src, null, null, an_encl_class);
   }
+  
 
   /**
    * Get a smart string from a JCExpression, and parse it accordingly
@@ -511,55 +438,53 @@ public final class JmlParser {
    * @return parsed expression
    */
   private static SmartString getType(final JCTree.JCExpression an_expr) {
-    if (an_expr.getKind() == Kind.PRIMITIVE_TYPE) { 
-      return new SmartString(an_expr.toString());
+    SmartString result = new SmartString(an_expr.toString());
+    
+    if (an_expr.getKind() == Kind.PRIMITIVE_TYPE) {  
+      result = new SmartString(an_expr.toString());
+    } 
+    else if (an_expr.getKind() == Kind.IDENTIFIER) {
+      result = new TypeSmartString(an_expr.toString()); 
     }
-    if (an_expr.getKind() == Kind.IDENTIFIER) {
-      return new TypeSmartString(an_expr.toString()); 
-    }
-    if (an_expr.getKind() == Kind.PARAMETERIZED_TYPE) {
+    else if (an_expr.getKind() == Kind.PARAMETERIZED_TYPE) {
       final JCTree.JCTypeApply type = (JCTree.JCTypeApply) an_expr;
       final SmartString name = new TypeSmartString(type.clazz.toString());
       final List < SmartString > params = new Vector < SmartString > ();
       for (final JCTree.JCExpression ee : type.getTypeArguments()) {
         params.add(getType(ee));
       }
-      return new ParametrizedSmartString(type.toString(), name, params);
+      result = new ParametrizedSmartString(type.toString(), name, params);
     }
-    if (an_expr.getKind() == Kind.MEMBER_SELECT) {
+    else if (an_expr.getKind() == Kind.MEMBER_SELECT) {
       final int index = an_expr.toString().lastIndexOf('.');
       String temp = ""; //$NON-NLS-1$
       if (index != -1 && index != an_expr.toString().length()) {
         temp = an_expr.toString().substring(index + 1);
       }
-      return new TypeSmartString(temp);
+      result = new TypeSmartString(temp);
     }
-    if (an_expr.getKind() == Kind.ARRAY_TYPE) {
+    else if (an_expr.getKind() == Kind.ARRAY_TYPE) {
       final JCTree.JCArrayTypeTree arr = (JCTree.JCArrayTypeTree) an_expr;
       final String fullname = "Aray<" +
         arr.getType().toString() + ">"; //$NON-NLS-1$ //$NON-NLS-2$
       final List < SmartString > list = new Vector < SmartString > ();
       list.add(getType(arr.elemtype));
-      return new ParametrizedSmartString(fullname,
-                                         new TypeSmartString("Aray"), //$NON-NLS-1$
-                                         list);
+      result =  new ParametrizedSmartString(fullname, new TypeSmartString("Aray"), list); //$NON-NLS-1$                                
     }
-    if (an_expr.getKind() == Kind.SUPER_WILDCARD) {
+    else if (an_expr.getKind() == Kind.SUPER_WILDCARD) {
       final JCTree.JCWildcard w = (JCTree.JCWildcard) an_expr;
-      return new WildcardSmartString(w.toString(), WildcardType.SUPER,
-                                     getType((JCTree.JCExpression)w.getBound()));
+      result = new WildcardSmartString(w.toString(), WildcardType.SUPER, getType((JCTree.JCExpression)w.getBound()));
     }
-    if (an_expr.getKind() == Kind.EXTENDS_WILDCARD) {
+    else if (an_expr.getKind() == Kind.EXTENDS_WILDCARD) {
       final JCTree.JCWildcard w = (JCTree.JCWildcard) an_expr;
-      return new WildcardSmartString(w.toString(), WildcardType.EXTENDS,
-                                     getType((JCTree.JCExpression)w.getBound()));
+      result = new WildcardSmartString(w.toString(), WildcardType.EXTENDS, getType((JCTree.JCExpression)w.getBound()));
     }
-    if (an_expr.getKind() == Kind.UNBOUNDED_WILDCARD) {
-      return WildcardSmartString.getJavaWildcard();
+    else if (an_expr.getKind() == Kind.UNBOUNDED_WILDCARD) {
+      result = WildcardSmartString.getJavaWildcard();
     }
-    return new SmartString(an_expr.toString());
-
+    return result;
   }
+  
 
   /**
    * Get a smart string from a JCExpression, and parse it accordingly
@@ -569,10 +494,12 @@ public final class JmlParser {
    */
   private static SmartString getType(final Type a_type) {
     final int two = 2;
+    SmartString result = new SmartString(a_type.toString());
+    
     if (a_type instanceof Type.ClassType && !a_type.isParameterized()) { //normal class type
-      return new TypeSmartString(a_type.toString());
+      result = new TypeSmartString(a_type.toString());
     }
-    if (a_type instanceof Type.ClassType && a_type.isParameterized()) { //params class type
+    else if (a_type instanceof Type.ClassType && a_type.isParameterized()) { //params class type
       final Type.ClassType c = (Type.ClassType) a_type;
       final String fullname = c.toString();
       final SmartString name = new TypeSmartString(a_type.asElement().toString());
@@ -580,28 +507,27 @@ public final class JmlParser {
       for (final Type ee : a_type.allparams()) {
         params.add(getType(ee));
       }
-      return new ParametrizedSmartString(fullname, name, params);
+      result = new ParametrizedSmartString(fullname, name, params);
     }
     //array
-    if (a_type instanceof ArrayType) {
+    else if (a_type instanceof ArrayType) {
       final String simpleType =
         a_type.toString().substring(0, a_type.toString().length() - two);
       final List < SmartString > list = new Vector < SmartString > ();
       list.add(new TypeSmartString(simpleType));
-      return
-        new ParametrizedSmartString("Aray<" + simpleType + ">", //$NON-NLS-1$ //$NON-NLS-2$
-                                         new TypeSmartString("Aray"), //$NON-NLS-1$
-                                         list);
+      result = new ParametrizedSmartString("Aray<" + simpleType + ">", //$NON-NLS-1$ //$NON-NLS-2$
+                                         new TypeSmartString("Aray"), list);//$NON-NLS-1$                                
     }
     //error
-    if (a_type instanceof ErrorType) {
+    else if (a_type instanceof ErrorType) {
       Beetlz.getWaitingRecords().
         add(new CCLogRecord(CCLevel.COMPILATION_ERROR, null,
                           "Java compilation error:" + //$NON-NLS-1$
                           a_type));
     }
-    return new SmartString(a_type.toString());
+    return result;
   }
+  
 
   /**
    * Parse a class' specification.
@@ -632,6 +558,7 @@ public final class JmlParser {
     }
     return new Invariant(clauses, history);
   }
+  
 
   /**
    * Parse a JML expression to our own representation.
@@ -642,117 +569,105 @@ public final class JmlParser {
     BeetlzExpression new_expr = InformalExpression.EMPTY_COMMENT;
     if (an_expr instanceof JCTree.JCBinary) {
       final JCTree.JCBinary bin = (JCTree.JCBinary) an_expr;
-      if (bin.getKind() == Kind.GREATER_THAN) {
-        new_expr = new RelationalExpression(parseExpr(bin.lhs),
-                                           Operator.GREATER, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.GREATER_THAN_EQUAL) {
-        new_expr = new RelationalExpression(parseExpr(bin.lhs),
-                                           Operator.GREATER_EQUAL, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.LESS_THAN) {
-        new_expr = new RelationalExpression(parseExpr(bin.lhs),
-                                           Operator.SMALLER, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.LESS_THAN_EQUAL) {
-        new_expr = new RelationalExpression(parseExpr(bin.lhs),
-                                           Operator.SMALLER_EQUAL, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.EQUAL_TO) {
-        new_expr = new EqualityExpression(parseExpr(bin.lhs),
-                                         Operator.EQUAL, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.NOT_EQUAL_TO) {
-        new_expr = new EqualityExpression(parseExpr(bin.lhs),
-                                         Operator.NOT_EQUAL, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.MULTIPLY) {
-        new_expr = new ArithmeticExpression(parseExpr(bin.lhs),
-                                           Operator.MULTIPLE, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.DIVIDE) {
-        new_expr = new ArithmeticExpression(parseExpr(bin.lhs),
-                                           Operator.DIVIDE, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.MINUS) {
-        new_expr = new ArithmeticExpression(parseExpr(bin.lhs),
-                                           Operator.MINUS, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.PLUS) {
-        new_expr = new ArithmeticExpression(parseExpr(bin.lhs),
-                                           Operator.PLUS, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.REMAINDER) { //guess this is modulo
-        new_expr = new ArithmeticExpression(parseExpr(bin.lhs),
-                                           Operator.MODULO, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.CONDITIONAL_AND) {
-        new_expr = new LogicalExpression(parseExpr(bin.lhs),
-                                        Operator.AND, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.CONDITIONAL_OR) {
-        new_expr = new LogicalExpression(parseExpr(bin.lhs),
-                                        Operator.OR, parseExpr(bin.rhs));
-      } else if (bin.getKind() == Kind.XOR) {
-        new_expr = new LogicalExpression(parseExpr(bin.lhs),
-                                        Operator.XOR, parseExpr(bin.rhs));
-      } else {
-        new_expr = new InformalExpression(an_expr.toString());
+      switch (bin.getKind()) {
+        case GREATER_THAN:  
+          new_expr = new RelationalExpression(parseExpr(bin.lhs), Operator.GREATER, parseExpr(bin.rhs)); 
+          break;
+        case GREATER_THAN_EQUAL: 
+          new_expr = new RelationalExpression(parseExpr(bin.lhs), Operator.GREATER_EQUAL, parseExpr(bin.rhs)); 
+          break;
+        case LESS_THAN: 
+          new_expr = new RelationalExpression(parseExpr(bin.lhs), Operator.SMALLER, parseExpr(bin.rhs)); 
+          break; //TODO: test this
+        case LESS_THAN_EQUAL: 
+          new_expr = new RelationalExpression(parseExpr(bin.lhs), Operator.SMALLER_EQUAL, parseExpr(bin.rhs)); 
+          break;
+        case EQUAL_TO: 
+          new_expr = new EqualityExpression(parseExpr(bin.lhs), Operator.EQUAL, parseExpr(bin.rhs)); 
+          break;
+        case NOT_EQUAL_TO: 
+          new_expr = new EqualityExpression(parseExpr(bin.lhs), Operator.NOT_EQUAL, parseExpr(bin.rhs)); 
+          break; //TODO: test this
+        case MULTIPLY: 
+          new_expr = new ArithmeticExpression(parseExpr(bin.lhs), Operator.MULTIPLE, parseExpr(bin.rhs)); 
+          break; //TODO: test this
+        case DIVIDE: 
+          new_expr = new ArithmeticExpression(parseExpr(bin.lhs), Operator.DIVIDE, parseExpr(bin.rhs));  
+          break;
+        case MINUS: 
+          new_expr = new ArithmeticExpression(parseExpr(bin.lhs), Operator.MINUS, parseExpr(bin.rhs));  
+          break;
+        case PLUS: 
+          new_expr = new ArithmeticExpression(parseExpr(bin.lhs), Operator.PLUS, parseExpr(bin.rhs)); 
+          break;
+        case REMAINDER:  
+          new_expr = new ArithmeticExpression(parseExpr(bin.lhs), Operator.MODULO, parseExpr(bin.rhs)); 
+          break;
+        case CONDITIONAL_AND: 
+          new_expr = new LogicalExpression(parseExpr(bin.lhs), Operator.AND, parseExpr(bin.rhs));
+          break;
+        case CONDITIONAL_OR: 
+          new_expr = new LogicalExpression(parseExpr(bin.lhs), Operator.OR, parseExpr(bin.rhs));
+          break;
+        case XOR: 
+          new_expr = new LogicalExpression(parseExpr(bin.lhs), Operator.XOR, parseExpr(bin.rhs));
+          break;
+        default: 
+          new_expr = new InformalExpression(an_expr.toString()); 
+          break;
       }
       //end binary
     } else if (an_expr instanceof JmlTree.JmlBinary) {
       final JmlTree.JmlBinary b = (JmlTree.JmlBinary) an_expr;
-      
-      if (b.op == JmlToken.IMPLIES) {
-        new_expr = new ImpliesExpression(parseExpr(b.lhs), parseExpr(b.rhs));
-      } else if (b.op == JmlToken.REVERSE_IMPLIES) {
-        new_expr = new ImpliesExpression(parseExpr(b.rhs), parseExpr(b.lhs));
-      } else if (b.op == JmlToken.EQUIVALENCE) {
-        new_expr = new EquivalenceExpression(parseExpr(b.rhs), Operator.IFF,
-                                            parseExpr(b.lhs));
-      } else if (b.op == JmlToken.INEQUIVALENCE) {
-        new_expr = new EquivalenceExpression(parseExpr(b.rhs), Operator.NOT_IFF,
-                                            parseExpr(b.lhs));
-      } else {
-        new_expr = new InformalExpression(an_expr.toString());
+      switch (b.op) {
+        case IMPLIES: new_expr = new ImpliesExpression(parseExpr(b.lhs), parseExpr(b.rhs)); 
+          break;
+        case REVERSE_IMPLIES: new_expr = new ImpliesExpression(parseExpr(b.rhs), parseExpr(b.lhs));
+          break;
+        case EQUIVALENCE: new_expr = new EquivalenceExpression(parseExpr(b.rhs), Operator.IFF, parseExpr(b.lhs));
+          break;
+        case INEQUIVALENCE: new_expr = new EquivalenceExpression(parseExpr(b.rhs), Operator.NOT_IFF, parseExpr(b.lhs));
+          break;
+        default: new_expr = new InformalExpression(an_expr.toString());
+          break;
       }
       //end JmlBinary
     } else if (an_expr instanceof JmlTree.JmlSingleton) {
       final JmlTree.JmlSingleton s = (JmlTree.JmlSingleton) an_expr;
-      if (s.token == JmlToken.BSRESULT) {
-        new_expr = new Keyword(Keywords.RESULT);
-      } else if (s.token == JmlToken.INFORMAL_COMMENT) {
-        new_expr = InformalExpression.EMPTY_COMMENT;
-      } else {
-        new_expr = new InformalExpression(an_expr.toString());
+      switch (s.token) {
+        case BSRESULT: new_expr = new Keyword(Keywords.RESULT); break;
+        case INFORMAL_COMMENT: new_expr = InformalExpression.EMPTY_COMMENT; break;
+        default: new_expr = new InformalExpression(an_expr.toString()); break;
       }
       //end JmlSingleton
     } else if (an_expr instanceof JCTree.JCUnary) {
       final JCTree.JCUnary un = (JCTree.JCUnary) an_expr;
-      if (un.getKind() == Kind.UNARY_MINUS) {
-        new_expr = new UnaryExpression(Operator.UNARY_MINUS,
-                                      parseExpr(un.getExpression()));
-      } else if (un.getKind() == Kind.UNARY_PLUS) {
-        new_expr = new UnaryExpression(Operator.UNARY_PLUS,
-                                      parseExpr(un.getExpression()));
-      } else if (un.getKind() == Kind.LOGICAL_COMPLEMENT) {
-        new_expr = new UnaryExpression(Operator.NOT, parseExpr(un.getExpression()));
-      } else {
-        new_expr = new InformalExpression(an_expr.toString());
+      switch (un.getKind()) {
+        case UNARY_MINUS: new_expr = new UnaryExpression(Operator.UNARY_MINUS, parseExpr(un.getExpression()));  
+          break;
+        case UNARY_PLUS: new_expr = new UnaryExpression(Operator.UNARY_PLUS, parseExpr(un.getExpression()));
+          break;
+        case LOGICAL_COMPLEMENT: new_expr = new UnaryExpression(Operator.NOT, parseExpr(un.getExpression()));
+          break;
+        default: new_expr = new InformalExpression(an_expr.toString()); break;
       }
       //end JCUnary
     } else if (an_expr instanceof JCTree.JCArrayAccess) {
       final JCTree.JCArrayAccess a = (JCTree.JCArrayAccess) an_expr;
-      new_expr = new ArrayaccessExpression(parseExpr(a.indexed),
-                                          parseExpr(a.index));
+      new_expr = new ArrayaccessExpression(parseExpr(a.indexed), parseExpr(a.index));
       //end JCArrayAccess
     } else if (an_expr instanceof JCTree.JCFieldAccess) {
       final JCTree.JCFieldAccess f = (JCTree.JCFieldAccess) an_expr;
-      new_expr = new MemberaccessExpression(parseExpr(f.selected),
-                                           new IdentifierExpression(f.name.toString()));
+      new_expr = new MemberaccessExpression(parseExpr(f.selected), new IdentifierExpression(f.name.toString()));
       //end JCFieldAccess
     } else if (an_expr instanceof JmlTree.JmlMethodInvocation) {
-      
       final JmlTree.JmlMethodInvocation m = (JmlTree.JmlMethodInvocation) an_expr;
       final java.util.List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
       for (final JCTree.JCExpression e : m.getArguments()) {
         list.add(parseExpr(e));
       }
-      if (m.token == JmlToken.BSOLD) {
-        new_expr =
-          new MethodcallExpression(new IdentifierExpression("old"), //$NON-NLS-1$
-                                           list);
-      } else {
-        new_expr = new InformalExpression(m.toString());
-      }
+      if (m.token == JmlToken.BSOLD) new_expr = new MethodcallExpression(new IdentifierExpression("old"), list); //$NON-NLS-1$                                         
+      else new_expr = new InformalExpression(m.toString());
       //end JCMethodInvocation
     } else if (an_expr instanceof JCTree.JCMethodInvocation) {
       final JCTree.JCMethodInvocation m = (JCTree.JCMethodInvocation) an_expr;
@@ -760,39 +675,31 @@ public final class JmlParser {
       for (final JCTree.JCExpression e : m.getArguments()) {
         list.add(parseExpr(e));
       }
-      new_expr = new MethodcallExpression(parseExpr(m.getMethodSelect()),
-                                         list);
+      new_expr = new MethodcallExpression(parseExpr(m.getMethodSelect()), list);
     } else  if (an_expr instanceof JCTree.JCIdent) {
       new_expr = new IdentifierExpression(an_expr.toString());
       //end JCIdent
     } else if (an_expr instanceof JCTree.JCLiteral) {
-      if (an_expr.getKind() == Kind.NULL_LITERAL) {
-        new_expr = new Keyword(Keywords.NULL);
-      } else if (an_expr.getKind() == Kind.BOOLEAN_LITERAL) {
-        if (an_expr.toString().equals("true")) { //$NON-NLS-1$
-          new_expr = new Keyword(Keywords.TRUE);
-        } else if (an_expr.toString().equals("false")) { //$NON-NLS-1$
-          new_expr = new Keyword(Keywords.FALSE);
-        }
-      } else {
-        new_expr = new LiteralExpression(an_expr.toString());
+      switch (an_expr.getKind()) {
+        case NULL_LITERAL: new_expr = new Keyword(Keywords.NULL); break;
+        case BOOLEAN_LITERAL: 
+          if (an_expr.toString().equals("true")) new_expr = new Keyword(Keywords.TRUE); //$NON-NLS-1$
+          else new_expr = new Keyword(Keywords.FALSE);
+          break;
+        default: new_expr = new LiteralExpression(an_expr.toString()); break;
       }
       //end JCLiteral
     } else if (an_expr instanceof JCTree.JCParens) {
       final JCTree.JCParens p = (JCTree.JCParens) an_expr;
-      final BeetlzExpression e = parseExpr(p.expr);
-      e.setParenthesised();
-      new_expr = e;
+      new_expr = parseExpr(p.expr);
+      new_expr.setParenthesised();
     } else {
-      if (an_expr == null) {
-        new_expr = InformalExpression.EMPTY_COMMENT;
-      } else {
-        new_expr = new InformalExpression(an_expr.toString());
-      }
+      if (an_expr == null) new_expr = InformalExpression.EMPTY_COMMENT;
+      else new_expr = new InformalExpression(an_expr.toString());
     }
-
     return new_expr;
   }
+  
 
   /**
    * Parse a feature specification.
@@ -853,12 +760,8 @@ public final class JmlParser {
               BeetlzExpression resultNonnullExpr = new EqualityExpression(new Keyword(Keywords.RESULT),
                   Operator.NOT_EQUAL, new Keyword(Keywords.VOID));
               
-              if (e.compareToTyped(resultNonnullExpr) == 0) {
-                a_return_value.setNullity(Nullity.NON_NULL);
-              }
-              else {
-                post.addAll(splitBooleanExpressions(e));
-              }
+              if (e.compareToTyped(resultNonnullExpr) == 0) a_return_value.setNullity(Nullity.NON_NULL);
+              else post.addAll(splitBooleanExpressions(e));
             }
             //ignore all other clauses
           } //end JmlMethodClauseExpr
@@ -921,13 +824,13 @@ public final class JmlParser {
           type = FeatureType.MIXED;
         }
       }
-      specCases.add(new Spec(new Vector < BeetlzExpression > (),
-                             new Vector < BeetlzExpression > (),
+      specCases.add(new Spec(new Vector < BeetlzExpression > (), new Vector < BeetlzExpression > (),
                              frame, null, type, ClassType.JAVA));
     }
     return specCases;
 
   }
+  
 
   /**
    * Split an expression if necessary.
@@ -948,6 +851,7 @@ public final class JmlParser {
     list.add(an_expr);
     return list;
   }
+  
 
   /**
    * Parse a variable specs.
@@ -962,8 +866,7 @@ public final class JmlParser {
     //Constant, initialiser is non-null?
     if (a_var.getConstantValue() != null) {
       return new Spec(new Vector < BeetlzExpression > (), new Vector < BeetlzExpression > (),
-                      frame, a_var.getConstantValue().toString(),
-                      FeatureType.QUERY, ClassType.JAVA);
+                      frame, a_var.getConstantValue().toString(), FeatureType.QUERY, ClassType.JAVA);
     } else if (a_var.getModifiers().contains(Modifier.STATIC) &&
         a_var.getModifiers().contains(Modifier.FINAL)) {
       return new Spec(new Vector < BeetlzExpression > (), new Vector < BeetlzExpression > (),
@@ -974,6 +877,7 @@ public final class JmlParser {
     }
   }
 
+  
   /**
    * Parse visibility speficiation.
    * @param a_var variable symbol to parse visibility from
@@ -981,16 +885,16 @@ public final class JmlParser {
    */
   private static VisibilityModifier parseSpecVisibility(final VarSymbol a_var) {
     for (final Attribute.Compound c : a_var.attributes_field) {
-      if (c.toString().equals("@org.jmlspecs.annotation.SpecPublic")) { //$NON-NLS-1$
+      if (c.toString().equals("@org.jmlspecs.annotation.SpecPublic"))  //$NON-NLS-1$
         return VisibilityModifier.PUBLIC;
-      }
-      if (c.toString().equals("@org.jmlspecs.annotation.SpecProtected")) { //$NON-NLS-1$
-        return VisibilityModifier.PROTECTED;
-      }
+      
+      if (c.toString().equals("@org.jmlspecs.annotation.SpecProtected"))  //$NON-NLS-1$
+        return VisibilityModifier.PROTECTED; 
     }
     return null;
   }
 
+  
   /**
    * Set the comment on a class.
    * @param the_cls class to set comments on

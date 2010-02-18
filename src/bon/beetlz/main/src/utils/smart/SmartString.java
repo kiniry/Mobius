@@ -140,14 +140,6 @@ public class SmartString implements Comparable < SmartString > {
   }
 
   /**
-   * Copy this SmartString.
-   * @return copy of this SmartString
-   */
-  public SmartString makeCopy() {
-    return new SmartString(my_string);
-  }
-
-  /**
    * Set the basic type dictionary to be used.
    * @param a_dict basic types
    */
@@ -196,16 +188,6 @@ public class SmartString implements Comparable < SmartString > {
       return an_other.my_string.compareTo(type);
     }
     return this.trimSmartString().compareTo(an_other.trimSmartString());
-  }
-
-  /**
-   * Compares the original strings of the SmartStrings,
-   * without any preprocessing.
-   * @param an_other object to compare to
-   * @return true if they are equal
-   */
-  public boolean equalsExactly(final SmartString an_other) {
-    return my_string.equals(an_other.my_string);
   }
 
   /**

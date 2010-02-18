@@ -11,7 +11,7 @@ public class BeetlzTest extends TestCase {
     String[] my_args = {
         "-source", "both",
         //"-verbose",
-        //"-userSettings", "tests/debug/custom.txt",
+        "-userSettings", "test/custom_file.txt",
         "-files", "test"
         };
     
@@ -22,6 +22,7 @@ public class BeetlzTest extends TestCase {
     assertTrue(true);
   }
   
+
   public void testBuggyComparison() {
     System.out.println("************* test comparison with bugs *****************");
     String[] my_args = {
@@ -37,6 +38,7 @@ public class BeetlzTest extends TestCase {
     System.gc();
     assertTrue(true);
   }
+  
   
   public void testPrettyprintBON() {
     System.out.println("****************** pretty print BON *********************");
@@ -67,7 +69,7 @@ public class BeetlzTest extends TestCase {
   }
   
   
-  
+  /*
   public void testFileNotFound() {
     System.out.println("****************** File not found *********************");
     String[] my_args = {
@@ -111,6 +113,7 @@ public class BeetlzTest extends TestCase {
     assertTrue(true);
   }
   
+  */
   
   public static Test suite(){
     return new TestSuite(BeetlzTest.class);

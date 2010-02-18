@@ -95,15 +95,6 @@ public class PrettyFormatter {
     return getClassName(a_name, my_to_java);
   }
   
-  /**
-   * Formats a class name.
-   * @param a_name class name to format
-   * @return formatted class name
-   */
-  public final String getClassNameFlipped(final SmartString a_name) {
-    return getClassName(a_name, !my_to_java);
-  }
-  
   private final String getClassName(final SmartString a_name, final boolean to_java) {
     if (to_java) {
       return formatJavaClassName(a_name.toString());
@@ -428,36 +419,4 @@ public class PrettyFormatter {
     }
   }
 
-  /**
-   * Format a frame condition to Java format.
-   * @param a_frame frame condition to format
-   * @return formatted string
-   */
-  public static String getJavaFrameName(final SmartString a_frame) {
-    return a_frame.toString();
-  }
-
-  /**
-   * Format a frame condition to BON format.
-   * @param a_frame frame condition to format
-   * @return formatted string
-   */
-  public static String getBonFrameName(final SmartString a_frame) {
-    return a_frame.toString();
-  }
-
-  /**
-   * Get a file name in package and class name parts.
-   * @param a_class class name to get file name from
-   * @return file name
-   */
-  public static String[] getFileName(final ClassStructure a_class) {
-    String pack = a_class.getPackage().toString();
-    if (pack.endsWith(BConst.CLUSTER_SUFFIX)) {
-      pack = pack.substring(0 , pack.length() - BConst.CLUSTER_SUFFIX.length());
-    }
-    return new String[] {pack.toLowerCase(),
-                         formatJavaClassName(a_class.getSimpleName()) +
-                         ".java"}; //$NON-NLS-1$
-  }
 }

@@ -106,16 +106,6 @@ public class FeatureSmartString extends SmartString {
   }
 
   /**
-   * Make copy.
-   * @see utils.smart.SmartString#makeCopy()
-   * @return copy
-   */
-  @Override
-  public SmartString makeCopy() {
-    return new FeatureSmartString(this.my_string);
-  }
-
-  /**
    * Set the prefixes to ignore.
    * @param the_prefixes prefixes to be ignored
    */

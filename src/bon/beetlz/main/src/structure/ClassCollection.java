@@ -9,10 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Logger;
 
-import main.Beetlz;
-import utils.BConst;
 import utils.smart.SmartString;
 import utils.smart.TypeSmartString;
 import utils.smart.TypeSmartStringWithLocation;
@@ -87,27 +84,6 @@ public class ClassCollection {
     return my_classes.values();
   }
 
-
-
-  /**
-   * Checks whether a certain class is present by matching names.
-   * @param a_name name of class to be found
-   * @return list of matching classes, zero length if none found
-   */
-  public final /*@ pure @*/ List < ClassStructure >
-  containsClass(final TypeSmartString a_name) {
-    final List < ClassStructure > list = new Vector < ClassStructure > ();
-
-    for (final ClassStructure cls : my_classes.values()) {
-      if (cls.getName().equalsTyped(a_name)) {
-        list.add(cls);
-      }
-    }
-
-    return list;
-
-  }
-
   /**
    * Get a class by qualified name.
    * @param a_name qualified name of class to be found
@@ -151,34 +127,6 @@ public class ClassCollection {
   }
   
   /**
-   * Gives all classes in the package given.
-   * These classes are all in the model/implementation respectively.
-   * @param a_package name of package
-   * @return all classes from given package
-   */
-  public final List < TypeSmartString > getClassesInPackage(final SmartString a_package) {
-    final List < TypeSmartString > list = new Vector < TypeSmartString > ();
-    final List < ClassStructure > classes = my_packages.get(a_package);
-    for (final ClassStructure c : classes) {
-      list.add(c.getName());
-    }
-
-    return list;
-  }
-
-  /**
-   * Get all names of classes in this collection.
-   * @return list of names
-   */
-  public final List < String > getQualifiedNames() {
-    final List < String > names = new Vector < String > ();
-    for (final ClassStructure c : my_classes.values()) {
-      names.add(c.getQualifiedName().toString());
-    }
-    return names;
-  }
-
-  /**
    * Returns a pretty printed string.
    * @see java.lang.Object#toString()
    * @return pretty printed string
@@ -188,28 +136,4 @@ public class ClassCollection {
     return getAccesibleClassTypes().toString();
   }
 
-  /**
-   * Returns a pretty printed string.
-   * @see java.lang.Object#toString()
-   * @return pretty printed string
-   */
-  public final /*@ pure @*/ String toStringVerbose() {
-    String string = ""; //$NON-NLS-1$
-    for (final ClassStructure c : my_classes.values()) {
-      string += c.toStringVerbose() + "\n"; //$NON-NLS-1$
-    }
-    return string;
-  }
-
-
-  /**
-   * Debugging help, just dump out everything to stdout.
-   */
-  public final /*@ pure @*/ void printOut() {
-    Logger.getLogger(BConst.LOGGER_NAME).
-      info("The class collection has following classes:"); //$NON-NLS-1$
-    for (final ClassStructure dclass : my_classes.values()) {
-      Logger.getLogger(BConst.LOGGER_NAME).info(dclass.printFullClass() + "\n"); //$NON-NLS-1$
-    }
-  }
 }

@@ -141,97 +141,6 @@ public class Beetlz {
     my_errorHandler.setFilter(errorFilter);
     
     reset(some_args);
-    
-   /* //***************  Initialisation ***************
-    my_status = Status.STARTED;
-    my_jmlfile = new JmlFile();
-    my_bonfile = new BonFile();
-    my_records_waiting = new ArrayList < CCLogRecord > ();
-    all_records = new ArrayList < CCLogRecord >();
-
-    
-    
-    //***************  Set up Logger  ***************
-    final StreamHandler errorHandler = new StreamHandler(an_error_stream,
-                                                         new CCLogFormatter());
-    final ErrorFilter errorfilter = new ErrorFilter();
-    errorHandler.setLevel(Level.FINEST);
-    errorHandler.setFilter(errorfilter);
-    JAVA_LOGGER.addHandler(errorHandler);
-    JAVA_LOGGER.setUseParentHandlers(false);
-    JAVA_LOGGER.setLevel(Level.FINEST);
-
-    
-    
-    //***************  Parse options ***************
-    my_options_ok = true;
-    my_profile = processOptions(some_args);
-    if (my_profile == null) {
-      my_options_ok = false;
-      my_status = Status.HELP;
-      JAVA_LOGGER.severe(getUsage());
-      
-      
-      
-    //*************** Options OK ***************
-    } else {
-      my_status = Status.OPTIONS_OK;
-      if (my_profile.getCustomSettingFile() != null) {
-        SettingIO.readSettings(my_profile, my_profile.getCustomSettingFile());
-      }
-      
-      
-      
-      //*************** Set up rest ***************
-      SmartString.setDictionary(my_profile.getBasicDictionary());
-      FeatureSmartString.setPrefixes(my_profile.getPrefixes());
-      final StreamHandler outputHandler = new StreamHandler(
-                                                            an_out_stream,
-                                                            new CCLogFormatter());
-      final OutputFilter outputfilter = new OutputFilter(!my_profile.noError(),
-                                                         !my_profile.noWarning(),
-                                                         !my_profile.noJml(),
-                                                         !my_profile.noJava(),
-                                                         true,
-                                                         my_profile.verbose());
-      outputHandler.setLevel(Level.FINEST);
-      outputHandler.setFilter(outputfilter);
-      JAVA_LOGGER.addHandler(outputHandler);
-
-      
-      
-      //*************** Parse files ***************
-      JAVA_LOGGER.config("Going to parse files..."); //$NON-NLS-1$
-      if (my_options_ok) {
-        my_parse_ok = parseFiles();
-        if (my_parse_ok) {
-          my_status = Status.PARSING_OK;
-          if (my_profile.verbose()) {
-            System.out.println(my_bonfile.toString());
-            System.out.println(my_jmlfile.toString());
-          }
-            
-        }
-        else
-          my_status = Status.PARSING_PROBLEM;
-
-        my_logger = new CCLogManager();
-        my_logger.addRecords(my_records_waiting);
-        JAVA_LOGGER.config("Finished parsing files."); //$NON-NLS-1$
-        my_class_map = createClassTypeMapping();
-        //Print some parsing info:
-        JAVA_LOGGER.config("Found Java types: " + //$NON-NLS-1$
-                           my_jmlfile.getClassCollection().getAccesibleClassTypes());
-        JAVA_LOGGER.config("Found BON types: " + //$NON-NLS-1$
-                           my_bonfile.getClassCollection().getAccesibleClassTypes());
-        JAVA_LOGGER.config("Class mapping: " + my_class_map); //$NON-NLS-1$
-        JAVA_LOGGER.config(my_profile.toString());
-      } else {
-        my_parse_ok = false;
-        JAVA_LOGGER.severe("The options you have entered are incorrect."); //$NON-NLS-1$
-      }
-    }
-    */
   }
   
   
@@ -244,10 +153,7 @@ public class Beetlz {
     }
     JAVA_LOGGER.addHandler(my_errorHandler);
     JAVA_LOGGER.setUseParentHandlers(false);
-    JAVA_LOGGER.setLevel(Level.FINEST);
-    
-   
-    
+    JAVA_LOGGER.setLevel(Level.FINEST);    
     
   //***************  Initialisation ***************
     my_status = Status.STARTED;
@@ -269,9 +175,7 @@ public class Beetlz {
       my_status = Status.OPTIONS_OK;
       if (my_profile.getCustomSettingFile() != null) {
         SettingIO.readSettings(my_profile, my_profile.getCustomSettingFile());
-      }
-      
-      
+      } 
       
       //*************** Set up rest ***************
       SmartString.setDictionary(my_profile.getBasicDictionary());

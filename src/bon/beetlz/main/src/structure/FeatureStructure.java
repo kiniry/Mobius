@@ -84,29 +84,6 @@ public class FeatureStructure implements Comparable < FeatureStructure > {
   // Printing methods
   //**************************
   /**
-   * Print a short string.
-   * @return string representation
-   */
-  public final String toShortString() {
-    String string = "    "; //$NON-NLS-1$
-    //Modifier
-    string += my_visibility.getActualVisibility() + " "; //$NON-NLS-1$
-
-    for (final FeatureModifier m : my_modifiers) {
-      string += m.getName() + " "; //$NON-NLS-1$
-    }
-
-    string += " " + my_signature.getReturnValue(); //$NON-NLS-1$
-    string += " " + my_name + " " + "("; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    for (final SmartString arg : my_signature.getFormalTypes()) {
-      string = string + arg + ", "; //$NON-NLS-1$
-    }
-    string += ")"; //$NON-NLS-1$
-
-    return string;
-  }
-
-  /**
    * Get a pretty printed string.
    * @see java.lang.Object#toString()
    * @return pretty string
@@ -141,45 +118,6 @@ public class FeatureStructure implements Comparable < FeatureStructure > {
       string += "\n\tspec: " + my_spec.toString(); //$NON-NLS-1$
     }
 
-    return string;
-  }
-
-  /**
-   * Get a pretty printed string with the full signature including pre and postconditions.
-   * @return pretty string
-   */
-  public final /*@ pure @*/ String printFullFeature() {
-    String string = "    "; //$NON-NLS-1$
-
-    //Modifier
-    if (my_visibility.getSpecVisibility() != my_visibility.getActualVisibility()) {
-      string += my_visibility.getSpecVisibility() + "( " +  //$NON-NLS-1$
-        my_visibility.getActualVisibility() + " ) "; //$NON-NLS-1$
-    } else {
-      string += my_visibility.getActualVisibility() + " "; //$NON-NLS-1$
-    }
-    for (final FeatureModifier m : my_modifiers) {
-      string += m.getName() + " "; //$NON-NLS-1$
-    }
-    string += " " + my_signature.getReturnValue(); //$NON-NLS-1$
-    string += " " + my_name + " " + "("; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    for (final SmartString arg : my_signature.getFormalTypes()) {
-      string = string + arg + ", "; //$NON-NLS-1$
-    }
-
-    string = string + ");"; //$NON-NLS-1$
-    string += "\n" + my_spec.toString(); //$NON-NLS-1$
-
-    if (my_renaming != null) {
-      string += "\n       *renamed: " +
-        my_renaming.getClassName() + "." + //$NON-NLS-1$ //$NON-NLS-2$
-        my_renaming.getFeatureName();
-    }
-    if (my_visibility.getExports().size() > 0) {
-      string += "\n       *exports: " + my_visibility.getExports(); //$NON-NLS-1$
-    }
-    //SourceLocation
-    string += "\n       *" + my_sourceLoc.toFileAndLineString() + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
     return string;
   }
 

@@ -705,44 +705,6 @@ public class BonPretty {
       return last;
     }
   }
-
- 
-  /**
-   * Print a feature for external use.
-   * @param the_feature feature to print
-   * @return string representation
-   */
-  public static String printPrettyFeature(final FeatureStructure the_feature) {
-    String feature = ""; //$NON-NLS-1$
-    
-    //final int count = 0;
-    //Name
-    //String head = ""; //$NON-NLS-1$
-    //head += the_feature.getSimpleName() + (count == 0 ? "" : count);
-    String head = the_feature.getSimpleName();
-
-    //Potentially return value
-    if (!the_feature.getSignature().getReturnValue().equals(SmartString.getVoid())) {
-      head += ": " +
-        PrettyFormatter.getBonType(the_feature.getSignature().getReturnValue()) +
-        "\n"; //$NON-NLS-1$ //$NON-NLS-2$
-    } else {
-      head += "\n"; //$NON-NLS-1$
-    }
-    feature += head;
-
-    //Parameter
-    final Map < String, SmartString > params = the_feature.getSignature().getFormalParameter();
-    for (final String s : params.keySet()) {
-      feature += "  -> " + s + ": " +  //$NON-NLS-1$ //$NON-NLS-2$
-        PrettyFormatter.getBonType(params.get(s)) +
-        " (" + params.get(s) + ")\n"; //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-
-    return feature;
-  }
-
   
   /**
    * Print a frame condition, method for external use.

@@ -380,7 +380,9 @@ public class ClassTranslator {
       if (t.endsWith(BConst.CLUSTER_SUFFIX)) {
         t = t.substring(0 , t.length() - eight).toLowerCase();
       }
-      if (!s.equals(t)) {
+      SmartString ss = new SmartString(s);
+      SmartString tt = new SmartString(t);
+      if (!ss.equalsTyped(tt)) {
         my_logger.logIncorrectPackage(my_src, my_trg_name,
                                       my_src_class.getInnermostPackage(),
                                       my_trg_class.getInnermostPackage());

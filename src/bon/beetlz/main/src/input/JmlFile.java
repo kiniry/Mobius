@@ -125,7 +125,8 @@ public class JmlFile {
           if (!Beetlz.getProfile().isJavaIgnored(qName)) {
             final ClassSymbol sym = api.getClassSymbol(qName);
             if (sym != null) {
-              final JmlClassDecl ast = api.getJavaDecl(sym);
+              //final JmlClassDecl ast = api.getJavaDecl(sym);
+              final JmlClassDecl ast = api.getClassDecl(qName);
               parseClass(ast, sym, api, cu, null); //no enclosing class, top level
             } else {
               LOGGER.severe(String.format("No class symbol for %s. The class is probably in the default package.", //$NON-NLS-1$
@@ -157,28 +158,26 @@ public class JmlFile {
    * @return class structure
    */
   private ClassStructure parseClass(final JmlClassDecl an_ast, final ClassSymbol a_symbol,
-      final API a_main, final JmlCompilationUnit a_cu,
-      final ClassStructure an_enclosing) {
+      final API a_main, final JmlCompilationUnit a_cu, final ClassStructure an_enclosing) {
+    
     if (a_symbol.getKind() != ElementKind.ANNOTATION_TYPE) {
       if (an_ast instanceof JCClassDecl) {
         try {
           //parse the class
           final TypeSpecs cs = a_main.getSpecs(a_symbol);
-          final ClassStructure cls = JmlParser.parseClass((JCClassDecl)an_ast, cs, a_symbol,
-              a_symbol.flatname.toString(),
-              an_enclosing, a_cu);
-          if (a_symbol != null && a_symbol.members() != null &&
-              a_symbol.members().getElements() != null) {
+          final ClassStructure cls = JmlParser.parseClass(an_ast, cs, a_symbol, a_symbol.flatname.toString(),
+              an_enclosing, a_cu); 
+          if (a_symbol != null && a_symbol.members() != null && a_symbol.members().getElements() != null) {
             for (final Symbol member : a_symbol.members().getElements()) {
               //parse methods
               if (member instanceof MethodSymbol) {
-                if (member.isConstructor() && (member.flags_field & GENERATEDCONSTR) != 0) {
+                
+                if (member.isConstructor() && (member.flags_field & GENERATEDCONSTR) != 0)
                   continue;
-                }
-
+                
                 final MethodSpecs ms = a_main.getSpecs((MethodSymbol)member);
                 if (ms != null) {
-                  final FeatureStructure feat = JmlParser.parseMethod(a_main.getJavaDecl((MethodSymbol)member), ms, cls, a_cu);
+                  final FeatureStructure feat = JmlParser.parseMethod((MethodSymbol)member, a_main.getJavaDecl((MethodSymbol)member), ms, cls, a_cu);
                   if (Beetlz.getProfile().noJml() && feat.isModel()) {
                     //TODO: test this
                     //System.err.println("found a model");

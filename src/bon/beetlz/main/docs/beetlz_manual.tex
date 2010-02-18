@@ -1,0 +1,391 @@
+\documentclass[11pt]{amsart}
+ \usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry} 
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{epstopdf}
+\usepackage{color}
+\usepackage{colortbl}
+\definecolor{purple}{rgb}{0.5,0,0.5}
+\definecolor{darkred}{rgb}{0.5,0,0}
+\definecolor{darkgreen}{rgb}{0,0.4,0.3}
+\definecolor{darkblue}{rgb}{0,0,0.3}
+\usepackage{array, arydshln}
+\setlength\dashlinedash{0.2pt}
+\setlength\dashlinegap{3pt}
+\newcommand{\mytablebeg}{\begin{table}[h]\centering\begin{footnotesize}
+\begin{tabular}{m{7cm}|m{7cm}} }
+\newcommand{\mytableend}[2]{\end{tabular}\end{footnotesize}\caption{#1} \label{#2}\end{table}}
+
+\usepackage{pifont} 
+\newcommand{\tick}{\ding{52}}
+\newcommand{\cross}{\ding{55}}
+\newcommand{\good}[1]{\textcolor[rgb]{0,0.6,0.5}{#1}}
+\newcommand{\bad}[1]{\textcolor[rgb]{0.7,0,0}{#1}}
+
+\newcommand{\goodline}[2]{\tick #1 & #2\\ \hdashline}
+\newcommand{\badline}[2]{\cross #1 & #2 \\ \hdashline}
+\newcommand{\simpleline}[2]{#1 & #2\\ \hdashline}
+\newcommand{\emptyline}{\hspace{2mm} & \hspace{2mm}\\ \hdashline}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{BEETLZ \\
+DRAFT}
+%\author{Eva Darulov\'{a}}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\tableofcontents
+
+\section{Technicalities}
+
+\subsection{Usage options}\hfill \newline
+
+\subsection{Custom file}\label{customfile}\hfill \newline
+
+\subsection{JML complaints file}\hfill \newline
+
+\subsection{Getting the latest version}\hfill \newline
+The plugin Eclipse update site link is available here:\\
+http://kind.ucd.ie/products/opensource/Beetlz/
+[[what about the command line version?]]
+
+\section{Reporting Bugs}
+Any information for bug reporting can be found here, including a link to the ticketing system:
+http://kind.ucd.ie/products/opensource/Beetlz/. 
+
+\section{Beetlz Good-To-Know}
+For details about the BON method and JML itself please see general documentation about BON and JML [1, 2]. Here, we would only point out a few specific features, which explain why the Beetlz tool gives a specific error or warning message.  we would like to point out only the few features that may either be unclear, or that have a specific definition in Beetlz that may differ from the general notion or that has not been defined yet. In a few cases, limitations arise from the tool's dependency on the OpenJML and BONc tool. [references]\\
+In the following tables, unless otherwise indicated, BON code is on the left side and JML on the right. Where only positive examples are given, it holds that anything different should result in an error or warning. 
+
+
+%-------- Names ----------
+\subsection{Class names}\hfill \newline
+Beetlz assumes and follows standard BON and JML naming conventions.
+\mytablebeg
+\goodline{BIG\_CLASS}{some.package.BigClass}
+\goodline{BIG\_CLASS}{some.package.Big\_Class}
+\emptyline
+\badline{BIG\_CLASS}{some.package.Big}
+\mytableend{Class names}{}
+
+\subsection{Feature names}\hfill \newline
+BON does not have explicit naming conventions for features, hence none are assumed and feature names must be matched exactly (case sensitive). Since BON does not allow overloaded features, the following workaround is adopted and supported: overloaded features are distinguished by numbering.
+Furthermore, an accessor method will be ignored and the corresponding hidden variable used for comparison, if the method name starts with one of \texttt{get-, has-, is-} and there exists a feature by the same name minus the prefix, which is specification-accessible, i.e. public, protected, spec\_public or spec\_protected.
+\mytablebeg
+\goodline{myName}{myName}
+\goodline{name: STRING}{private /*@ spec\_public @*/ String name; \\ & public String getName() \{...\}}
+\emptyline
+\badline{my\_name}{myName}
+\badline{myname}{myName}
+\badline{name: STRING}{private String name;}
+\badline{name: STRING}{private /*@ spec\_public @*/ String name; \\ & public String getThatName() \{...\}}
+\badline{name: STRING}{private String name; \\ & public String getName() \{...\}}
+\mytableend{Feature names}{}
+
+
+
+
+\subsection{Cluster/Package names}\hfill \newline
+Cluster names in BON follows the same conventions as class names, except that they can have the suffix \texttt{\_CLUSTER}. In comparison to Java package names, this suffix is ignored and the same comparison rules apply as for class names.
+[[Does BON now also take into account the cluster hierarchy? If so, this needs to be changed.]]
+\mytablebeg
+\goodline{DEBUG\_CLUSTER}{some.package.debug}
+\goodline{DEBUG}{some.package.debug}
+\goodline{DEBUG\_CLUSTER}{some.package.debugCluster}
+\emptyline
+\badline{DEBUG}{some.package.debugCluster}
+\mytableend{Cluster names}{}
+
+
+%--------- Features ---------- 
+\subsection{Constructors}\hfill \newline
+No constructors are defined in \emph{pure} BON, however they can be useful for specifications. Following Eiffel's [3] example, the word \texttt{make} is reserved to designate a constructor and compared as all other features. Overloaded constructors are also handled in the same way as overloaded features. Note that a constructor has \texttt{void} return type.
+\mytablebeg
+\goodline{make: VOID}{MyClass()\{...\} }
+\emptyline
+\badline{make: STRING}{MyClass() \{...\}}
+\mytableend{Constructors}{}
+
+
+\subsection{Feature signature}\hfill \newline
+The checks performed are: return types have to match, the number of formal parameters have to match and the all types of formal parameters must be present, in which ever order. It is not checked, whether types actually exist and types are matched based on name, following usual class naming conventions. Exceptions to this rule are so-called basic types and are described in ~\ref{basictypes}. Parameter names do not have to match and are ignored for the signature comparison. (They are stored though, as they are needed for certain types of predicates.)
+\mytablebeg
+\goodline{doSomething: STRING \newline -$>$ i: INTEGER \newline -$>$ b: BOOLEAN }{public String doSomething(boolean isTrue, int number) \{...\}}
+\emptyline
+\badline{doSomething: STRING \newline -$>$ i: INTEGER \newline -$>$ b: BOOLEAN }{public String doSomething(boolean isTrue, boolean isAlsoTrue) \{...\}}
+\badline{doSomething: STRING \newline -$>$ i: INTEGER \newline -$>$ b: BOOLEAN \newline -$>$ bb: BOOLEAN}{public String doSomething(boolean isTrue, boolean isAlsoTrue) \{...\}}
+\mytableend{Feature signature}{}
+
+\subsection{Java fields and BON features}\hfill \newline
+Java fields are treated as methods with no formal parameters and with the type of the variable being the return type. All Java fields are automatically Queries (see ~\ref{queriescommands}).
+\mytablebeg
+\goodline{name: STRING}{public String name;}
+\mytableend{Java field}{}
+
+%---------- Modifier ----------
+\subsection{Class modifier}\hfill \newline
+The relations are summarized in ~\autoref{classModifierTable}, no other assumptions or checks apart from these are made.
+\mytablebeg
+\simpleline{\texttt{deferred}}{\texttt{abstract}}
+\simpleline{\texttt{deferred} \newline with all features \texttt{public} and \texttt{abstract}}{\texttt{interface}}
+\simpleline{class with distinct constant features of its own type \ref{enums}}{\texttt{enum}}
+\simpleline{\texttt{effective}}{not \texttt{abstract}}
+\simpleline{\texttt{root}}{contains \texttt{public static void main(String[] args)} or \texttt{extends Thread} or \texttt{implements Runnable}}
+\simpleline{interfaced}{all members public}
+\simpleline{reused}{\emph{ignored}}
+\simpleline{persistent}{\texttt{implements Serializable/Externalizable}}
+\simpleline{not \texttt{deferred}}{static, final}
+\simpleline{\emph{ignored}}{strictfp}
+\mytableend{Class Modifier}{classModifierTable}
+
+
+\subsection{Feature modifier}\hfill \newline
+The relations are summarized in ~\autoref{featureModifierTable}, no other assumptions or checks apart from these are made. Note, in Java a method may be both \texttt{abstract} and have the annotation \texttt{@Override}, in BON only one of these is possible, hence will inevitable lead to a Beetlz error.
+\mytablebeg
+\simpleline{\texttt{deferred}}{\texttt{abstract}}
+\simpleline{\texttt{effective}}{not \texttt{abstract}}
+\simpleline{\texttt{redefined}}{\texttt{@Override} annotation}
+\simpleline{not \texttt{deferred}}{\texttt{static}}
+\simpleline{not \texttt{deferred}}{\texttt{final}}
+\simpleline{not \texttt{deferred}}{\texttt{native}}
+\simpleline{\emph{ignored}}{\texttt{strictfp \newline synchronized \newline transient \newline volatile}}
+\mytableend{Feature modifier}{featureModifierTable}
+
+
+\subsection{Visibility}\hfill \newline
+Since all classes in BON are public, the class visibility modifier \texttt{public} and \texttt{protected} in the JML interface is ignored. If a class is \texttt{private} it is removed from the comparison altogether.
+In the case of features, public and private visibilities are equivalent, for Java's \texttt{protected} and package-private the convention is to list the class name and the cluster name respectively in the accessibility list (see ~\autoref{visibilityTable}. Note that BON's general restricted access to separate classes cannot be expressed in Java and will thus cause a Beetlz error.
+\mytablebeg
+\simpleline{public (default)}{\texttt{public}}
+\simpleline{\texttt{feature\{ONE\_CLASS, ANOTHER\_CLASS\}}}{\emph{not possible}}
+\simpleline{\texttt{feature\{MY\_CLASS\_NAME\}}}{protected}
+\simpleline{\texttt{feature\{MY\_CLUSTER\_NAME\}}}{package-private (default)}
+\simpleline{\texttt{feature\{NONE\}}}{\texttt{private}}
+\mytableend{Feature visibility}{visibilityTable}
+
+%------------ Package ---------
+\subsection{Packages}\hfill \newline
+[[Does BON support now several packages, or still just the nearest? ]]
+
+
+
+\subsection{Default package}\hfill \newline
+[[What's the story with this? ]]
+
+%----------- Interfaces and Inheritance --------
+\subsection{Interfaces and Inheritance}\label{inheritance}\hfill \newline
+A BON super class can correspond to a Java super class or a Java interface. Multiple inheritance, allowed in BON, can be solved in such a manner in Java, i.e. extends only one class and implement all other types as interfaces. In cases, where this is not possible (two or more abstract classes and not interfaces), no conventions are made to resolve this conflict. BON renaming is ignored. All types, which are not explicitly declared in the model (e.g. Comparable interfaces) are ignored. \newline
+[[What's the story with repeated inheritance?]]
+\mytablebeg
+\simpleline{\texttt{MY\_CLASS inherit ANOTHER}}{\texttt{MyClass extends Another}}
+\simpleline{\texttt{MY\_CLASS inherit ANOTHER}}{\texttt{MyClass implements Another}}
+\simpleline{\texttt{MY\_CLASS inherit ONE, TWO}}{\texttt{MyClass extends One implements Two}\newline \texttt{MyClass extends Two implements One}}
+\simpleline{\texttt{MY\_CLASS}}{\texttt{MyClass extends Button}\newline (provided Button is a class taken from a library)}
+\mytableend{}{}
+
+%---------- Enums -------------
+\subsection{Enums}\label{enums}\hfill \newline
+An enumerated type in Java is recognized by the class modifier \texttt{enum}, in BON the convention recognized by Beetlz is that such a class must include:
+\begin{verbatim}
+...
+  feature{NONE}
+    enumeration:SET
+...
+\end{verbatim}
+This is the only recognition used by Beetlz, however, since the actual types in a Java \texttt{enum} are constants, they have to be defined constant in BON as well, or an error will be generated. This approach also allows additional methods to be included (not part of the enumeration and not constant).
+How to define enumerated types in BON is best described with an example:
+The enumerated type defined in Java in either long or short form:\\
+\texttt{public enum Mood \{ HAPPY, SAD, DUNNO \}}\\
+corresponds to the following class in BON:
+\begin{verbatim}
+class MOOD  
+  feature
+    happy: MOOD
+      ensure
+        Result = old happy;
+      end
+    sad: MOOD
+      ensure
+        Result = old sad;
+      end
+    dunno: MOOD
+      ensure
+        Result = old dunno;
+      end
+  feature{NONE}
+    enumeration:SET
+  end
+\end{verbatim}
+
+%------------ Generics ----------------
+\subsection{Generics}\hfill \newline
+Generics at class level work in the same way in both specifications, except for Java allowing several types to restrict the generic parameter, whereas BON only allows one. This is solved in Beetlz by only looking whether the one BON restriction is listed in the Java list. As with inheritance, types not declared in the model are ignored. Generic methods are not supported, as BON does not support them either. This genericity can be extended to class level and should be done so.\\
+Wildcards do not exist in BON, however a sensible translation can be made, see \autoref{genericsTable}.
+\mytablebeg
+\simpleline{\texttt{MY\_CLASS[T, S, R]}}{\texttt{MyClass $<$ T, S, R $>$}}
+\simpleline{\texttt{MY\_CLASS [T -$>$ ONE\_CLASS]}}{\texttt{MyClass $<$ T extends OneClass $>$ }}
+\simpleline{\texttt{MY\_CLASS [T -$>$ TWO\_CLASS]}}{\texttt{MyClass $<$ T extends TwoClass $>$ \newline MyClass $<$ T extends TwoClass \& ThirdClass$>$}}
+\simpleline{\texttt{MY\_CLASS [ANY]}}{\texttt{MyClass $<$ ? $>$}}
+\simpleline{\texttt{MY\_CLASS [ANOTHER\_CLASS]}}{\texttt{MyClass $<$ ? extends AnotherClass$>$}}
+\simpleline{\texttt{MY\_CLASS [ANOTHER\_CLASS]}}{\texttt{MyClass $<$ ? super AnotherClass $>$}}
+\mytableend{}{genericsTable}
+
+
+%------------- Basic Types ------------
+\subsection{Basic types}\label{basictypes}\hfill \newline
+In general, types are matched by name, taken into account the usual class naming conventions. Certain common types in BON and Java are predefined however, see \autoref{basicTypesTable}. These are hardcoded and can be extended by the user using a custom file ~\ref{customfile}
+\mytablebeg
+\texttt{}
+\simpleline{\texttt{VALUE}}{\texttt{int, double, short, long, float, byte, AtomicInteger, AtomicLong, BigDecimal, BigInteger, Byte, Double, Float, Long, Short, Number, Integer, boolean, Boolean, char, Character, String}}
+\simpleline{\texttt{NUMERIC}}{\texttt{int, double, short, long, float, byte, AtomicInteger, AtomicLong, BigDecimal, BigInteger, Byte, Double, Float, Long, Short, Number, Integer}}
+\simpleline{\texttt{INTEGER}}{\texttt{int, long, short, byte, AtomicInteger, AtomicLong, BigInteger, Byte, Short, Long, Integer}}
+\simpleline{\texttt{REAL}}{\texttt{double, float, BigDecimal, Float, Double}}
+\simpleline{\texttt{BOOLEAN}}{\texttt{boolean, Boolean}}
+\simpleline{\texttt{CHARACTER}}{\texttt{char, Character}}
+\simpleline{\texttt{STRING}}{\texttt{String}}
+\simpleline{\texttt{ANY}}{\texttt{Object}}
+\simpleline{\texttt{SET}}{\texttt{Set, HashSet, TreeSet, SortedSet, NavigableSet, ConcurrentSkipListSet, AbstractSet, CopyOnWriteArraySet, EnumSet, LinkedHashSet}}
+\simpleline{\texttt{SEQUENCE}}{\texttt{List, Vector, Array, AbstractList, AbstractSequentialList, ArrayList, AttributeList, CopyOnWriteArrayList, LinkedList, RoleList, RoleUnresolvedList, Stack, Queue, AbstractQueue, ArrayBlockingQueue, ArrayDeque, ConcurrentLInkedQueue, DelayQueue, LinkedBlockingDeque, LinkedBlockingQueue, LinkedList, PriorityBlockingQueue, PriorityQueue, SynchronousQueue, Deque, BlockingQueue, BlockingDeque}}
+\simpleline{\texttt{TABLE}}{\texttt{Map, HashMap, AbstractMap, Attributes, AuthProvider, ConcurrentHashMap, ConcurrentSkipListMap, EnumMap, Hashtable, IdentityHashMap, LinkedHashMap, PrinterStateReasons, Properties, Provider, RenderingHints, SimpleBindings, TabularDataSupport, TreeMap, UIDefaults, WeakHashMap, Bindings, ConcurrentMap, ConcurrentNavigableMap, LogicalMessageContext, NavigableMap, SOAPMessageContext, SortedMap}}
+\mytableend{Basic types}{basicTypesTable}
+
+Apart from these mappings, a few common method names are also internally matched for convenience (e.g. for sizes and lengths), see \autoref{featureNamesMappingTable}
+\mytablebeg
+\simpleline{count}{length, size}
+\simpleline{item}{get}
+\simpleline{empty}{isEmpty}
+\mytableend{Feature names mappings}{featureNamesMappingTable}
+
+%------------ Queries and Commands -----------
+\subsection{Queries and Commands}\label{queriescommands}\hfill \newline
+BON defines the notion of commands and queries and does not allow 'mixins'. \\
+Commands as defined by Beetlz are features/methods with:
+\begin{itemize}
+\item return type void
+\end{itemize}
+Queries as defined by Beetlz are features/methods with:
+\begin{itemize}
+\item non-void return type + pure method
+\item non-void return type + empty frame (assignable nothing)
+\item non-void return type + part of pure class
+\end{itemize}
+Mixed types are all others, i.e. methods that return some value, but also modify state.
+
+
+%------------ Operators -------------------
+\subsection{Operators}\hfill \newline
+Most operators are available in both languages, however their notation may differ. Also, a few of them are not supported in Beetlz. All of these are summarized in ~\autoref{operatorsTable} 
+\mytablebeg
+\simpleline{\emph{not supported}}{\texttt{new()}}
+\simpleline{\texttt{for\_all}}{\texttt{\textbackslash forall}}
+\simpleline{\texttt{exists}}{\texttt{\textbackslash exists}} 
+\simpleline{\texttt{such\_that}}{\emph{not supported}}
+\simpleline{\texttt{it\_holds}}{\emph{not supported}}
+\simpleline{\texttt{member\_of}}{\emph{not supported}}
+\simpleline{\texttt{not member\_of}}{\emph{not supported}}
+\simpleline{\emph{not supported}}{\texttt{\textbackslash max, \textbackslash min, \textbackslash product, \textbackslash sum, \textbackslash num\_of}}
+\simpleline{-- (comment)}{ \texttt{(* ... *)}  (informal predicate) }
+\simpleline{\texttt{.at(), .get()}}{\texttt{[]}  (array access)}
+\simpleline{\texttt{.} (dot operator)}{\texttt{.} (dot operator)}
+\simpleline{feature call}{method call}
+\simpleline{\texttt{+, -} (unary)}{\texttt{+, -} (unary)}
+\simpleline{\emph{not supported}}{~}
+\simpleline{\texttt{not}}{!}
+\simpleline{\emph{not supported}}{(typecast)}
+\simpleline{\^{}}{\texttt{Math.pow(...)}}
+\simpleline{\texttt{*, /, \textbackslash \textbackslash}}{\texttt{*, /, \%}}
+\simpleline{\texttt{//} (integer division)}{\emph{not supported}}
+\simpleline{\texttt{+, -} (binary)}{\texttt{+, -} (binary)}
+\simpleline{\emph{not supported}}{\texttt{$<<, >>, >>>$}}
+\simpleline{$<, <=, =>, >$}{$<, <=, =>, >$}
+\simpleline{\emph{not supported}}{$<:$ (subtype)}
+\simpleline{\emph{not supported}}{\texttt{instanceof}}
+\simpleline{\texttt{=, /=}}{\texttt{==, !=, equals(), ! ... equals()}}
+\simpleline{\emph{not supported}}{\texttt{\&} (bitwise and)}
+\simpleline{\texttt{xor}}{\texttt{\^}}
+\simpleline{\emph{not supported}}{\texttt{|} (bitwise or)}
+\simpleline{\texttt{and}}{\texttt{\&\&}}
+\simpleline{\texttt{or}}{\texttt{||}}
+\simpleline{\texttt{-$>$}}{\texttt{==$>$, $<$==}}
+\simpleline{\texttt{$<$-$>$, not ( ... $<$-$>$ ... )}}{\texttt{$<$=$>$, $<$=!=$>$}}
+\simpleline{\emph{not supported, must be expanded}}{\texttt{? : } (if else than)}
+\mytableend{Operators}{operatorsTable}
+
+\subsection{Predicates}\hfill \newline
+BON allows only one explicit clause for preconditions, postconditions and invariants, whereas in JML, these can be in several parts and are implicitly conjunctions. For this reason, all BON and JML predicates are separated along conjunctions. Hence, any error message about missing or faulty predicates will only mention that particular part of the whole conjunction.\\
+No type checking or similar is being performed, that is Beetlz assumes the clauses have compiled successfully and all references, variable names, etc. are valid. When relating BON and JML predicates, it is done in a structural and not logical way. Hence, if there is a negation clause, then it will only be successfully matched to another negation clause with the same argument. Only a few minor equivalences are being taken into account (a = b is matched to b = a for example). Hence, sometimes rewriting a predicate very slightly make the match successful.\\
+Any predicates with not recognized elements will be retained as informal comments, where possible.
+
+
+
+\subsection{History constraints}\hfill \newline
+As history constraints may use the \texttt{\textbackslash old} keyword, they cannot be related to class invariants. Instead, Beetlz attempts to find, whether there is a feature with a matching postcondition. In  the case the is one such feature, not \emph{all} features as it would be strictly necessary, it is taken as success, otherwise logged as an error. Note, that as soon one history constraint is being used a general warning is also being printed.
+
+\subsection{Initially clauses}\hfill \newline
+These can be viewed as postconditions on constructors in JML and thus matched to postconditions on BON \texttt{make} features. The comparison is done in the same way as for any other predicates.
+Initially clauses are ignored in pure-BON mode.
+
+\subsection{Client relations}\hfill \newline
+The three client relations possible in BON are inheritance (see ~\ref{inheritance}), associations and aggregations. Although these can be defined also between clusters and classes, it is assumed that they are expanded to class level only. \\
+Simple associations correspond to reference types in Java, shared associations to final reference types. Only shared associations are being explicitly checked. \\
+An aggregation is translated by Beetlz into a member class relation. Since Java does not define any additional details, all different flavours, like role and multiplicity in BON, are ignored.
+
+\subsection{Frame condition}\hfill \newline
+The BON frame condition is part of the postcondition whereas in JML it is a separate clause. Nontheless, the matching is being done in a straight-forward way. Note, that Beetlz does not attempt to find some compromise for the differing default values and will log an error wherever a mismatch occurs.  
+
+
+\subsection{Nullity}\hfill \newline
+JML defines all reference types non-null by defaults, whereas BON does the opposite. Beetlz does not try to attempt to resolve this discrepancy and will dutifully record all mismatched between nullities. Since BON does not have special key-words, the notational conventions in ~\autoref{nullityTable} have been adopted.
+\mytablebeg
+\simpleline{\texttt{myFeature \newline ensure \newline Result \textbackslash = Void \newline end}}{\texttt{/*@ non\_null @*/ myField \newline
+(annotation optional)}}
+\simpleline{\texttt{myFeature}}{\texttt{/*@ nullable @*/ myField}}
+\simpleline{\texttt{myArray \textbackslash = Void and \newline
+for\_all i it\_holds myArray.item(i) \textbackslash = Void}}{\texttt{nonnullelements(myArray)}}
+\simpleline{\texttt{class MY\_CLASS}}{\texttt{public /*@ nullable\_by\_default @*/ class MyClass}}
+\simpleline{\emph{no correspondence}}{\texttt{public class MyClass}}
+\mytableend{}{nullityTable}
+
+
+
+\subsection{Models and Ghosts}\hfill \newline
+Model and ghost fields are being matched to their BON counterparts as if they were normal variables, including all visibility and type comparisons.
+
+%------------ heavy-weight specs and defaults --------------
+\subsection{Heavy-weight and light-weight specifications}\hfill \newline
+Throughout, the JML specifications are assumed to be light-weight. One can still write ones specifications in heavy-weight form, as those will be parsed in the same manner, however, one should keep in mind that the default values will be assumed to be the ones for light-weight specs regardless. No warning or notification is being made.
+
+
+\subsection{Not supported}\hfill \newline
+Some features of BON or JML are not supported by Beetlz. Some will result in an error and some will be simply ignored. In general, if some 'important' ignored feature is encountered, the user will be notified at least by a warning message. Note that such a message does not lead to program abortion. The ignored elements include:
+\begin{itemize}
+\item data groups
+\item redundant clauses
+\item all JML elements that are not level 0 or 1
+\item \texttt{exceptional} behaviour clauses in JML specs
+\item \texttt{signals} and \texttt{signals\_only} clauses in JML specs
+\item \texttt{for\_all} clauses in JML specs
+\item \texttt{old} clauses in JML specs
+\item renaming in BON
+\item repeated inheritance
+\end{itemize}
+[[To be extended when we find more...]]
+
+
+\section*{References}\hfill \newline
+[1] K. Walden and J.-M. Nerson, Seamless Object-Oriented Software Architecture. Prentice
+Hall, 1995 \newline
+[2] G. T. Leavens, E. Poll, C. Clifton, Y. Cheon, C. Ruby, D. Cok, P. Muller, J. Kiniry,
+P. Chalin, and D. M. Zimmerman, JML Reference Manual DRAFT, Revision : 1:231,
+2008\newline
+[3] B. Meyer, Eiffel, The Language. Prentice Hall, 1991
+
+
+
+\end{document}  

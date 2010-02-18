@@ -79,17 +79,17 @@ component
     about: "enumerated type, suggested form"  
   feature
     happy: MOOD
-      ensure
-        Result = old happy;
-      end
+      --ensure
+        --Result = old happy;
+      --end
     sad: MOOD
-      ensure
-        Result = old sad;
-      end
+      --ensure
+        --Result = old sad;
+      --end
     dunno: MOOD
-      ensure
-        Result = old dunno;
-      end
+      --ensure
+        --Result = old dunno;
+      --end
     --getName: STRING
   feature{NONE}
     enumeration:SET

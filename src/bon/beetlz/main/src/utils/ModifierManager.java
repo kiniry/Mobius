@@ -215,13 +215,6 @@ public class ModifierManager {
       this.my_modifier = a_name;
     }
 
-    /**
-     * Returns the modifier in lower case written form.
-     * @return String representation of modifier
-     */
-    public String getName() {
-      return my_modifier;
-    }
 
     /**
      * Returns the modifier in lower case written form.

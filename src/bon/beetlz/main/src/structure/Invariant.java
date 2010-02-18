@@ -122,6 +122,7 @@ public class Invariant {
   @Override
   public final String toString() {
     String string = ""; //$NON-NLS-1$
+    
     if (my_predicates.size() > 0) {
       string += "invariants \n"; //$NON-NLS-1$
       for (final BeetlzExpression s : my_predicates) {

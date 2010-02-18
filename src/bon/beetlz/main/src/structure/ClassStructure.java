@@ -80,6 +80,8 @@ public class ClassStructure implements Comparable < ClassStructure > {
                                      final BeetlzSourceLocation the_source_location) {
     //final ClassStructure enclosingClass
     my_type = a_class_type;
+    if (my_type == ClassType.BON) my_nullity = Nullity.NULLABLE;
+    else my_nullity = Nullity.NON_NULL;
     my_sourceLoc = the_source_location;
     my_modifiers = a_modifier;
     my_visibility = a_visibility;
@@ -107,122 +109,6 @@ public class ClassStructure implements Comparable < ClassStructure > {
   @Override
   public final String toString() {
     return my_simplename.toQualifiedString().toString();
-  }
-
-  /**
-   * Returns a pretty printed string, without invariants.
-   * @see java.lang.Object#toString()
-   * @return pretty string
-   */
-  public final /*@ pure @*/ String toStringVerbose() {
-    String string = ""; //$NON-NLS-1$
-    //Modifier
-    string += my_visibility.getActualVisibility() + " "; //$NON-NLS-1$
-    for (final ClassModifier m : my_modifiers) {
-      string += m.getName() + " "; //$NON-NLS-1$
-    }
-
-    //Class type and class name
-    if (my_modifiers.contains(ClassModifier.JAVA_INTERFACE)) {
-      string += my_simplename;
-    } else {
-      string += " class " + my_simplename; //$NON-NLS-1$
-    }
-
-    //Generics
-    if (my_generics != null) {
-      if (my_generics.size() > 0) {
-        string += "["; //$NON-NLS-1$
-        for (final SmartString s : my_generics) {
-          string += s + ", "; //$NON-NLS-1$
-        }
-        string += "]"; //$NON-NLS-1$
-      }
-    }
-    //Interfaces
-    if (my_interfaces != null) {
-      if (my_interfaces.size() > 0) {
-        string += " implements "; //$NON-NLS-1$
-        for (final SmartString intf : my_interfaces) {
-          string += intf.toString() + ", "; //$NON-NLS-1$
-        }
-      }
-    }
-    //Features/methods
-    for (final FeatureStructure f : my_constructors) {
-      string = string + "\n" + f.toString(); //$NON-NLS-1$
-    }
-    for (final FeatureStructure f : my_features) {
-      string = string + "\n" + f.toString(); //$NON-NLS-1$
-    }
-
-    //associations
-    if (my_sharedAssociations.size() > 0) {
-      string += "\n shared associations: " + my_sharedAssociations.toString(); //$NON-NLS-1$
-    }
-
-    //associations
-    if (my_aggregations.size() > 0) {
-      string += "\n aggregations: " + my_aggregations.toString(); //$NON-NLS-1$
-    }
-
-    if (my_invariant != null) {
-      string += "\n" + my_invariant; //$NON-NLS-1$
-    }
-    return string + "\n"; //$NON-NLS-1$
-  }
-
-  /**
-   * Creates a full print including invariant.
-   * @return pretty string
-   */
-  public final /*@ pure @*/ String printFullClass() {
-    String string = ""; //$NON-NLS-1$
-
-    //Modifier
-    string += my_visibility.getActualVisibility() + " "; //$NON-NLS-1$
-    for (final ClassModifier m : my_modifiers) {
-      string += m.getName() + " "; //$NON-NLS-1$
-    }
-
-    //Class type and class name
-    if (my_modifiers.contains(ClassModifier.JAVA_INTERFACE)) {
-      string += my_simplename;
-    } else {
-      string += " class " + my_simplename; //$NON-NLS-1$
-    }
-    //Generics
-    if (my_generics.size() > 0) {
-      string += "<"; //$NON-NLS-1$
-      for (final SmartString s : my_generics) {
-        string += s + ", "; //$NON-NLS-1$
-      }
-      string += ">"; //$NON-NLS-1$
-    }
-
-    //Interfaces
-    if (my_interfaces.size() > 0) {
-      string += " implements " + my_interfaces + " ";   //$NON-NLS-1$ //$NON-NLS-2$
-    }
-    string += "{"; //$NON-NLS-1$
-
-    //Features/methods
-    for (final FeatureStructure f : my_constructors) {
-      string = string + "\n" + f.printFullFeature(); //$NON-NLS-1$
-    }
-    for (final FeatureStructure f : my_features) {
-      string = string + "\n" + f.printFullFeature(); //$NON-NLS-1$
-    }
-
-    if (my_invariant != null) {
-      string += "\n" + my_invariant; //$NON-NLS-1$
-    }
-    string += "\n   *part of package: " + my_pack; //$NON-NLS-1$
-
-    //SourceLocation
-    string += "\n(" + my_sourceLoc.toFileAndLineString() + ")\n"; //$NON-NLS-1$ //$NON-NLS-2$
-    string += "}"; //$NON-NLS-1$
-    return string;
   }
 
   //**************************
@@ -477,50 +363,6 @@ public class ClassStructure implements Comparable < ClassStructure > {
   }
 
   /**
-   * Add the Java interface modifier.
-   */
-  public final void addInterfaceModifier() {
-    my_modifiers.add(ClassModifier.JAVA_INTERFACE);
-  }
-
-  /**
-   * Add the BON root modifier.
-   */
-  public final void addRootModifier() {
-    my_modifiers.add(ClassModifier.ROOT);
-  }
-
-  /**
-   * Set the class type.
-   * @param a_type the type to set
-   */
-  public final void setClassType(final ClassType a_type) {
-    this.my_type = a_type;
-  }
-
-  /**
-   * Set classes to which we are visible.
-   * This only affects protected, package-private classe.
-   * This also affects all protected and package-private features inside the class.
-   * @param some_exports exports to set
-   */
-  public final void setExports(final List < TypeSmartString > some_exports) {
-    if (isPackagePrivate() || isProtected()) {
-      my_visibility.setExports(some_exports);
-    }
-    for (final FeatureStructure f : my_features) {
-      if (f.isProtected() || f.isPackagePrivate()) {
-        f.setExports(some_exports);
-      }
-    }
-    for (final FeatureStructure f : my_constructors) {
-      if (f.isProtected() || f.isPackagePrivate()) {
-        f.setExports(some_exports);
-      }
-    }
-  }
-
-  /**
    * Set the invariant.
    * @param an_invariant invariant to set
    */
@@ -707,22 +549,6 @@ public class ClassStructure implements Comparable < ClassStructure > {
   }
 
   /**
-   * Checks if the class contains a certain accessible feature.
-   * Spec-Private features are not being returned.
-   * @param a_name feature name to search for
-   * @return  feature, if found, otherwise an empty list
-   */
-  public final /*@ pure @*/ List < FeatureStructure > hasFeature(final SmartString a_name) {
-    final List < FeatureStructure > list = new Vector < FeatureStructure > ();
-    for (final FeatureStructure c : my_features) {
-      if (!c.isPrivate() && c.getName().equalsTyped(a_name)) {
-        list.add(c);
-      }
-    }
-    return list;
-  }
-
-  /**
    * Checks if the class contains a certain feature with exactly the
    * given name. Since Java allows overloading, this will be a list.
    * To accomodate this in BON, we assume the naming convention for
@@ -817,19 +643,6 @@ public class ClassStructure implements Comparable < ClassStructure > {
     return false;
   }
 
-
-  /**
-   * Get all feature names.
-   * @return feature names, concatenated by underscore
-   */
-  public final /*@ pure @*/ String getFeatureNames() {
-    String string = ""; //$NON-NLS-1$
-    for (final FeatureStructure c : my_features) {
-      string += c.getName() + "_"; //$NON-NLS-1$
-    }
-    return string;
-  }
-
   /**
    * Get all accesible features, ie all not private ones.
    * @return non-private features
@@ -842,26 +655,6 @@ public class ClassStructure implements Comparable < ClassStructure > {
       }
     }
     return list;
-  }
-
-  /**
-   * Get the compound name of this class.
-   * @return compound name
-   */
-  public final /*@ pure @*/ SmartString getCompoundName() {
-    final int two = 2;
-    if (my_generics.size() == 0) {
-      return my_simplename;
-    } else {
-      String str = my_simplename.toString() + "["; //$NON-NLS-1$
-      for (final SmartString s : my_generics) {
-        str += s.toString() + ", "; //$NON-NLS-1$
-      }
-      str = str.substring(0, str.length() - two);
-      str += "]"; //$NON-NLS-1$
-      final List < SmartString > list = new Vector < SmartString > (my_generics);
-      return new ParametrizedSmartString(str, my_simplename, list);
-    }
   }
 
   /**

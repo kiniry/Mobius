@@ -54,14 +54,6 @@ public class GenericParameter extends SmartString {
   }
 
   /**
-   * Has this generic parameter constraints.
-   * @return true if contraints are present
-   */
-  public final boolean isParametrized() {
-    return (my_types.size() != 0);
-  }
-
-  /**
    * Compare two SmartStrings.
    * They can only match if they are of the same class.
    * @see java.lang.Comparable#compareTo(java.lang.Object)

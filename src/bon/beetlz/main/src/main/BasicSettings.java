@@ -10,9 +10,6 @@ import utils.BasicTypesDictionary;
    */
 public final class BasicSettings {
 
-  /** */
-  private BasicSettings() { } 
-
   /**
    * Initialises basic types.
    * @param a_profile where to put settings

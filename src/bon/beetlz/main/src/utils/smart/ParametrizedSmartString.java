@@ -105,17 +105,6 @@ public class ParametrizedSmartString extends SmartString {
   }
 
   /**
-   * Make a copy of this string.
-   * @see utils.smart.SmartString#makeCopy()
-   * @return copy of this string
-   */
-  @Override
-  public final SmartString makeCopy() {
-    return new ParametrizedSmartString(my_string, my_name, my_params);
-  }
-
-
-  /**
    * Get the type of this parametrized string.
    * @return type
    */

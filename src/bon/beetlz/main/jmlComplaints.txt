@@ -1,9 +1,3 @@
-/Users/evka/Work/Beetlz/mac_workspace/Beetlz/tests/debug/Debug.java:6: package pus.util does not exist
- //@ public model instance non_null pus.util.List _list;
-                                            ^
-/Users/evka/Work/Beetlz/mac_workspace/Beetlz/tests/debug/Debug.java:6: package pus.util does not exist
- //@ public model instance non_null pus.util.List _list;
-                                            ^
 /Users/evka/Work/Beetlz/mac_workspace/Beetlz/lib/openjml.jar(specs16/java/lang/reflect/Method.jml):53: warning: A non-pure method is being called where it is not permitted: isStatic(int)
     //+@ requires !Modifier.isStatic(getModifiers()) ==> obj != null;
                                     ^

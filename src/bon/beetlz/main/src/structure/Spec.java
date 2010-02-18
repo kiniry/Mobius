@@ -37,19 +37,6 @@ public class Spec {
   /** Feature type: field, query, command, mixed, unknown. */
   private final FeatureType my_featureType;
 
-
-  /**
-   * Dummy specs.
-   */
-  public Spec() {
-    my_precondition = new Vector < BeetlzExpression > ();
-    my_postcondition = new Vector < BeetlzExpression > ();
-    my_frame = new Vector < BeetlzExpression > ();
-    my_constantValue = null;
-    my_featureType = FeatureType.UNKNOWN;
-    my_type = ClassType.NOT_SPECIFIED;
-  }
-
   /**
    * Create a new specification.
    * @param a_pre preconditions

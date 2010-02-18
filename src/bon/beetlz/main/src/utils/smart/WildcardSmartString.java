@@ -2,8 +2,6 @@ package utils.smart;
 
 import utils.BConst;
 
-
-
 /**
  * @author Eva Darulova (edarulova@googlemail.com)
  * @version beta-1
@@ -92,16 +90,6 @@ public class WildcardSmartString extends SmartString implements Comparable < Sma
   }
 
   /**
-   * Make a copy of this string.
-   * @see utils.smart.SmartString#makeCopy()
-   * @return copy of this string
-   */
-  @Override
-  public final SmartString makeCopy() {
-    return new WildcardSmartString(my_string, my_wildcard, my_bound);
-  }
-
-  /**
    * Wildcard types.
    * @author Eva Darulova (edarulova@googlemail.com)
    * @version beta-1
@@ -128,15 +116,6 @@ public class WildcardSmartString extends SmartString implements Comparable < Sma
       return my_modifier;
     }
 
-    /**
-     * Returns the modifier in lower case written form.
-     * @see java.lang.Enum#toString()
-     * @return String representation of modifier
-     */
-    @Override
-    public String toString() {
-      return my_modifier;
-    }
 
   }
 

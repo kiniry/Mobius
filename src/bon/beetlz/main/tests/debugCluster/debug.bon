@@ -1,0 +1,20 @@
+static_diagram TEST          
+component 
+
+cluster DEBUG_CLUSTER
+component
+
+   class DEBUG_CLASS 
+   feature
+     --hello: BOOLEAN
+     --Hello: INTEGER
+     name: STRING
+     make 
+   end
+   
+   deferred class TEST
+   feature
+     deferred hello
+   end
+end   
+end
