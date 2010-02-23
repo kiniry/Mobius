@@ -64,8 +64,6 @@ public class BONClassIndexCompartment2EditPart extends ListCompartmentEditPart {
 		layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
 		rcf.getContentPane().setLayoutManager(layout);
 
-		Insets myInsets = rcf.getContentPane().getInsets();
-
 		rcf.setTitleVisibility(false);
 		return rcf;
 	}

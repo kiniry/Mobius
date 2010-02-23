@@ -68,7 +68,7 @@ public class BONClassInheritanceCompartmentEditPart extends ListCompartmentEditP
 
 		rcf.setTitleVisibility(false);
 		return rcf;
-		
+
 		/*ResizableCompartmentFigure result = (ResizableCompartmentFigure) super.createFigure();
 		result.setTitleVisibility(false);
 		return result;*/

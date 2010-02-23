@@ -325,8 +325,8 @@ public class BonideViewProvider extends AbstractProvider implements IViewProvide
 				.getType(bonIDE.diagram.edit.parts.BONClassInheritanceCompartment2EditPart.VISUAL_ID), true, false,
 				true, true);
 		createCompartment(node, bonIDE.diagram.part.BonideVisualIDRegistry
-				.getType(bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart.VISUAL_ID), true, false, false,
-				false);
+				.getType(bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart.VISUAL_ID), true, false, true,
+				true);
 		return node;
 	}
 
@@ -412,8 +412,8 @@ public class BonideViewProvider extends AbstractProvider implements IViewProvide
 				.getType(bonIDE.diagram.edit.parts.BONClassInheritanceCompartmentEditPart.VISUAL_ID), true, false,
 				true, true);
 		createCompartment(node, bonIDE.diagram.part.BonideVisualIDRegistry
-				.getType(bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID), true, false, false,
-				false);
+				.getType(bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID), true, false, true,
+				true);
 		return node;
 	}
 

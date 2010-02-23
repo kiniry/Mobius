@@ -121,9 +121,20 @@ public class FeatureNamesEditPart extends CompartmentEditPart implements ITextAw
 	}
 
 	/**
-	 * @generated
+	 * @generated NOT
 	 */
 	protected void setLabelTextHelper(IFigure figure, String text) {
+
+		if (text.startsWith("[")) {
+			text = text.substring(1);
+		}
+
+		if (text.endsWith("]")) {
+			text = text.substring(0, text.length() - 1);
+		}
+
+		text += ":";
+
 		if (figure instanceof WrappingLabel) {
 			((WrappingLabel) figure).setText(text);
 		} else {
@@ -500,7 +511,7 @@ public class FeatureNamesEditPart extends CompartmentEditPart implements ITextAw
 	 * @generated
 	 */
 	private View getFontStyleOwnerView() {
-		return getPrimaryView();
+		return (View) getModel();
 	}
 
 	/**

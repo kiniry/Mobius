@@ -22,7 +22,10 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @generated
@@ -171,10 +174,10 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 	}
 
 	/**
-	 * @generated
+	 * @generated NOT
 	 */
 	protected NodeFigure createNodePlate() {
-		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(40, 40);
+		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(40, 12);
 		return result;
 	}
 
@@ -313,20 +316,28 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 			fFigureArgumentArrowFigure = new WrappingLabel();
 			fFigureArgumentArrowFigure.setText("->");
 
+			fFigureArgumentArrowFigure.setFont(FFIGUREARGUMENTARROWFIGURE_FONT);
+
 			this.add(fFigureArgumentArrowFigure);
 
 			fFigureArgumentNameFigure = new WrappingLabel();
 			fFigureArgumentNameFigure.setText("");
+
+			fFigureArgumentNameFigure.setFont(FFIGUREARGUMENTNAMEFIGURE_FONT);
 
 			this.add(fFigureArgumentNameFigure);
 
 			fFigureArgumentCollectionFigure = new WrappingLabel();
 			fFigureArgumentCollectionFigure.setText("");
 
+			fFigureArgumentCollectionFigure.setFont(FFIGUREARGUMENTCOLLECTIONFIGURE_FONT);
+
 			this.add(fFigureArgumentCollectionFigure);
 
 			fFigureArgumentTypeFigure = new WrappingLabel();
 			fFigureArgumentTypeFigure.setText("");
+
+			fFigureArgumentTypeFigure.setFont(FFIGUREARGUMENTTYPEFIGURE_FONT);
 
 			this.add(fFigureArgumentTypeFigure);
 
@@ -385,5 +396,29 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	static final Color THIS_FORE = new Color(null, 200, 0, 0);
+
+	/**
+	 * @generated
+	 */
+	static final Font FFIGUREARGUMENTARROWFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
+			SWT.NORMAL);
+
+	/**
+	 * @generated
+	 */
+	static final Font FFIGUREARGUMENTNAMEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
+			SWT.NORMAL);
+
+	/**
+	 * @generated
+	 */
+	static final Font FFIGUREARGUMENTCOLLECTIONFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
+			SWT.NORMAL);
+
+	/**
+	 * @generated
+	 */
+	static final Font FFIGUREARGUMENTTYPEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
+			SWT.NORMAL);
 
 }

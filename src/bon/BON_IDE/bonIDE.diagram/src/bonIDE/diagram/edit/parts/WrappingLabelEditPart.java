@@ -242,7 +242,7 @@ public class WrappingLabelEditPart extends CompartmentEditPart implements ITextA
 	 * @generated
 	 */
 	protected boolean isEditable() {
-		return getParser() != null;
+		return false;
 	}
 
 	/**

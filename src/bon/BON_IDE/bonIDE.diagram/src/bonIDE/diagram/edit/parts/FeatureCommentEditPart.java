@@ -500,7 +500,7 @@ public class FeatureCommentEditPart extends CompartmentEditPart implements IText
 	 * @generated
 	 */
 	private View getFontStyleOwnerView() {
-		return getPrimaryView();
+		return (View) getModel();
 	}
 
 	/**

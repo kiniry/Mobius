@@ -4,6 +4,7 @@ import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.ToolbarLayout;
@@ -309,6 +310,10 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 				return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
 						.getType(bonIDE.diagram.edit.parts.BONClassInheritanceCompartmentEditPart.VISUAL_ID));
 			}
+			if (type == bonIDE.diagram.providers.BonideElementTypes.Feature_3006) {
+				return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
+						.getType(bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID));
+			}
 		}
 		return super.getTargetEditPart(request);
 	}
@@ -316,7 +321,7 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	public class BONClassFigure extends RectangleFigure {
+	public class BONClassFigure extends RoundedRectangle {
 
 		/**
 		 * @generated
@@ -350,6 +355,8 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 
 			this.setLayoutManager(layoutThis);
 
+			this.setCornerDimensions(new Dimension(getMapMode().DPtoLP(8)
+					, getMapMode().DPtoLP(8)));
 			this.setLineWidth(1);
 			createContents();
 		}
@@ -369,11 +376,6 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 			fFigureIndexRectangleFigure = new RectangleFigure();
 			fFigureIndexRectangleFigure.setLineWidth(1);
 			fFigureIndexRectangleFigure.setForegroundColor(FFIGUREINDEXRECTANGLEFIGURE_FORE);
-
-			fFigureIndexRectangleFigure.setBorder(new MarginBorder(getMapMode().DPtoLP(0)
-					, getMapMode().DPtoLP(0)
-					, getMapMode().DPtoLP(2)
-					, getMapMode().DPtoLP(0)));
 
 			this.add(fFigureIndexRectangleFigure);
 
@@ -407,14 +409,12 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 
 			this.add(fFigureFeatureRectangleFigure);
 
-			FlowLayout layoutFFigureFeatureRectangleFigure = new FlowLayout();
-			layoutFFigureFeatureRectangleFigure.setStretchMinorAxis(false);
-			layoutFFigureFeatureRectangleFigure.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			ToolbarLayout layoutFFigureFeatureRectangleFigure = new ToolbarLayout();
+			layoutFFigureFeatureRectangleFigure.setStretchMinorAxis(true);
+			layoutFFigureFeatureRectangleFigure.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
 
-			layoutFFigureFeatureRectangleFigure.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP);
-			layoutFFigureFeatureRectangleFigure.setMajorSpacing(5);
-			layoutFFigureFeatureRectangleFigure.setMinorSpacing(5);
-			layoutFFigureFeatureRectangleFigure.setHorizontal(true);
+			layoutFFigureFeatureRectangleFigure.setSpacing(0);
+			layoutFFigureFeatureRectangleFigure.setVertical(true);
 
 			fFigureFeatureRectangleFigure.setLayoutManager(layoutFFigureFeatureRectangleFigure);
 
@@ -472,7 +472,8 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREBONCLASSNAMEFIGURE_FONT = new Font(Display.getCurrent(), "LucidaSans", 9, SWT.NORMAL);
+	static final Font FFIGUREBONCLASSNAMEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 9,
+			SWT.NORMAL);
 
 	/**
 	 * @generated

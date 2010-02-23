@@ -500,7 +500,7 @@ public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwa
 	 * @generated
 	 */
 	private View getFontStyleOwnerView() {
-		return getPrimaryView();
+		return (View) getModel();
 	}
 
 	/**

@@ -500,7 +500,7 @@ public class FeatureModifierEditPart extends CompartmentEditPart implements ITex
 	 * @generated
 	 */
 	private View getFontStyleOwnerView() {
-		return getPrimaryView();
+		return (View) getModel();
 	}
 
 	/**

@@ -500,7 +500,7 @@ public class FeatureArgumentContainerTypeEditPart extends CompartmentEditPart im
 	 * @generated
 	 */
 	private View getFontStyleOwnerView() {
-		return getPrimaryView();
+		return (View) getModel();
 	}
 
 	/**

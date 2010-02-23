@@ -28,7 +28,10 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @generated
@@ -108,16 +111,6 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureCommentEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureFeatureCommentFigure());
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureModifierEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureFeatureModifierFigure());
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
 			((bonIDE.diagram.edit.parts.FeatureNamesEditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureFeatureNamesFigure());
@@ -126,6 +119,16 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
 			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureFeatureTypeFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureCommentEditPart) childEditPart).setLabel(getPrimaryShape()
+					.getFigureFeatureCommentFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureModifierEditPart) childEditPart).setLabel(getPrimaryShape()
+					.getFigureFeatureModifierFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) {
@@ -153,16 +156,16 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) {
@@ -424,20 +427,28 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 			fFigureFeatureNamesFigure = new WrappingLabel();
 			fFigureFeatureNamesFigure.setText("<...>");
 
+			fFigureFeatureNamesFigure.setFont(FFIGUREFEATURENAMESFIGURE_FONT);
+
 			fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureNamesFigure);
 
 			fFigureFeatureModifierFigure = new WrappingLabel();
 			fFigureFeatureModifierFigure.setText("");
+
+			fFigureFeatureModifierFigure.setFont(FFIGUREFEATUREMODIFIERFIGURE_FONT);
 
 			fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureModifierFigure);
 
 			fFigureFeatureTypeFigure = new WrappingLabel();
 			fFigureFeatureTypeFigure.setText("");
 
+			fFigureFeatureTypeFigure.setFont(FFIGUREFEATURETYPEFIGURE_FONT);
+
 			fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureTypeFigure);
 
 			fFigureFeatureCommentFigure = new WrappingLabel();
 			fFigureFeatureCommentFigure.setText("");
+
+			fFigureFeatureCommentFigure.setFont(FFIGUREFEATURECOMMENTFIGURE_FONT);
 
 			this.add(fFigureFeatureCommentFigure);
 
@@ -580,6 +591,30 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	static final Color FFIGUREFEATURESIGNATURERECTANGLEFIGURE_FORE = new Color(null, 0, 0, 200);
+
+	/**
+	 * @generated
+	 */
+	static final Font FFIGUREFEATURENAMESFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
+			SWT.NORMAL);
+
+	/**
+	 * @generated
+	 */
+	static final Font FFIGUREFEATUREMODIFIERFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
+			SWT.NORMAL);
+
+	/**
+	 * @generated
+	 */
+	static final Font FFIGUREFEATURETYPEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
+			SWT.NORMAL);
+
+	/**
+	 * @generated
+	 */
+	static final Font FFIGUREFEATURECOMMENTFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
+			SWT.NORMAL);
 
 	/**
 	 * @generated
