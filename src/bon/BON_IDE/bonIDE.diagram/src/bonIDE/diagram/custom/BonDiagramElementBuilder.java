@@ -133,14 +133,6 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 
 		// --------------------------------------------------------------------------------------
 
-		/*
-		 * FeatureImpl newFeature = (FeatureImpl)
-		 * BonIDEFactoryImpl.eINSTANCE.createFeature();
-		 * newFeature.setComment("-- this is a comment");
-		 * newClass.getFeatures().add(newFeature);
-		 */
-		System.out.println("start making class " + System.currentTimeMillis());
-
 		CreateViewRequest.ViewDescriptor viewDescriptor = new CreateViewRequest.ViewDescriptor(
 				new EObjectAdapter(newClass),
 				org.eclipse.gmf.runtime.notation.Node.class,
@@ -151,14 +143,9 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 		viewDescriptor.setPersisted(true);
 		CreateViewRequest createViewRequest = new CreateViewRequest(viewDescriptor);
 		Command createViewCommand = modelEP.getCommand(createViewRequest);
-
-		System.out.println("end making class " + System.currentTimeMillis());
-		System.out.println("start executing make class command" + System.currentTimeMillis());
-
+		
 		modelEP.getDiagramEditDomain().getDiagramCommandStack().execute(createViewCommand);
 
-		System.out.println("end executing make class command" + System.currentTimeMillis());
-		System.out.println("start adding class " + System.currentTimeMillis());
 		// --------------------------------------------------------------------------------------
 
 		bonIDE.impl.ModelImpl modelImpl = (bonIDE.impl.ModelImpl) ((View) modelEP.getModel()).getElement();
@@ -177,8 +164,6 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 
 		SetValueCommand operation = new SetValueCommand(reqSet);
 		modelEP.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(operation));
-
-		System.out.println("end adding class " + System.currentTimeMillis());
 	}
 
 	private static void createBONClassInheritanceElement(BONClassImpl newClass, List<Type> parents) {

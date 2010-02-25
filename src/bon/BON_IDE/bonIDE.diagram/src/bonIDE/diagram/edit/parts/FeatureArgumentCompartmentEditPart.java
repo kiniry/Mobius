@@ -19,6 +19,16 @@ import bonIDE.diagram.custom.VeryThinResizableCompartmentFigure;
  */
 public class FeatureArgumentCompartmentEditPart extends ListCompartmentEditPart {
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#handleNotificationEvent(org.eclipse.emf.common.notify.Notification)
+	 */
+	@Override
+	protected void handleNotificationEvent(Notification event) {
+		// TODO Auto-generated method stub
+		System.out.println("FeatureArgumentEditPart.FeatureArgumentCompartmentEditPart");
+		super.handleNotificationEvent(event);
+	}
+
 	/**
 	 * @generated
 	 */

@@ -32,6 +32,25 @@ import org.eclipse.swt.widgets.Display;
  */
 public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart#refreshBounds()
+	 */
+	@Override
+	protected void refreshBounds() {
+		System.out.println("FeatureArgumentEditPart.refreshBounds");
+		super.refreshBounds();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart#refreshVisuals()
+	 */
+	@Override
+	protected void refreshVisuals() {
+		System.out.println("FeatureArgumentEditPart.refreshVisuals");
+		// TODO Auto-generated method stub
+		super.refreshVisuals();
+	}
+
 	/**
 	 * @generated
 	 */

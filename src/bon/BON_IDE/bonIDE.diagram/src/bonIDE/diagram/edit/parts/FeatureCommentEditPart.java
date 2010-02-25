@@ -45,6 +45,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 
+
 /**
  * @generated
  */
@@ -391,9 +392,20 @@ public class FeatureCommentEditPart extends CompartmentEditPart implements IText
 	}
 
 	/**
-	 * @generated
+	 * @generated NOT
 	 */
 	protected void refreshLabel() {
+		
+		String labelText = this.getLabelText();
+		if( labelText.equals("")){
+			FeatureEditPart parentFeature = (FeatureEditPart)this.getParent();
+			parentFeature.getPrimaryShape().hideComponent(this);			
+		}
+		else{
+			FeatureEditPart parentFeature = (FeatureEditPart)this.getParent();
+			parentFeature.getPrimaryShape().showComponent(this);			
+		}				
+		
 		setLabelTextHelper(getFigure(), getLabelText());
 		setLabelIconHelper(getFigure(), getLabelIcon());
 		Object pdEditPolicy = getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE);

@@ -6,6 +6,7 @@ import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.ToolbarLayout;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -14,6 +15,7 @@ import org.eclipse.gef.editpolicies.FlowLayoutEditPolicy;
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
@@ -37,6 +39,28 @@ import org.eclipse.swt.widgets.Display;
  * @generated
  */
 public class FeatureEditPart extends ShapeNodeEditPart {
+
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart#refreshVisuals()
+	 */
+	@Override
+	protected void refreshVisuals() {
+		// TODO Auto-generated method stub
+		System.out.println("FeatureEditPart.refreshVisuals");
+		super.refreshVisuals();
+		
+	}
+
+	/**
+	 * @generated NOT
+	 */
+	@Override
+	protected void refreshBounds() {
+		// TODO Auto-generated method stub
+		System.out.println("FeatureEditPart.refreshBounds");
+		super.refreshBounds();
+	}
 
 	/**
 	 * @generated
@@ -162,7 +186,7 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {					
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
@@ -231,7 +255,7 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected NodeFigure createNodePlate() {
-		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(40, 40);
+		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(40, 5);
 		return result;
 	}
 
@@ -390,17 +414,26 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 		 */
 		public FeatureFigure() {
 
-			ToolbarLayout layoutThis = new ToolbarLayout();
+			/*ToolbarLayout layoutThis = new ToolbarLayout();
 			layoutThis.setStretchMinorAxis(false);
 			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
 
 			layoutThis.setSpacing(0);
-			layoutThis.setVertical(true);
-
+			layoutThis.setVertical(true);*/
+			
+			ConstrainedToolbarLayout layoutThis = new ConstrainedToolbarLayout();
+			layoutThis.setStretchMajorAxis(true);
+			layoutThis.setStretchMinorAxis(true);
+			layoutThis.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
+			
 			this.setLayoutManager(layoutThis);
 
 			this.setLineWidth(1);
 			this.setForegroundColor(THIS_FORE);
+			//this.setSize(10, 5);
+			//this.setMinimumSize();
+			//this.setPreferredSize(new Dimension(10,5));
+			
 			createContents();
 		}
 
@@ -445,7 +478,7 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 
 			fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureTypeFigure);
 
-			fFigureFeatureCommentFigure = new WrappingLabel();
+			fFigureFeatureCommentFigure = new WrappingLabel();			
 			fFigureFeatureCommentFigure.setText("");
 
 			fFigureFeatureCommentFigure.setFont(FFIGUREFEATURECOMMENTFIGURE_FONT);
@@ -502,9 +535,30 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 			layoutFFigurePostConditionsRectangeFigure.setHorizontal(true);
 
 			fFigurePostConditionsRectangeFigure.setLayoutManager(layoutFFigurePostConditionsRectangeFigure);
-
+			
 		}
 
+		/**
+		 * @generated NOT
+		 */
+		public void hideComponent(GraphicalEditPart component){
+			if( component instanceof FeatureCommentEditPart){
+				fFigureFeatureCommentFigure.setVisible(false);
+			
+			}			
+		}
+		
+		/**
+		 * @generated NOT
+		 */
+		public void showComponent(GraphicalEditPart component){
+			if( component instanceof FeatureCommentEditPart){
+				fFigureFeatureCommentFigure.setVisible(true);
+			}else if ( component instanceof FeatureCommentEditPart){
+				//this.fFigurePreConditionsRectangleFigure
+			}
+		}
+		
 		/**
 		 * @generated
 		 */
