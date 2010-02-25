@@ -123,24 +123,24 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureArgumentTypeFigure());
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart) {
 			((bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureArgumentNameFigure());
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureArgumentCollectionFigure());
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart) childEditPart).setLabel(getPrimaryShape()
+					.getFigureArgumentTypeFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabel2EditPart) {
 			((bonIDE.diagram.edit.parts.WrappingLabel2EditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureArgumentArrowFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart) childEditPart).setLabel(getPrimaryShape()
+					.getFigureArgumentCollectionFigure());
 			return true;
 		}
 		return false;
@@ -150,16 +150,16 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart) {
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabel2EditPart) {
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart) {
 			return true;
 		}
 		return false;

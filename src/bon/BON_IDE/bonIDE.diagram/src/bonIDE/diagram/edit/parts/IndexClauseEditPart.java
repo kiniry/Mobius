@@ -119,14 +119,14 @@ public class IndexClauseEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.IndexClauseTermsEditPart) {
-			((bonIDE.diagram.edit.parts.IndexClauseTermsEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureIndexTermsFigure());
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart) {
 			((bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureIndexIdentifierFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.IndexClauseTermsEditPart) {
+			((bonIDE.diagram.edit.parts.IndexClauseTermsEditPart) childEditPart).setLabel(getPrimaryShape()
+					.getFigureIndexTermsFigure());
 			return true;
 		}
 		return false;
@@ -136,10 +136,10 @@ public class IndexClauseEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.IndexClauseTermsEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.IndexClauseTermsEditPart) {
 			return true;
 		}
 		return false;

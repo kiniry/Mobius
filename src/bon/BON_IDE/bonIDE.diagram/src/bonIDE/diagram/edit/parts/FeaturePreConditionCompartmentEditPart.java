@@ -3,6 +3,7 @@ package bonIDE.diagram.edit.parts;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy;
@@ -39,6 +40,49 @@ public class FeaturePreConditionCompartmentEditPart extends ListCompartmentEditP
 	}
 
 	/**
+	 * @generated NOT
+	 */
+	protected void adjustVisibility() {
+		if (this.getChildren().size() == 0) {
+			FeatureEditPart parentFeature = (FeatureEditPart) this.getParent();
+			parentFeature.getPrimaryShape().hideComponent(this);
+		} else {
+			FeatureEditPart parentFeature = (FeatureEditPart) this.getParent();
+			parentFeature.getPrimaryShape().showComponent(this);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#addChild
+	 * (org.eclipse.gef.EditPart, int)
+	 * 
+	 * @generated NOT
+	 */
+	@Override
+	protected void addChild(EditPart child, int index) {
+		super.addChild(child, index);
+		adjustVisibility();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gef.editparts.AbstractEditPart#removeChild(org.eclipse.gef
+	 * .EditPart)
+	 * 
+	 * @generated NOT
+	 */
+	@Override
+	protected void removeChild(EditPart child) {
+		super.removeChild(child);
+		adjustVisibility();
+	}
+
+	/**
 	 * @generated
 	 */
 	public String getCompartmentName() {
@@ -51,7 +95,8 @@ public class FeaturePreConditionCompartmentEditPart extends ListCompartmentEditP
 	public IFigure createFigure() {
 		ResizableCompartmentFigure rcf;
 		if (getParent() == getTopGraphicEditPart()) {
-			rcf = (ResizableCompartmentFigure) new VeryThinResizableCompartmentFigure(getCompartmentName(), getMapMode());
+			rcf = (ResizableCompartmentFigure) new VeryThinResizableCompartmentFigure(getCompartmentName(),
+					getMapMode());
 		} else {
 			rcf = new NestedResizableCompartmentFigure(getMapMode());
 		}
@@ -65,6 +110,7 @@ public class FeaturePreConditionCompartmentEditPart extends ListCompartmentEditP
 		Insets myInsets = rcf.getContentPane().getInsets();
 
 		rcf.setTitleVisibility(false);
+		adjustVisibility();
 		return rcf;
 	}
 

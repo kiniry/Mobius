@@ -40,28 +40,6 @@ import org.eclipse.swt.widgets.Display;
  */
 public class FeatureEditPart extends ShapeNodeEditPart {
 
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart#refreshVisuals()
-	 */
-	@Override
-	protected void refreshVisuals() {
-		// TODO Auto-generated method stub
-		System.out.println("FeatureEditPart.refreshVisuals");
-		super.refreshVisuals();
-		
-	}
-
-	/**
-	 * @generated NOT
-	 */
-	@Override
-	protected void refreshBounds() {
-		// TODO Auto-generated method stub
-		System.out.println("FeatureEditPart.refreshBounds");
-		super.refreshBounds();
-	}
-
 	/**
 	 * @generated
 	 */
@@ -135,14 +113,14 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureNamesEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureFeatureNamesFigure());
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
 			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureFeatureTypeFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureNamesEditPart) childEditPart).setLabel(getPrimaryShape()
+					.getFigureFeatureNamesFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
@@ -180,13 +158,13 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {					
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
@@ -252,7 +230,7 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	}
 
 	/**
-	 * @generated
+	 * @generated NOT
 	 */
 	protected NodeFigure createNodePlate() {
 		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(40, 5);
@@ -410,30 +388,26 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 		private RectangleFigure fFigurePostConditionsRectangeFigure;
 
 		/**
-		 * @generated
+		 * @generated NOT
 		 */
 		public FeatureFigure() {
 
-			/*ToolbarLayout layoutThis = new ToolbarLayout();
-			layoutThis.setStretchMinorAxis(false);
-			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
-
-			layoutThis.setSpacing(0);
-			layoutThis.setVertical(true);*/
-			
 			ConstrainedToolbarLayout layoutThis = new ConstrainedToolbarLayout();
-			layoutThis.setStretchMajorAxis(true);
-			layoutThis.setStretchMinorAxis(true);
+			layoutThis.setStretchMajorAxis(false);
+			layoutThis.setStretchMinorAxis(false);
 			layoutThis.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
-			
+
+			//			ToolbarLayout layoutThis = new ToolbarLayout();
+			//			layoutThis.setStretchMinorAxis(false);
+			//			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
+			//
+			//			layoutThis.setSpacing(0);
+			//			layoutThis.setVertical(true);
+
 			this.setLayoutManager(layoutThis);
 
 			this.setLineWidth(1);
 			this.setForegroundColor(THIS_FORE);
-			//this.setSize(10, 5);
-			//this.setMinimumSize();
-			//this.setPreferredSize(new Dimension(10,5));
-			
 			createContents();
 		}
 
@@ -478,7 +452,7 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 
 			fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureTypeFigure);
 
-			fFigureFeatureCommentFigure = new WrappingLabel();			
+			fFigureFeatureCommentFigure = new WrappingLabel();
 			fFigureFeatureCommentFigure.setText("");
 
 			fFigureFeatureCommentFigure.setFont(FFIGUREFEATURECOMMENTFIGURE_FONT);
@@ -535,30 +509,39 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 			layoutFFigurePostConditionsRectangeFigure.setHorizontal(true);
 
 			fFigurePostConditionsRectangeFigure.setLayoutManager(layoutFFigurePostConditionsRectangeFigure);
-			
+
 		}
 
 		/**
 		 * @generated NOT
 		 */
-		public void hideComponent(GraphicalEditPart component){
-			if( component instanceof FeatureCommentEditPart){
+		public void hideComponent(GraphicalEditPart component) {
+			if (component instanceof FeatureCommentEditPart) {
 				fFigureFeatureCommentFigure.setVisible(false);
-			
-			}			
+			} else if (component instanceof FeaturePreConditionCompartmentEditPart) {
+				fFigurePreConditionsRectangleFigure.setVisible(false);
+			}else if ( component instanceof FeaturePostConditionCompartmentEditPart){
+				fFigurePostConditionsRectangeFigure.setVisible(false);
+			}else if( component instanceof FeatureArgumentCompartmentEditPart){
+				fFigureFeatureArgumentsRectangleFigure.setVisible(false);
+			}
 		}
-		
+
 		/**
 		 * @generated NOT
 		 */
-		public void showComponent(GraphicalEditPart component){
-			if( component instanceof FeatureCommentEditPart){
+		public void showComponent(GraphicalEditPart component) {
+			if (component instanceof FeatureCommentEditPart) {
 				fFigureFeatureCommentFigure.setVisible(true);
-			}else if ( component instanceof FeatureCommentEditPart){
-				//this.fFigurePreConditionsRectangleFigure
+			} else if (component instanceof FeaturePreConditionCompartmentEditPart) {
+				fFigurePreConditionsRectangleFigure.setVisible(true);
+			}else if ( component instanceof FeaturePostConditionCompartmentEditPart){
+				fFigurePostConditionsRectangeFigure.setVisible(true);
+			}else if( component instanceof FeatureArgumentCompartmentEditPart){
+				fFigureFeatureArgumentsRectangleFigure.setVisible(true);
 			}
 		}
-		
+
 		/**
 		 * @generated
 		 */

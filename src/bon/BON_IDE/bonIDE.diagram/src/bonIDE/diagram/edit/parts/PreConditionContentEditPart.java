@@ -218,6 +218,7 @@ public class PreConditionContentEditPart extends CompartmentEditPart implements 
 	 * @generated
 	 */
 	public void setLabelText(String text) {
+		text = "\u00a9\u003d\u2200\u2203\u2205";
 		setLabelTextHelper(getFigure(), text);
 		Object pdEditPolicy = getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE);
 		if (pdEditPolicy instanceof bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy) {
@@ -398,6 +399,7 @@ public class PreConditionContentEditPart extends CompartmentEditPart implements 
 	 * @generated
 	 */
 	protected void refreshLabel() {
+		this.setLabelText("\u00a9\u003d\u2200\u2203\u2205");
 		setLabelTextHelper(getFigure(), getLabelText());
 		setLabelIconHelper(getFigure(), getLabelIcon());
 		Object pdEditPolicy = getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE);
