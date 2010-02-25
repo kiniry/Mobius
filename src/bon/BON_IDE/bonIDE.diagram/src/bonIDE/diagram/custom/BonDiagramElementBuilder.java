@@ -243,7 +243,7 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 				}
 
 				// feature comment
-				newFeature.setComment(featSpec.getComment());
+				newFeature.setComment("-- " + featSpec.getComment());
 
 				// feature arguments
 				Iterator<ie.ucd.bon.ast.FeatureArgument> featArgIter = featSpec.arguments.iterator();
@@ -258,8 +258,7 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 					newFeature.getArguments().add(newArg);
 				}
 
-				// feature preConditions
-				
+				// feature preConditions				
 				ContractFormatter expFormatter = new ContractFormatter();
 
 				Iterator<ie.ucd.bon.ast.Expression> preCondIter = featSpec.getContracts().getPreconditions().iterator();
@@ -274,8 +273,7 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 					newFeature.getPreConditions().add(newPreCond);
 				}
 
-				// feature postConditions
-				
+				// feature postConditions				
 				Iterator<ie.ucd.bon.ast.Expression> postCondIter = featSpec.getContracts().getPostconditions().iterator();
 
 				while (postCondIter.hasNext()) {

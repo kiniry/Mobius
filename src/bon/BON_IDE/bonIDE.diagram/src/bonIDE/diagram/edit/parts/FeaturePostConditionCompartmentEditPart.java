@@ -81,7 +81,7 @@ public class FeaturePostConditionCompartmentEditPart extends ListCompartmentEdit
 		super.removeChild(child);
 		adjustVisibility();
 	}
-	
+
 	/**
 	 * @generated
 	 */

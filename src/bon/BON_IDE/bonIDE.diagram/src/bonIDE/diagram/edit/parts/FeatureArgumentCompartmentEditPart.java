@@ -91,7 +91,7 @@ public class FeatureArgumentCompartmentEditPart extends ListCompartmentEditPart 
 		super.removeChild(child);
 		adjustVisibility();
 	}
-	
+
 	/**
 	 * @generated
 	 */

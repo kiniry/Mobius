@@ -113,11 +113,6 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureFeatureTypeFigure());
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
 			((bonIDE.diagram.edit.parts.FeatureNamesEditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureFeatureNamesFigure());
@@ -126,6 +121,11 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
 			((bonIDE.diagram.edit.parts.FeatureCommentEditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureFeatureCommentFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape()
+					.getFigureFeatureTypeFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
@@ -158,13 +158,13 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
@@ -520,9 +520,9 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 				fFigureFeatureCommentFigure.setVisible(false);
 			} else if (component instanceof FeaturePreConditionCompartmentEditPart) {
 				fFigurePreConditionsRectangleFigure.setVisible(false);
-			}else if ( component instanceof FeaturePostConditionCompartmentEditPart){
+			} else if (component instanceof FeaturePostConditionCompartmentEditPart) {
 				fFigurePostConditionsRectangeFigure.setVisible(false);
-			}else if( component instanceof FeatureArgumentCompartmentEditPart){
+			} else if (component instanceof FeatureArgumentCompartmentEditPart) {
 				fFigureFeatureArgumentsRectangleFigure.setVisible(false);
 			}
 		}
@@ -535,9 +535,9 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 				fFigureFeatureCommentFigure.setVisible(true);
 			} else if (component instanceof FeaturePreConditionCompartmentEditPart) {
 				fFigurePreConditionsRectangleFigure.setVisible(true);
-			}else if ( component instanceof FeaturePostConditionCompartmentEditPart){
+			} else if (component instanceof FeaturePostConditionCompartmentEditPart) {
 				fFigurePostConditionsRectangeFigure.setVisible(true);
-			}else if( component instanceof FeatureArgumentCompartmentEditPart){
+			} else if (component instanceof FeatureArgumentCompartmentEditPart) {
 				fFigureFeatureArgumentsRectangleFigure.setVisible(true);
 			}
 		}

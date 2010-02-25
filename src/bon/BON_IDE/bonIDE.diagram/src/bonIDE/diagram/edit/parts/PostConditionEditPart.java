@@ -225,7 +225,6 @@ public class PostConditionEditPart extends CompartmentEditPart implements ITextA
 	 * @generated
 	 */
 	public void setLabelText(String text) {
-		text = "\u00a9\u003d\u2200\u2203\u2205";
 		setLabelTextHelper(getFigure(), text);
 		Object pdEditPolicy = getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE);
 		if (pdEditPolicy instanceof bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy) {
