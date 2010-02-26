@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="MOBIUS Program Verification Environment"  topic="html/toc.html">
+<toc label="Mobius Program Verification Environment"  topic="pvedoc/toc.html">
 	<link toc="pvedoc/index.xml" />
-    <topic label="JML2 Plug-in Table of Contents" topic="html/toc.html">
+    <topic label="JML2 Plugin Guide" topic="html/toc.html">
 	   <link toc="../ch.ethz.inf.pm.jml.plugin.help/toc.xml" />
 	</topic>
 	<link toc="../mobius.escjava2.ui/escjavaHelp.xml" /> 

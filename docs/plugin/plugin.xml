@@ -4,10 +4,7 @@
    <extension
          point="org.eclipse.help.toc">
       <toc file="pvedoc/index.xml" extradir="pvedoc" />
-      <toc
-            file="mobiuspve.xml"
-            primary="true">
-      </toc>
+      <toc file="mobiuspve.xml" primary="true" />
    </extension>
    <extension
          point="org.eclipse.ui.splashHandlers">
