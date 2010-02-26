@@ -2,7 +2,7 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="MOBIUS Program Verification Environment"  topic="html/escjavaHelp.html">
-    <topic label="Extended Static Checking for Java" href="html/escjavaHelp.html">
+    <topic label="ESC/Java2 Plugin Guide" href="html/escjavaHelp.html">
       <topic label="Overview" href="html/escjavaHelp.html#Overview"/>
       <topic label="Installation" href="html/escjavaHelp.html#Installation"/>
       <topic label="General comments" href="html/escjavaHelp.html#General_comments"/>
