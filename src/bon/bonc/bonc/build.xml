@@ -91,7 +91,7 @@
     <echo message="${release-name}-${release-version}" file="${build}/version"/>
 
     <copy todir="${dist}">
-      <fileset dir="${src-script}" includes="bonc,bonc.bat,update,my-bonc.example"/>
+      <fileset dir="${src-script}" includes="bonc,bonc.bat,bonc.js,update,my-bonc.example"/>
     </copy>
 
     <jar jarfile="${dist}/lib/BON.jar" basedir="${build}">
