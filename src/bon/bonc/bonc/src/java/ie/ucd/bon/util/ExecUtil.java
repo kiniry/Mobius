@@ -35,7 +35,7 @@ public class ExecUtil {
   private final String[] newEnv;
 
   public ExecUtil(boolean useAdditionalPaths) {
-    String pathString = StringUtil.getCaseInsensitiveEnvironmentVariable("PATH");
+    String pathString = getCaseInsensitiveEnvironmentVariable("PATH");
     if (pathString == null) {
       pathString = "";
     } else {
@@ -56,7 +56,7 @@ public class ExecUtil {
     
     for (Entry<String,String> entry : env.entrySet()) {
       if (entry.getKey().equalsIgnoreCase("PATH")) {
-        entries.add("PATH=" + StringUtil.appendWithSeparator(pathFiles, File.pathSeparator));
+        entries.add(entry.getKey() + "=" + StringUtil.appendWithSeparator(pathFiles, File.pathSeparator));
       } else {
         entries.add(entry.getKey() + '=' + entry.getValue());
       }
@@ -174,4 +174,28 @@ public class ExecUtil {
   
   public static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 
+  public static String getCaseUsedForEnvironmentVariable(String varName) {
+    Map<String,String> env = System.getenv();
+    String[] possibilities = { varName.toUpperCase(), varName.toLowerCase(), varName.toUpperCase().charAt(0) + varName.toLowerCase().substring(1) };
+    for (String possibility : possibilities) {
+      String var = env.get(possibility);
+      if (var != null) {
+        return possibility;
+      }
+    }
+    return null;
+  }
+  
+  public static String getCaseInsensitiveEnvironmentVariable(String varName) {
+    Map<String,String> env = System.getenv();
+    String[] possibilities = { varName.toUpperCase(), varName.toLowerCase(), varName.toUpperCase().charAt(0) + varName.toLowerCase().substring(1) };
+    for (String possibility : possibilities) {
+      String var = env.get(possibility);
+      if (var != null) {
+        return var;
+      }
+    }
+    return null;
+  }
+  
 }

@@ -149,29 +149,5 @@ public final class StringUtil {
     node.accept(lpv);
     return lpv.getVisitorOutputAsString();
   }
-  
-  public static String getCaseUsedForEnvironmentVariable(String varName) {
-    Map<String,String> env = System.getenv();
-    String[] possibilities = { varName.toUpperCase(), varName.toLowerCase(), varName.toUpperCase().charAt(0) + varName.toLowerCase().substring(1) };
-    for (String possibility : possibilities) {
-      String var = env.get(possibility);
-      if (var != null) {
-        return possibility;
-      }
-    }
-    return null;
-  }
-  
-  public static String getCaseInsensitiveEnvironmentVariable(String varName) {
-    Map<String,String> env = System.getenv();
-    String[] possibilities = { varName.toUpperCase(), varName.toLowerCase(), varName.toUpperCase().charAt(0) + varName.toLowerCase().substring(1) };
-    for (String possibility : possibilities) {
-      String var = env.get(possibility);
-      if (var != null) {
-        return var;
-      }
-    }
-    return null;
-  }
 
 }
