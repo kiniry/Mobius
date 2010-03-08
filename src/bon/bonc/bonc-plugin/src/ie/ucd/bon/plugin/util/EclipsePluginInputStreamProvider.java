@@ -1,6 +1,6 @@
 package ie.ucd.bon.plugin.util;
 
-import ie.ucd.bon.util.FileUtil.InputStreamProvider;
+import ie.ucd.bon.util.FileUtil.InputProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,7 +9,7 @@ import java.net.URL;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
-public class EclipsePluginInputStreamProvider implements InputStreamProvider {
+public class EclipsePluginInputStreamProvider implements InputProvider {
   
   private final Bundle bundle;
   

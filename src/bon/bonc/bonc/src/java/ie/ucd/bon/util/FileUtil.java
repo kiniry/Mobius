@@ -59,11 +59,12 @@ public final class FileUtil {
     return inputStreamProvider.getInputStream(filePath);
   }
   
-  public interface InputStreamProvider {
+  public interface InputProvider {
     InputStream getInputStream(String filePath);
+    
   }
   
-  public static InputStreamProvider inputStreamProvider = new InputStreamProvider() {
+  public static InputProvider inputStreamProvider = new InputProvider() {
     public InputStream getInputStream(String filePath) {
       return FileUtil.class.getClassLoader().getResourceAsStream(filePath);
     }    

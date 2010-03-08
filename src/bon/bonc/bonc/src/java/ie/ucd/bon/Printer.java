@@ -108,7 +108,7 @@ public final class Printer {
 
   private static Map<String,Object> getAdditionalDataMap(final ParsingTracker parsingTracker) {
     Map<String,Object> additionalDataMap = new HashMap<String,Object>();
-    additionalDataMap.put("version", Main.getVersion());
+    additionalDataMap.put("version", API.getVersion());
     ClusterChart sysDef = parsingTracker.getSymbolTable().informal.systemChart;
     additionalDataMap.put("systemName", sysDef == null ? "NO SYSTEM DEFINED" : sysDef.getName());
     additionalDataMap.put("time", new Date());

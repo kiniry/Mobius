@@ -7,7 +7,6 @@ import ie.ucd.bon.plugin.BONPlugin;
 import ie.ucd.bon.plugin.builder.BONResourceVisitor;
 import ie.ucd.bon.plugin.util.PluginUtil;
 import ie.ucd.bon.printer.BONPrintMonitor;
-import ie.ucd.bon.util.ExecUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,9 +19,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.FileDialog;
 
-public class GenerateBONDocumentationAction extends AllSelectedResourcesAction {
+public class GenerateOldBONDocumentationAction extends AllSelectedResourcesAction {
 
   @Override
   protected void run(IAction action, List<IResource> resources) {
@@ -37,36 +37,26 @@ public class GenerateBONDocumentationAction extends AllSelectedResourcesAction {
     if (outputFileString != null) {
       if (outputFileString != null) {
         final File outputFile = new File(outputFileString);
-        if (outputFile.isDirectory()) {
-          final Collection<File> files = PluginUtil.getFiles(allResources);
-          Job job = new Job("Generating BON Documentation") {
-            @Override
-            protected IStatus run(IProgressMonitor monitor) {
-              if (ExecUtil.IS_WINDOWS) {
-                return new Status(IStatus.ERROR, BONPlugin.PLUGIN_ID, "Unfortunately generating documentation from Eclipse on windows is not currently supported due to requirements on third party applications.");
-              }
-              
-              final BONProgressMonitor bMonitor = new BONProgressMonitor(monitor);
-              ParsingTracker tracker = API.parse(files, false, false);
-              if (tracker.continueFromParse()) {
-                API.print(Print.NEWHTML, false, outputFile, tracker, true, false, bMonitor);
-              }
-
-              if (bMonitor.errorMessage != null) {
-                return new Status(IStatus.ERROR, BONPlugin.PLUGIN_ID, bMonitor.errorMessage);
-              } else if (monitor.isCanceled()) {
-                return Status.CANCEL_STATUS;
-              } else   {
-                return Status.OK_STATUS;
-              }
+        final Collection<File> files = PluginUtil.getFiles(allResources);
+        Job job = new Job("Generating BON Documentation") {
+          @Override
+          protected IStatus run(IProgressMonitor monitor) {
+            final BONProgressMonitor bMonitor = new BONProgressMonitor(monitor);
+            ParsingTracker tracker = API.parse(files, false, false);
+            if (tracker.continueFromParse()) {
+              API.print(Print.HTML, true, outputFile, tracker, true, false, bMonitor);
             }
-          };
-          job.schedule();
 
-        } else {
-          //TODO dialog...
-          System.out.println("Not a directory");
-        }
+            if (bMonitor.errorMessage != null) {
+              return new Status(IStatus.ERROR, BONPlugin.PLUGIN_ID, bMonitor.errorMessage);
+            } else if (monitor.isCanceled()) {
+              return Status.CANCEL_STATUS;
+            } else   {
+              return Status.OK_STATUS;
+            }
+          }
+        };
+        job.schedule();
       } else {
         System.out.println("No file selected");
       }
@@ -74,9 +64,8 @@ public class GenerateBONDocumentationAction extends AllSelectedResourcesAction {
   }
 
   private String doOutputFileDialog() {
-    //ChooseOutputFileDialog dialog = new ChooseOutputFileDialog(getTargetPart().getSite().getShell());
-    DirectoryDialog dialog = new DirectoryDialog(getTargetPart().getSite().getShell());
-    dialog.setText("Select output directory");
+    FileDialog dialog = new FileDialog(getTargetPart().getSite().getShell(), SWT.SAVE);
+    dialog.setText("Select output file");
     return dialog.open();
   }
 

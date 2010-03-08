@@ -65,6 +65,30 @@
          </action>
       </objectContribution>
       <objectContribution
+            adaptable="true"
+            id="ie.ucd.bon.plugin.project.generateOldDocs"
+            objectClass="org.eclipse.core.resources.IResource">
+         <action
+               class="ie.ucd.bon.plugin.ui.actions.GenerateOldBONDocumentationAction"
+               id="ie.ucd.bon.plugin.project.generateOldDocsAction"
+               label="Generate old BON HTML documentation"
+               menubarPath="ie.ucd.bon.plugin.project.popupSubMenu/content"
+               tooltip="Generate documentation for the selected BON file(s)/project(s).">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="ie.ucd.bon.plugin.project.generateDocs"
+            objectClass="org.eclipse.core.resources.IResource">
+         <action
+               class="ie.ucd.bon.plugin.ui.actions.GenerateBONDocumentationAction"
+               id="ie.ucd.bon.plugin.project.generateDocsAction"
+               label="Generate BON Documentation"
+               menubarPath="ie.ucd.bon.plugin.project.popupSubMenu/content"
+               tooltip="Generate documentation for the selected BON file(s)/project(s).">
+         </action>
+      </objectContribution>
+      <objectContribution
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
             id="ie.ucd.bon.plugin.project.removeNature">
@@ -78,18 +102,6 @@
              menubarPath="ie.ucd.bon.plugin.project.popupSubMenu/content"
              enablesFor="+"
              class="ie.ucd.bon.plugin.ui.actions.RemoveBONcNatureActionDelegate">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="true"
-            id="ie.ucd.bon.plugin.project.generateDocs"
-            objectClass="org.eclipse.core.resources.IResource">
-         <action
-               class="ie.ucd.bon.plugin.ui.actions.GenerateBONDocumentationAction"
-               id="ie.ucd.bon.plugin.project.generateDocsAction"
-               label="Generate BON Documentation"
-               menubarPath="ie.ucd.bon.plugin.project.popupSubMenu/content"
-               tooltip="Generate documentation for the selected BON file(s)/project(s).">
          </action>
       </objectContribution>
       

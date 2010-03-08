@@ -179,6 +179,9 @@ public final class API {
     return typeCheck(tracker, so.getCheckInformal(), so.getCheckFormal(), so.getCheckConsistency(), so.getTypecheck(), timing);
   }
 
-
   //TODO combined operations for a nicer interface in some situations. For example parseAndTypeCheck(final Collection<File> files, final boolean readFromStdIn, final boolean printTiming
+  
+  public static String getVersion() {
+    return StringUtil.versionProvider.getVersion();
+  }
 }

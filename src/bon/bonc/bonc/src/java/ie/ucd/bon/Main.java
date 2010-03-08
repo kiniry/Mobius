@@ -13,11 +13,9 @@ import ie.ucd.bon.clinterface.InvalidArgumentsError;
 import ie.ucd.bon.errorreporting.ExceptionalError;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
-import ie.ucd.bon.util.FileUtil;
 import ie.ucd.clops.util.OptionUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +28,6 @@ import java.util.List;
 public final class Main {
 
   private static boolean debug = false;
-  private static String version;
 
   /** Prevent instantiation of Main. */
   private Main() { }
@@ -43,21 +40,6 @@ public final class Main {
     if (debug) {
       System.out.println("Debug: " + debugMessage);
     }
-  }
-
-  /**
-   * Get the version of BONc that is running.
-   * @return a string containing the version number of BONc.
-   */
-  public static String getVersion() {
-    if (version == null) {
-      try {
-        version = FileUtil.readToString("version");
-      } catch (IOException ioe) {
-        version = "An error occurred when reading the version.";
-      }
-    }
-    return version;
   }
 
   public static void main(final String[] args) {
@@ -89,12 +71,12 @@ public final class Main {
           OptionUtil.printBashCompletionOptionsScript(System.out, options.getOptionsWithoutErrorOption(), "bonc");
           return overallProblems;
         } else if (options.getHelp()) {
-          System.out.println(getVersion());
+          System.out.println(API.getVersion());
           System.out.println("Options:");
           OptionUtil.printOptions(System.out, OptionUtil.sortOptions(options, ALPHABETICAL_BY_FIRST_ALIAS), 80, 2);
           return overallProblems;
         } else if (options.getVersion()) {
-          System.out.println(getVersion());
+          System.out.println(API.getVersion());
           return overallProblems;
         } else {
           List<File> files = options.getRawSourceFiles();

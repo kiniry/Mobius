@@ -6,8 +6,10 @@ import ie.ucd.bon.plugin.editor.BONCodeScanner;
 import ie.ucd.bon.plugin.editor.BONColourProvider;
 import ie.ucd.bon.plugin.util.EclipsePluginInputStreamProvider;
 import ie.ucd.bon.plugin.util.EclipsePluginURLTemplateLoader;
+import ie.ucd.bon.plugin.util.EclipsePluginVersionProvider;
 import ie.ucd.bon.printer.template.FreeMarkerTemplate;
 import ie.ucd.bon.util.FileUtil;
+import ie.ucd.bon.util.StringUtil;
 
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -44,6 +46,7 @@ public class BONPlugin extends AbstractUIPlugin {
 		plugin = this;
 		
 		FileUtil.inputStreamProvider = new EclipsePluginInputStreamProvider(API.PLUGIN_ID);
+		StringUtil.versionProvider = new EclipsePluginVersionProvider(API.PLUGIN_ID);
 		Configuration config = new Configuration();
 		config.setTemplateLoader(new EclipsePluginURLTemplateLoader(API.PLUGIN_ID, "templates/"));
 		FreeMarkerTemplate.setConfiguration(config);

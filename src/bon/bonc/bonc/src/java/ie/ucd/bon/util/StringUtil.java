@@ -10,10 +10,10 @@ import ie.ucd.bon.printer.LatexPrintVisitor;
 import ie.ucd.bon.printer.PrettyPrintVisitor;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 
 
 public final class StringUtil {
@@ -149,5 +149,27 @@ public final class StringUtil {
     node.accept(lpv);
     return lpv.getVisitorOutputAsString();
   }
+  
+  public interface VersionProvider {
+    String getVersion();
+  }
 
+  public static VersionProvider versionProvider = new VersionProvider() {
+    private String version;
+    /**
+     * Get the version of BONc that is running.
+     * @return a string containing the version number of BONc.
+     */
+    public String getVersion() {
+      if (version == null) {
+        try {
+          version = FileUtil.readToString("version");
+        } catch (IOException ioe) {
+          version = "An error occurred when reading the version.";
+        }
+      }
+      return version;
+    }
+  };
+  
 }
