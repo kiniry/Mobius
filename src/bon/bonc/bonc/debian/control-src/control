@@ -4,6 +4,6 @@ Section: misc
 Priority: optional
 Architecture: all
 Distribution: unstable
-Description: Meteor web texts sender.
+Description: Parser/typechecker/documentation generator for BON.
 Maintainer: fintan.fairmichael@ucd.ie
 Depends: openjdk-6-jre | sun-java5-bin | sun-java6-bin
