@@ -24,6 +24,8 @@ import com.google.common.collect.ImmutableList;
 public class ExecUtil {
 
   private final static String[] additionalPaths = { "/bin", "/usr/bin", "/opt/local/bin" };
+  private final static String WINDOWS_BINARY_EXTENSION = ".exe";
+  
   
   public static final ExecUtil instance = new ExecUtil(true);
   
@@ -33,7 +35,7 @@ public class ExecUtil {
   private final String[] newEnv;
 
   public ExecUtil(boolean useAdditionalPaths) {
-    String pathString = System.getenv("PATH");
+    String pathString = StringUtil.getCaseInsensitiveEnvironmentVariable("PATH");
     if (pathString == null) {
       pathString = "";
     } else {
@@ -51,8 +53,9 @@ public class ExecUtil {
   private String[] createNewEnv() {
     List<String> entries = new ArrayList<String>();
     Map<String,String> env = System.getenv();
+    
     for (Entry<String,String> entry : env.entrySet()) {
-      if (entry.getKey().equals("PATH")) {
+      if (entry.getKey().equalsIgnoreCase("PATH")) {
         entries.add("PATH=" + StringUtil.appendWithSeparator(pathFiles, File.pathSeparator));
       } else {
         entries.add(entry.getKey() + '=' + entry.getValue());
@@ -80,11 +83,12 @@ public class ExecUtil {
   }
 
   public boolean hasBinaryOnPath(String binaryName, boolean useCache) {
+    binaryName = IS_WINDOWS ? binaryName + WINDOWS_BINARY_EXTENSION : binaryName;
     for (File file : pathFiles) {
       Set<String> fileNames = null;
       boolean foundInCache = false;
       if (useCache) {
-        fileNames = filesOnPathMap.get(fileNames);
+        fileNames = filesOnPathMap.get(file);
         foundInCache = fileNames != null; 
       }
       if (fileNames == null) {
@@ -167,5 +171,7 @@ public class ExecUtil {
   public int execWaitAndPrintToStandardChannels(String command) {
     return execWait(command, true, true);
   }
+  
+  public static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 
 }
