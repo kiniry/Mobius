@@ -83,7 +83,14 @@ public class ExecUtil {
   }
 
   public boolean hasBinaryOnPath(String binaryName, boolean useCache) {
-    binaryName = IS_WINDOWS ? binaryName + WINDOWS_BINARY_EXTENSION : binaryName;
+    if (IS_WINDOWS) {
+      return hasBinaryOnPathNoAddExtension(binaryName, useCache) || hasBinaryOnPathNoAddExtension(binaryName + WINDOWS_BINARY_EXTENSION, useCache);
+    } else {
+      return hasBinaryOnPathNoAddExtension(binaryName, useCache);
+    }    
+  }
+  
+  private boolean hasBinaryOnPathNoAddExtension(String binaryName, boolean useCache) {
     for (File file : pathFiles) {
       Set<String> fileNames = null;
       boolean foundInCache = false;
