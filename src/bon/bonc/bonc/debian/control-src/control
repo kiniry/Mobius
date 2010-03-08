@@ -6,4 +6,4 @@ Architecture: all
 Distribution: unstable
 Description: Parser/typechecker/documentation generator for BON.
 Maintainer: fintan.fairmichael@ucd.ie
-Depends: openjdk-6-jre | sun-java5-bin | sun-java6-bin
+Depends: graphicsmagick, rubber, texlive-extra-utils, openjdk-6-jre | sun-java5-bin | sun-java6-bin
