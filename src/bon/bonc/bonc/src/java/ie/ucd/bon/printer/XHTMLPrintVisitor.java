@@ -34,13 +34,14 @@ import java.util.Map;
 
 public class XHTMLPrintVisitor extends AbstractVisitorWithAdditions implements PrintAgent {
 
-  public static final String CLASS_CHART_TEMPLATE = "xhtml-classchart.ftl";
-  public static final String CLUSTER_CHART_TEMPLATE = "xhtml-clusterchart.ftl";
-  public static final String SYSTEM_CHART_TEMPLATE = "xhtml-systemchart.ftl";
-  public static final String CREATION_CHART_TEMPLATE = "xhtml-creationchart.ftl";
-  public static final String EVENT_CHART_TEMPLATE = "xhtml-eventchart.ftl";
-  public static final String SCENARIO_CHART_TEMPLATE = "xhtml-scenariochart.ftl";
-  public static final String CLASS_DICT_TEMPLATE = "xhtml-classdict.ftl";
+  private static final String XHTML_TEMPLATE_DIR = "xhtml/";
+  public static final String CLASS_CHART_TEMPLATE = XHTML_TEMPLATE_DIR + "xhtml-classchart.ftl";
+  public static final String CLUSTER_CHART_TEMPLATE = XHTML_TEMPLATE_DIR + "xhtml-clusterchart.ftl";
+  public static final String SYSTEM_CHART_TEMPLATE = XHTML_TEMPLATE_DIR + "xhtml-systemchart.ftl";
+  public static final String CREATION_CHART_TEMPLATE = XHTML_TEMPLATE_DIR + "xhtml-creationchart.ftl";
+  public static final String EVENT_CHART_TEMPLATE = XHTML_TEMPLATE_DIR + "xhtml-eventchart.ftl";
+  public static final String SCENARIO_CHART_TEMPLATE = XHTML_TEMPLATE_DIR + "xhtml-scenariochart.ftl";
+  public static final String CLASS_DICT_TEMPLATE = XHTML_TEMPLATE_DIR + "xhtml-classdict.ftl";
 
   private final PrintWriter writer;
   private final ByteArrayOutputStream baos;
