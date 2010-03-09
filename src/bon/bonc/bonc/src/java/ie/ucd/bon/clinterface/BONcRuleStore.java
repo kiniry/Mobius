@@ -56,7 +56,7 @@ public class BONcRuleStore extends RuleStore {
      * {@inheritDoc}
      */
     public Boolean evaluate(OptionStore optionStore) {
-      return ((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Formal")).getValue();
+      return ((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Formal")).getRawValue();
     }
   }
     
@@ -92,7 +92,7 @@ public class BONcRuleStore extends RuleStore {
      * {@inheritDoc}
      */
     public Boolean evaluate(OptionStore optionStore) {
-      return ((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Informal")).getValue();
+      return ((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Informal")).getRawValue();
     }
   }
     
@@ -137,7 +137,7 @@ public class BONcRuleStore extends RuleStore {
      * {@inheritDoc}
      */
     public Boolean evaluate(OptionStore optionStore) {
-      return ((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrettyPrint")).getValue();
+      return ((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrettyPrint")).getRawValue();
     }
   }
     
@@ -173,8 +173,8 @@ public class BONcRuleStore extends RuleStore {
      * {@inheritDoc}
      */
     public Boolean evaluate(final OptionStore optionStore) {
-      return !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Version")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Help")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintMan")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintReadme")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintBashCompletion")).getValue() && 
- !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("ReadFromStdin")).getValue() && (!((ie.ucd.clops.runtime.options.FileListOption)optionStore.getOptionByIdentifier("SourceFiles")).hasValue() || (((ie.ucd.clops.runtime.options.FileListOption)optionStore.getOptionByIdentifier("SourceFiles")).getValue()).size() == 0);
+      return !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Version")).getRawValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Help")).getRawValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintMan")).getRawValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintReadme")).getRawValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintBashCompletion")).getRawValue() && 
+ !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("ReadFromStdin")).getRawValue() && (!((ie.ucd.clops.runtime.options.FileListOption)optionStore.getOptionByIdentifier("SourceFiles")).hasValue() || (((ie.ucd.clops.runtime.options.FileListOption)optionStore.getOptionByIdentifier("SourceFiles")).getRawValue()).size() == 0);
     }
   }
     
@@ -192,7 +192,7 @@ public class BONcRuleStore extends RuleStore {
      * {@inheritDoc}
      */
     public Boolean evaluate(final OptionStore optionStore) {
-      return !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintExtraWork")).getValue() && !((ie.ucd.clops.runtime.options.EnumOption)optionStore.getOptionByIdentifier("Print")).hasValue();
+      return !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintExtraWork")).getRawValue() && !((ie.ucd.clops.runtime.options.EnumOption)optionStore.getOptionByIdentifier("Print")).hasValue();
     }
   }
     

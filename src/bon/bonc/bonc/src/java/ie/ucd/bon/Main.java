@@ -55,7 +55,7 @@ public final class Main {
     Problems overallProblems = new Problems("Overall problems");
     try {
       //CLOLogger.setLogLevel(Level.FINE);
-      BONcParseResult clParseResult = BONcParser.parse(args);
+      BONcParseResult clParseResult = BONcParser.parse(args, "bonc");
       if (clParseResult.successfulParse()) {
         BONcOptionStore options = clParseResult.getOptionStore();
 

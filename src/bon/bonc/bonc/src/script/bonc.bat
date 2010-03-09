@@ -1,6 +1,6 @@
 @echo off
 
-rem Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+rem Copyright (c) 2007-2010, Fintan Fairmichael, University College Dublin under the BSD licence.
 rem See LICENCE.TXT for details.
 
 rem You must set BON_HOME below. You can optionally set JAVA to use a specific version of java.

@@ -46,9 +46,10 @@ Contents:
   code, it has not been tested on these at all.
 
   The tool utilises the ANTLR parser generator, and releases of the tool
-  include the appropriate ANTLR runtime as well as the StringTemplate library.
-  ANTLR and StringTemplate are Copyright (c) 2003-2007, Terence Parr, under the
-  BSD licence.
+  include the appropriate ANTLR runtime which is Copyright (c) 2003-2007, 
+  Terence Parr, under the BSD licence.
+  
+  
 
 3. USING THE TOOL
 ===================

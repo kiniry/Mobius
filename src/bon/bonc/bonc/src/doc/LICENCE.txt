@@ -1,4 +1,4 @@
-Copyright (c) 2007, Fintan Fairmichael, University College Dublin
+Copyright (c) 2007-2010, Fintan Fairmichael, University College Dublin
 
 All rights reserved.
 

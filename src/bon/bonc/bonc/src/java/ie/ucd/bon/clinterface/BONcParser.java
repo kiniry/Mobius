@@ -56,9 +56,9 @@ public class BONcParser extends AbstractSpecificCLParser {
    * Parse the given command line arguments using a new BONcParser,
    * with normal lookahead. 
    */
-  public static BONcParseResult parse(String[] args) {
+  public static BONcParseResult parse(String[] args, String progName) {
     BONcParser parser = new BONcParser();
-    ParseResult parseResult = parser.parseInternal(args);
+    ParseResult parseResult = parser.parseInternal(args, progName);
     return new BONcParseResult(parseResult, parser.getOptionStore());
   }
   
@@ -66,9 +66,9 @@ public class BONcParser extends AbstractSpecificCLParser {
    * Parse the given command line arguments using a new BONcParser,
    * with infinite lookahead.
    */
-  public static BONcParseResult parseAlternate(String[] args) {
+  public static BONcParseResult parseAlternate(String[] args, String progName) {
     BONcParser parser = new BONcParser();
-    ParseResult parseResult = parser.parseAlternateInternal(args);
+    ParseResult parseResult = parser.parseAlternateInternal(args, progName);
     return new BONcParseResult(parseResult, parser.getOptionStore());
   }
 }

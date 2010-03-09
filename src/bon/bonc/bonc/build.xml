@@ -131,7 +131,7 @@
     <copy todir="${release}">
       <fileset dir="${src-doc}" includes="README.txt,FAQ.txt,INSTALLATION.txt,LICENCE.txt,RELEASE_NOTES.txt"/>
       <fileset dir="${src-doc}/changelog/" includes="changelog"/>
-      <fileset file="update"/>
+      <fileset file="${src-script}/update"/>
     </copy>
     <chmod perm="a+x" file="${release}/update"/>
     <echo message="${release-name}-${release-version}" file="${release}/version"/>
