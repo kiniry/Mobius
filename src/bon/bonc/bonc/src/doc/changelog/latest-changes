@@ -1,0 +1,1 @@
+ * Fixed a bug that meant that additional constraints (after the first) in class charts were not being recorded.
