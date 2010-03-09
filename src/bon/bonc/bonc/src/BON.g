@@ -338,7 +338,9 @@ constraint_list returns [List<String> constraints] :
   { $constraints = createList(); }
   m1=manifest_textblock 
   { if(isOk()) $constraints.add($m1.text); }
-  (  (',' m=manifest_textblock )
+  (  (',' m=manifest_textblock
+      { if(isOk()) $constraints.add($m.text); } 
+     )
    | m=manifest_textblock 
      { addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional constraint item", false)); }
      { if(isOk()) $constraints.add($m.text); }

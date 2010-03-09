@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-11-26 12:32:23
+// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 /home/fintan/workspaces/bon/bonc/src/BON.g 2010-03-09 21:45:28
 
 /**
  * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
@@ -143,15 +143,15 @@ public class BONLexer extends AbstractBONLexer {
         super(input,state);
 
     }
-    public String getGrammarFileName() { return "BON.g"; }
+    public String getGrammarFileName() { return "/home/fintan/workspaces/bon/bonc/src/BON.g"; }
 
     // $ANTLR start "T__24"
     public final void mT__24() throws RecognitionException {
         try {
             int _type = T__24;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:11:7: ( 'dictionary' )
-            // BON.g:11:9: 'dictionary'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:11:7: ( 'dictionary' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:11:9: 'dictionary'
             {
             match("dictionary"); 
 
@@ -171,8 +171,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__25;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:12:7: ( 'end' )
-            // BON.g:12:9: 'end'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:12:7: ( 'end' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:12:9: 'end'
             {
             match("end"); 
 
@@ -192,8 +192,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__26;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:13:7: ( 'class' )
-            // BON.g:13:9: 'class'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:13:7: ( 'class' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:13:9: 'class'
             {
             match("class"); 
 
@@ -213,8 +213,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__27;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:14:7: ( 'cluster' )
-            // BON.g:14:9: 'cluster'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:14:7: ( 'cluster' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:14:9: 'cluster'
             {
             match("cluster"); 
 
@@ -234,8 +234,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__28;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:15:7: ( 'system_chart' )
-            // BON.g:15:9: 'system_chart'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:15:7: ( 'system_chart' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:15:9: 'system_chart'
             {
             match("system_chart"); 
 
@@ -255,8 +255,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__29;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:16:7: ( 'explanation' )
-            // BON.g:16:9: 'explanation'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:16:7: ( 'explanation' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:16:9: 'explanation'
             {
             match("explanation"); 
 
@@ -276,8 +276,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__30;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:17:7: ( 'indexing' )
-            // BON.g:17:9: 'indexing'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:17:7: ( 'indexing' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:17:9: 'indexing'
             {
             match("indexing"); 
 
@@ -297,8 +297,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__31;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:18:7: ( 'part' )
-            // BON.g:18:9: 'part'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:18:7: ( 'part' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:18:9: 'part'
             {
             match("part"); 
 
@@ -318,8 +318,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__32;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:19:7: ( 'description' )
-            // BON.g:19:9: 'description'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:19:7: ( 'description' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:19:9: 'description'
             {
             match("description"); 
 
@@ -339,8 +339,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__33;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:20:7: ( ';' )
-            // BON.g:20:9: ';'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:20:7: ( ';' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:20:9: ';'
             {
             match(';'); 
 
@@ -359,8 +359,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__34;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:21:7: ( ':' )
-            // BON.g:21:9: ':'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:21:7: ( ':' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:21:9: ':'
             {
             match(':'); 
 
@@ -379,8 +379,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__35;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:22:7: ( ',' )
-            // BON.g:22:9: ','
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:22:7: ( ',' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:22:9: ','
             {
             match(','); 
 
@@ -399,8 +399,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__36;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:23:7: ( 'cluster_chart' )
-            // BON.g:23:9: 'cluster_chart'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:23:7: ( 'cluster_chart' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:23:9: 'cluster_chart'
             {
             match("cluster_chart"); 
 
@@ -420,8 +420,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__37;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:24:7: ( 'class_chart' )
-            // BON.g:24:9: 'class_chart'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:24:7: ( 'class_chart' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:24:9: 'class_chart'
             {
             match("class_chart"); 
 
@@ -441,8 +441,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__38;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:25:7: ( 'inherit' )
-            // BON.g:25:9: 'inherit'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:25:7: ( 'inherit' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:25:9: 'inherit'
             {
             match("inherit"); 
 
@@ -462,8 +462,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__39;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:26:7: ( 'query' )
-            // BON.g:26:9: 'query'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:26:7: ( 'query' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:26:9: 'query'
             {
             match("query"); 
 
@@ -483,8 +483,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__40;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:27:7: ( 'command' )
-            // BON.g:27:9: 'command'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:27:7: ( 'command' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:27:9: 'command'
             {
             match("command"); 
 
@@ -504,8 +504,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__41;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:28:7: ( 'constraint' )
-            // BON.g:28:9: 'constraint'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:28:7: ( 'constraint' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:28:9: 'constraint'
             {
             match("constraint"); 
 
@@ -525,8 +525,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__42;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:29:7: ( '(' )
-            // BON.g:29:9: '('
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:29:7: ( '(' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:29:9: '('
             {
             match('('); 
 
@@ -545,8 +545,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__43;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:30:7: ( ')' )
-            // BON.g:30:9: ')'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:30:7: ( ')' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:30:9: ')'
             {
             match(')'); 
 
@@ -565,8 +565,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__44;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:31:7: ( 'event_chart' )
-            // BON.g:31:9: 'event_chart'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:31:7: ( 'event_chart' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:31:9: 'event_chart'
             {
             match("event_chart"); 
 
@@ -586,8 +586,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__45;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:32:7: ( 'incoming' )
-            // BON.g:32:9: 'incoming'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:32:7: ( 'incoming' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:32:9: 'incoming'
             {
             match("incoming"); 
 
@@ -607,8 +607,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__46;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:33:7: ( 'outgoing' )
-            // BON.g:33:9: 'outgoing'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:33:7: ( 'outgoing' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:33:9: 'outgoing'
             {
             match("outgoing"); 
 
@@ -628,8 +628,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__47;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:34:7: ( 'event' )
-            // BON.g:34:9: 'event'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:34:7: ( 'event' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:34:9: 'event'
             {
             match("event"); 
 
@@ -649,8 +649,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__48;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:35:7: ( 'involves' )
-            // BON.g:35:9: 'involves'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:35:7: ( 'involves' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:35:9: 'involves'
             {
             match("involves"); 
 
@@ -670,8 +670,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__49;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:36:7: ( 'scenario_chart' )
-            // BON.g:36:9: 'scenario_chart'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:36:7: ( 'scenario_chart' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:36:9: 'scenario_chart'
             {
             match("scenario_chart"); 
 
@@ -691,8 +691,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__50;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:37:7: ( 'scenario' )
-            // BON.g:37:9: 'scenario'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:37:7: ( 'scenario' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:37:9: 'scenario'
             {
             match("scenario"); 
 
@@ -712,8 +712,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__51;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:38:7: ( 'creation_chart' )
-            // BON.g:38:9: 'creation_chart'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:38:7: ( 'creation_chart' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:38:9: 'creation_chart'
             {
             match("creation_chart"); 
 
@@ -733,8 +733,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__52;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:39:7: ( 'creator' )
-            // BON.g:39:9: 'creator'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:39:7: ( 'creator' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:39:9: 'creator'
             {
             match("creator"); 
 
@@ -754,8 +754,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__53;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:40:7: ( 'creates' )
-            // BON.g:40:9: 'creates'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:40:7: ( 'creates' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:40:9: 'creates'
             {
             match("creates"); 
 
@@ -775,8 +775,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__54;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:41:7: ( 'static_diagram' )
-            // BON.g:41:9: 'static_diagram'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:41:7: ( 'static_diagram' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:41:9: 'static_diagram'
             {
             match("static_diagram"); 
 
@@ -796,8 +796,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__55;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:42:7: ( 'component' )
-            // BON.g:42:9: 'component'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:42:7: ( 'component' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:42:9: 'component'
             {
             match("component"); 
 
@@ -817,8 +817,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__56;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:43:7: ( 'reused' )
-            // BON.g:43:9: 'reused'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:43:7: ( 'reused' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:43:9: 'reused'
             {
             match("reused"); 
 
@@ -838,8 +838,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__57;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:44:7: ( 'root' )
-            // BON.g:44:9: 'root'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:44:7: ( 'root' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:44:9: 'root'
             {
             match("root"); 
 
@@ -859,8 +859,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__58;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:45:7: ( 'deferred' )
-            // BON.g:45:9: 'deferred'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:45:7: ( 'deferred' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:45:9: 'deferred'
             {
             match("deferred"); 
 
@@ -880,8 +880,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__59;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:46:7: ( 'effective' )
-            // BON.g:46:9: 'effective'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:46:7: ( 'effective' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:46:9: 'effective'
             {
             match("effective"); 
 
@@ -901,8 +901,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__60;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:47:7: ( 'persistent' )
-            // BON.g:47:9: 'persistent'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:47:7: ( 'persistent' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:47:9: 'persistent'
             {
             match("persistent"); 
 
@@ -922,8 +922,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__61;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:48:7: ( 'interfaced' )
-            // BON.g:48:9: 'interfaced'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:48:7: ( 'interfaced' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:48:9: 'interfaced'
             {
             match("interfaced"); 
 
@@ -943,8 +943,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__62;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:49:7: ( '{' )
-            // BON.g:49:9: '{'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:49:7: ( '{' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:49:9: '{'
             {
             match('{'); 
 
@@ -963,8 +963,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__63;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:50:7: ( '}' )
-            // BON.g:50:9: '}'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:50:7: ( '}' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:50:9: '}'
             {
             match('}'); 
 
@@ -983,8 +983,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__64;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:51:7: ( 'client' )
-            // BON.g:51:9: 'client'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:51:7: ( 'client' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:51:9: 'client'
             {
             match("client"); 
 
@@ -1004,8 +1004,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__65;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:52:7: ( '->' )
-            // BON.g:52:9: '->'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:52:7: ( '->' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:52:9: '->'
             {
             match("->"); 
 
@@ -1025,8 +1025,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__66;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:53:7: ( '[' )
-            // BON.g:53:9: '['
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:53:7: ( '[' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:53:9: '['
             {
             match('['); 
 
@@ -1045,8 +1045,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__67;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:54:7: ( ']' )
-            // BON.g:54:9: ']'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:54:7: ( ']' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:54:9: ']'
             {
             match(']'); 
 
@@ -1065,8 +1065,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__68;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:55:7: ( '...' )
-            // BON.g:55:9: '...'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:55:7: ( '...' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:55:9: '...'
             {
             match("..."); 
 
@@ -1086,8 +1086,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__69;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:56:7: ( ':{' )
-            // BON.g:56:9: ':{'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:56:7: ( ':{' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:56:9: ':{'
             {
             match(":{"); 
 
@@ -1107,8 +1107,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__70;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:57:7: ( '.' )
-            // BON.g:57:9: '.'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:57:7: ( '.' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:57:9: '.'
             {
             match('.'); 
 
@@ -1127,8 +1127,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__71;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:58:7: ( 'invariant' )
-            // BON.g:58:9: 'invariant'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:58:7: ( 'invariant' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:58:9: 'invariant'
             {
             match("invariant"); 
 
@@ -1148,8 +1148,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__72;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:59:7: ( 'feature' )
-            // BON.g:59:9: 'feature'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:59:7: ( 'feature' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:59:9: 'feature'
             {
             match("feature"); 
 
@@ -1169,8 +1169,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__73;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:60:7: ( 'redefined' )
-            // BON.g:60:9: 'redefined'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:60:7: ( 'redefined' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:60:9: 'redefined'
             {
             match("redefined"); 
 
@@ -1190,8 +1190,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__74;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:61:7: ( 'Void' )
-            // BON.g:61:9: 'Void'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:61:7: ( 'Void' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:61:9: 'Void'
             {
             match("Void"); 
 
@@ -1211,8 +1211,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__75;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:62:7: ( 'require' )
-            // BON.g:62:9: 'require'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:62:7: ( 'require' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:62:9: 'require'
             {
             match("require"); 
 
@@ -1232,8 +1232,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__76;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:63:7: ( 'ensure' )
-            // BON.g:63:9: 'ensure'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:63:7: ( 'ensure' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:63:9: 'ensure'
             {
             match("ensure"); 
 
@@ -1253,8 +1253,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__77;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:64:7: ( '^' )
-            // BON.g:64:9: '^'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:64:7: ( '^' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:64:9: '^'
             {
             match('^'); 
 
@@ -1273,8 +1273,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__78;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:65:7: ( '<-' )
-            // BON.g:65:9: '<-'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:65:7: ( '<-' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:65:9: '<-'
             {
             match("<-"); 
 
@@ -1294,8 +1294,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__79;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:66:7: ( 'prefix' )
-            // BON.g:66:9: 'prefix'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:66:7: ( 'prefix' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:66:9: 'prefix'
             {
             match("prefix"); 
 
@@ -1315,8 +1315,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__80;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:67:7: ( '\"' )
-            // BON.g:67:9: '\"'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:67:7: ( '\"' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:67:9: '\"'
             {
             match('\"'); 
 
@@ -1335,8 +1335,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__81;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:68:7: ( 'infix' )
-            // BON.g:68:9: 'infix'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:68:7: ( 'infix' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:68:9: 'infix'
             {
             match("infix"); 
 
@@ -1356,8 +1356,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__82;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:69:7: ( 'for_all' )
-            // BON.g:69:9: 'for_all'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:69:7: ( 'for_all' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:69:9: 'for_all'
             {
             match("for_all"); 
 
@@ -1377,8 +1377,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__83;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:70:7: ( 'exists' )
-            // BON.g:70:9: 'exists'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:70:7: ( 'exists' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:70:9: 'exists'
             {
             match("exists"); 
 
@@ -1398,8 +1398,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__84;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:71:7: ( 'such_that' )
-            // BON.g:71:9: 'such_that'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:71:7: ( 'such_that' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:71:9: 'such_that'
             {
             match("such_that"); 
 
@@ -1419,8 +1419,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__85;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:72:7: ( 'it_holds' )
-            // BON.g:72:9: 'it_holds'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:72:7: ( 'it_holds' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:72:9: 'it_holds'
             {
             match("it_holds"); 
 
@@ -1440,8 +1440,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__86;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:73:7: ( 'member_of' )
-            // BON.g:73:9: 'member_of'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:73:7: ( 'member_of' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:73:9: 'member_of'
             {
             match("member_of"); 
 
@@ -1461,8 +1461,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__87;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:74:7: ( '..' )
-            // BON.g:74:9: '..'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:74:7: ( '..' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:74:9: '..'
             {
             match(".."); 
 
@@ -1482,8 +1482,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__88;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:75:7: ( 'Current' )
-            // BON.g:75:9: 'Current'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:75:7: ( 'Current' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:75:9: 'Current'
             {
             match("Current"); 
 
@@ -1503,8 +1503,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__89;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:76:7: ( 'Result' )
-            // BON.g:76:9: 'Result'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:76:7: ( 'Result' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:76:9: 'Result'
             {
             match("Result"); 
 
@@ -1524,8 +1524,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__90;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:77:7: ( 'true' )
-            // BON.g:77:9: 'true'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:77:7: ( 'true' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:77:9: 'true'
             {
             match("true"); 
 
@@ -1545,8 +1545,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__91;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:78:7: ( 'false' )
-            // BON.g:78:9: 'false'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:78:7: ( 'false' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:78:9: 'false'
             {
             match("false"); 
 
@@ -1566,8 +1566,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__92;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:79:7: ( 'dynamic_diagram' )
-            // BON.g:79:9: 'dynamic_diagram'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:79:7: ( 'dynamic_diagram' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:79:9: 'dynamic_diagram'
             {
             match("dynamic_diagram"); 
 
@@ -1587,8 +1587,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__93;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:80:7: ( 'action' )
-            // BON.g:80:9: 'action'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:80:7: ( 'action' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:80:9: 'action'
             {
             match("action"); 
 
@@ -1608,8 +1608,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__94;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:81:7: ( 'nameless' )
-            // BON.g:81:9: 'nameless'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:81:7: ( 'nameless' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:81:9: 'nameless'
             {
             match("nameless"); 
 
@@ -1629,8 +1629,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__95;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:82:7: ( 'object_group' )
-            // BON.g:82:9: 'object_group'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:82:7: ( 'object_group' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:82:9: 'object_group'
             {
             match("object_group"); 
 
@@ -1650,8 +1650,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__96;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:83:7: ( 'object_stack' )
-            // BON.g:83:9: 'object_stack'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:83:7: ( 'object_stack' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:83:9: 'object_stack'
             {
             match("object_stack"); 
 
@@ -1671,8 +1671,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__97;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:84:7: ( 'object' )
-            // BON.g:84:9: 'object'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:84:7: ( 'object' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:84:9: 'object'
             {
             match("object"); 
 
@@ -1692,8 +1692,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__98;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:85:7: ( 'calls' )
-            // BON.g:85:9: 'calls'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:85:7: ( 'calls' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:85:9: 'calls'
             {
             match("calls"); 
 
@@ -1713,8 +1713,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__99;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:86:7: ( 'string_marks' )
-            // BON.g:86:9: 'string_marks'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:86:7: ( 'string_marks' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:86:9: 'string_marks'
             {
             match("string_marks"); 
 
@@ -1734,8 +1734,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__100;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:87:8: ( 'concatenator' )
-            // BON.g:87:10: 'concatenator'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:87:8: ( 'concatenator' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:87:10: 'concatenator'
             {
             match("concatenator"); 
 
@@ -1755,8 +1755,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__101;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:88:8: ( 'keyword_prefix' )
-            // BON.g:88:10: 'keyword_prefix'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:88:8: ( 'keyword_prefix' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:88:10: 'keyword_prefix'
             {
             match("keyword_prefix"); 
 
@@ -1776,8 +1776,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__102;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:89:8: ( '<->' )
-            // BON.g:89:10: '<->'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:89:8: ( '<->' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:89:10: '<->'
             {
             match("<->"); 
 
@@ -1797,8 +1797,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__103;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:90:8: ( '+' )
-            // BON.g:90:10: '+'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:90:8: ( '+' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:90:10: '+'
             {
             match('+'); 
 
@@ -1817,8 +1817,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__104;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:91:8: ( '-' )
-            // BON.g:91:10: '-'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:91:8: ( '-' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:91:10: '-'
             {
             match('-'); 
 
@@ -1837,8 +1837,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__105;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:92:8: ( 'and' )
-            // BON.g:92:10: 'and'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:92:8: ( 'and' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:92:10: 'and'
             {
             match("and"); 
 
@@ -1858,8 +1858,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__106;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:93:8: ( 'or' )
-            // BON.g:93:10: 'or'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:93:8: ( 'or' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:93:10: 'or'
             {
             match("or"); 
 
@@ -1879,8 +1879,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__107;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:94:8: ( 'xor' )
-            // BON.g:94:10: 'xor'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:94:8: ( 'xor' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:94:10: 'xor'
             {
             match("xor"); 
 
@@ -1900,8 +1900,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__108;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:95:8: ( 'delta' )
-            // BON.g:95:10: 'delta'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:95:8: ( 'delta' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:95:10: 'delta'
             {
             match("delta"); 
 
@@ -1921,8 +1921,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__109;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:96:8: ( 'old' )
-            // BON.g:96:10: 'old'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:96:8: ( 'old' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:96:10: 'old'
             {
             match("old"); 
 
@@ -1942,8 +1942,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__110;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:97:8: ( 'not' )
-            // BON.g:97:10: 'not'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:97:8: ( 'not' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:97:10: 'not'
             {
             match("not"); 
 
@@ -1963,8 +1963,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__111;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:98:8: ( '<' )
-            // BON.g:98:10: '<'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:98:8: ( '<' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:98:10: '<'
             {
             match('<'); 
 
@@ -1983,8 +1983,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__112;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:99:8: ( '>' )
-            // BON.g:99:10: '>'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:99:8: ( '>' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:99:10: '>'
             {
             match('>'); 
 
@@ -2003,8 +2003,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__113;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:100:8: ( '<=' )
-            // BON.g:100:10: '<='
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:100:8: ( '<=' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:100:10: '<='
             {
             match("<="); 
 
@@ -2024,8 +2024,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__114;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:101:8: ( '>=' )
-            // BON.g:101:10: '>='
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:101:8: ( '>=' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:101:10: '>='
             {
             match(">="); 
 
@@ -2045,8 +2045,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__115;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:102:8: ( '=' )
-            // BON.g:102:10: '='
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:102:8: ( '=' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:102:10: '='
             {
             match('='); 
 
@@ -2065,8 +2065,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__116;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:103:8: ( '/=' )
-            // BON.g:103:10: '/='
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:103:8: ( '/=' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:103:10: '/='
             {
             match("/="); 
 
@@ -2086,8 +2086,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__117;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:104:8: ( '*' )
-            // BON.g:104:10: '*'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:104:8: ( '*' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:104:10: '*'
             {
             match('*'); 
 
@@ -2106,8 +2106,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__118;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:105:8: ( '/' )
-            // BON.g:105:10: '/'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:105:8: ( '/' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:105:10: '/'
             {
             match('/'); 
 
@@ -2126,8 +2126,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__119;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:106:8: ( '//' )
-            // BON.g:106:10: '//'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:106:8: ( '//' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:106:10: '//'
             {
             match("//"); 
 
@@ -2147,8 +2147,8 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__120;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:107:8: ( '\\\\\\\\' )
-            // BON.g:107:10: '\\\\\\\\'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:107:8: ( '\\\\\\\\' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:107:10: '\\\\\\\\'
             {
             match("\\\\"); 
 
@@ -2170,8 +2170,8 @@ public class BONLexer extends AbstractBONLexer {
             int _channel = DEFAULT_TOKEN_CHANNEL;
             int v;
 
-            // BON.g:1306:20: ( '\\'' v= . '\\'' )
-            // BON.g:1306:23: '\\'' v= . '\\''
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1308:20: ( '\\'' v= . '\\'' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1308:23: '\\'' v= . '\\''
             {
             match('\''); 
             v = input.LA(1);
@@ -2193,27 +2193,27 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = MANIFEST_STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1687:17: ( '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )* '\"' )
-            // BON.g:1687:19: '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )* '\"'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1689:17: ( '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )* '\"' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1689:19: '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )* '\"'
             {
             match('\"'); 
-            // BON.g:1688:19: ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )*
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1690:19: ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )*
             loop1:
             do {
                 int alt1=2;
                 int LA1_0 = input.LA(1);
 
-                if ( ((LA1_0>='\u0000' && LA1_0<='\t')||(LA1_0>='\u000B' && LA1_0<='\f')||(LA1_0>='\u000E' && LA1_0<='!')||(LA1_0>='#' && LA1_0<='[')||(LA1_0>=']' && LA1_0<='\uFFFF')) ) {
-                    alt1=1;
-                }
-                else if ( (LA1_0=='\"') ) {
+                if ( (LA1_0=='\"') ) {
                     alt1=2;
+                }
+                else if ( ((LA1_0>='\u0000' && LA1_0<='\t')||(LA1_0>='\u000B' && LA1_0<='\f')||(LA1_0>='\u000E' && LA1_0<='!')||(LA1_0>='#' && LA1_0<='[')||(LA1_0>=']' && LA1_0<='\uFFFF')) ) {
+                    alt1=1;
                 }
 
 
                 switch (alt1) {
             	case 1 :
-            	    // BON.g:1688:46: ~ ( '\\n' | '\\r' | '\"' | '\\\\' )
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:1690:46: ~ ( '\\n' | '\\r' | '\"' | '\\\\' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2250,28 +2250,28 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = MANIFEST_TEXTBLOCK_START;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1698:27: ( '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE )
-            // BON.g:1698:29: '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1700:27: ( '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1700:29: '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE
             {
             match('\"'); 
-            // BON.g:1698:33: ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1700:33: ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+
             int cnt2=0;
             loop2:
             do {
                 int alt2=2;
                 int LA2_0 = input.LA(1);
 
-                if ( ((LA2_0>='\u0000' && LA2_0<='\t')||(LA2_0>='\u000B' && LA2_0<='\f')||(LA2_0>='\u000E' && LA2_0<='!')||(LA2_0>='#' && LA2_0<='[')||(LA2_0>=']' && LA2_0<='\uFFFF')) ) {
-                    alt2=1;
-                }
-                else if ( (LA2_0=='\\') ) {
+                if ( (LA2_0=='\\') ) {
                     alt2=2;
+                }
+                else if ( ((LA2_0>='\u0000' && LA2_0<='\t')||(LA2_0>='\u000B' && LA2_0<='\f')||(LA2_0>='\u000E' && LA2_0<='!')||(LA2_0>='#' && LA2_0<='[')||(LA2_0>=']' && LA2_0<='\uFFFF')) ) {
+                    alt2=1;
                 }
 
 
                 switch (alt2) {
             	case 1 :
-            	    // BON.g:1698:60: ~ ( '\\n' | '\\r' | '\"' | '\\\\' )
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:1700:60: ~ ( '\\n' | '\\r' | '\"' | '\\\\' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2296,7 +2296,7 @@ public class BONLexer extends AbstractBONLexer {
             } while (true);
 
             match('\\'); 
-            // BON.g:1698:90: ( ' ' | '\\t' )*
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1700:90: ( ' ' | '\\t' )*
             loop3:
             do {
                 int alt3=2;
@@ -2309,7 +2309,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // BON.g:
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:
             	    {
             	    if ( input.LA(1)=='\t'||input.LA(1)==' ' ) {
             	        input.consume();
@@ -2346,28 +2346,28 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = MANIFEST_TEXTBLOCK_MIDDLE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1701:28: ( '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE )
-            // BON.g:1701:30: '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1703:28: ( '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1703:30: '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE
             {
             match('\\'); 
-            // BON.g:1701:35: ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1703:35: ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+
             int cnt4=0;
             loop4:
             do {
                 int alt4=2;
                 int LA4_0 = input.LA(1);
 
-                if ( ((LA4_0>='\u0000' && LA4_0<='!')||(LA4_0>='#' && LA4_0<='[')||(LA4_0>=']' && LA4_0<='\uFFFF')) ) {
-                    alt4=1;
-                }
-                else if ( (LA4_0=='\\') ) {
+                if ( (LA4_0=='\\') ) {
                     alt4=2;
+                }
+                else if ( ((LA4_0>='\u0000' && LA4_0<='!')||(LA4_0>='#' && LA4_0<='[')||(LA4_0>=']' && LA4_0<='\uFFFF')) ) {
+                    alt4=1;
                 }
 
 
                 switch (alt4) {
             	case 1 :
-            	    // BON.g:1701:62: ~ ( '\"' | '\\\\' )
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:1703:62: ~ ( '\"' | '\\\\' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2392,7 +2392,7 @@ public class BONLexer extends AbstractBONLexer {
             } while (true);
 
             match('\\'); 
-            // BON.g:1701:82: ( ' ' | '\\t' )*
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1703:82: ( ' ' | '\\t' )*
             loop5:
             do {
                 int alt5=2;
@@ -2405,7 +2405,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt5) {
             	case 1 :
-            	    // BON.g:
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:
             	    {
             	    if ( input.LA(1)=='\t'||input.LA(1)==' ' ) {
             	        input.consume();
@@ -2442,28 +2442,28 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = MANIFEST_TEXTBLOCK_END;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1704:25: ( '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\"' )
-            // BON.g:1704:27: '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\"'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1706:25: ( '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\"' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1706:27: '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\"'
             {
             match('\\'); 
-            // BON.g:1704:32: ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1706:32: ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+
             int cnt6=0;
             loop6:
             do {
                 int alt6=2;
                 int LA6_0 = input.LA(1);
 
-                if ( ((LA6_0>='\u0000' && LA6_0<='!')||(LA6_0>='#' && LA6_0<='[')||(LA6_0>=']' && LA6_0<='\uFFFF')) ) {
-                    alt6=1;
-                }
-                else if ( (LA6_0=='\"') ) {
+                if ( (LA6_0=='\"') ) {
                     alt6=2;
+                }
+                else if ( ((LA6_0>='\u0000' && LA6_0<='!')||(LA6_0>='#' && LA6_0<='[')||(LA6_0>=']' && LA6_0<='\uFFFF')) ) {
+                    alt6=1;
                 }
 
 
                 switch (alt6) {
             	case 1 :
-            	    // BON.g:1704:59: ~ ( '\"' | '\\\\' )
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:1706:59: ~ ( '\"' | '\\\\' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2504,10 +2504,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1716:10: ( ( LINE_COMMENT )+ )
-            // BON.g:1716:13: ( LINE_COMMENT )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1718:10: ( ( LINE_COMMENT )+ )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1718:13: ( LINE_COMMENT )+
             {
-            // BON.g:1716:13: ( LINE_COMMENT )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1718:13: ( LINE_COMMENT )+
             int cnt7=0;
             loop7:
             do {
@@ -2521,7 +2521,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt7) {
             	case 1 :
-            	    // BON.g:1716:13: LINE_COMMENT
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:1718:13: LINE_COMMENT
             	    {
             	    mLINE_COMMENT(); 
 
@@ -2552,11 +2552,11 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "LINE_COMMENT"
     public final void mLINE_COMMENT() throws RecognitionException {
         try {
-            // BON.g:1720:15: ( COMMENT_START ( options {greedy=false; } : . )* NEWLINE )
-            // BON.g:1720:18: COMMENT_START ( options {greedy=false; } : . )* NEWLINE
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1722:15: ( COMMENT_START ( options {greedy=false; } : . )* NEWLINE )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1722:18: COMMENT_START ( options {greedy=false; } : . )* NEWLINE
             {
             mCOMMENT_START(); 
-            // BON.g:1720:32: ( options {greedy=false; } : . )*
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1722:32: ( options {greedy=false; } : . )*
             loop8:
             do {
                 int alt8=2;
@@ -2575,7 +2575,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // BON.g:1720:59: .
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:1722:59: .
             	    {
             	    matchAny(); 
 
@@ -2600,8 +2600,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "COMMENT_START"
     public final void mCOMMENT_START() throws RecognitionException {
         try {
-            // BON.g:1724:16: ( '--' )
-            // BON.g:1724:18: '--'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1726:16: ( '--' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1726:18: '--'
             {
             match("--"); 
 
@@ -2617,10 +2617,10 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "NEWLINE"
     public final void mNEWLINE() throws RecognitionException {
         try {
-            // BON.g:1728:10: ( ( '\\r' )? '\\n' )
-            // BON.g:1728:13: ( '\\r' )? '\\n'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1730:10: ( ( '\\r' )? '\\n' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1730:13: ( '\\r' )? '\\n'
             {
-            // BON.g:1728:13: ( '\\r' )?
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1730:13: ( '\\r' )?
             int alt9=2;
             int LA9_0 = input.LA(1);
 
@@ -2629,7 +2629,7 @@ public class BONLexer extends AbstractBONLexer {
             }
             switch (alt9) {
                 case 1 :
-                    // BON.g:1728:13: '\\r'
+                    // /home/fintan/workspaces/bon/bonc/src/BON.g:1730:13: '\\r'
                     {
                     match('\r'); 
 
@@ -2653,10 +2653,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = INTEGER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1735:10: ( ( DIGIT )+ )
-            // BON.g:1735:13: ( DIGIT )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1737:10: ( ( DIGIT )+ )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1737:13: ( DIGIT )+
             {
-            // BON.g:1735:13: ( DIGIT )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1737:13: ( DIGIT )+
             int cnt10=0;
             loop10:
             do {
@@ -2670,7 +2670,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt10) {
             	case 1 :
-            	    // BON.g:1735:14: DIGIT
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:1737:14: DIGIT
             	    {
             	    mDIGIT(); 
 
@@ -2702,10 +2702,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = REAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1738:7: ( ( DIGIT )+ '.' ( DIGIT )+ )
-            // BON.g:1738:10: ( DIGIT )+ '.' ( DIGIT )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1740:7: ( ( DIGIT )+ '.' ( DIGIT )+ )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1740:10: ( DIGIT )+ '.' ( DIGIT )+
             {
-            // BON.g:1738:10: ( DIGIT )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1740:10: ( DIGIT )+
             int cnt11=0;
             loop11:
             do {
@@ -2719,7 +2719,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt11) {
             	case 1 :
-            	    // BON.g:1738:10: DIGIT
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:1740:10: DIGIT
             	    {
             	    mDIGIT(); 
 
@@ -2736,7 +2736,7 @@ public class BONLexer extends AbstractBONLexer {
             } while (true);
 
             match('.'); 
-            // BON.g:1738:21: ( DIGIT )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1740:21: ( DIGIT )+
             int cnt12=0;
             loop12:
             do {
@@ -2750,7 +2750,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt12) {
             	case 1 :
-            	    // BON.g:1738:21: DIGIT
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:1740:21: DIGIT
             	    {
             	    mDIGIT(); 
 
@@ -2780,8 +2780,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "DIGIT"
     public final void mDIGIT() throws RecognitionException {
         try {
-            // BON.g:1742:8: ( '0' .. '9' )
-            // BON.g:1742:11: '0' .. '9'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1744:8: ( '0' .. '9' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1744:11: '0' .. '9'
             {
             matchRange('0','9'); 
 
@@ -2798,11 +2798,11 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = IDENTIFIER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1755:13: ( ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )? )
-            // BON.g:1755:15: ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1757:13: ( ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )? )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1757:15: ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
             {
             mALPHA(); 
-            // BON.g:1755:21: ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1757:21: ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
             int alt14=2;
             int LA14_0 = input.LA(1);
 
@@ -2811,9 +2811,9 @@ public class BONLexer extends AbstractBONLexer {
             }
             switch (alt14) {
                 case 1 :
-                    // BON.g:1755:22: ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC
+                    // /home/fintan/workspaces/bon/bonc/src/BON.g:1757:22: ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC
                     {
-                    // BON.g:1755:22: ( ALPHANUMERIC_OR_UNDERSCORE )*
+                    // /home/fintan/workspaces/bon/bonc/src/BON.g:1757:22: ( ALPHANUMERIC_OR_UNDERSCORE )*
                     loop13:
                     do {
                         int alt13=2;
@@ -2835,7 +2835,7 @@ public class BONLexer extends AbstractBONLexer {
 
                         switch (alt13) {
                     	case 1 :
-                    	    // BON.g:1755:22: ALPHANUMERIC_OR_UNDERSCORE
+                    	    // /home/fintan/workspaces/bon/bonc/src/BON.g:1757:22: ALPHANUMERIC_OR_UNDERSCORE
                     	    {
                     	    mALPHANUMERIC_OR_UNDERSCORE(); 
 
@@ -2868,8 +2868,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "ALPHANUMERIC_OR_UNDERSCORE"
     public final void mALPHANUMERIC_OR_UNDERSCORE() throws RecognitionException {
         try {
-            // BON.g:1761:29: ( ALPHANUMERIC | UNDERSCORE )
-            // BON.g:
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1763:29: ( ALPHANUMERIC | UNDERSCORE )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -2892,8 +2892,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "UNDERSCORE"
     public final void mUNDERSCORE() throws RecognitionException {
         try {
-            // BON.g:1765:13: ( '_' )
-            // BON.g:1765:16: '_'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1767:13: ( '_' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1767:16: '_'
             {
             match('_'); 
 
@@ -2908,8 +2908,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "ALPHANUMERIC"
     public final void mALPHANUMERIC() throws RecognitionException {
         try {
-            // BON.g:1769:15: ( ALPHA | DIGIT )
-            // BON.g:
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1771:15: ( ALPHA | DIGIT )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -2932,8 +2932,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "ALPHA"
     public final void mALPHA() throws RecognitionException {
         try {
-            // BON.g:1773:8: ( LOWER | UPPER )
-            // BON.g:
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1775:8: ( LOWER | UPPER )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -2956,8 +2956,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "LOWER"
     public final void mLOWER() throws RecognitionException {
         try {
-            // BON.g:1777:8: ( 'a' .. 'z' )
-            // BON.g:1777:10: 'a' .. 'z'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1779:8: ( 'a' .. 'z' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1779:10: 'a' .. 'z'
             {
             matchRange('a','z'); 
 
@@ -2972,8 +2972,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "UPPER"
     public final void mUPPER() throws RecognitionException {
         try {
-            // BON.g:1781:8: ( 'A' .. 'Z' )
-            // BON.g:1781:10: 'A' .. 'Z'
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1783:8: ( 'A' .. 'Z' )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1783:10: 'A' .. 'Z'
             {
             matchRange('A','Z'); 
 
@@ -2990,10 +2990,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = WHITESPACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1788:13: ( ( ' ' | '\\n' | '\\r' | '\\t' )+ )
-            // BON.g:1788:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1790:13: ( ( ' ' | '\\n' | '\\r' | '\\t' )+ )
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1790:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
             {
-            // BON.g:1788:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
+            // /home/fintan/workspaces/bon/bonc/src/BON.g:1790:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
             int cnt15=0;
             loop15:
             do {
@@ -3007,7 +3007,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt15) {
             	case 1 :
-            	    // BON.g:
+            	    // /home/fintan/workspaces/bon/bonc/src/BON.g:
             	    {
             	    if ( (input.LA(1)>='\t' && input.LA(1)<='\n')||input.LA(1)=='\r'||input.LA(1)==' ' ) {
             	        input.consume();
@@ -3044,754 +3044,754 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR end "WHITESPACE"
 
     public void mTokens() throws RecognitionException {
-        // BON.g:1:8: ( T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | T__77 | T__78 | T__79 | T__80 | T__81 | T__82 | T__83 | T__84 | T__85 | T__86 | T__87 | T__88 | T__89 | T__90 | T__91 | T__92 | T__93 | T__94 | T__95 | T__96 | T__97 | T__98 | T__99 | T__100 | T__101 | T__102 | T__103 | T__104 | T__105 | T__106 | T__107 | T__108 | T__109 | T__110 | T__111 | T__112 | T__113 | T__114 | T__115 | T__116 | T__117 | T__118 | T__119 | T__120 | CHARACTER_CONSTANT | MANIFEST_STRING | MANIFEST_TEXTBLOCK_START | MANIFEST_TEXTBLOCK_MIDDLE | MANIFEST_TEXTBLOCK_END | COMMENT | INTEGER | REAL | IDENTIFIER | WHITESPACE )
+        // /home/fintan/workspaces/bon/bonc/src/BON.g:1:8: ( T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | T__77 | T__78 | T__79 | T__80 | T__81 | T__82 | T__83 | T__84 | T__85 | T__86 | T__87 | T__88 | T__89 | T__90 | T__91 | T__92 | T__93 | T__94 | T__95 | T__96 | T__97 | T__98 | T__99 | T__100 | T__101 | T__102 | T__103 | T__104 | T__105 | T__106 | T__107 | T__108 | T__109 | T__110 | T__111 | T__112 | T__113 | T__114 | T__115 | T__116 | T__117 | T__118 | T__119 | T__120 | CHARACTER_CONSTANT | MANIFEST_STRING | MANIFEST_TEXTBLOCK_START | MANIFEST_TEXTBLOCK_MIDDLE | MANIFEST_TEXTBLOCK_END | COMMENT | INTEGER | REAL | IDENTIFIER | WHITESPACE )
         int alt16=107;
         alt16 = dfa16.predict(input);
         switch (alt16) {
             case 1 :
-                // BON.g:1:10: T__24
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:10: T__24
                 {
                 mT__24(); 
 
                 }
                 break;
             case 2 :
-                // BON.g:1:16: T__25
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:16: T__25
                 {
                 mT__25(); 
 
                 }
                 break;
             case 3 :
-                // BON.g:1:22: T__26
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:22: T__26
                 {
                 mT__26(); 
 
                 }
                 break;
             case 4 :
-                // BON.g:1:28: T__27
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:28: T__27
                 {
                 mT__27(); 
 
                 }
                 break;
             case 5 :
-                // BON.g:1:34: T__28
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:34: T__28
                 {
                 mT__28(); 
 
                 }
                 break;
             case 6 :
-                // BON.g:1:40: T__29
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:40: T__29
                 {
                 mT__29(); 
 
                 }
                 break;
             case 7 :
-                // BON.g:1:46: T__30
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:46: T__30
                 {
                 mT__30(); 
 
                 }
                 break;
             case 8 :
-                // BON.g:1:52: T__31
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:52: T__31
                 {
                 mT__31(); 
 
                 }
                 break;
             case 9 :
-                // BON.g:1:58: T__32
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:58: T__32
                 {
                 mT__32(); 
 
                 }
                 break;
             case 10 :
-                // BON.g:1:64: T__33
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:64: T__33
                 {
                 mT__33(); 
 
                 }
                 break;
             case 11 :
-                // BON.g:1:70: T__34
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:70: T__34
                 {
                 mT__34(); 
 
                 }
                 break;
             case 12 :
-                // BON.g:1:76: T__35
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:76: T__35
                 {
                 mT__35(); 
 
                 }
                 break;
             case 13 :
-                // BON.g:1:82: T__36
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:82: T__36
                 {
                 mT__36(); 
 
                 }
                 break;
             case 14 :
-                // BON.g:1:88: T__37
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:88: T__37
                 {
                 mT__37(); 
 
                 }
                 break;
             case 15 :
-                // BON.g:1:94: T__38
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:94: T__38
                 {
                 mT__38(); 
 
                 }
                 break;
             case 16 :
-                // BON.g:1:100: T__39
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:100: T__39
                 {
                 mT__39(); 
 
                 }
                 break;
             case 17 :
-                // BON.g:1:106: T__40
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:106: T__40
                 {
                 mT__40(); 
 
                 }
                 break;
             case 18 :
-                // BON.g:1:112: T__41
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:112: T__41
                 {
                 mT__41(); 
 
                 }
                 break;
             case 19 :
-                // BON.g:1:118: T__42
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:118: T__42
                 {
                 mT__42(); 
 
                 }
                 break;
             case 20 :
-                // BON.g:1:124: T__43
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:124: T__43
                 {
                 mT__43(); 
 
                 }
                 break;
             case 21 :
-                // BON.g:1:130: T__44
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:130: T__44
                 {
                 mT__44(); 
 
                 }
                 break;
             case 22 :
-                // BON.g:1:136: T__45
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:136: T__45
                 {
                 mT__45(); 
 
                 }
                 break;
             case 23 :
-                // BON.g:1:142: T__46
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:142: T__46
                 {
                 mT__46(); 
 
                 }
                 break;
             case 24 :
-                // BON.g:1:148: T__47
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:148: T__47
                 {
                 mT__47(); 
 
                 }
                 break;
             case 25 :
-                // BON.g:1:154: T__48
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:154: T__48
                 {
                 mT__48(); 
 
                 }
                 break;
             case 26 :
-                // BON.g:1:160: T__49
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:160: T__49
                 {
                 mT__49(); 
 
                 }
                 break;
             case 27 :
-                // BON.g:1:166: T__50
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:166: T__50
                 {
                 mT__50(); 
 
                 }
                 break;
             case 28 :
-                // BON.g:1:172: T__51
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:172: T__51
                 {
                 mT__51(); 
 
                 }
                 break;
             case 29 :
-                // BON.g:1:178: T__52
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:178: T__52
                 {
                 mT__52(); 
 
                 }
                 break;
             case 30 :
-                // BON.g:1:184: T__53
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:184: T__53
                 {
                 mT__53(); 
 
                 }
                 break;
             case 31 :
-                // BON.g:1:190: T__54
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:190: T__54
                 {
                 mT__54(); 
 
                 }
                 break;
             case 32 :
-                // BON.g:1:196: T__55
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:196: T__55
                 {
                 mT__55(); 
 
                 }
                 break;
             case 33 :
-                // BON.g:1:202: T__56
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:202: T__56
                 {
                 mT__56(); 
 
                 }
                 break;
             case 34 :
-                // BON.g:1:208: T__57
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:208: T__57
                 {
                 mT__57(); 
 
                 }
                 break;
             case 35 :
-                // BON.g:1:214: T__58
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:214: T__58
                 {
                 mT__58(); 
 
                 }
                 break;
             case 36 :
-                // BON.g:1:220: T__59
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:220: T__59
                 {
                 mT__59(); 
 
                 }
                 break;
             case 37 :
-                // BON.g:1:226: T__60
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:226: T__60
                 {
                 mT__60(); 
 
                 }
                 break;
             case 38 :
-                // BON.g:1:232: T__61
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:232: T__61
                 {
                 mT__61(); 
 
                 }
                 break;
             case 39 :
-                // BON.g:1:238: T__62
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:238: T__62
                 {
                 mT__62(); 
 
                 }
                 break;
             case 40 :
-                // BON.g:1:244: T__63
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:244: T__63
                 {
                 mT__63(); 
 
                 }
                 break;
             case 41 :
-                // BON.g:1:250: T__64
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:250: T__64
                 {
                 mT__64(); 
 
                 }
                 break;
             case 42 :
-                // BON.g:1:256: T__65
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:256: T__65
                 {
                 mT__65(); 
 
                 }
                 break;
             case 43 :
-                // BON.g:1:262: T__66
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:262: T__66
                 {
                 mT__66(); 
 
                 }
                 break;
             case 44 :
-                // BON.g:1:268: T__67
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:268: T__67
                 {
                 mT__67(); 
 
                 }
                 break;
             case 45 :
-                // BON.g:1:274: T__68
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:274: T__68
                 {
                 mT__68(); 
 
                 }
                 break;
             case 46 :
-                // BON.g:1:280: T__69
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:280: T__69
                 {
                 mT__69(); 
 
                 }
                 break;
             case 47 :
-                // BON.g:1:286: T__70
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:286: T__70
                 {
                 mT__70(); 
 
                 }
                 break;
             case 48 :
-                // BON.g:1:292: T__71
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:292: T__71
                 {
                 mT__71(); 
 
                 }
                 break;
             case 49 :
-                // BON.g:1:298: T__72
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:298: T__72
                 {
                 mT__72(); 
 
                 }
                 break;
             case 50 :
-                // BON.g:1:304: T__73
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:304: T__73
                 {
                 mT__73(); 
 
                 }
                 break;
             case 51 :
-                // BON.g:1:310: T__74
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:310: T__74
                 {
                 mT__74(); 
 
                 }
                 break;
             case 52 :
-                // BON.g:1:316: T__75
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:316: T__75
                 {
                 mT__75(); 
 
                 }
                 break;
             case 53 :
-                // BON.g:1:322: T__76
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:322: T__76
                 {
                 mT__76(); 
 
                 }
                 break;
             case 54 :
-                // BON.g:1:328: T__77
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:328: T__77
                 {
                 mT__77(); 
 
                 }
                 break;
             case 55 :
-                // BON.g:1:334: T__78
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:334: T__78
                 {
                 mT__78(); 
 
                 }
                 break;
             case 56 :
-                // BON.g:1:340: T__79
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:340: T__79
                 {
                 mT__79(); 
 
                 }
                 break;
             case 57 :
-                // BON.g:1:346: T__80
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:346: T__80
                 {
                 mT__80(); 
 
                 }
                 break;
             case 58 :
-                // BON.g:1:352: T__81
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:352: T__81
                 {
                 mT__81(); 
 
                 }
                 break;
             case 59 :
-                // BON.g:1:358: T__82
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:358: T__82
                 {
                 mT__82(); 
 
                 }
                 break;
             case 60 :
-                // BON.g:1:364: T__83
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:364: T__83
                 {
                 mT__83(); 
 
                 }
                 break;
             case 61 :
-                // BON.g:1:370: T__84
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:370: T__84
                 {
                 mT__84(); 
 
                 }
                 break;
             case 62 :
-                // BON.g:1:376: T__85
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:376: T__85
                 {
                 mT__85(); 
 
                 }
                 break;
             case 63 :
-                // BON.g:1:382: T__86
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:382: T__86
                 {
                 mT__86(); 
 
                 }
                 break;
             case 64 :
-                // BON.g:1:388: T__87
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:388: T__87
                 {
                 mT__87(); 
 
                 }
                 break;
             case 65 :
-                // BON.g:1:394: T__88
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:394: T__88
                 {
                 mT__88(); 
 
                 }
                 break;
             case 66 :
-                // BON.g:1:400: T__89
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:400: T__89
                 {
                 mT__89(); 
 
                 }
                 break;
             case 67 :
-                // BON.g:1:406: T__90
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:406: T__90
                 {
                 mT__90(); 
 
                 }
                 break;
             case 68 :
-                // BON.g:1:412: T__91
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:412: T__91
                 {
                 mT__91(); 
 
                 }
                 break;
             case 69 :
-                // BON.g:1:418: T__92
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:418: T__92
                 {
                 mT__92(); 
 
                 }
                 break;
             case 70 :
-                // BON.g:1:424: T__93
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:424: T__93
                 {
                 mT__93(); 
 
                 }
                 break;
             case 71 :
-                // BON.g:1:430: T__94
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:430: T__94
                 {
                 mT__94(); 
 
                 }
                 break;
             case 72 :
-                // BON.g:1:436: T__95
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:436: T__95
                 {
                 mT__95(); 
 
                 }
                 break;
             case 73 :
-                // BON.g:1:442: T__96
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:442: T__96
                 {
                 mT__96(); 
 
                 }
                 break;
             case 74 :
-                // BON.g:1:448: T__97
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:448: T__97
                 {
                 mT__97(); 
 
                 }
                 break;
             case 75 :
-                // BON.g:1:454: T__98
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:454: T__98
                 {
                 mT__98(); 
 
                 }
                 break;
             case 76 :
-                // BON.g:1:460: T__99
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:460: T__99
                 {
                 mT__99(); 
 
                 }
                 break;
             case 77 :
-                // BON.g:1:466: T__100
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:466: T__100
                 {
                 mT__100(); 
 
                 }
                 break;
             case 78 :
-                // BON.g:1:473: T__101
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:473: T__101
                 {
                 mT__101(); 
 
                 }
                 break;
             case 79 :
-                // BON.g:1:480: T__102
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:480: T__102
                 {
                 mT__102(); 
 
                 }
                 break;
             case 80 :
-                // BON.g:1:487: T__103
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:487: T__103
                 {
                 mT__103(); 
 
                 }
                 break;
             case 81 :
-                // BON.g:1:494: T__104
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:494: T__104
                 {
                 mT__104(); 
 
                 }
                 break;
             case 82 :
-                // BON.g:1:501: T__105
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:501: T__105
                 {
                 mT__105(); 
 
                 }
                 break;
             case 83 :
-                // BON.g:1:508: T__106
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:508: T__106
                 {
                 mT__106(); 
 
                 }
                 break;
             case 84 :
-                // BON.g:1:515: T__107
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:515: T__107
                 {
                 mT__107(); 
 
                 }
                 break;
             case 85 :
-                // BON.g:1:522: T__108
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:522: T__108
                 {
                 mT__108(); 
 
                 }
                 break;
             case 86 :
-                // BON.g:1:529: T__109
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:529: T__109
                 {
                 mT__109(); 
 
                 }
                 break;
             case 87 :
-                // BON.g:1:536: T__110
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:536: T__110
                 {
                 mT__110(); 
 
                 }
                 break;
             case 88 :
-                // BON.g:1:543: T__111
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:543: T__111
                 {
                 mT__111(); 
 
                 }
                 break;
             case 89 :
-                // BON.g:1:550: T__112
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:550: T__112
                 {
                 mT__112(); 
 
                 }
                 break;
             case 90 :
-                // BON.g:1:557: T__113
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:557: T__113
                 {
                 mT__113(); 
 
                 }
                 break;
             case 91 :
-                // BON.g:1:564: T__114
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:564: T__114
                 {
                 mT__114(); 
 
                 }
                 break;
             case 92 :
-                // BON.g:1:571: T__115
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:571: T__115
                 {
                 mT__115(); 
 
                 }
                 break;
             case 93 :
-                // BON.g:1:578: T__116
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:578: T__116
                 {
                 mT__116(); 
 
                 }
                 break;
             case 94 :
-                // BON.g:1:585: T__117
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:585: T__117
                 {
                 mT__117(); 
 
                 }
                 break;
             case 95 :
-                // BON.g:1:592: T__118
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:592: T__118
                 {
                 mT__118(); 
 
                 }
                 break;
             case 96 :
-                // BON.g:1:599: T__119
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:599: T__119
                 {
                 mT__119(); 
 
                 }
                 break;
             case 97 :
-                // BON.g:1:606: T__120
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:606: T__120
                 {
                 mT__120(); 
 
                 }
                 break;
             case 98 :
-                // BON.g:1:613: CHARACTER_CONSTANT
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:613: CHARACTER_CONSTANT
                 {
                 mCHARACTER_CONSTANT(); 
 
                 }
                 break;
             case 99 :
-                // BON.g:1:632: MANIFEST_STRING
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:632: MANIFEST_STRING
                 {
                 mMANIFEST_STRING(); 
 
                 }
                 break;
             case 100 :
-                // BON.g:1:648: MANIFEST_TEXTBLOCK_START
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:648: MANIFEST_TEXTBLOCK_START
                 {
                 mMANIFEST_TEXTBLOCK_START(); 
 
                 }
                 break;
             case 101 :
-                // BON.g:1:673: MANIFEST_TEXTBLOCK_MIDDLE
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:673: MANIFEST_TEXTBLOCK_MIDDLE
                 {
                 mMANIFEST_TEXTBLOCK_MIDDLE(); 
 
                 }
                 break;
             case 102 :
-                // BON.g:1:699: MANIFEST_TEXTBLOCK_END
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:699: MANIFEST_TEXTBLOCK_END
                 {
                 mMANIFEST_TEXTBLOCK_END(); 
 
                 }
                 break;
             case 103 :
-                // BON.g:1:722: COMMENT
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:722: COMMENT
                 {
                 mCOMMENT(); 
 
                 }
                 break;
             case 104 :
-                // BON.g:1:730: INTEGER
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:730: INTEGER
                 {
                 mINTEGER(); 
 
                 }
                 break;
             case 105 :
-                // BON.g:1:738: REAL
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:738: REAL
                 {
                 mREAL(); 
 
                 }
                 break;
             case 106 :
-                // BON.g:1:743: IDENTIFIER
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:743: IDENTIFIER
                 {
                 mIDENTIFIER(); 
 
                 }
                 break;
             case 107 :
-                // BON.g:1:754: WHITESPACE
+                // /home/fintan/workspaces/bon/bonc/src/BON.g:1:754: WHITESPACE
                 {
                 mWHITESPACE(); 
 
