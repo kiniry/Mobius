@@ -2,7 +2,7 @@
 <feature
       id="ie.ucd.bon.plugin"
       label="BONc Feature"
-      version="0.3.12"
+      version="0.3.13"
       provider-name="Fintan Fairmichael, University College Dublin">
 
    <description url="http://kind.ucd.ie/products/opensource/BONc/">
