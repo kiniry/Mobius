@@ -1,3 +1,12 @@
+bonc (0.2.6) unstable; urgency=low
+
+ * Fixes the bug for locating templates for html generation.
+ * Updated changelog to reflect the dependencies for using the documentation generation.
+ * Better feedback for invalid command line inputs.
+ * Fixed debian script that was causing errors on at least one system.
+
+ -- Fintan Fairmichael <fintan.fairmichael@ucd.ie> Tue, 09 Mar 2010 16:26:51 +0000
+
 bonc (0.1.5) unstable; urgency=low
 
  * Fixed a small problem with escaping characters for HTML generation.

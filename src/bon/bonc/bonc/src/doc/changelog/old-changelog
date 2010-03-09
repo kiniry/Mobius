@@ -1,3 +1,11 @@
+bonc-0.2.6   2010-03-09 16:26
+
+ * Fixes the bug for locating templates for html generation.
+ * Updated changelog to reflect the dependencies for using the documentation generation.
+ * Better feedback for invalid command line inputs.
+ * Fixed debian script that was causing errors on at least one system.
+
+
 bonc-0.1.5   2008-10-01 15:45
 
  * Fixed a small problem with escaping characters for HTML generation.
