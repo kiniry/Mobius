@@ -6,10 +6,13 @@ package ie.ucd.bon.graph;
 
 import ie.ucd.bon.util.Converter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -81,6 +84,48 @@ public class Graph<A,B> extends ForwardingMultimap<A,B> {
           }
           pred.put(na, a);
           todo.addLast(na);
+        }
+      }
+    }
+    return null;
+  }
+  
+  public final List<A> findPath(A startNode, A endNode, Converter<B,A> converter) {
+    if (startNode.equals(endNode)) {
+      List<A> single = new ArrayList<A>();
+      single.add(startNode);
+      return single;
+    }
+
+    Map<A,A> pred = new HashMap<A,A>();
+    
+    LinkedList<A> todo = new LinkedList<A>();
+    todo.addLast(startNode);
+    while(!todo.isEmpty()) {
+      A current = todo.removeFirst();
+      Collection<B> nexts = get(current);
+      if (nexts == null) {
+        continue;
+      }
+      Collection<A> nextAs = converter.convert(nexts);
+      if (nextAs == null) {
+        continue;
+      }
+      for (A nextA : nextAs) {
+        if (pred.get(nextA) == null) {
+          if (nextA.equals(endNode)) {
+            // build and return path
+            LinkedList<A> result = new LinkedList<A>();
+            result.addFirst(nextA);
+            result.addFirst(current);
+            while (current != startNode) {
+              current = pred.get(current);
+              result.addFirst(current);
+            }
+            return result;
+          }
+          pred.put(nextA, current);
+          todo.addLast(nextA);
         }
       }
     }

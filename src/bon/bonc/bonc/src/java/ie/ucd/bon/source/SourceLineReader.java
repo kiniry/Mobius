@@ -88,7 +88,7 @@ public class SourceLineReader {
     for ( ; lineReadTo < lineToReadTo; lineReadTo++) {
       String line = br.readLine();
       if (line == null) {
-        //TODO a new Exception type for here, so we can identify exactly what's happened!
+        //TODO a new Exception type for here, so we can identify exactly what's happened
         throw new IOException("Attempted to read line " + lineReadTo + ", but the file is not that long.");
       } else {
         lines.add(line);

@@ -57,7 +57,7 @@
   </target>
 
   <target name="compile" depends="init" description="compile the source">
-    <javac srcdir="${src-java}" destdir="${build}" target="${java-target-version}" classpathref="compile.path"/>
+    <javac srcdir="${src-java}" destdir="${build}" target="${java-target-version}" classpathref="compile.path" debug="true"/>
   </target>
 
   <target name="javadocs" depends="init" description="Generate javadocs">

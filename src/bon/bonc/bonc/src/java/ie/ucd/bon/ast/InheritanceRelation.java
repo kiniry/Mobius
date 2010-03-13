@@ -1,6 +1,6 @@
 
 /**
- * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * Copyright (c) 2007-2010, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  *
  * This class is generated automatically from normal_classes.tpl.
@@ -10,6 +10,7 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.util.StringUtil;
 
 public class InheritanceRelation extends StaticRelation {
 
@@ -58,24 +59,7 @@ public class InheritanceRelation extends StaticRelation {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("InheritanceRelation ast node: ");
-    sb.append("child = ");
-    sb.append(child);
-    sb.append(", ");
-        sb.append("parent = ");
-    sb.append(parent);
-    sb.append(", ");
-        sb.append("multiplicity = ");
-    sb.append(multiplicity);
-    sb.append(", ");
-        sb.append("semanticLabel = ");
-    sb.append(semanticLabel);
-    sb.append(", ");
-    if (sb.length() >= 2) {
-      sb.delete(sb.length()-2, sb.length());
-    }
-    return sb.toString();
+    return StringUtil.prettyPrint(this);
   }
 }
 

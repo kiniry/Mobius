@@ -6,12 +6,7 @@ package ie.ucd.bon.typechecker;
 
 import static ie.ucd.bon.ast.FeatureSpecification.Modifier.DEFERRED;
 import ie.ucd.bon.ast.AbstractVisitorWithAdditions;
-import ie.ucd.bon.ast.BONType;
-import ie.ucd.bon.ast.BinaryExp;
 import ie.ucd.bon.ast.BonSourceFile;
-import ie.ucd.bon.ast.BooleanConstant;
-import ie.ucd.bon.ast.CallExp;
-import ie.ucd.bon.ast.CharacterConstant;
 import ie.ucd.bon.ast.ClassChart;
 import ie.ucd.bon.ast.ClassInterface;
 import ie.ucd.bon.ast.ClassName;
@@ -30,11 +25,7 @@ import ie.ucd.bon.ast.HasType;
 import ie.ucd.bon.ast.IVisitorWithAdditions;
 import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.InheritanceRelation;
-import ie.ucd.bon.ast.IntegerConstant;
-import ie.ucd.bon.ast.KeywordConstant;
 import ie.ucd.bon.ast.Multiplicity;
-import ie.ucd.bon.ast.Quantification;
-import ie.ucd.bon.ast.RealConstant;
 import ie.ucd.bon.ast.RenameClause;
 import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.ast.StaticComponent;
@@ -43,13 +34,8 @@ import ie.ucd.bon.ast.StaticRef;
 import ie.ucd.bon.ast.StaticRefPart;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
-import ie.ucd.bon.ast.UnaryExp;
-import ie.ucd.bon.ast.UnqualifiedCall;
-import ie.ucd.bon.ast.VariableRange;
-import ie.ucd.bon.ast.BinaryExp.Op;
 import ie.ucd.bon.ast.Clazz.Mod;
 import ie.ucd.bon.ast.FeatureSpecification.Modifier;
-import ie.ucd.bon.ast.Quantification.Quantifier;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.printer.PrettyPrintVisitor;
 import ie.ucd.bon.source.SourceLocation;
@@ -63,6 +49,7 @@ import ie.ucd.bon.typechecker.errors.NotContainedInClusterError;
 import ie.ucd.bon.typechecker.errors.ParentFeatureIsDeferredError;
 import ie.ucd.bon.typechecker.errors.ParentFeatureNotDeferredError;
 import ie.ucd.bon.typechecker.informal.errors.InvalidInformalClassTypeError;
+import ie.ucd.bon.util.HashMapStack;
 
 import java.util.Collection;
 import java.util.List;
@@ -72,11 +59,19 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
   private final BONST st;
   private final VisitorContext context;
   private final Problems problems;
+  private final HashMapStack<String,Type> tc;
 
   public TypeCheckerVisitor(BONST st) {
     this.st = st;
     this.problems = new Problems("TC");
     this.context = new VisitorContext();
+    this.tc = new HashMapStack<String,Type>();
+    
+    initialiseTC();
+  }
+  
+  private void initialiseTC() {
+    tc.putAll(st.classNameToTypeMap); 
   }
 
   @Override
@@ -266,14 +261,9 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
   }
 
   @Override
-  public void visitCluster(Cluster node, String name,
-      List<StaticComponent> components, Boolean reused, String comment,
-      SourceLocation loc) {
-
+  public void visitCluster(Cluster node, String name, List<StaticComponent> components, Boolean reused, String comment, SourceLocation loc) {
     visitAll(components);
   }
-
-
 
   @Override
   public void visitClassChart(ClassChart node, ClassName name,
@@ -330,6 +320,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
     visitAll(postconditions);
   }
 
+  /*
   @Override
   public void visitIntegerConstant(IntegerConstant node, Integer value,
       SourceLocation loc) {
@@ -527,7 +518,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
       return false;
     }
   }
-
+*/
   private String typeChoices(Type[] types) {
     if (types.length == 0) {
       return "";

@@ -1,0 +1,11 @@
+static_diagram A
+component 
+  class ANY
+  class O
+
+  class LIST[T]
+
+  class A[T->O]
+
+  class B[T->A[ANY]] --Should be an error as A[ANY] is not valid
+end

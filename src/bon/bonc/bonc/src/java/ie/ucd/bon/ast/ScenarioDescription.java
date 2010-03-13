@@ -1,6 +1,6 @@
 
 /**
- * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * Copyright (c) 2007-2010, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  *
  * This class is generated automatically from normal_classes.tpl.
@@ -10,6 +10,7 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.util.StringUtil;
 
 public class ScenarioDescription extends DynamicComponent {
 
@@ -54,21 +55,7 @@ public class ScenarioDescription extends DynamicComponent {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("ScenarioDescription ast node: ");
-    sb.append("name = ");
-    sb.append(name);
-    sb.append(", ");
-        sb.append("actions = ");
-    sb.append(actions);
-    sb.append(", ");
-        sb.append("comment = ");
-    sb.append(comment);
-    sb.append(", ");
-    if (sb.length() >= 2) {
-      sb.delete(sb.length()-2, sb.length());
-    }
-    return sb.toString();
+    return StringUtil.prettyPrint(this);
   }
 }
 

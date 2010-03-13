@@ -1,6 +1,6 @@
 
 /**
- * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * Copyright (c) 2007-2010, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  *
  * This class is generated automatically from normal_classes.tpl.
@@ -10,6 +10,7 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.util.StringUtil;
 
 public class IndexClause extends AstNode {
 
@@ -50,18 +51,7 @@ public class IndexClause extends AstNode {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("IndexClause ast node: ");
-    sb.append("id = ");
-    sb.append(id);
-    sb.append(", ");
-        sb.append("indexTerms = ");
-    sb.append(indexTerms);
-    sb.append(", ");
-    if (sb.length() >= 2) {
-      sb.delete(sb.length()-2, sb.length());
-    }
-    return sb.toString();
+    return StringUtil.prettyPrint(this);
   }
 }
 

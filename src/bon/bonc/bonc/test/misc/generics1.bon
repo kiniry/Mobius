@@ -1,0 +1,20 @@
+static_diagram A
+component 
+
+  class ANY
+
+  class A[X,Y]
+
+  class B[X,Y]
+    inherit A[X,Y]
+  end
+
+  class K
+    inherit ANY
+  end
+
+  class C[X->K,Y]
+    inherit B[X,Y]
+  end
+
+end

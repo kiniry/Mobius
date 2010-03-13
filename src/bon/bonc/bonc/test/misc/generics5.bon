@@ -1,0 +1,11 @@
+static_diagram A
+component 
+  class ANY
+  class O
+
+  class A[T->O]
+
+  class B
+    inherit A[S] --Should be an error
+  end
+end

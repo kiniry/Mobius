@@ -1,6 +1,6 @@
 
 /**
- * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * Copyright (c) 2007-2010, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  *
  * This class is generated automatically from normal_classes.tpl.
@@ -10,6 +10,7 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.util.StringUtil;
 
 public class ClassDictionary extends SpecificationElement {
 
@@ -62,27 +63,7 @@ public class ClassDictionary extends SpecificationElement {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("ClassDictionary ast node: ");
-    sb.append("systemName = ");
-    sb.append(systemName);
-    sb.append(", ");
-        sb.append("entries = ");
-    sb.append(entries);
-    sb.append(", ");
-        sb.append("indexing = ");
-    sb.append(indexing);
-    sb.append(", ");
-        sb.append("explanation = ");
-    sb.append(explanation);
-    sb.append(", ");
-        sb.append("part = ");
-    sb.append(part);
-    sb.append(", ");
-    if (sb.length() >= 2) {
-      sb.delete(sb.length()-2, sb.length());
-    }
-    return sb.toString();
+    return StringUtil.prettyPrint(this);
   }
 }
 

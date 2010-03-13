@@ -1,0 +1,22 @@
+static_diagram A
+component 
+  class M
+    inherit O
+  end
+  class N
+    inherit ANY
+  end
+  class ANY
+  class O
+    inherit ANY
+  end
+
+  class LIST[T]
+
+  class A[X->O,Y->LIST[X]]
+
+  class B[T->ANY]
+    inherit A[T,LIST[T]]
+  end
+
+end

@@ -923,7 +923,7 @@ has_type returns [HasType htype] :
   (  type 
      { if(isOk()) $htype = HasType.mk($type_mark.mark, $type.type, getSLoc($type_mark.start,$type.stop)); }
    | v='Void'
-     { if(isOk()) $htype = HasType.mk($type_mark.mark, BONType.voidType(getSLoc($v)), getSLoc($v)); }
+     { if(isOk()) $htype = HasType.mk($type_mark.mark, Type.mk("Void", Constants.EMPTY_TYPE_LIST, getSLoc($v)), getSLoc($v)); }
   )
 ;
 
@@ -1061,9 +1061,9 @@ formal_generic_name returns [String name] :
 class_type returns [Type type] :  
   c=class_name 
   (  actual_generics
-     { if(isOk()) $type = BONType.mk($c.text, $actual_generics.types, getSLoc($c.start, $actual_generics.stop)); }
+     { if(isOk()) $type = Type.mk($c.text, $actual_generics.types, getSLoc($c.start, $actual_generics.stop)); }
     |
-     { if(isOk()) $type = BONType.mk($c.text, Constants.EMPTY_TYPE_LIST, getSLoc($c.start,$c.stop)); } 
+     { if(isOk()) $type = Type.mk($c.text, Constants.EMPTY_TYPE_LIST, getSLoc($c.start,$c.stop)); } 
   ) 
 ;
             
@@ -1087,10 +1087,10 @@ type returns [Type type] :
        i=IDENTIFIER 
        (
         ( actual_generics 
-          { if(isOk()) $type = BONType.mk($IDENTIFIER.text, $actual_generics.types, getSLoc($i,$actual_generics.stop)); }
+          { if(isOk()) $type = Type.mk($IDENTIFIER.text, $actual_generics.types, getSLoc($i,$actual_generics.stop)); }
         ) 
         |
-        { if(isOk()) $type = BONType.mk($IDENTIFIER.text, Constants.EMPTY_TYPE_LIST, getSLoc($i)); }
+        { if(isOk()) $type = Type.mk($IDENTIFIER.text, Constants.EMPTY_TYPE_LIST, getSLoc($i)); }
        ) 
 ;
 

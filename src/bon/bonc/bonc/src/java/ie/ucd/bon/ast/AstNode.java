@@ -9,7 +9,7 @@ import ie.ucd.bon.util.AstUtil;
 
 public abstract class AstNode {
 
-  private final SourceLocation location;
+  public final SourceLocation location;
 
   public AstNode(SourceLocation location) {
     this.location = location;

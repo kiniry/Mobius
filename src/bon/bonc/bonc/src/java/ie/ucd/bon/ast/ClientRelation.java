@@ -1,6 +1,6 @@
 
 /**
- * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * Copyright (c) 2007-2010, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  *
  * This class is generated automatically from normal_classes.tpl.
@@ -10,6 +10,7 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.util.StringUtil;
 
 public class ClientRelation extends StaticRelation {
 
@@ -62,27 +63,7 @@ public class ClientRelation extends StaticRelation {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("ClientRelation ast node: ");
-    sb.append("client = ");
-    sb.append(client);
-    sb.append(", ");
-        sb.append("supplier = ");
-    sb.append(supplier);
-    sb.append(", ");
-        sb.append("clientEntities = ");
-    sb.append(clientEntities);
-    sb.append(", ");
-        sb.append("typeMark = ");
-    sb.append(typeMark);
-    sb.append(", ");
-        sb.append("semanticLabel = ");
-    sb.append(semanticLabel);
-    sb.append(", ");
-    if (sb.length() >= 2) {
-      sb.delete(sb.length()-2, sb.length());
-    }
-    return sb.toString();
+    return StringUtil.prettyPrint(this);
   }
 }
 

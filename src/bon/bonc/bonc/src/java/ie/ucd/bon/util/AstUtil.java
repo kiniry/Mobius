@@ -10,10 +10,13 @@ import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.FeatureSpecification;
+import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.StaticDiagram;
+import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.source.SourceReader;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -68,6 +71,14 @@ public class AstUtil {
     } else {
       return getSourceLines(new SourceLocation(node.get(0).getLocation(), node.get(node.size()-1).getLocation()));
     }
+  }
+  
+  public static List<Type> formalGenericTypes(List<FormalGeneric> generics) {
+    List<Type> types = new ArrayList<Type>(generics.size());
+    for (FormalGeneric generic : generics) {
+      types.add(generic.getType());
+    }
+    return types;
   }
 
 }

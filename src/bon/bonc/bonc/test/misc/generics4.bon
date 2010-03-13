@@ -1,0 +1,18 @@
+static_diagram A
+component 
+  class M
+    inherit O
+  end
+  class N
+    inherit ANY
+  end
+  class ANY
+  class O
+    inherit ANY
+  end
+
+  class LIST[T]
+
+  class A[T->LIST[T]] --The T in LIST[T] is not a known type
+
+end

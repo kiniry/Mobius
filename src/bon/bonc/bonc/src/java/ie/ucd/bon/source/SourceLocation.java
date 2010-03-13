@@ -239,6 +239,10 @@ public class SourceLocation implements Comparable<SourceLocation> {
   public MutableSourceLocation mutableClone() {
     return new MutableSourceLocation(this);
   }
+  
+  public SourceLocation shortenToLength(int newLength) {
+    return mutableClone().setAbsoluteCharPositionEnd(absoluteCharPositionStart + newLength);
+  }
 
   @Override
   public int hashCode() {

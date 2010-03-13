@@ -46,6 +46,7 @@ import ie.ucd.bon.typechecker.errors.DuplicateSystemDefinitionError;
 import ie.ucd.bon.typechecker.errors.NameNotUniqueError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClassChartError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClusterChartError;
+import ie.ucd.bon.util.AstUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,6 +111,9 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
 
       st.genericsMap.put(context.clazz, generics);
 
+      Type cType = Type.mk(name.name, AstUtil.formalGenericTypes(generics), loc);
+      st.classNameToTypeMap.put(name.name, cType);
+      
       context.clazz = node;
       visitAll(generics);
       visitNode(classInterface);

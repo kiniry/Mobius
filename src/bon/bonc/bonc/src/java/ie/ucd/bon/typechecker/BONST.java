@@ -41,6 +41,7 @@ public class BONST {
   /** A map from cluster name (String) to the Cluster AST node that contains the cluster. */
   public final Graph<String,Cluster> clusterClusterGraph = new Graph<String,Cluster>();
 
+  public final Map<String,Type> classNameToTypeMap = new HashMap<String,Type>();
   public final TwoDimensionalMap<Clazz, String, FeatureSpecification> featuresMap = new TwoDimensionalMap<Clazz,String,FeatureSpecification>();
   public final Map<FeatureSpecification,Clazz> featureDeclaringClassMap = new HashMap<FeatureSpecification,Clazz>();
   public final Map<FeatureSpecification,List<ClassName>> selectiveExportMap = new HashMap<FeatureSpecification,List<ClassName>>();
@@ -76,36 +77,5 @@ public class BONST {
     public final Map<String,String> alternativeClusterDescriptions = new HashMap<String,String>();
     public final Map<String,String> alternativeClassDescriptions = new HashMap<String,String>();
 
-  }
-
-  public boolean isSubtypeOrEqual(Type type1, Type type2) {
-    if (type1 == null && type2 == null) {
-      //TODO should we definitely return true here?
-      return true;
-    }
-    //If one type is null
-    if ((type1 == null && type2 != null) || (type2 == null && type1 != null)) {
-      return false;
-    }
-    //TODO using .equals here, which will do exact instance comparison.
-    //This is fine so long as type instances are unique for a given type
-    if (type1.equals(type2)) {
-      return true;
-    } else {
-      //If all generics are equal
-      if (type1.getActualGenerics().equals(type2.getActualGenerics())) {
-        //If one of the parents are a subtype or equal...
-        Collection<Type> parents = classInheritanceGraph.get(type1.getIdentifier());
-        for (Type parent : parents) {
-          if (isSubtypeOrEqual(parent, type2)) {
-            return true;
-          }
-        }
-        //No parents are a subtype or equal
-        return false;
-      } else {
-        return false;
-      }
-    }
   }
 }

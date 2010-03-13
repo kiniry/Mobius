@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 /home/fintan/workspaces/bon/bonc/src/BON.g 2010-03-09 21:45:26
+// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 /home/fintan/workspaces/bon/bonc/src/BON.g 2010-03-11 11:56:28
 
   package ie.ucd.bon.parser; 
   
@@ -7959,7 +7959,7 @@ public class BONParser extends AbstractBONParser {
                     {
                     v=(Token)match(input,74,FOLLOW_74_in_has_type5982); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       if(isOk()) retval.htype = HasType.mk((type_mark87!=null?type_mark87.mark:null), BONType.voidType(getSLoc(v)), getSLoc(v)); 
+                       if(isOk()) retval.htype = HasType.mk((type_mark87!=null?type_mark87.mark:null), Type.mk("Void", Constants.EMPTY_TYPE_LIST, getSLoc(v)), getSLoc(v)); 
                     }
 
                     }
@@ -9178,7 +9178,7 @@ public class BONParser extends AbstractBONParser {
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       if(isOk()) retval.type = BONType.mk((c!=null?input.toString(c.start,c.stop):null), (actual_generics96!=null?actual_generics96.types:null), getSLoc((c!=null?((Token)c.start):null), (actual_generics96!=null?((Token)actual_generics96.stop):null))); 
+                       if(isOk()) retval.type = Type.mk((c!=null?input.toString(c.start,c.stop):null), (actual_generics96!=null?actual_generics96.types:null), getSLoc((c!=null?((Token)c.start):null), (actual_generics96!=null?((Token)actual_generics96.stop):null))); 
                     }
 
                     }
@@ -9187,7 +9187,7 @@ public class BONParser extends AbstractBONParser {
                     // /home/fintan/workspaces/bon/bonc/src/BON.g:1066:6: 
                     {
                     if ( state.backtracking==0 ) {
-                       if(isOk()) retval.type = BONType.mk((c!=null?input.toString(c.start,c.stop):null), Constants.EMPTY_TYPE_LIST, getSLoc((c!=null?((Token)c.start):null),(c!=null?((Token)c.stop):null))); 
+                       if(isOk()) retval.type = Type.mk((c!=null?input.toString(c.start,c.stop):null), Constants.EMPTY_TYPE_LIST, getSLoc((c!=null?((Token)c.start):null),(c!=null?((Token)c.stop):null))); 
                     }
 
                     }
@@ -9373,7 +9373,7 @@ public class BONParser extends AbstractBONParser {
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       if(isOk()) retval.type = BONType.mk((i!=null?i.getText():null), (actual_generics98!=null?actual_generics98.types:null), getSLoc(i,(actual_generics98!=null?((Token)actual_generics98.stop):null))); 
+                       if(isOk()) retval.type = Type.mk((i!=null?i.getText():null), (actual_generics98!=null?actual_generics98.types:null), getSLoc(i,(actual_generics98!=null?((Token)actual_generics98.stop):null))); 
                     }
 
                     }
@@ -9385,7 +9385,7 @@ public class BONParser extends AbstractBONParser {
                     // /home/fintan/workspaces/bon/bonc/src/BON.g:1093:9: 
                     {
                     if ( state.backtracking==0 ) {
-                       if(isOk()) retval.type = BONType.mk((i!=null?i.getText():null), Constants.EMPTY_TYPE_LIST, getSLoc(i)); 
+                       if(isOk()) retval.type = Type.mk((i!=null?i.getText():null), Constants.EMPTY_TYPE_LIST, getSLoc(i)); 
                     }
 
                     }

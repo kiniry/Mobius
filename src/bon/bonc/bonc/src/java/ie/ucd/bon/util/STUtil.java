@@ -56,6 +56,25 @@ public class STUtil {
     return classNameToClazzConverter(st).convert(st.simpleClassInheritanceGraph.get(clazz.name.name));
   }
 
+  public static boolean isAncestor(Clazz parent, Clazz sub, BONST st) {
+    //TODO more efficient search
+    return getAllAncestors(sub,st).contains(parent);
+  }
+
+  public static Collection<String> getAllClassAncestors(String className, BONST st) {
+    return st.simpleClassInheritanceGraph.getAllSuccessorNodes(className, Converter.<String>identityConverter());
+  }
+  
+  public static boolean isClassAncestor(String parentName, String subName, BONST st) {
+    //TODO more efficient search
+    return getAllClassAncestors(subName, st).contains(parentName);
+  }
+  
+  public static boolean isClassAncestorOrEqual(String parentName, String subName, BONST st) {
+    //TODO more efficient search
+    return parentName.equals(subName) || getAllClassAncestors(subName, st).contains(parentName);
+  }
+  
   public static Converter<String,Clazz> classNameToClazzConverter(final BONST st) {
     return new Converter<String,Clazz>() {      
       @Override

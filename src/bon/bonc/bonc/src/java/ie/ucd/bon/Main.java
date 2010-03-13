@@ -151,7 +151,6 @@ public final class Main {
       API.displayGraphs(tracker, so);
     }
 
-    //TODO - return false here if we have problems...
     return totalProblems;
   }
 

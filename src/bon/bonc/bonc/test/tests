@@ -274,3 +274,41 @@
 @Location { misc/ }
 @Input { feature_inherits3.bon }
 @Output { < ParentFeatureIsDeferredError, #File:feature_inherits3.bon, 10, 16, K, Y > }
+
+@Test-name: "Generics #1 - some valid uses"
+@Prog-args: {--formal}
+@Location { misc/ }
+@Input { generics1.bon }
+//Currently 
+
+@Test-name: "Generics #2 - more valid uses"
+@Prog-args: {--formal}
+@Location { misc/ }
+@Input { generics2.bon }
+//Currently gives an error because the binders are not yet recognised in constraints on generics
+
+@Test-name: "Generics #3 - invalid use #1"
+@Prog-args: {--formal}
+@Location { misc/ }
+@Input { generics3.bon }
+@Output { < TypeMismatchWithExplanationError, #File:generics3.bon, 19, 14, "Invalid type for generic parameter to A. ", O, ANY > }
+//Currently gives an error because the binders are not yet recognised in constraints on generics
+
+@Test-name: "Generics #4 - invalid use #2"
+@Prog-args: {--formal}
+@Location { misc/ }
+@Input { generics4.bon }
+@Output { < InvalidFormalClassTypeError, #File:generics4.bon, 16, 18, T > }
+
+@Test-name: "Generics #5 - invalid use #3"
+@Prog-args: {--formal}
+@Location { misc/ }
+@Input { generics5.bon }
+@Output { < InvalidFormalClassTypeError, #File:generics5.bon, 9, 14, S >,
+          < TypeMismatchWithExplanationError, #File:generics5.bon, 9, 14, "Invalid type for generic parameter to A. ", O, S > }
+
+@Test-name: "Generics #6 - invalid use #4"
+@Prog-args: {--formal}
+@Location { misc/ }
+@Input { generics6.bon }
+//Should be an error, line 10
