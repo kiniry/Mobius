@@ -42,18 +42,24 @@ public class BONWalker {
   public final void parseTypingInformation(final ParsingTracker the_tracker) {
     final UserProfile profile = Beetlz.getProfile();
     final BONST the_st = the_tracker.getSymbolTable();
-    final Map<String,Cluster> clusterList = the_st.clusters;
     
-
     final Graph<String,Cluster> clusterMap = the_st.classClusterMap;
+    final Map<String, Clazz> classMap = the_st.classes;
     
-    for (final String c : clusterMap.keySet()) {
+    for (final String c: classMap.keySet()) {
       if (!profile.isBONIgnored(c)) {  
         Collection<Cluster> clusterInfo = clusterMap.get(c);
         final ClassStructure temp = BONParser.parseClass(the_st, c, clusterInfo);
         my_classes.put(temp.getSimpleName(), temp);
       }
     }
+    /*for (final String c : clusterMap.keySet()) {
+      if (!profile.isBONIgnored(c)) {  
+        Collection<Cluster> clusterInfo = clusterMap.get(c);
+        final ClassStructure temp = BONParser.parseClass(the_st, c, clusterInfo);
+        my_classes.put(temp.getSimpleName(), temp);
+      }
+    }*/
 
     for (final ClientRelation cr : the_st.clientRelations) {
       String clientName = cr.getClient().getName().getName();

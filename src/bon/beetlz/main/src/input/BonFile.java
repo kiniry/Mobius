@@ -71,7 +71,7 @@ public class BonFile {
     }
     
     ParsingTracker tracker = API.parse(my_files, false, false);
-
+    
     if (tracker.getErrorsAndWarnings().getNumberOfErrors() == 0) {
       LOGGER.config("Successfully compiled BON files."); //$NON-NLS-1$
       my_bonWalker.parseTypingInformation(tracker);
