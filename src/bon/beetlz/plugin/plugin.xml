@@ -207,7 +207,7 @@
          </enabledWhen>
          <filter
                name="nature"
-               value="BeetlzPlugin.beetlzNature">
+               value="ie.ucd.bon.beetlz.plugin.beetlznature">
          </filter>
       </page>
    </extension>

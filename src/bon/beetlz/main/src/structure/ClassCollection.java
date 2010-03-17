@@ -3,6 +3,8 @@
  */
 package structure;
 
+import ie.ucd.bon.source.SourceLocation;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import utils.BeetlzSourceLocation;
 import utils.smart.SmartString;
 import utils.smart.TypeSmartString;
 import utils.smart.TypeSmartStringWithLocation;
@@ -114,6 +117,15 @@ public class ClassCollection {
       }
     }
     return list;
+  }
+  
+  public BeetlzSourceLocation getLocation(TypeSmartString t) {
+    ClassStructure cs = my_classes.get(t);
+    if (cs != null) {
+      return cs.getSourceLocation();
+    } else {
+      return null;
+    }
   }
   
   public final /*@ pure @ */ List < TypeSmartString > getAccesibleClassTypesNoLoc() {

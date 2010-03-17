@@ -32,10 +32,10 @@ public class UserProfile {
 
   /** Java files source files? */
   private boolean my_java_is_source;
-  
+
   /** Run check both ways? */
   private boolean my_check_both_ways;
-  
+
   /** Stores the original input by the user. */
   private final String my_original_source;
 
@@ -53,7 +53,7 @@ public class UserProfile {
 
   /** Custom specs directory. */
   private final String my_specs;
-  
+
   /** The Java/JML classpath, to be passed to openjml. */
   private final String my_classpath;
 
@@ -113,16 +113,16 @@ public class UserProfile {
    * @param the_specs where are the specs
    */
   public UserProfile(final boolean a_no_error, final boolean a_no_warning,
-                     final boolean a_no_jml, final boolean a_no_java,
-                     final boolean a_verbose, final String the_source,
-                     final boolean a_check_both_ways,
-                     final boolean a_pure_bon, final boolean a_skeleton,
-                     final/*@ nullable @*/String the_skeleton_dir,
-                     final boolean a_skeleton_one_file, final boolean a_check_null,
-                     final List < String > some_javafiles,
-                     final List < String > some_bonfiles,
-                     final String a_custom_file, final boolean a_use_basics,
-                     final String the_specs, final String the_classpath) {
+      final boolean a_no_jml, final boolean a_no_java,
+      final boolean a_verbose, final String the_source,
+      final boolean a_check_both_ways,
+      final boolean a_pure_bon, final boolean a_skeleton,
+      final/*@ nullable @*/String the_skeleton_dir,
+      final boolean a_skeleton_one_file, final boolean a_check_null,
+      final List < String > some_javafiles,
+      final List < String > some_bonfiles,
+      final String a_custom_file, final boolean a_use_basics,
+      final String the_specs, final String the_classpath) {
     my_no_error = a_no_error;
     my_no_warning = a_no_warning;
     my_no_jml = a_no_jml;
@@ -148,7 +148,7 @@ public class UserProfile {
     my_ignore_java = new TreeSet < String > ();
     my_prefixes = new Vector < String > ();
     my_check_both_ways = a_check_both_ways;
-    
+
     if (the_source == null) {
       my_java_is_source = false;
     } else if (the_source.equals("bon")) { //$NON-NLS-1$
@@ -157,8 +157,8 @@ public class UserProfile {
       my_java_is_source = true;
     } else {
       Logger.getLogger(BConst.LOGGER_NAME)
-          .severe("Options syntax error: '-source' must be followed " + //$NON-NLS-1$
-          		"by either 'bon' or 'java' or 'both'."); //$NON-NLS-1$
+      .severe("Options syntax error: '-source' must be followed " + //$NON-NLS-1$
+      "by either 'bon' or 'java' or 'both'."); //$NON-NLS-1$
       my_java_is_source = false;
     }
     if (a_use_basics) {
@@ -175,8 +175,8 @@ public class UserProfile {
    * @return feature mapping
    */
   public final String getFeatureMapping(final String a_feature_name,
-                                  final String a_src_class,
-                                  final String a_trg_class) {
+      final String a_src_class,
+      final String a_trg_class) {
     final String src = a_feature_name + "@" + a_src_class; //$NON-NLS-1$
     for (final FeatureMappingPair m : my_feature_map) {
       if (m.my_first.equals(src)) {
@@ -288,7 +288,7 @@ public class UserProfile {
    * @param a_java_name Java name of the mapping
    */
   protected void addFeatureMapping(final String a_bon_name,
-                                   final String a_java_name) {
+      final String a_java_name) {
     my_feature_map.add(new FeatureMappingPair(a_bon_name, a_java_name));
   }
 
@@ -298,7 +298,7 @@ public class UserProfile {
    * @param a_java_name java part
    */
   protected void addSimpleFeatureMapping(final String a_bon_name,
-                                         final String a_java_name) {
+      final String a_java_name) {
     my_simple_feature_map.add(new FeatureMappingPair(a_bon_name, a_java_name));
   }
 
@@ -309,8 +309,8 @@ public class UserProfile {
    * @param some_java_types Java types
    */
   protected void addTypeMapping(final String a_mapping_name,
-                                final String[] some_bon_types,
-                                final String[] some_java_types) {
+      final String[] some_bon_types,
+      final String[] some_java_types) {
     my_basic_dictionary.addMapping(a_mapping_name, some_bon_types, some_java_types);
   }
 
@@ -321,7 +321,7 @@ public class UserProfile {
    */
   protected void addTypeMapping(final String a_bon_type, final String a_java_type) {
     my_basic_dictionary.addMapping(a_bon_type, new String[] {a_bon_type},
-                               new String[] {a_java_type});
+        new String[] {a_java_type});
   }
 
   /**
@@ -330,7 +330,7 @@ public class UserProfile {
    * @param some_java java ignored classes
    */
   protected void addIgnoredClasses(final String[] some_bon,
-                                   final String[] some_java) {
+      final String[] some_java) {
     for (final String s : some_bon) {
       my_ignore_bon.add(s.trim());
     }
@@ -348,13 +348,13 @@ public class UserProfile {
   public String toString() {
     String string = "OPTIONS:\n"; //$NON-NLS-1$
     string += "noError: " + my_no_error + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-              "noWarning: " + my_no_warning + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-              "noJML: " + my_no_jml + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-              "verbose: " + my_verbose + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-              "pureBON: " + my_pure_bon + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-              "custom setting files: " + my_custom_setting_file +
-              "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-              "Java input files: "; //$NON-NLS-1$
+    "noWarning: " + my_no_warning + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
+    "noJML: " + my_no_jml + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
+    "verbose: " + my_verbose + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
+    "pureBON: " + my_pure_bon + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
+    "custom setting files: " + my_custom_setting_file +
+    "\n" + //$NON-NLS-1$ //$NON-NLS-2$
+    "Java input files: "; //$NON-NLS-1$
     for (final String s : my_java_files) {
       string += s + "\n"; //$NON-NLS-1$
     }
@@ -363,12 +363,12 @@ public class UserProfile {
       string += s + "\n"; //$NON-NLS-1$
     }
     string += "ignored Java files: " + my_ignore_java + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-              "ignored BON files: " + my_ignore_bon + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-              "ignored prefixes:" + my_prefixes + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-              "Basic types dictionary: " + my_basic_dictionary.toString() +
-              "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-              "Class map: " + my_class_map.toString() + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-              "Feature map: " + my_feature_map.toString() + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
+    "ignored BON files: " + my_ignore_bon + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
+    "ignored prefixes:" + my_prefixes + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
+    "Basic types dictionary: " + my_basic_dictionary.toString() +
+    "\n" + //$NON-NLS-1$ //$NON-NLS-2$
+    "Class map: " + my_class_map.toString() + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
+    "Feature map: " + my_feature_map.toString() + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
     return string;
   }
 
@@ -538,8 +538,8 @@ public class UserProfile {
   public final boolean javaIsSource() {
     return my_java_is_source;
   }
-  
-  
+
+
   /**
    * Do we perform check both ways.
    * @return true if check is to be done both ways
@@ -692,7 +692,7 @@ public class UserProfile {
   public final List < String > getPrefixes() {
     return my_prefixes;
   }
-  
+
   /**
    * Get the Java/JML classpath.
    * @return the classpath

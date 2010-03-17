@@ -1423,8 +1423,8 @@ public abstract class BeetlzExpression {
      */
     @Override
     public String toJavaStringSimple() {
-      return my_source.toJavaString() + SPACE + my_op.getJavaName() +
-        SPACE + my_field.toJavaString();
+      return my_source.toJavaString() + my_op.getJavaName() +
+        my_field.toJavaString();
     }
   } //end Memberaccess expr
 
@@ -1801,7 +1801,7 @@ public abstract class BeetlzExpression {
     @Override
     public String toJavaStringSimple() {
       if (my_op == Operator.NOT) {
-        return my_op.getJavaName() + SPACE + my_expr.toJavaString();
+        return my_op.getJavaName() + '(' + my_expr.toJavaString() + ')';
       }
       return my_op.getJavaName() + my_expr.toJavaString();
     }

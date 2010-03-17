@@ -14,7 +14,7 @@ import java.io.File;
  */
 public class BeetlzSourceLocation extends SourceLocation {
 
-  private final boolean isJava;
+  private boolean isJava;
   
   /**
    * Default implementation of SourceLocation denoting no specific location,
@@ -25,9 +25,17 @@ public class BeetlzSourceLocation extends SourceLocation {
     this.isJava = isJava;
   }
   
-  public BeetlzSourceLocation(SourceLocation a_loc) {
+  public BeetlzSourceLocation(SourceLocation a_loc, boolean isJava) {
     super(a_loc);
-    this.isJava = false;
+    this.isJava = isJava;
+  }
+  
+  public BeetlzSourceLocation(SourceLocation a_loc) {
+    this(a_loc, false);
+  }
+  
+  public BeetlzSourceLocation(BeetlzSourceLocation a_loc) {
+    this(a_loc, a_loc.isJava);
   }
 
   /**
@@ -123,5 +131,13 @@ public class BeetlzSourceLocation extends SourceLocation {
     }
     return false;
   }
+  
+  public BeetlzSourceLocation clone() {
+    return new BeetlzSourceLocation(this);
+  }
+  
+  public BeetlzSourceLocation cloneSwitchingIsJava() {
+    return new BeetlzSourceLocation(this, !isJava);
+  } 
 
 }

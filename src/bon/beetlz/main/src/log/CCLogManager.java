@@ -628,7 +628,7 @@ public class CCLogManager {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, a_cls.getLocation(),
         String.format("No mapping for class %s found.",  //$NON-NLS-1$
-            my_pretty.getClassName(a_cls))));
+            my_pretty.getSwitchedClassName(a_cls))));
   }
 
 

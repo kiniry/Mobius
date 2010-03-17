@@ -58,7 +58,7 @@ public enum Operator {
   /** Logical disjunction. */
   OR(35, "or", "||"), //$NON-NLS-1$ //$NON-NLS-2$
   /** Implication. */
-  IMPLIES(40, "->", "->"), //$NON-NLS-1$ //$NON-NLS-2$
+  IMPLIES(40, "->", "==>"), //$NON-NLS-1$ //$NON-NLS-2$
   /** Equivalence. */
   IFF(45, "<->", "<==>"), //$NON-NLS-1$ //$NON-NLS-2$
   /** Negated equivalence. */

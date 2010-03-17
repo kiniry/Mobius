@@ -4,15 +4,14 @@ import input.BonFile;
 import input.JmlFile;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -481,7 +480,7 @@ public class Beetlz {
       } else if (arg.equals(SOURCE_OPTION)) {
         if (i < the_args.length) {
           source = the_args[i++];
-          if (source == "both") { //$NON-NLS-1$
+          if (source.equals("both")) { //$NON-NLS-1$
             check_both = true;
             source = "java";//$NON-NLS-1$
           }
@@ -585,10 +584,8 @@ public class Beetlz {
   * @return mapping
   */
  private TwoWayMap < String, String > createClassTypeMapping() {
-   final List < TypeSmartString > bonList = 
-     new ArrayList < TypeSmartString > (my_bonfile.getClassCollection().getAccesibleClassTypesNoLoc());
-   final List < TypeSmartString > jmlList = 
-     new ArrayList < TypeSmartString > (my_jmlfile.getClassCollection().getAccesibleClassTypesNoLoc());
+   final List < TypeSmartString > bonList = new ArrayList < TypeSmartString > (my_bonfile.getClassCollection().getAccesibleClassTypesNoLoc());
+   final List < TypeSmartString > jmlList = new ArrayList < TypeSmartString > (my_jmlfile.getClassCollection().getAccesibleClassTypesNoLoc());
    
    bonMissing = new ArrayList < TypeSmartStringWithLocation > ();
    final TwoWayMap < String, String > classMap = new TwoWayMap < String, String > ();
@@ -615,7 +612,9 @@ public class Beetlz {
        final int last = jmlList.lastIndexOf(bonName);
        if (first == -1) {
          //TODO: does this really work?
-         bonMissing.add(new TypeSmartStringWithLocation(bonName, new BeetlzSourceLocation(false)));
+         BeetlzSourceLocation location = my_bonfile.getClassCollection().getLocation(bonName);
+         location = location == null ? new BeetlzSourceLocation(false) : location;
+         bonMissing.add(new TypeSmartStringWithLocation(bonName, location));
        } else if (first != last) {
          my_logger.logMultipleClasses(bonName);
        } else {
@@ -636,7 +635,10 @@ public class Beetlz {
  private List < TypeSmartStringWithLocation > copyToListWithSourceLocation(List < TypeSmartString > list) {
    List < TypeSmartStringWithLocation > result = new ArrayList < TypeSmartStringWithLocation >();
    for(TypeSmartString t: list) {
-     result.add(new TypeSmartStringWithLocation(t, new BeetlzSourceLocation(false)));
+     BeetlzSourceLocation location = my_jmlfile.getClassCollection().getLocation(t);
+     location = location == null ? new BeetlzSourceLocation(false) : location;
+     JAVA_LOGGER.severe("Name: " + t.getSimpleName());
+     result.add(new TypeSmartStringWithLocation(t, location));
    }
    
    return result;
