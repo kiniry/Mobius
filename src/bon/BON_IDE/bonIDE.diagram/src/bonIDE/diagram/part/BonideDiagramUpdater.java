@@ -27,6 +27,8 @@ public class BonideDiagramUpdater {
 			return getBONClassInheritanceCompartment_7005SemanticChildren(view);
 		case bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID:
 			return getBONClassFeatureCompartment_7007SemanticChildren(view);
+		case bonIDE.diagram.edit.parts.BONClassInvariantCompartmentEditPart.VISUAL_ID:
+			return getBONClassInvariantCompartment_7012SemanticChildren(view);
 		case bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart.VISUAL_ID:
 			return getFeaturePostConditionCompartment_7009SemanticChildren(view);
 		case bonIDE.diagram.edit.parts.FeaturePreConditionCompartmentEditPart.VISUAL_ID:
@@ -39,6 +41,8 @@ public class BonideDiagramUpdater {
 			return getBONClassInheritanceCompartment_7006SemanticChildren(view);
 		case bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart.VISUAL_ID:
 			return getBONClassFeatureCompartment_7008SemanticChildren(view);
+		case bonIDE.diagram.edit.parts.BONClassInvariantCompartment2EditPart.VISUAL_ID:
+			return getBONClassInvariantCompartment_7013SemanticChildren(view);
 		case bonIDE.diagram.edit.parts.ModelEditPart.VISUAL_ID:
 			return getModel_1000SemanticChildren(view);
 		}
@@ -165,6 +169,30 @@ public class BonideDiagramUpdater {
 			bonIDE.Feature childElement = (bonIDE.Feature) it.next();
 			int visualID = bonIDE.diagram.part.BonideVisualIDRegistry.getNodeVisualID(view, childElement);
 			if (visualID == bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID) {
+				result.add(new bonIDE.diagram.part.BonideNodeDescriptor(childElement, visualID));
+				continue;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List getBONClassInvariantCompartment_7012SemanticChildren(View view) {
+		if (false == view.eContainer() instanceof View) {
+			return Collections.EMPTY_LIST;
+		}
+		View containerView = (View) view.eContainer();
+		if (!containerView.isSetElement()) {
+			return Collections.EMPTY_LIST;
+		}
+		bonIDE.BONClass modelElement = (bonIDE.BONClass) containerView.getElement();
+		List result = new LinkedList();
+		for (Iterator it = modelElement.getInvariants().iterator(); it.hasNext();) {
+			bonIDE.Invariant childElement = (bonIDE.Invariant) it.next();
+			int visualID = bonIDE.diagram.part.BonideVisualIDRegistry.getNodeVisualID(view, childElement);
+			if (visualID == bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID) {
 				result.add(new bonIDE.diagram.part.BonideNodeDescriptor(childElement, visualID));
 				continue;
 			}
@@ -318,6 +346,30 @@ public class BonideDiagramUpdater {
 	/**
 	 * @generated
 	 */
+	public static List getBONClassInvariantCompartment_7013SemanticChildren(View view) {
+		if (false == view.eContainer() instanceof View) {
+			return Collections.EMPTY_LIST;
+		}
+		View containerView = (View) view.eContainer();
+		if (!containerView.isSetElement()) {
+			return Collections.EMPTY_LIST;
+		}
+		bonIDE.BONClass modelElement = (bonIDE.BONClass) containerView.getElement();
+		List result = new LinkedList();
+		for (Iterator it = modelElement.getInvariants().iterator(); it.hasNext();) {
+			bonIDE.Invariant childElement = (bonIDE.Invariant) it.next();
+			int visualID = bonIDE.diagram.part.BonideVisualIDRegistry.getNodeVisualID(view, childElement);
+			if (visualID == bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID) {
+				result.add(new bonIDE.diagram.part.BonideNodeDescriptor(childElement, visualID));
+				continue;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
 	public static List getModel_1000SemanticChildren(View view) {
 		if (!view.isSetElement()) {
 			return Collections.EMPTY_LIST;
@@ -366,6 +418,8 @@ public class BonideDiagramUpdater {
 			return getPreCondition_3008ContainedLinks(view);
 		case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
 			return getPostCondition_3009ContainedLinks(view);
+		case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
+			return getInvariant_3010ContainedLinks(view);
 		}
 		return Collections.EMPTY_LIST;
 	}
@@ -395,6 +449,8 @@ public class BonideDiagramUpdater {
 			return getPreCondition_3008IncomingLinks(view);
 		case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
 			return getPostCondition_3009IncomingLinks(view);
+		case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
+			return getInvariant_3010IncomingLinks(view);
 		}
 		return Collections.EMPTY_LIST;
 	}
@@ -424,6 +480,8 @@ public class BonideDiagramUpdater {
 			return getPreCondition_3008OutgoingLinks(view);
 		case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
 			return getPostCondition_3009OutgoingLinks(view);
+		case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
+			return getInvariant_3010OutgoingLinks(view);
 		}
 		return Collections.EMPTY_LIST;
 	}
@@ -508,6 +566,13 @@ public class BonideDiagramUpdater {
 	/**
 	 * @generated
 	 */
+	public static List getInvariant_3010ContainedLinks(View view) {
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
 	public static List getCluster_2001IncomingLinks(View view) {
 		return Collections.EMPTY_LIST;
 	}
@@ -578,6 +643,13 @@ public class BonideDiagramUpdater {
 	/**
 	 * @generated
 	 */
+	public static List getInvariant_3010IncomingLinks(View view) {
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
 	public static List getCluster_2001OutgoingLinks(View view) {
 		return Collections.EMPTY_LIST;
 	}
@@ -642,6 +714,13 @@ public class BonideDiagramUpdater {
 	 * @generated
 	 */
 	public static List getPostCondition_3009OutgoingLinks(View view) {
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List getInvariant_3010OutgoingLinks(View view) {
 		return Collections.EMPTY_LIST;
 	}
 

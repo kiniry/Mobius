@@ -7,10 +7,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gmf.runtime.diagram.core.internal.commands.PersistViewsCommand;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
@@ -41,6 +47,7 @@ import ie.ucd.bon.ast.BonSourceFile;
 import ie.ucd.bon.ast.ClassInterface;
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.ClusterChart;
+import ie.ucd.bon.ast.Expression;
 import ie.ucd.bon.ast.Feature;
 import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.IndexClause;
@@ -66,7 +73,7 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 
 		monitor.setTaskName("Building diagram...");
 		monitor.subTask("Loading bon source file...");
-		
+
 		List<File> files = new ArrayList<File>();
 		files.add(new File(bonFileName));
 		ParsingTracker bonTracker = null;
@@ -112,6 +119,8 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 		} catch (InterruptedException e) {
 			// handle cancelation
 		}
+		
+		persistAllElements(modelEP.getDiagramView());
 	}
 
 	public static void createBONClassElement(ModelEditPart modelEP, Clazz ASTClassNode) {
@@ -130,6 +139,7 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 		createBONClassIndexesElement(newClass, ASTClassInterface.indexing);
 		createBONClassInheritanceElement(newClass, ASTClassInterface.parents);
 		createBONClassFeaturesElement(newClass, ASTClassInterface.features);
+		createBONClassInvariantsElement(newClass, ASTClassInterface.invariant);
 
 		// --------------------------------------------------------------------------------------
 
@@ -143,8 +153,10 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 		viewDescriptor.setPersisted(true);
 		CreateViewRequest createViewRequest = new CreateViewRequest(viewDescriptor);
 		Command createViewCommand = modelEP.getCommand(createViewRequest);
-		
+
 		modelEP.getDiagramEditDomain().getDiagramCommandStack().execute(createViewCommand);
+		
+		Collection results = DiagramCommandStack.getReturnValues(createViewCommand);
 
 		// --------------------------------------------------------------------------------------
 
@@ -158,21 +170,54 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 		}
 		newClasses.add(newClass);
 
-		SetRequest reqSet = new SetRequest(modelEP.getEditingDomain(), (EObject) (((View) modelEP.getModel())
-				.getElement()),
-				BonIDEPackage.eINSTANCE.getModel_Abstractions(), newClasses);
+		SetRequest reqSet = new SetRequest(
+				modelEP.getEditingDomain(),
+				(EObject) (((View) modelEP.getModel()).getElement()),
+				BonIDEPackage.eINSTANCE.getModel_Abstractions(),
+				newClasses);
 
 		SetValueCommand operation = new SetValueCommand(reqSet);
 		modelEP.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(operation));
 	}
 
+	private static void persistAllElements(View view) {
+				
+		if( view.getChildren().size() == 0){
+			ViewUtil.persistElement(view);		
+		}else{
+			for( int index = view.getChildren().size()-1; index > -1; index--){
+				persistAllElements((View)view.getChildren().get(index));
+			}
+		}			
+	}
+
+	private static void createBONClassInvariantsElement(BONClassImpl newClass, List<Expression> invariants) {
+
+		if (invariants == null || invariants.size() == 0) {
+			return;
+		}
+
+		ContractFormatter expFormatter = new ContractFormatter();
+		Iterator<ie.ucd.bon.ast.Expression> invariantIter = invariants.iterator();
+
+		while (invariantIter.hasNext()) {
+			bonIDE.Invariant newInvariant = (bonIDE.Invariant) BonIDEFactoryImpl.eINSTANCE.createInvariant();
+
+			ie.ucd.bon.ast.Expression invariant = invariantIter.next();
+			PrettyPrintVisitor ppv = new PrettyPrintVisitor();
+			invariant.accept(ppv);
+			newInvariant.setContent(expFormatter.format(ppv.getVisitorOutputAsString()));
+			newClass.getInvariants().add(newInvariant);
+		}
+	}
+
 	private static void createBONClassInheritanceElement(BONClassImpl newClass, List<Type> parents) {
+
 		if (parents == null || parents.size() == 0) {
 			return;
 		}
 
-		bonIDE.InheritanceClause inheritClause = (bonIDE.InheritanceClause) BonIDEFactoryImpl.eINSTANCE
-				.createInheritanceClause();
+		bonIDE.InheritanceClause inheritClause = (bonIDE.InheritanceClause) BonIDEFactoryImpl.eINSTANCE.createInheritanceClause();
 
 		for (int parentIdx = 0; parentIdx < parents.size(); parentIdx++) {
 			inheritClause.getParentNames().add(parents.get(parentIdx).getIdentifier());
@@ -182,6 +227,7 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 	}
 
 	private static void createBONClassIndexesElement(BONClassImpl newClass, Indexing indexing) {
+
 		if (indexing == null || indexing.indexes.size() == 0) {
 			return;
 		}
@@ -243,7 +289,7 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 				}
 
 				// feature comment
-				newFeature.setComment("-- " + featSpec.getComment());
+				newFeature.setComment(" -- " + featSpec.getComment());
 
 				// feature arguments
 				Iterator<ie.ucd.bon.ast.FeatureArgument> featArgIter = featSpec.arguments.iterator();
@@ -258,7 +304,7 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 					newFeature.getArguments().add(newArg);
 				}
 
-				// feature preConditions				
+				// feature preConditions
 				ContractFormatter expFormatter = new ContractFormatter();
 
 				Iterator<ie.ucd.bon.ast.Expression> preCondIter = featSpec.getContracts().getPreconditions().iterator();
@@ -273,7 +319,7 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 					newFeature.getPreConditions().add(newPreCond);
 				}
 
-				// feature postConditions				
+				// feature postConditions
 				Iterator<ie.ucd.bon.ast.Expression> postCondIter = featSpec.getContracts().getPostconditions().iterator();
 
 				while (postCondIter.hasNext()) {
@@ -311,10 +357,10 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 			modString = "*";
 			break;
 		case EFFECTIVE:
-			modString = "+";
+			modString = "\u207A";
 			break;
 		case REDEFINED:
-			modString = "++";
+			modString = "\u207A\u207A";
 			break;
 		case NONE:
 		default:

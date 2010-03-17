@@ -25,6 +25,7 @@ Package bonIDE <http://www.ucd.ie/bonIDE>
     Attribute implementationStatus : ImplementationStatus
     Reference indexes : IndexClause<<0..*>>
     Reference parents : InheritanceClause
+    Reference invariants : Invariant<<0..*>>
 
   Class StaticAbstraction -> Abstraction
 
@@ -53,6 +54,9 @@ Package bonIDE <http://www.ucd.ie/bonIDE>
     Attribute content : EString
 
   Class PostCondition
+    Attribute content : EString
+
+  Class Invariant
     Attribute content : EString
 
   Enum ImplementationStatus

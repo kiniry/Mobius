@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link bonIDE.BONClass#getImplementationStatus <em>Implementation Status</em>}</li>
  *   <li>{@link bonIDE.BONClass#getIndexes <em>Indexes</em>}</li>
  *   <li>{@link bonIDE.BONClass#getParents <em>Parents</em>}</li>
+ *   <li>{@link bonIDE.BONClass#getInvariants <em>Invariants</em>}</li>
  * </ul>
  * </p>
  *
@@ -123,6 +124,22 @@ public interface BONClass extends StaticAbstraction {
 	 * @generated
 	 */
 	void setParents(InheritanceClause value);
+
+	/**
+	 * Returns the value of the '<em><b>Invariants</b></em>' containment reference list.
+	 * The list contents are of type {@link bonIDE.Invariant}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Invariants</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Invariants</em>' containment reference list.
+	 * @see bonIDE.BonIDEPackage#getBONClass_Invariants()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Invariant> getInvariants();
 
 	/**
 	 * Returns the value of the '<em><b>Indexes</b></em>' containment reference list.

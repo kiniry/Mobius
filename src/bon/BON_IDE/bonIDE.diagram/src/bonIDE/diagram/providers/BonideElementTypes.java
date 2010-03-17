@@ -96,6 +96,11 @@ public class BonideElementTypes extends ElementInitializers {
 	/**
 	 * @generated
 	 */
+	public static final IElementType Invariant_3010 = getElementType("bonIDE.diagram.Invariant_3010"); //$NON-NLS-1$
+
+	/**
+	 * @generated
+	 */
 	private static ImageRegistry getImageRegistry() {
 		if (imageRegistry == null) {
 			imageRegistry = new ImageRegistry();
@@ -221,6 +226,8 @@ public class BonideElementTypes extends ElementInitializers {
 			elements.put(PreCondition_3008, bonIDE.BonIDEPackage.eINSTANCE.getPreCondition());
 
 			elements.put(PostCondition_3009, bonIDE.BonIDEPackage.eINSTANCE.getPostCondition());
+
+			elements.put(Invariant_3010, bonIDE.BonIDEPackage.eINSTANCE.getInvariant());
 		}
 		return (ENamedElement) elements.get(type);
 	}
@@ -249,6 +256,7 @@ public class BonideElementTypes extends ElementInitializers {
 			KNOWN_ELEMENT_TYPES.add(FeatureArgument_3007);
 			KNOWN_ELEMENT_TYPES.add(PreCondition_3008);
 			KNOWN_ELEMENT_TYPES.add(PostCondition_3009);
+			KNOWN_ELEMENT_TYPES.add(Invariant_3010);
 		}
 		return KNOWN_ELEMENT_TYPES.contains(elementType);
 	}
@@ -280,6 +288,8 @@ public class BonideElementTypes extends ElementInitializers {
 			return PreCondition_3008;
 		case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
 			return PostCondition_3009;
+		case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
+			return Invariant_3010;
 		}
 		return null;
 	}

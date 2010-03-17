@@ -73,7 +73,7 @@
         itemSemanticEditPolicyClassName="BONClass2ItemSemanticEditPolicy"
         notationViewFactoryClassName="BONClassViewFactory"
         canonicalEditPolicyClassName="BONClass2CanonicalEditPolicy"
-        compartments="//@diagram/@compartments.2 //@diagram/@compartments.3 //@diagram/@compartments.4"
+        compartments="//@diagram/@compartments.2 //@diagram/@compartments.3 //@diagram/@compartments.4 //@diagram/@compartments.5"
         graphicalNodeEditPolicyClassName="BONClass2GraphicalNodeEditPolicy"
         createCommandClassName="BONClass2CreateCommand"
         containers="//@diagram/@compartments.1 //@diagram/@compartments.0">
@@ -86,7 +86,7 @@
           xsi:type="gmfgen:InnerClassViewmap"
           layoutType="TOOLBAR_LAYOUT"
           className="BONClassFigure"
-          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class BONClassFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureBONClassNameFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureIndexRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureInheritanceRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureRectangleFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public BONClassFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutThis = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(true);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_CENTER&#xA;);&#xA;&#xA;&#x9;layoutThis.setSpacing(0);&#xA;&#x9;layoutThis.setVertical(true);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setLineWidth(1);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureBONClassNameFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureBONClassNameFigure.setText(&quot;&lt;...>&quot;);&#xA;&#xA;fFigureBONClassNameFigure.setFont(FFIGUREBONCLASSNAMEFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;this.add(fFigureBONClassNameFigure);&#xA;&#xA;&#xA;&#xA;fFigureIndexRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureIndexRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureIndexRectangleFigure.setForegroundColor(FFIGUREINDEXRECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;fFigureIndexRectangleFigure.setBorder(new org.eclipse.draw2d.MarginBorder(getMapMode().DPtoLP(0)&#xA;, getMapMode().DPtoLP(0)&#xA;, getMapMode().DPtoLP(2)&#xA;, getMapMode().DPtoLP(0)&#xA;));&#xA;&#xA;this.add(fFigureIndexRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureIndexRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureIndexRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureIndexRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureIndexRectangleFigure.setSpacing(2);&#xA;&#x9;layoutFFigureIndexRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureIndexRectangleFigure.setLayoutManager(layoutFFigureIndexRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureInheritanceRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureInheritanceRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureInheritanceRectangleFigure.setForegroundColor(FFIGUREINHERITANCERECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureInheritanceRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureInheritanceRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setSpacing(2);&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureInheritanceRectangleFigure.setLayoutManager(layoutFFigureInheritanceRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureFeatureRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureFeatureRectangleFigure.setForegroundColor(FFIGUREFEATURERECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureFeatureRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigureFeatureRectangleFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setMajorSpacing(5);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setMinorSpacing(5);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigureFeatureRectangleFigure.setLayoutManager(layoutFFigureFeatureRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureBONClassNameFigure() {&#xA;&#x9;&#x9;return fFigureBONClassNameFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureIndexRectangleFigure() {&#xA;&#x9;&#x9;return fFigureIndexRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureInheritanceRectangleFigure() {&#xA;&#x9;&#x9;return fFigureInheritanceRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureRectangleFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREBONCLASSNAMEFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;LucidaSans&quot;, 9, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREINDEXRECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 128, 0, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREINHERITANCERECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 0, 128, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREFEATURERECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 192, 0, 0);&#xA;&#xA;"/>
+          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class BONClassFigure extends org.eclipse.draw2d.RoundedRectangle {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureBONClassNameFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureIndexRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureInheritanceRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureInvariantRectangleFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public BONClassFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutThis = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(true);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_CENTER&#xA;);&#xA;&#xA;&#x9;layoutThis.setSpacing(0);&#xA;&#x9;layoutThis.setVertical(true);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setCornerDimensions(new org.eclipse.draw2d.geometry.Dimension(getMapMode().DPtoLP(12)&#xA;, getMapMode().DPtoLP(12)&#xA;));&#xA;this.setLineWidth(2);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureBONClassNameFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureBONClassNameFigure.setText(&quot;&lt;...>&quot;);&#xA;&#xA;fFigureBONClassNameFigure.setFont(FFIGUREBONCLASSNAMEFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;this.add(fFigureBONClassNameFigure);&#xA;&#xA;&#xA;&#xA;fFigureIndexRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureIndexRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureIndexRectangleFigure.setForegroundColor(FFIGUREINDEXRECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureIndexRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureIndexRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureIndexRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureIndexRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureIndexRectangleFigure.setSpacing(2);&#xA;&#x9;layoutFFigureIndexRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureIndexRectangleFigure.setLayoutManager(layoutFFigureIndexRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureInheritanceRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureInheritanceRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureInheritanceRectangleFigure.setForegroundColor(FFIGUREINHERITANCERECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureInheritanceRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureInheritanceRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setSpacing(2);&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureInheritanceRectangleFigure.setLayoutManager(layoutFFigureInheritanceRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureFeatureRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureFeatureRectangleFigure.setForegroundColor(FFIGUREFEATURERECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureFeatureRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureFeatureRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setSpacing(0);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureFeatureRectangleFigure.setLayoutManager(layoutFFigureFeatureRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureInvariantRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureInvariantRectangleFigure.setFill(false);&#xA;fFigureInvariantRectangleFigure.setLineWidth(1);&#xA;&#xA;this.add(fFigureInvariantRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureInvariantRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureInvariantRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureInvariantRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureInvariantRectangleFigure.setSpacing(0);&#xA;&#x9;layoutFFigureInvariantRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureInvariantRectangleFigure.setLayoutManager(layoutFFigureInvariantRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureBONClassNameFigure() {&#xA;&#x9;&#x9;return fFigureBONClassNameFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureIndexRectangleFigure() {&#xA;&#x9;&#x9;return fFigureIndexRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureInheritanceRectangleFigure() {&#xA;&#x9;&#x9;return fFigureInheritanceRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureInvariantRectangleFigure() {&#xA;&#x9;&#x9;return fFigureInvariantRectangleFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREBONCLASSNAMEFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;Lucida Sans Unicode&quot;, 9, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREINDEXRECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 128, 0, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREINHERITANCERECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 0, 128, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREFEATURERECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 192, 0, 0);&#xA;&#xA;"/>
       <modelFacet>
         <metaClass
             href="bonide.genmodel#//bonIDE/BONClass"/>
@@ -126,7 +126,7 @@
         canonicalEditPolicyClassName="IndexClauseCanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="IndexClauseGraphicalNodeEditPolicy"
         createCommandClassName="IndexClauseCreateCommand"
-        containers="//@diagram/@compartments.2 //@diagram/@compartments.8">
+        containers="//@diagram/@compartments.2 //@diagram/@compartments.9">
       <diagramRunTimeClass
           href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -201,7 +201,7 @@
         canonicalEditPolicyClassName="InheritanceClauseCanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="InheritanceClauseGraphicalNodeEditPolicy"
         createCommandClassName="InheritanceClauseCreateCommand"
-        containers="//@diagram/@compartments.3 //@diagram/@compartments.9">
+        containers="//@diagram/@compartments.3 //@diagram/@compartments.10">
       <diagramRunTimeClass
           href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -224,7 +224,8 @@
           visualID="5009"
           editPartClassName="WrappingLabelEditPart"
           itemSemanticEditPolicyClassName="WrappingLabelItemSemanticEditPolicy"
-          notationViewFactoryClassName="InheritanceClauseLabelViewFactory">
+          notationViewFactoryClassName="InheritanceClauseLabelViewFactory"
+          readOnly="true">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -268,10 +269,10 @@
         itemSemanticEditPolicyClassName="FeatureItemSemanticEditPolicy"
         notationViewFactoryClassName="FeatureViewFactory"
         canonicalEditPolicyClassName="FeatureCanonicalEditPolicy"
-        compartments="//@diagram/@compartments.5 //@diagram/@compartments.6 //@diagram/@compartments.7"
+        compartments="//@diagram/@compartments.6 //@diagram/@compartments.7 //@diagram/@compartments.8"
         graphicalNodeEditPolicyClassName="FeatureGraphicalNodeEditPolicy"
         createCommandClassName="FeatureCreateCommand"
-        containers="//@diagram/@compartments.4 //@diagram/@compartments.10">
+        containers="//@diagram/@compartments.4 //@diagram/@compartments.11">
       <diagramRunTimeClass
           href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -281,7 +282,7 @@
           xsi:type="gmfgen:InnerClassViewmap"
           layoutType="TOOLBAR_LAYOUT"
           className="FeatureFigure"
-          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class FeatureFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureNamesFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureSignatureRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureModifierFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureTypeFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureCommentFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureArgumentsRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigurePreConditionsRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigurePostConditionsRectangeFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public FeatureFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutThis = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(false);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutThis.setSpacing(0);&#xA;&#x9;layoutThis.setVertical(true);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setLineWidth(1);&#xA;&#x9;this.setForegroundColor(THIS_FORE&#xA;);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureFeatureSignatureRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureSignatureRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureFeatureSignatureRectangleFigure.setForegroundColor(FFIGUREFEATURESIGNATURERECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureFeatureSignatureRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureFeatureSignatureRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setSpacing(0);&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setVertical(false);&#xA;&#xA;&#x9;fFigureFeatureSignatureRectangleFigure.setLayoutManager(layoutFFigureFeatureSignatureRectangleFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureNamesFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureNamesFigure.setText(&quot;&lt;...>&quot;);&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureNamesFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureModifierFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureModifierFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureModifierFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureTypeFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureTypeFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureTypeFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureFeatureCommentFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureCommentFigure.setText(&quot;&quot;);&#xA;&#xA;this.add(fFigureFeatureCommentFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureArgumentsRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureArgumentsRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureFeatureArgumentsRectangleFigure.setForegroundColor(FFIGUREFEATUREARGUMENTSRECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureFeatureArgumentsRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigureFeatureArgumentsRectangleFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMajorSpacing(1);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMinorSpacing(1);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigureFeatureArgumentsRectangleFigure.setLayoutManager(layoutFFigureFeatureArgumentsRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigurePreConditionsRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigurePreConditionsRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigurePreConditionsRectangleFigure.setForegroundColor(FFIGUREPRECONDITIONSRECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigurePreConditionsRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigurePreConditionsRectangleFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMajorSpacing(5);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMinorSpacing(5);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigurePreConditionsRectangleFigure.setLayoutManager(layoutFFigurePreConditionsRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigurePostConditionsRectangeFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigurePostConditionsRectangeFigure.setLineWidth(1);&#xA;&#x9;fFigurePostConditionsRectangeFigure.setForegroundColor(FFIGUREPOSTCONDITIONSRECTANGEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigurePostConditionsRectangeFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigurePostConditionsRectangeFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMajorSpacing(5);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMinorSpacing(5);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigurePostConditionsRectangeFigure.setLayoutManager(layoutFFigurePostConditionsRectangeFigure);&#xA;&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureNamesFigure() {&#xA;&#x9;&#x9;return fFigureFeatureNamesFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureSignatureRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureSignatureRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureModifierFigure() {&#xA;&#x9;&#x9;return fFigureFeatureModifierFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureTypeFigure() {&#xA;&#x9;&#x9;return fFigureFeatureTypeFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureCommentFigure() {&#xA;&#x9;&#x9;return fFigureFeatureCommentFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureArgumentsRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureArgumentsRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigurePreConditionsRectangleFigure() {&#xA;&#x9;&#x9;return fFigurePreConditionsRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigurePostConditionsRectangeFigure() {&#xA;&#x9;&#x9;return fFigurePostConditionsRectangeFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color THIS_FORE = new org.eclipse.swt.graphics.Color(null, 255, 67, 226);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREFEATURESIGNATURERECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 0, 0, 200);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREFEATUREARGUMENTSRECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 255, 255, 64);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREPRECONDITIONSRECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 192, 192, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREPOSTCONDITIONSRECTANGEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 255, 128, 128);&#xA;&#xA;">
+          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class FeatureFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureNamesFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureSignatureRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureModifierFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureTypeFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureFeatureCommentFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureArgumentsRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigurePreConditionsRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigurePostConditionsRectangeFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public FeatureFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutThis = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(false);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutThis.setSpacing(0);&#xA;&#x9;layoutThis.setVertical(true);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setLineWidth(1);&#xA;&#x9;this.setForegroundColor(THIS_FORE&#xA;);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureFeatureSignatureRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureSignatureRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureFeatureSignatureRectangleFigure.setForegroundColor(FFIGUREFEATURESIGNATURERECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureFeatureSignatureRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureFeatureSignatureRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setSpacing(0);&#xA;&#x9;layoutFFigureFeatureSignatureRectangleFigure.setVertical(false);&#xA;&#xA;&#x9;fFigureFeatureSignatureRectangleFigure.setLayoutManager(layoutFFigureFeatureSignatureRectangleFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureNamesFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureNamesFigure.setText(&quot;&lt;...>&quot;);&#xA;&#xA;fFigureFeatureNamesFigure.setFont(FFIGUREFEATURENAMESFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureNamesFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureModifierFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureModifierFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureFeatureModifierFigure.setFont(FFIGUREFEATUREMODIFIERFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureModifierFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureTypeFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureTypeFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureFeatureTypeFigure.setFont(FFIGUREFEATURETYPEFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;fFigureFeatureSignatureRectangleFigure.add(fFigureFeatureTypeFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureFeatureCommentFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureFeatureCommentFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureFeatureCommentFigure.setFont(FFIGUREFEATURECOMMENTFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;this.add(fFigureFeatureCommentFigure);&#xA;&#xA;&#xA;&#xA;fFigureFeatureArgumentsRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureArgumentsRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureFeatureArgumentsRectangleFigure.setForegroundColor(FFIGUREFEATUREARGUMENTSRECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureFeatureArgumentsRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigureFeatureArgumentsRectangleFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMajorSpacing(1);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setMinorSpacing(1);&#xA;&#x9;layoutFFigureFeatureArgumentsRectangleFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigureFeatureArgumentsRectangleFigure.setLayoutManager(layoutFFigureFeatureArgumentsRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigurePreConditionsRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigurePreConditionsRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigurePreConditionsRectangleFigure.setForegroundColor(FFIGUREPRECONDITIONSRECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigurePreConditionsRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigurePreConditionsRectangleFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMajorSpacing(5);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setMinorSpacing(5);&#xA;&#x9;layoutFFigurePreConditionsRectangleFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigurePreConditionsRectangleFigure.setLayoutManager(layoutFFigurePreConditionsRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigurePostConditionsRectangeFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigurePostConditionsRectangeFigure.setLineWidth(1);&#xA;&#x9;fFigurePostConditionsRectangeFigure.setForegroundColor(FFIGUREPOSTCONDITIONSRECTANGEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigurePostConditionsRectangeFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigurePostConditionsRectangeFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMajorSpacing(5);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setMinorSpacing(5);&#xA;&#x9;layoutFFigurePostConditionsRectangeFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigurePostConditionsRectangeFigure.setLayoutManager(layoutFFigurePostConditionsRectangeFigure);&#xA;&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureNamesFigure() {&#xA;&#x9;&#x9;return fFigureFeatureNamesFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureSignatureRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureSignatureRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureModifierFigure() {&#xA;&#x9;&#x9;return fFigureFeatureModifierFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureTypeFigure() {&#xA;&#x9;&#x9;return fFigureFeatureTypeFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureFeatureCommentFigure() {&#xA;&#x9;&#x9;return fFigureFeatureCommentFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureArgumentsRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureArgumentsRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigurePreConditionsRectangleFigure() {&#xA;&#x9;&#x9;return fFigurePreConditionsRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigurePostConditionsRectangeFigure() {&#xA;&#x9;&#x9;return fFigurePostConditionsRectangeFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color THIS_FORE = new org.eclipse.swt.graphics.Color(null, 255, 67, 226);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREFEATURESIGNATURERECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 0, 0, 200);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREFEATURENAMESFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;Lucida Sans Unicode&quot;, 7, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREFEATUREMODIFIERFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;Lucida Sans Unicode&quot;, 7, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREFEATURETYPEFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;Lucida Sans Unicode&quot;, 7, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREFEATURECOMMENTFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;Lucida Sans Unicode&quot;, 7, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREFEATUREARGUMENTSRECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 255, 255, 64);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREPRECONDITIONSRECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 192, 192, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREPOSTCONDITIONSRECTANGEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 255, 128, 128);&#xA;&#xA;">
         <attributes
             xsi:type="gmfgen:StyleAttributes"
             fixedForeground="true"/>
@@ -304,7 +305,11 @@
         <viewmap
             xsi:type="gmfgen:ParentAssignedViewmap"
             getterName="getFigureFeatureNamesFigure"
-            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel">
+          <attributes
+              xsi:type="gmfgen:StyleAttributes"
+              fixedFont="true"/>
+        </viewmap>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet"
             parser="//@labelParsers/@implementations.0">
@@ -322,7 +327,11 @@
         <viewmap
             xsi:type="gmfgen:ParentAssignedViewmap"
             getterName="getFigureFeatureModifierFigure"
-            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel">
+          <attributes
+              xsi:type="gmfgen:StyleAttributes"
+              fixedFont="true"/>
+        </viewmap>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet"
             parser="//@labelParsers/@implementations.0">
@@ -340,7 +349,11 @@
         <viewmap
             xsi:type="gmfgen:ParentAssignedViewmap"
             getterName="getFigureFeatureTypeFigure"
-            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel">
+          <attributes
+              xsi:type="gmfgen:StyleAttributes"
+              fixedFont="true"/>
+        </viewmap>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet"
             parser="//@labelParsers/@implementations.0">
@@ -358,7 +371,11 @@
         <viewmap
             xsi:type="gmfgen:ParentAssignedViewmap"
             getterName="getFigureFeatureCommentFigure"
-            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel">
+          <attributes
+              xsi:type="gmfgen:StyleAttributes"
+              fixedFont="true"/>
+        </viewmap>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet"
             parser="//@labelParsers/@implementations.0">
@@ -375,7 +392,7 @@
         canonicalEditPolicyClassName="FeatureArgumentCanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="FeatureArgumentGraphicalNodeEditPolicy"
         createCommandClassName="FeatureArgumentCreateCommand"
-        containers="//@diagram/@compartments.7">
+        containers="//@diagram/@compartments.8">
       <diagramRunTimeClass
           href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -385,7 +402,7 @@
           xsi:type="gmfgen:InnerClassViewmap"
           layoutType="TOOLBAR_LAYOUT"
           className="ArgumentFigure"
-          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class ArgumentFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentArrowFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentNameFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentCollectionFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentTypeFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public ArgumentFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutThis = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(false);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutThis.setSpacing(1);&#xA;&#x9;layoutThis.setVertical(false);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setLineWidth(1);&#xA;&#x9;this.setForegroundColor(THIS_FORE&#xA;);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureArgumentArrowFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentArrowFigure.setText(&quot;->&quot;);&#xA;&#xA;this.add(fFigureArgumentArrowFigure);&#xA;&#xA;&#xA;&#xA;fFigureArgumentNameFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentNameFigure.setText(&quot;&quot;);&#xA;&#xA;this.add(fFigureArgumentNameFigure);&#xA;&#xA;&#xA;&#xA;fFigureArgumentCollectionFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentCollectionFigure.setText(&quot;&quot;);&#xA;&#xA;this.add(fFigureArgumentCollectionFigure);&#xA;&#xA;&#xA;&#xA;fFigureArgumentTypeFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentTypeFigure.setText(&quot;&quot;);&#xA;&#xA;this.add(fFigureArgumentTypeFigure);&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentArrowFigure() {&#xA;&#x9;&#x9;return fFigureArgumentArrowFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentNameFigure() {&#xA;&#x9;&#x9;return fFigureArgumentNameFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentCollectionFigure() {&#xA;&#x9;&#x9;return fFigureArgumentCollectionFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentTypeFigure() {&#xA;&#x9;&#x9;return fFigureArgumentTypeFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color THIS_FORE = new org.eclipse.swt.graphics.Color(null, 200, 0, 0);&#xA;&#xA;">
+          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class ArgumentFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentArrowFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentNameFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentCollectionFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureArgumentTypeFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public ArgumentFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutThis = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(false);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutThis.setSpacing(1);&#xA;&#x9;layoutThis.setVertical(false);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setLineWidth(1);&#xA;&#x9;this.setForegroundColor(THIS_FORE&#xA;);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureArgumentArrowFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentArrowFigure.setText(&quot;\u2192&quot;);&#xA;&#xA;fFigureArgumentArrowFigure.setFont(FFIGUREARGUMENTARROWFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;this.add(fFigureArgumentArrowFigure);&#xA;&#xA;&#xA;&#xA;fFigureArgumentNameFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentNameFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureArgumentNameFigure.setFont(FFIGUREARGUMENTNAMEFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;this.add(fFigureArgumentNameFigure);&#xA;&#xA;&#xA;&#xA;fFigureArgumentCollectionFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentCollectionFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureArgumentCollectionFigure.setFont(FFIGUREARGUMENTCOLLECTIONFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;this.add(fFigureArgumentCollectionFigure);&#xA;&#xA;&#xA;&#xA;fFigureArgumentTypeFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureArgumentTypeFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureArgumentTypeFigure.setFont(FFIGUREARGUMENTTYPEFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;this.add(fFigureArgumentTypeFigure);&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentArrowFigure() {&#xA;&#x9;&#x9;return fFigureArgumentArrowFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentNameFigure() {&#xA;&#x9;&#x9;return fFigureArgumentNameFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentCollectionFigure() {&#xA;&#x9;&#x9;return fFigureArgumentCollectionFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureArgumentTypeFigure() {&#xA;&#x9;&#x9;return fFigureArgumentTypeFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color THIS_FORE = new org.eclipse.swt.graphics.Color(null, 200, 0, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREARGUMENTARROWFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;Lucida Sans Unicode&quot;, 7, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREARGUMENTNAMEFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;Lucida Sans Unicode&quot;, 7, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREARGUMENTCOLLECTIONFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;Lucida Sans Unicode&quot;, 7, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREARGUMENTTYPEFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;Lucida Sans Unicode&quot;, 7, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;">
         <attributes
             xsi:type="gmfgen:StyleAttributes"
             fixedForeground="true"/>
@@ -408,7 +425,11 @@
         <viewmap
             xsi:type="gmfgen:ParentAssignedViewmap"
             getterName="getFigureArgumentArrowFigure"
-            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel">
+          <attributes
+              xsi:type="gmfgen:StyleAttributes"
+              fixedFont="true"/>
+        </viewmap>
         <modelFacet
             xsi:type="gmfgen:DesignLabelModelFacet"
             parser="//@labelParsers/@implementations.1"/>
@@ -423,7 +444,11 @@
         <viewmap
             xsi:type="gmfgen:ParentAssignedViewmap"
             getterName="getFigureArgumentNameFigure"
-            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel">
+          <attributes
+              xsi:type="gmfgen:StyleAttributes"
+              fixedFont="true"/>
+        </viewmap>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet"
             parser="//@labelParsers/@implementations.0">
@@ -441,7 +466,11 @@
         <viewmap
             xsi:type="gmfgen:ParentAssignedViewmap"
             getterName="getFigureArgumentCollectionFigure"
-            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel">
+          <attributes
+              xsi:type="gmfgen:StyleAttributes"
+              fixedFont="true"/>
+        </viewmap>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet"
             parser="//@labelParsers/@implementations.0">
@@ -459,7 +488,11 @@
         <viewmap
             xsi:type="gmfgen:ParentAssignedViewmap"
             getterName="getFigureArgumentTypeFigure"
-            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel">
+          <attributes
+              xsi:type="gmfgen:StyleAttributes"
+              fixedFont="true"/>
+        </viewmap>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet"
             parser="//@labelParsers/@implementations.0">
@@ -477,7 +510,7 @@
         canonicalEditPolicyClassName="PreConditionCanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="PreConditionGraphicalNodeEditPolicy"
         createCommandClassName="PreConditionCreateCommand"
-        containers="//@diagram/@compartments.6"
+        containers="//@diagram/@compartments.7"
         labelElementIcon="true">
       <diagramRunTimeClass
           href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
@@ -485,8 +518,13 @@
           xsi:type="gmfgen:MetamodelType"
           editHelperClassName="PreConditionEditHelper"/>
       <viewmap
-          xsi:type="gmfgen:FigureViewmap"
-          figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+          xsi:type="gmfgen:ParentAssignedViewmap"
+          getterName="getFigurePreConditionTextFigure"
+          figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel">
+        <attributes
+            xsi:type="gmfgen:StyleAttributes"
+            fixedFont="true"/>
+      </viewmap>
       <modelFacet>
         <metaClass
             href="bonide.genmodel#//bonIDE/PreCondition"/>
@@ -512,7 +550,7 @@
         canonicalEditPolicyClassName="PostConditionCanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="PostConditionGraphicalNodeEditPolicy"
         createCommandClassName="PostConditionCreateCommand"
-        containers="//@diagram/@compartments.5"
+        containers="//@diagram/@compartments.6"
         labelElementIcon="true">
       <diagramRunTimeClass
           href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
@@ -520,9 +558,13 @@
           xsi:type="gmfgen:MetamodelType"
           editHelperClassName="PostConditionEditHelper"/>
       <viewmap
-          xsi:type="gmfgen:InnerClassViewmap"
-          className="PostConditionFigure"
-          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class PostConditionFigure extends org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel {&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public PostConditionFigure() {&#xA;&#x9;&#x9;&#x9;&#x9;this.setText(&quot;&quot;);&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;}&#xA;&#xA;"/>
+          xsi:type="gmfgen:ParentAssignedViewmap"
+          getterName="getFigurePostConditionTextFigure"
+          figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel">
+        <attributes
+            xsi:type="gmfgen:StyleAttributes"
+            fixedFont="true"/>
+      </viewmap>
       <modelFacet>
         <metaClass
             href="bonide.genmodel#//bonIDE/PostCondition"/>
@@ -537,6 +579,56 @@
         <metaFeatures
             href="bonide.genmodel#//bonIDE/PostCondition/content"/>
       </labelModelFacet>
+    </childNodes>
+    <childNodes
+        visualID="3010"
+        editPartClassName="InvariantEditPart"
+        itemSemanticEditPolicyClassName="InvariantItemSemanticEditPolicy"
+        notationViewFactoryClassName="InvariantViewFactory"
+        canonicalEditPolicyClassName="InvariantCanonicalEditPolicy"
+        graphicalNodeEditPolicyClassName="InvariantGraphicalNodeEditPolicy"
+        createCommandClassName="InvariantCreateCommand"
+        containers="//@diagram/@compartments.5 //@diagram/@compartments.12">
+      <diagramRunTimeClass
+          href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+      <elementType
+          xsi:type="gmfgen:MetamodelType"
+          editHelperClassName="InvariantEditHelper"/>
+      <viewmap
+          xsi:type="gmfgen:InnerClassViewmap"
+          layoutType="FLOW_LAYOUT"
+          className="InvariantFigure"
+          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class InvariantFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureInvariantTextFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureInvariantFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public InvariantFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutThis = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(false);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutThis.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutThis.setMajorSpacing(0);&#xA;&#x9;layoutThis.setMinorSpacing(0);&#xA;&#x9;layoutThis.setHorizontal(true);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setFill(false);&#xA;this.setLineWidth(1);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureInvariantTextFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureInvariantTextFigure.setText(&quot;&quot;);&#xA;&#xA;fFigureInvariantTextFigure.setFont(FFIGUREINVARIANTTEXTFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;this.add(fFigureInvariantTextFigure);&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureInvariantTextFigure() {&#xA;&#x9;&#x9;return fFigureInvariantTextFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureInvariantFigure() {&#xA;&#x9;&#x9;return fFigureInvariantFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREINVARIANTTEXTFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;Lucida Sans Unicode&quot;, 7, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;"/>
+      <modelFacet>
+        <metaClass
+            href="bonide.genmodel#//bonIDE/Invariant"/>
+        <containmentMetaFeature
+            href="bonide.genmodel#//bonIDE/BONClass/invariants"/>
+        <childMetaFeature
+            href="bonide.genmodel#//bonIDE/BONClass/invariants"/>
+      </modelFacet>
+      <labels
+          visualID="5019"
+          editPartClassName="InvariantContentEditPart"
+          itemSemanticEditPolicyClassName="InvariantContentItemSemanticEditPolicy"
+          notationViewFactoryClassName="InvariantContentViewFactory">
+        <diagramRunTimeClass
+            href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+        <viewmap
+            xsi:type="gmfgen:ParentAssignedViewmap"
+            getterName="getFigureInvariantTextFigure"
+            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel">
+          <attributes
+              xsi:type="gmfgen:StyleAttributes"
+              fixedFont="true"/>
+        </viewmap>
+        <modelFacet
+            xsi:type="gmfgen:FeatureLabelModelFacet"
+            parser="//@labelParsers/@implementations.0">
+          <metaFeatures
+              href="bonide.genmodel#//bonIDE/Invariant/content"/>
+        </modelFacet>
+      </labels>
     </childNodes>
     <topLevelNodes
         visualID="2001"
@@ -590,7 +682,7 @@
         itemSemanticEditPolicyClassName="BONClassItemSemanticEditPolicy"
         notationViewFactoryClassName="BONClassViewFactory"
         canonicalEditPolicyClassName="BONClassCanonicalEditPolicy"
-        compartments="//@diagram/@compartments.8 //@diagram/@compartments.9 //@diagram/@compartments.10"
+        compartments="//@diagram/@compartments.9 //@diagram/@compartments.10 //@diagram/@compartments.11 //@diagram/@compartments.12"
         graphicalNodeEditPolicyClassName="BONClassGraphicalNodeEditPolicy"
         createCommandClassName="BONClassCreateCommand">
       <diagramRunTimeClass
@@ -602,7 +694,7 @@
           xsi:type="gmfgen:InnerClassViewmap"
           layoutType="TOOLBAR_LAYOUT"
           className="BONClassFigure"
-          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class BONClassFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureBONClassNameFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureIndexRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureInheritanceRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureRectangleFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public BONClassFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutThis = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(true);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_CENTER&#xA;);&#xA;&#xA;&#x9;layoutThis.setSpacing(0);&#xA;&#x9;layoutThis.setVertical(true);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setLineWidth(1);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureBONClassNameFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureBONClassNameFigure.setText(&quot;&lt;...>&quot;);&#xA;&#xA;fFigureBONClassNameFigure.setFont(FFIGUREBONCLASSNAMEFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;this.add(fFigureBONClassNameFigure);&#xA;&#xA;&#xA;&#xA;fFigureIndexRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureIndexRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureIndexRectangleFigure.setForegroundColor(FFIGUREINDEXRECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;fFigureIndexRectangleFigure.setBorder(new org.eclipse.draw2d.MarginBorder(getMapMode().DPtoLP(0)&#xA;, getMapMode().DPtoLP(0)&#xA;, getMapMode().DPtoLP(2)&#xA;, getMapMode().DPtoLP(0)&#xA;));&#xA;&#xA;this.add(fFigureIndexRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureIndexRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureIndexRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureIndexRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureIndexRectangleFigure.setSpacing(2);&#xA;&#x9;layoutFFigureIndexRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureIndexRectangleFigure.setLayoutManager(layoutFFigureIndexRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureInheritanceRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureInheritanceRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureInheritanceRectangleFigure.setForegroundColor(FFIGUREINHERITANCERECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureInheritanceRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureInheritanceRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setSpacing(2);&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureInheritanceRectangleFigure.setLayoutManager(layoutFFigureInheritanceRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureFeatureRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureFeatureRectangleFigure.setForegroundColor(FFIGUREFEATURERECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureFeatureRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutFFigureFeatureRectangleFigure = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setStretchMinorAxis(false);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setMajorSpacing(5);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setMinorSpacing(5);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setHorizontal(true);&#xA;&#xA;&#x9;fFigureFeatureRectangleFigure.setLayoutManager(layoutFFigureFeatureRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureBONClassNameFigure() {&#xA;&#x9;&#x9;return fFigureBONClassNameFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureIndexRectangleFigure() {&#xA;&#x9;&#x9;return fFigureIndexRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureInheritanceRectangleFigure() {&#xA;&#x9;&#x9;return fFigureInheritanceRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureRectangleFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREBONCLASSNAMEFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;LucidaSans&quot;, 9, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREINDEXRECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 128, 0, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREINHERITANCERECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 0, 128, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREFEATURERECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 192, 0, 0);&#xA;&#xA;"/>
+          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class BONClassFigure extends org.eclipse.draw2d.RoundedRectangle {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureBONClassNameFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureIndexRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureInheritanceRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureFeatureRectangleFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureInvariantRectangleFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public BONClassFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutThis = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(true);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_CENTER&#xA;);&#xA;&#xA;&#x9;layoutThis.setSpacing(0);&#xA;&#x9;layoutThis.setVertical(true);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setCornerDimensions(new org.eclipse.draw2d.geometry.Dimension(getMapMode().DPtoLP(12)&#xA;, getMapMode().DPtoLP(12)&#xA;));&#xA;this.setLineWidth(2);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureBONClassNameFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureBONClassNameFigure.setText(&quot;&lt;...>&quot;);&#xA;&#xA;fFigureBONClassNameFigure.setFont(FFIGUREBONCLASSNAMEFIGURE_FONT);&#xA;&#xA;&#xA;&#xA;this.add(fFigureBONClassNameFigure);&#xA;&#xA;&#xA;&#xA;fFigureIndexRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureIndexRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureIndexRectangleFigure.setForegroundColor(FFIGUREINDEXRECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureIndexRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureIndexRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureIndexRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureIndexRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureIndexRectangleFigure.setSpacing(2);&#xA;&#x9;layoutFFigureIndexRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureIndexRectangleFigure.setLayoutManager(layoutFFigureIndexRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureInheritanceRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureInheritanceRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureInheritanceRectangleFigure.setForegroundColor(FFIGUREINHERITANCERECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureInheritanceRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureInheritanceRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setSpacing(2);&#xA;&#x9;layoutFFigureInheritanceRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureInheritanceRectangleFigure.setLayoutManager(layoutFFigureInheritanceRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureFeatureRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureFeatureRectangleFigure.setLineWidth(1);&#xA;&#x9;fFigureFeatureRectangleFigure.setForegroundColor(FFIGUREFEATURERECTANGLEFIGURE_FORE&#xA;);&#xA;&#xA;this.add(fFigureFeatureRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureFeatureRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setSpacing(0);&#xA;&#x9;layoutFFigureFeatureRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureFeatureRectangleFigure.setLayoutManager(layoutFFigureFeatureRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#xA;fFigureInvariantRectangleFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigureInvariantRectangleFigure.setFill(false);&#xA;fFigureInvariantRectangleFigure.setLineWidth(1);&#xA;&#xA;this.add(fFigureInvariantRectangleFigure);&#xA;&#xA;&#x9;org.eclipse.draw2d.ToolbarLayout layoutFFigureInvariantRectangleFigure = new org.eclipse.draw2d.ToolbarLayout();&#xA;&#x9;layoutFFigureInvariantRectangleFigure.setStretchMinorAxis(true);&#xA;&#x9;layoutFFigureInvariantRectangleFigure.setMinorAlignment(org.eclipse.draw2d.ToolbarLayout.ALIGN_TOPLEFT&#xA;);&#xA;&#xA;&#x9;layoutFFigureInvariantRectangleFigure.setSpacing(0);&#xA;&#x9;layoutFFigureInvariantRectangleFigure.setVertical(true);&#xA;&#xA;&#x9;fFigureInvariantRectangleFigure.setLayoutManager(layoutFFigureInvariantRectangleFigure);&#xA;&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureBONClassNameFigure() {&#xA;&#x9;&#x9;return fFigureBONClassNameFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureIndexRectangleFigure() {&#xA;&#x9;&#x9;return fFigureIndexRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureInheritanceRectangleFigure() {&#xA;&#x9;&#x9;return fFigureInheritanceRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureFeatureRectangleFigure() {&#xA;&#x9;&#x9;return fFigureFeatureRectangleFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureInvariantRectangleFigure() {&#xA;&#x9;&#x9;return fFigureInvariantRectangleFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Font FFIGUREBONCLASSNAMEFIGURE_FONT = new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getCurrent(), &quot;Lucida Sans Unicode&quot;, 9, org.eclipse.swt.SWT.NORMAL);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREINDEXRECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 128, 0, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREINHERITANCERECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 0, 128, 0);&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color FFIGUREFEATURERECTANGLEFIGURE_FORE = new org.eclipse.swt.graphics.Color(null, 192, 0, 0);&#xA;&#xA;"/>
       <modelFacet>
         <metaClass
             href="bonide.genmodel#//bonIDE/BONClass"/>
@@ -719,8 +811,7 @@
         childNodes="//@diagram/@childNodes.4"
         title="FeatureCompartment"
         needsTitle="false"
-        node="//@diagram/@childNodes.1"
-        listLayout="false">
+        node="//@diagram/@childNodes.1">
       <diagramRunTimeClass
           href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <viewmap
@@ -731,6 +822,23 @@
             xsi:type="gmfgen:StyleAttributes"
             fixedForeground="true"/>
       </viewmap>
+    </compartments>
+    <compartments
+        visualID="7012"
+        editPartClassName="BONClassInvariantCompartmentEditPart"
+        itemSemanticEditPolicyClassName="BONClassInvariantCompartmentItemSemanticEditPolicy"
+        notationViewFactoryClassName="BONClassInvariantCompartmentViewFactory"
+        canonicalEditPolicyClassName="BONClassInvariantCompartmentCanonicalEditPolicy"
+        childNodes="//@diagram/@childNodes.8"
+        title="InvariantCompartment"
+        needsTitle="false"
+        node="//@diagram/@childNodes.1">
+      <diagramRunTimeClass
+          href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+      <viewmap
+          xsi:type="gmfgen:ParentAssignedViewmap"
+          getterName="getFigureInvariantRectangleFigure"
+          figureQualifiedClassName="org.eclipse.draw2d.RectangleFigure"/>
     </compartments>
     <compartments
         visualID="7009"
@@ -849,8 +957,7 @@
         childNodes="//@diagram/@childNodes.4"
         title="FeatureCompartment"
         needsTitle="false"
-        node="//@diagram/@topLevelNodes.1"
-        listLayout="false">
+        node="//@diagram/@topLevelNodes.1">
       <diagramRunTimeClass
           href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <viewmap
@@ -861,6 +968,23 @@
             xsi:type="gmfgen:StyleAttributes"
             fixedForeground="true"/>
       </viewmap>
+    </compartments>
+    <compartments
+        visualID="7013"
+        editPartClassName="BONClassInvariantCompartment2EditPart"
+        itemSemanticEditPolicyClassName="BONClassInvariantCompartment2ItemSemanticEditPolicy"
+        notationViewFactoryClassName="BONClassInvariantCompartmentViewFactory"
+        canonicalEditPolicyClassName="BONClassInvariantCompartment2CanonicalEditPolicy"
+        childNodes="//@diagram/@childNodes.8"
+        title="InvariantCompartment"
+        needsTitle="false"
+        node="//@diagram/@topLevelNodes.1">
+      <diagramRunTimeClass
+          href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+      <viewmap
+          xsi:type="gmfgen:ParentAssignedViewmap"
+          getterName="getFigureInvariantRectangleFigure"
+          figureQualifiedClassName="org.eclipse.draw2d.RectangleFigure"/>
     </compartments>
     <palette>
       <groups
@@ -883,26 +1007,33 @@
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Index"
-            description="Create New Index"
+            description="Create new Index"
             genNodes="//@diagram/@childNodes.2"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Inheritance"
-            description="Create New Inheritance"
+            description="Create new Inheritance"
             genNodes="//@diagram/@childNodes.3"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Argument"
-            description="Create New Argument"
+            description="Create new Argument"
             genNodes="//@diagram/@childNodes.5"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="PreCondition"
+            description="Create new PreCondition"
             genNodes="//@diagram/@childNodes.6"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="PostCondition"
+            description="Create new PostCondition"
             genNodes="//@diagram/@childNodes.7"/>
+        <entries
+            xsi:type="gmfgen:ToolEntry"
+            title="Invariant"
+            description="Create new Invariant"
+            genNodes="//@diagram/@childNodes.8"/>
       </groups>
     </palette>
     <preferencePages
@@ -933,7 +1064,6 @@
   </diagram>
   <plugin>
     <requiredPlugins>org.eclipse.draw2d</requiredPlugins>
-    <requiredPlugins>org.eclipse.gmf.runtime.draw2d.ui</requiredPlugins>
   </plugin>
   <editor/>
   <navigator>
@@ -961,6 +1091,9 @@
         parent="//@diagram/@childNodes.1"
         child="//@diagram/@childNodes.4"/>
     <childReferences
+        parent="//@diagram/@childNodes.1"
+        child="//@diagram/@childNodes.8"/>
+    <childReferences
         parent="//@diagram/@childNodes.0"
         child="//@diagram/@childNodes.1"/>
     <childReferences
@@ -981,6 +1114,9 @@
     <childReferences
         parent="//@diagram/@topLevelNodes.1"
         child="//@diagram/@childNodes.4"/>
+    <childReferences
+        parent="//@diagram/@topLevelNodes.1"
+        child="//@diagram/@childNodes.8"/>
     <childReferences
         parent="//@diagram"
         child="//@diagram/@topLevelNodes.1"/>
@@ -1011,7 +1147,7 @@
       extensibleViaService="true">
     <implementations
         xsi:type="gmfgen:PredefinedParser"
-        uses="//@diagram/@childNodes.2/@labels.0/@modelFacet //@diagram/@childNodes.2/@labels.1/@modelFacet //@diagram/@childNodes.3/@labels.1/@modelFacet //@diagram/@childNodes.5/@labels.1/@modelFacet //@diagram/@childNodes.5/@labels.2/@modelFacet //@diagram/@childNodes.5/@labels.3/@modelFacet //@diagram/@childNodes.6/@labelModelFacet //@diagram/@childNodes.7/@labelModelFacet //@diagram/@childNodes.4/@labels.0/@modelFacet //@diagram/@childNodes.4/@labels.1/@modelFacet //@diagram/@childNodes.4/@labels.2/@modelFacet //@diagram/@childNodes.4/@labels.3/@modelFacet //@diagram/@childNodes.1/@labels.0/@modelFacet //@diagram/@childNodes.0/@labels.0/@modelFacet //@diagram/@topLevelNodes.0/@labels.0/@modelFacet //@diagram/@topLevelNodes.1/@labels.0/@modelFacet"/>
+        uses="//@diagram/@childNodes.2/@labels.0/@modelFacet //@diagram/@childNodes.2/@labels.1/@modelFacet //@diagram/@childNodes.3/@labels.1/@modelFacet //@diagram/@childNodes.5/@labels.1/@modelFacet //@diagram/@childNodes.5/@labels.2/@modelFacet //@diagram/@childNodes.5/@labels.3/@modelFacet //@diagram/@childNodes.6/@labelModelFacet //@diagram/@childNodes.7/@labelModelFacet //@diagram/@childNodes.4/@labels.0/@modelFacet //@diagram/@childNodes.4/@labels.1/@modelFacet //@diagram/@childNodes.4/@labels.2/@modelFacet //@diagram/@childNodes.4/@labels.3/@modelFacet //@diagram/@childNodes.8/@labels.0/@modelFacet //@diagram/@childNodes.1/@labels.0/@modelFacet //@diagram/@childNodes.0/@labels.0/@modelFacet //@diagram/@topLevelNodes.0/@labels.0/@modelFacet //@diagram/@topLevelNodes.1/@labels.0/@modelFacet"/>
     <implementations
         xsi:type="gmfgen:ExternalParser"
         uses="//@diagram/@childNodes.3/@labels.0/@modelFacet //@diagram/@childNodes.5/@labels.0/@modelFacet"/>

@@ -27,6 +27,9 @@
     <compartmentTraces
         visualID="7008"
         queryText="true"/>
+    <compartmentTraces
+        visualID="7013"
+        queryText="true"/>
   </nodeTraces>
   <childNodeTraces
       visualID="3001"
@@ -52,6 +55,9 @@
         queryText="true"/>
     <compartmentTraces
         visualID="7007"
+        queryText="true"/>
+    <compartmentTraces
+        visualID="7012"
         queryText="true"/>
   </childNodeTraces>
   <childNodeTraces
@@ -121,4 +127,11 @@
   <childNodeTraces
       visualID="3009"
       queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.ucd.ie/bonIDE' and _eClass_.name = 'PostCondition') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.ucd.ie/bonIDE' and _eClass_.name = 'Feature') and _containmentMF_.name = 'postConditions')"/>
+  <childNodeTraces
+      visualID="3010"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.ucd.ie/bonIDE' and _eClass_.name = 'Invariant') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.ucd.ie/bonIDE' and _eClass_.name = 'BONClass') and _containmentMF_.name = 'invariants')">
+    <nodeLabelTraces
+        visualID="5019"
+        queryText="true"/>
+  </childNodeTraces>
 </trace:TraceModel>

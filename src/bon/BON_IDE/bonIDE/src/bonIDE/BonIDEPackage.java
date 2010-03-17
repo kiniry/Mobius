@@ -246,13 +246,22 @@ public interface BonIDEPackage extends EPackage {
 	int BON_CLASS__PARENTS = STATIC_ABSTRACTION_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Invariants</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BON_CLASS__INVARIANTS = STATIC_ABSTRACTION_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>BON Class</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BON_CLASS_FEATURE_COUNT = STATIC_ABSTRACTION_FEATURE_COUNT + 6;
+	int BON_CLASS_FEATURE_COUNT = STATIC_ABSTRACTION_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link bonIDE.impl.FeatureImpl <em>Feature</em>}' class.
@@ -505,6 +514,34 @@ public interface BonIDEPackage extends EPackage {
 	int POST_CONDITION_FEATURE_COUNT = 1;
 
 	/**
+	 * The meta object id for the '{@link bonIDE.impl.InvariantImpl <em>Invariant</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see bonIDE.impl.InvariantImpl
+	 * @see bonIDE.impl.BonIDEPackageImpl#getInvariant()
+	 * @generated
+	 */
+	int INVARIANT = 11;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INVARIANT__CONTENT = 0;
+
+	/**
+	 * The number of structural features of the '<em>Invariant</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INVARIANT_FEATURE_COUNT = 1;
+
+	/**
 	 * The meta object id for the '{@link bonIDE.ImplementationStatus <em>Implementation Status</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -512,7 +549,7 @@ public interface BonIDEPackage extends EPackage {
 	 * @see bonIDE.impl.BonIDEPackageImpl#getImplementationStatus()
 	 * @generated
 	 */
-	int IMPLEMENTATION_STATUS = 11;
+	int IMPLEMENTATION_STATUS = 12;
 
 
 	/**
@@ -653,6 +690,17 @@ public interface BonIDEPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getBONClass_Parents();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link bonIDE.BONClass#getInvariants <em>Invariants</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Invariants</em>'.
+	 * @see bonIDE.BONClass#getInvariants()
+	 * @see #getBONClass()
+	 * @generated
+	 */
+	EReference getBONClass_Invariants();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link bonIDE.BONClass#getIndexes <em>Indexes</em>}'.
@@ -912,6 +960,27 @@ public interface BonIDEPackage extends EPackage {
 	EAttribute getPostCondition_Content();
 
 	/**
+	 * Returns the meta object for class '{@link bonIDE.Invariant <em>Invariant</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Invariant</em>'.
+	 * @see bonIDE.Invariant
+	 * @generated
+	 */
+	EClass getInvariant();
+
+	/**
+	 * Returns the meta object for the attribute '{@link bonIDE.Invariant#getContent <em>Content</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Content</em>'.
+	 * @see bonIDE.Invariant#getContent()
+	 * @see #getInvariant()
+	 * @generated
+	 */
+	EAttribute getInvariant_Content();
+
+	/**
 	 * Returns the meta object for enum '{@link bonIDE.ImplementationStatus <em>Implementation Status</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1054,6 +1123,14 @@ public interface BonIDEPackage extends EPackage {
 		 * @generated
 		 */
 		EReference BON_CLASS__PARENTS = eINSTANCE.getBONClass_Parents();
+
+		/**
+		 * The meta object literal for the '<em><b>Invariants</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BON_CLASS__INVARIANTS = eINSTANCE.getBONClass_Invariants();
 
 		/**
 		 * The meta object literal for the '<em><b>Indexes</b></em>' containment reference list feature.
@@ -1260,6 +1337,24 @@ public interface BonIDEPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute POST_CONDITION__CONTENT = eINSTANCE.getPostCondition_Content();
+
+		/**
+		 * The meta object literal for the '{@link bonIDE.impl.InvariantImpl <em>Invariant</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see bonIDE.impl.InvariantImpl
+		 * @see bonIDE.impl.BonIDEPackageImpl#getInvariant()
+		 * @generated
+		 */
+		EClass INVARIANT = eINSTANCE.getInvariant();
+
+		/**
+		 * The meta object literal for the '<em><b>Content</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INVARIANT__CONTENT = eINSTANCE.getInvariant_Content();
 
 		/**
 		 * The meta object literal for the '{@link bonIDE.ImplementationStatus <em>Implementation Status</em>}' enum.

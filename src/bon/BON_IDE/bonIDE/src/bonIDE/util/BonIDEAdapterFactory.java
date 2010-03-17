@@ -116,6 +116,10 @@ public class BonIDEAdapterFactory extends AdapterFactoryImpl {
 				return createPostConditionAdapter();
 			}
 			@Override
+			public Adapter caseInvariant(Invariant object) {
+				return createInvariantAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -286,6 +290,20 @@ public class BonIDEAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createPostConditionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bonIDE.Invariant <em>Invariant</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bonIDE.Invariant
+	 * @generated
+	 */
+	public Adapter createInvariantAdapter() {
 		return null;
 	}
 

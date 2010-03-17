@@ -240,6 +240,11 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassInvariantCompartment2EditPart.VISUAL_ID));
+			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
 			return result.toArray();
 		}
 
@@ -276,6 +281,11 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 					.getType(bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID));
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassInvariantCompartmentEditPart.VISUAL_ID));
+			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
 			return result.toArray();
 		}

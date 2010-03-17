@@ -70,6 +70,7 @@ public class BonIDEFactoryImpl extends EFactoryImpl implements BonIDEFactory {
 			case BonIDEPackage.FEATURE_ARGUMENT: return createFeatureArgument();
 			case BonIDEPackage.PRE_CONDITION: return createPreCondition();
 			case BonIDEPackage.POST_CONDITION: return createPostCondition();
+			case BonIDEPackage.INVARIANT: return createInvariant();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -193,6 +194,16 @@ public class BonIDEFactoryImpl extends EFactoryImpl implements BonIDEFactory {
 	public PostCondition createPostCondition() {
 		PostConditionImpl postCondition = new PostConditionImpl();
 		return postCondition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Invariant createInvariant() {
+		InvariantImpl invariant = new InvariantImpl();
+		return invariant;
 	}
 
 	/**

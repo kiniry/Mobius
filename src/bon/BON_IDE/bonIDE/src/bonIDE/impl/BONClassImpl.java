@@ -13,6 +13,7 @@ import bonIDE.Feature;
 import bonIDE.ImplementationStatus;
 import bonIDE.IndexClause;
 import bonIDE.InheritanceClause;
+import bonIDE.Invariant;
 import bonIDE.Parent;
 import java.util.Collection;
 
@@ -44,6 +45,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link bonIDE.impl.BONClassImpl#getImplementationStatus <em>Implementation Status</em>}</li>
  *   <li>{@link bonIDE.impl.BONClassImpl#getIndexes <em>Indexes</em>}</li>
  *   <li>{@link bonIDE.impl.BONClassImpl#getParents <em>Parents</em>}</li>
+ *   <li>{@link bonIDE.impl.BONClassImpl#getInvariants <em>Invariants</em>}</li>
  * </ul>
  * </p>
  *
@@ -139,6 +141,16 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 	 * @ordered
 	 */
 	protected InheritanceClause parents;
+
+	/**
+	 * The cached value of the '{@link #getInvariants() <em>Invariants</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getInvariants()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Invariant> invariants;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -261,6 +273,18 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Invariant> getInvariants() {
+		if (invariants == null) {
+			invariants = new EObjectContainmentEList<Invariant>(Invariant.class, this, BonIDEPackage.BON_CLASS__INVARIANTS);
+		}
+		return invariants;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<IndexClause> getIndexes() {
 		if (indexes == null) {
 			indexes = new EObjectContainmentEList<IndexClause>(IndexClause.class, this, BonIDEPackage.BON_CLASS__INDEXES);
@@ -303,6 +327,8 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 				return ((InternalEList<?>)getIndexes()).basicRemove(otherEnd, msgs);
 			case BonIDEPackage.BON_CLASS__PARENTS:
 				return basicSetParents(null, msgs);
+			case BonIDEPackage.BON_CLASS__INVARIANTS:
+				return ((InternalEList<?>)getInvariants()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -327,6 +353,8 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 				return getIndexes();
 			case BonIDEPackage.BON_CLASS__PARENTS:
 				return getParents();
+			case BonIDEPackage.BON_CLASS__INVARIANTS:
+				return getInvariants();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -360,6 +388,10 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 			case BonIDEPackage.BON_CLASS__PARENTS:
 				setParents((InheritanceClause)newValue);
 				return;
+			case BonIDEPackage.BON_CLASS__INVARIANTS:
+				getInvariants().clear();
+				getInvariants().addAll((Collection<? extends Invariant>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -390,6 +422,9 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 			case BonIDEPackage.BON_CLASS__PARENTS:
 				setParents((InheritanceClause)null);
 				return;
+			case BonIDEPackage.BON_CLASS__INVARIANTS:
+				getInvariants().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -414,6 +449,8 @@ public class BONClassImpl extends StaticAbstractionImpl implements BONClass {
 				return indexes != null && !indexes.isEmpty();
 			case BonIDEPackage.BON_CLASS__PARENTS:
 				return parents != null;
+			case BonIDEPackage.BON_CLASS__INVARIANTS:
+				return invariants != null && !invariants.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

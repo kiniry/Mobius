@@ -107,6 +107,15 @@ public interface BonIDEFactory extends EFactory {
 	PostCondition createPostCondition();
 
 	/**
+	 * Returns a new object of class '<em>Invariant</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Invariant</em>'.
+	 * @generated
+	 */
+	Invariant createInvariant();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

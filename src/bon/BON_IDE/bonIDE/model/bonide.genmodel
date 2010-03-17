@@ -32,6 +32,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//BONClass/implementationStatus"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//BONClass/indexes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference bonide.ecore#//BONClass/parents"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//BONClass/invariants"/>
     </genClasses>
     <genClasses image="false" ecoreClass="bonide.ecore#//StaticAbstraction"/>
     <genClasses ecoreClass="bonide.ecore#//Feature">
@@ -60,6 +61,9 @@
     </genClasses>
     <genClasses ecoreClass="bonide.ecore#//PostCondition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//PostCondition/content"/>
+    </genClasses>
+    <genClasses ecoreClass="bonide.ecore#//Invariant">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Invariant/content"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

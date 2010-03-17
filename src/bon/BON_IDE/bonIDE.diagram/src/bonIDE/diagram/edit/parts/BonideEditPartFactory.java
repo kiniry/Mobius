@@ -108,6 +108,12 @@ public class BonideEditPartFactory implements EditPartFactory {
 			case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
 				return new bonIDE.diagram.edit.parts.PostConditionEditPart(view);
 
+			case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.InvariantEditPart(view);
+
+			case bonIDE.diagram.edit.parts.InvariantContentEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.InvariantContentEditPart(view);
+
 			case bonIDE.diagram.edit.parts.ClusterClusterCompartmentEditPart.VISUAL_ID:
 				return new bonIDE.diagram.edit.parts.ClusterClusterCompartmentEditPart(view);
 
@@ -122,6 +128,9 @@ public class BonideEditPartFactory implements EditPartFactory {
 
 			case bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID:
 				return new bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart(view);
+
+			case bonIDE.diagram.edit.parts.BONClassInvariantCompartmentEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.BONClassInvariantCompartmentEditPart(view);
 
 			case bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart.VISUAL_ID:
 				return new bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart(view);
@@ -140,6 +149,9 @@ public class BonideEditPartFactory implements EditPartFactory {
 
 			case bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart.VISUAL_ID:
 				return new bonIDE.diagram.edit.parts.BONClassFeatureCompartment2EditPart(view);
+
+			case bonIDE.diagram.edit.parts.BONClassInvariantCompartment2EditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.BONClassInvariantCompartment2EditPart(view);
 			}
 		}
 		return createUnrecognizedEditPart(context, model);

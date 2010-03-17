@@ -34,17 +34,19 @@ public class BonideModelingAssistantProvider extends ModelingAssistantProvider {
 				(IGraphicalEditPart) host.getAdapter(
 				IGraphicalEditPart.class);
 		if (editPart instanceof bonIDE.diagram.edit.parts.BONClassEditPart) {
-			ArrayList types = new ArrayList(3);
+			ArrayList types = new ArrayList(4);
 			types.add(bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003);
 			types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005);
 			types.add(bonIDE.diagram.providers.BonideElementTypes.Feature_3006);
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Invariant_3010);
 			return types;
 		}
 		if (editPart instanceof bonIDE.diagram.edit.parts.BONClass2EditPart) {
-			ArrayList types = new ArrayList(3);
+			ArrayList types = new ArrayList(4);
 			types.add(bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003);
 			types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005);
 			types.add(bonIDE.diagram.providers.BonideElementTypes.Feature_3006);
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Invariant_3010);
 			return types;
 		}
 		if (editPart instanceof bonIDE.diagram.edit.parts.FeatureEditPart) {

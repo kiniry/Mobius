@@ -133,6 +133,12 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 			pane.add(((bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart) childEditPart).getFigure());
 			return true;
 		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.BONClassInvariantCompartmentEditPart) {
+			IFigure pane = getPrimaryShape().getFigureInvariantRectangleFigure();
+			setupContentPane(pane); // FIXME each comparment should handle his content pane in his own way 
+			pane.add(((bonIDE.diagram.edit.parts.BONClassInvariantCompartmentEditPart) childEditPart).getFigure());
+			return true;
+		}
 		return false;
 	}
 
@@ -159,6 +165,12 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 			IFigure pane = getPrimaryShape().getFigureFeatureRectangleFigure();
 			setupContentPane(pane); // FIXME each comparment should handle his content pane in his own way 
 			pane.remove(((bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart) childEditPart).getFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.BONClassInvariantCompartmentEditPart) {
+			IFigure pane = getPrimaryShape().getFigureInvariantRectangleFigure();
+			setupContentPane(pane); // FIXME each comparment should handle his content pane in his own way 
+			pane.remove(((bonIDE.diagram.edit.parts.BONClassInvariantCompartmentEditPart) childEditPart).getFigure());
 			return true;
 		}
 		return false;
@@ -196,6 +208,9 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 		}
 		if (editPart instanceof bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart) {
 			return getPrimaryShape().getFigureFeatureRectangleFigure();
+		}
+		if (editPart instanceof bonIDE.diagram.edit.parts.BONClassInvariantCompartmentEditPart) {
+			return getPrimaryShape().getFigureInvariantRectangleFigure();
 		}
 		return getContentPane();
 	}
@@ -314,6 +329,10 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 				return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
 						.getType(bonIDE.diagram.edit.parts.BONClassFeatureCompartmentEditPart.VISUAL_ID));
 			}
+			if (type == bonIDE.diagram.providers.BonideElementTypes.Invariant_3010) {
+				return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
+						.getType(bonIDE.diagram.edit.parts.BONClassInvariantCompartmentEditPart.VISUAL_ID));
+			}
 		}
 		return super.getTargetEditPart(request);
 	}
@@ -344,6 +363,11 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 		/**
 		 * @generated
 		 */
+		private RectangleFigure fFigureInvariantRectangleFigure;
+
+		/**
+		 * @generated
+		 */
 		public BONClassFigure() {
 
 			ToolbarLayout layoutThis = new ToolbarLayout();
@@ -355,9 +379,9 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 
 			this.setLayoutManager(layoutThis);
 
-			this.setCornerDimensions(new Dimension(getMapMode().DPtoLP(8)
-					, getMapMode().DPtoLP(8)));
-			this.setLineWidth(1);
+			this.setCornerDimensions(new Dimension(getMapMode().DPtoLP(12)
+					, getMapMode().DPtoLP(12)));
+			this.setLineWidth(2);
 			createContents();
 		}
 
@@ -418,6 +442,21 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 
 			fFigureFeatureRectangleFigure.setLayoutManager(layoutFFigureFeatureRectangleFigure);
 
+			fFigureInvariantRectangleFigure = new RectangleFigure();
+			fFigureInvariantRectangleFigure.setFill(false);
+			fFigureInvariantRectangleFigure.setLineWidth(1);
+
+			this.add(fFigureInvariantRectangleFigure);
+
+			ToolbarLayout layoutFFigureInvariantRectangleFigure = new ToolbarLayout();
+			layoutFFigureInvariantRectangleFigure.setStretchMinorAxis(true);
+			layoutFFigureInvariantRectangleFigure.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
+
+			layoutFFigureInvariantRectangleFigure.setSpacing(0);
+			layoutFFigureInvariantRectangleFigure.setVertical(true);
+
+			fFigureInvariantRectangleFigure.setLayoutManager(layoutFFigureInvariantRectangleFigure);
+
 		}
 
 		/**
@@ -465,6 +504,13 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 		 */
 		public RectangleFigure getFigureFeatureRectangleFigure() {
 			return fFigureFeatureRectangleFigure;
+		}
+
+		/**
+		 * @generated
+		 */
+		public RectangleFigure getFigureInvariantRectangleFigure() {
+			return fFigureInvariantRectangleFigure;
 		}
 
 	}

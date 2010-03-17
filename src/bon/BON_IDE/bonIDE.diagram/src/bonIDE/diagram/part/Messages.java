@@ -313,7 +313,27 @@ public class Messages extends NLS {
 	/**
 	 * @generated
 	 */
+	public static String PreCondition7CreationTool_desc;
+
+	/**
+	 * @generated
+	 */
 	public static String PostCondition8CreationTool_title;
+
+	/**
+	 * @generated
+	 */
+	public static String PostCondition8CreationTool_desc;
+
+	/**
+	 * @generated
+	 */
+	public static String Invariant9CreationTool_title;
+
+	/**
+	 * @generated
+	 */
+	public static String Invariant9CreationTool_desc;
 
 	/**
 	 * @generated
@@ -339,6 +359,11 @@ public class Messages extends NLS {
 	 * @generated
 	 */
 	public static String BONClassFeatureCompartmentEditPart_title;
+
+	/**
+	 * @generated
+	 */
+	public static String BONClassInvariantCompartmentEditPart_title;
 
 	/**
 	 * @generated
@@ -369,6 +394,11 @@ public class Messages extends NLS {
 	 * @generated
 	 */
 	public static String BONClassFeatureCompartment2EditPart_title;
+
+	/**
+	 * @generated
+	 */
+	public static String BONClassInvariantCompartment2EditPart_title;
 
 	/**
 	 * @generated

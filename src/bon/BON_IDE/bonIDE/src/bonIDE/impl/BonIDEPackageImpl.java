@@ -16,6 +16,7 @@ import bonIDE.FeatureArgument;
 import bonIDE.ImplementationStatus;
 import bonIDE.IndexClause;
 import bonIDE.InheritanceClause;
+import bonIDE.Invariant;
 import bonIDE.Model;
 import bonIDE.PostCondition;
 import bonIDE.PreCondition;
@@ -113,6 +114,13 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 	 * @generated
 	 */
 	private EClass postConditionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass invariantEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -297,6 +305,15 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 	 */
 	public EReference getBONClass_Parents() {
 		return (EReference)bonClassEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getBONClass_Invariants() {
+		return (EReference)bonClassEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -520,6 +537,24 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getInvariant() {
+		return invariantEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getInvariant_Content() {
+		return (EAttribute)invariantEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getImplementationStatus() {
 		return implementationStatusEEnum;
 	}
@@ -570,6 +605,7 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 		createEAttribute(bonClassEClass, BON_CLASS__IMPLEMENTATION_STATUS);
 		createEReference(bonClassEClass, BON_CLASS__INDEXES);
 		createEReference(bonClassEClass, BON_CLASS__PARENTS);
+		createEReference(bonClassEClass, BON_CLASS__INVARIANTS);
 
 		staticAbstractionEClass = createEClass(STATIC_ABSTRACTION);
 
@@ -599,6 +635,9 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 
 		postConditionEClass = createEClass(POST_CONDITION);
 		createEAttribute(postConditionEClass, POST_CONDITION__CONTENT);
+
+		invariantEClass = createEClass(INVARIANT);
+		createEAttribute(invariantEClass, INVARIANT__CONTENT);
 
 		// Create enums
 		implementationStatusEEnum = createEEnum(IMPLEMENTATION_STATUS);
@@ -655,6 +694,7 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 		initEAttribute(getBONClass_ImplementationStatus(), this.getImplementationStatus(), "implementationStatus", "Effective", 0, 1, BONClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBONClass_Indexes(), this.getIndexClause(), null, "indexes", null, 0, -1, BONClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBONClass_Parents(), this.getInheritanceClause(), null, "parents", null, 0, 1, BONClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBONClass_Invariants(), this.getInvariant(), null, "invariants", null, 0, -1, BONClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(staticAbstractionEClass, StaticAbstraction.class, "StaticAbstraction", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -684,6 +724,9 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 
 		initEClass(postConditionEClass, PostCondition.class, "PostCondition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPostCondition_Content(), ecorePackage.getEString(), "content", null, 0, 1, PostCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(invariantEClass, Invariant.class, "Invariant", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getInvariant_Content(), ecorePackage.getEString(), "content", null, 0, 1, Invariant.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(implementationStatusEEnum, ImplementationStatus.class, "ImplementationStatus");

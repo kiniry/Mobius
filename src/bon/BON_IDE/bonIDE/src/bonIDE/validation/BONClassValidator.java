@@ -12,6 +12,7 @@ import bonIDE.Feature;
 import bonIDE.ImplementationStatus;
 import bonIDE.IndexClause;
 import bonIDE.InheritanceClause;
+import bonIDE.Invariant;
 import bonIDE.Parent;
 import org.eclipse.emf.common.util.EList;
 
@@ -32,6 +33,8 @@ public interface BONClassValidator {
 	boolean validateIndexes(EList<IndexClause> value);
 
 	boolean validateParents(InheritanceClause value);
+
+	boolean validateInvariants(EList<Invariant> value);
 
 	boolean validateParents(Parent value);
 

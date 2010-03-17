@@ -103,6 +103,9 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 		case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
 			return getImage(
 					"Navigator?Node?http://www.ucd.ie/bonIDE?PostCondition", bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009); //$NON-NLS-1$
+		case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
+			return getImage(
+					"Navigator?Node?http://www.ucd.ie/bonIDE?Invariant", bonIDE.diagram.providers.BonideElementTypes.Invariant_3010); //$NON-NLS-1$
 		}
 		return getImage("Navigator?UnknownElement", null); //$NON-NLS-1$
 	}
@@ -176,6 +179,8 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 			return getPreCondition_3008Text(view);
 		case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
 			return getPostCondition_3009Text(view);
+		case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
+			return getInvariant_3010Text(view);
 		}
 		return getUnknownElementText(view);
 	}
@@ -361,6 +366,24 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
 					"Parser was not found for label " + 3009); //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @generated
+	 */
+	private String getInvariant_3010Text(View view) {
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
+				bonIDE.diagram.providers.BonideElementTypes.Invariant_3010, view.getElement() != null ? view
+						.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+						.getType(bonIDE.diagram.edit.parts.InvariantContentEditPart.VISUAL_ID));
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view),
+					ParserOptions.NONE.intValue());
+		} else {
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
+					"Parser was not found for label " + 5019); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
 		}
 	}

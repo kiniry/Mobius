@@ -5,7 +5,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.StackLayout;
-import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
@@ -13,9 +12,7 @@ import org.eclipse.gef.editpolicies.FlowLayoutEditPolicy;
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConstrainedToolbarLayoutEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
@@ -30,31 +27,12 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @generated
  */
-public class FeatureArgumentEditPart extends ShapeNodeEditPart {
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart#refreshBounds()
-	 */
-	@Override
-	protected void refreshBounds() {
-		System.out.println("FeatureArgumentEditPart.refreshBounds");
-		super.refreshBounds();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart#refreshVisuals()
-	 */
-	@Override
-	protected void refreshVisuals() {
-		System.out.println("FeatureArgumentEditPart.refreshVisuals");
-		// TODO Auto-generated method stub
-		super.refreshVisuals();
-	}
+public class InvariantEditPart extends ShapeNodeEditPart {
 
 	/**
 	 * @generated
 	 */
-	public static final int VISUAL_ID = 3007;
+	public static final int VISUAL_ID = 3010;
 
 	/**
 	 * @generated
@@ -69,7 +47,7 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	public FeatureArgumentEditPart(View view) {
+	public InvariantEditPart(View view) {
 		super(view);
 	}
 
@@ -79,7 +57,7 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
 		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
-				new bonIDE.diagram.edit.policies.FeatureArgumentItemSemanticEditPolicy());
+				new bonIDE.diagram.edit.policies.InvariantItemSemanticEditPolicy());
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, createLayoutEditPolicy());
 		// XXX need an SCR to runtime to have another abstract superclass that would let children add reasonable editpolicies
 		// removeEditPolicy(org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles.CONNECTION_HANDLES_ROLE);
@@ -90,15 +68,18 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 	 */
 	protected LayoutEditPolicy createLayoutEditPolicy() {
 
-		ConstrainedToolbarLayoutEditPolicy lep = new ConstrainedToolbarLayoutEditPolicy() {
+		FlowLayoutEditPolicy lep = new FlowLayoutEditPolicy() {
 
-			protected EditPolicy createChildEditPolicy(EditPart child) {
-				if (child.getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE) == null) {
-					if (child instanceof ITextAwareEditPart) {
-						return new bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy();
-					}
-				}
-				return super.createChildEditPolicy(child);
+			protected Command createAddCommand(EditPart child, EditPart after) {
+				return null;
+			}
+
+			protected Command createMoveChildCommand(EditPart child, EditPart after) {
+				return null;
+			}
+
+			protected Command getCreateCommand(CreateRequest request) {
+				return null;
 			}
 		};
 		return lep;
@@ -108,39 +89,24 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected IFigure createNodeShape() {
-		ArgumentFigure figure = new ArgumentFigure();
+		InvariantFigure figure = new InvariantFigure();
 		return primaryShape = figure;
 	}
 
 	/**
 	 * @generated
 	 */
-	public ArgumentFigure getPrimaryShape() {
-		return (ArgumentFigure) primaryShape;
+	public InvariantFigure getPrimaryShape() {
+		return (InvariantFigure) primaryShape;
 	}
 
 	/**
 	 * @generated
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureArgumentCollectionFigure());
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabel2EditPart) {
-			((bonIDE.diagram.edit.parts.WrappingLabel2EditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureArgumentArrowFigure());
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureArgumentNameFigure());
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureArgumentTypeFigure());
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.InvariantContentEditPart) {
+			((bonIDE.diagram.edit.parts.InvariantContentEditPart) childEditPart).setLabel(getPrimaryShape()
+					.getFigureInvariantTextFigure());
 			return true;
 		}
 		return false;
@@ -150,16 +116,7 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentContainerTypeEditPart) {
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabel2EditPart) {
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart) {
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureArgumentTypeEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.InvariantContentEditPart) {
 			return true;
 		}
 		return false;
@@ -283,47 +240,41 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 	 */
 	public EditPart getPrimaryChildEditPart() {
 		return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
-				.getType(bonIDE.diagram.edit.parts.WrappingLabel2EditPart.VISUAL_ID));
+				.getType(bonIDE.diagram.edit.parts.InvariantContentEditPart.VISUAL_ID));
 	}
 
 	/**
 	 * @generated
 	 */
-	public class ArgumentFigure extends RectangleFigure {
+	public class InvariantFigure extends RectangleFigure {
 
 		/**
 		 * @generated
 		 */
-		private WrappingLabel fFigureArgumentArrowFigure;
+		private WrappingLabel fFigureInvariantTextFigure;
 		/**
 		 * @generated
 		 */
-		private WrappingLabel fFigureArgumentNameFigure;
-		/**
-		 * @generated
-		 */
-		private WrappingLabel fFigureArgumentCollectionFigure;
-		/**
-		 * @generated
-		 */
-		private WrappingLabel fFigureArgumentTypeFigure;
+		private RectangleFigure fFigureInvariantFigure;
 
 		/**
 		 * @generated
 		 */
-		public ArgumentFigure() {
+		public InvariantFigure() {
 
-			ToolbarLayout layoutThis = new ToolbarLayout();
+			FlowLayout layoutThis = new FlowLayout();
 			layoutThis.setStretchMinorAxis(false);
-			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
+			layoutThis.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP);
 
-			layoutThis.setSpacing(1);
-			layoutThis.setVertical(false);
+			layoutThis.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			layoutThis.setMajorSpacing(0);
+			layoutThis.setMinorSpacing(0);
+			layoutThis.setHorizontal(true);
 
 			this.setLayoutManager(layoutThis);
 
+			this.setFill(false);
 			this.setLineWidth(1);
-			this.setForegroundColor(THIS_FORE);
 			createContents();
 		}
 
@@ -332,33 +283,12 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 		 */
 		private void createContents() {
 
-			fFigureArgumentArrowFigure = new WrappingLabel();
-			fFigureArgumentArrowFigure.setText("\u2192");
+			fFigureInvariantTextFigure = new WrappingLabel();
+			fFigureInvariantTextFigure.setText("");
 
-			fFigureArgumentArrowFigure.setFont(FFIGUREARGUMENTARROWFIGURE_FONT);
+			fFigureInvariantTextFigure.setFont(FFIGUREINVARIANTTEXTFIGURE_FONT);
 
-			this.add(fFigureArgumentArrowFigure);
-
-			fFigureArgumentNameFigure = new WrappingLabel();
-			fFigureArgumentNameFigure.setText("");
-
-			fFigureArgumentNameFigure.setFont(FFIGUREARGUMENTNAMEFIGURE_FONT);
-
-			this.add(fFigureArgumentNameFigure);
-
-			fFigureArgumentCollectionFigure = new WrappingLabel();
-			fFigureArgumentCollectionFigure.setText("");
-
-			fFigureArgumentCollectionFigure.setFont(FFIGUREARGUMENTCOLLECTIONFIGURE_FONT);
-
-			this.add(fFigureArgumentCollectionFigure);
-
-			fFigureArgumentTypeFigure = new WrappingLabel();
-			fFigureArgumentTypeFigure.setText("");
-
-			fFigureArgumentTypeFigure.setFont(FFIGUREARGUMENTTYPEFIGURE_FONT);
-
-			this.add(fFigureArgumentTypeFigure);
+			this.add(fFigureInvariantTextFigure);
 
 		}
 
@@ -384,29 +314,15 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 		/**
 		 * @generated
 		 */
-		public WrappingLabel getFigureArgumentArrowFigure() {
-			return fFigureArgumentArrowFigure;
+		public WrappingLabel getFigureInvariantTextFigure() {
+			return fFigureInvariantTextFigure;
 		}
 
 		/**
 		 * @generated
 		 */
-		public WrappingLabel getFigureArgumentNameFigure() {
-			return fFigureArgumentNameFigure;
-		}
-
-		/**
-		 * @generated
-		 */
-		public WrappingLabel getFigureArgumentCollectionFigure() {
-			return fFigureArgumentCollectionFigure;
-		}
-
-		/**
-		 * @generated
-		 */
-		public WrappingLabel getFigureArgumentTypeFigure() {
-			return fFigureArgumentTypeFigure;
+		public RectangleFigure getFigureInvariantFigure() {
+			return fFigureInvariantFigure;
 		}
 
 	}
@@ -414,30 +330,7 @@ public class FeatureArgumentEditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	static final Color THIS_FORE = new Color(null, 200, 0, 0);
-
-	/**
-	 * @generated
-	 */
-	static final Font FFIGUREARGUMENTARROWFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
-
-	/**
-	 * @generated
-	 */
-	static final Font FFIGUREARGUMENTNAMEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
-
-	/**
-	 * @generated
-	 */
-	static final Font FFIGUREARGUMENTCOLLECTIONFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
-
-	/**
-	 * @generated
-	 */
-	static final Font FFIGUREARGUMENTTYPEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
+	static final Font FFIGUREINVARIANTTEXTFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
 			SWT.NORMAL);
 
 }

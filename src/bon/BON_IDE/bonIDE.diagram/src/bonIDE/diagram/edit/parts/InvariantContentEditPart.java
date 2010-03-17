@@ -1,26 +1,24 @@
 package bonIDE.diagram.edit.parts;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.Shape;
-import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.AccessibleEditPart;
-import org.eclipse.gef.DragTracker;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
-import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gef.handles.MoveHandle;
+import org.eclipse.gef.handles.NonResizableHandleKit;
 import org.eclipse.gef.requests.DirectEditRequest;
-import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParserEditStatus;
@@ -29,20 +27,13 @@ import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ListItemComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ISemanticParser;
-import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
-import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -51,20 +42,18 @@ import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * @generated
  */
-public class PreConditionEditPart extends CompartmentEditPart implements ITextAwareEditPart {
+public class InvariantContentEditPart extends CompartmentEditPart implements ITextAwareEditPart {
 
 	/**
 	 * @generated
 	 */
-	public static final int VISUAL_ID = 3008;
+	public static final int VISUAL_ID = 5019;
 
 	/**
 	 * @generated
@@ -89,18 +78,8 @@ public class PreConditionEditPart extends CompartmentEditPart implements ITextAw
 	/**
 	 * @generated
 	 */
-	public PreConditionEditPart(View view) {
+	public InvariantContentEditPart(View view) {
 		super(view);
-	}
-
-	/**
-	 * @generated
-	 */
-	public DragTracker getDragTracker(Request request) {
-		if (request instanceof SelectionRequest && ((SelectionRequest) request).getLastButtonPressed() == 3) {
-			return null;
-		}
-		return new DragEditPartsTrackerEx(this);
 	}
 
 	/**
@@ -108,12 +87,26 @@ public class PreConditionEditPart extends CompartmentEditPart implements ITextAw
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
-				new bonIDE.diagram.edit.policies.PreConditionItemSemanticEditPolicy());
-		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE,
-				new bonIDE.diagram.edit.policies.BonideTextNonResizableEditPolicy());
-		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ListItemComponentEditPolicy());
+		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE,
+				new bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy());
 		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new LabelDirectEditPolicy());
+		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new NonResizableEditPolicy() {
+
+			protected List createSelectionHandles() {
+				List handles = new ArrayList();
+				NonResizableHandleKit.addMoveHandle((GraphicalEditPart) getHost(), handles);
+				((MoveHandle) handles.get(0)).setBorder(null);
+				return handles;
+			}
+
+			public Command getCommand(Request request) {
+				return null;
+			}
+
+			public boolean understandsRequest(Request request) {
+				return false;
+			}
+		});
 	}
 
 	/**
@@ -197,11 +190,7 @@ public class PreConditionEditPart extends CompartmentEditPart implements ITextAw
 	 * @generated
 	 */
 	protected Image getLabelIcon() {
-		EObject parserElement = getParserElement();
-		if (parserElement == null) {
-			return null;
-		}
-		return bonIDE.diagram.providers.BonideElementTypes.getImage(parserElement.eClass());
+		return null;
 	}
 
 	/**
@@ -308,9 +297,9 @@ public class PreConditionEditPart extends CompartmentEditPart implements ITextAw
 	public IParser getParser() {
 		if (parser == null) {
 			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-					bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008, getParserElement(),
+					bonIDE.diagram.providers.BonideElementTypes.Invariant_3010, getParserElement(),
 					bonIDE.diagram.part.BonideVisualIDRegistry
-							.getType(bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID));
+							.getType(bonIDE.diagram.edit.parts.InvariantContentEditPart.VISUAL_ID));
 		}
 		return parser;
 	}

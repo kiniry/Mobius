@@ -90,6 +90,19 @@ public class BONClass2ItemSemanticEditPolicy extends bonIDE.diagram.edit.policie
 					}
 				}
 				break;
+			case bonIDE.diagram.edit.parts.BONClassInvariantCompartmentEditPart.VISUAL_ID:
+				for (Iterator cit = node.getChildren().iterator(); cit.hasNext();) {
+					Node cnode = (Node) cit.next();
+					switch (bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(cnode)) {
+					case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
+						cmd.add(new DestroyElementCommand(new DestroyElementRequest(getEditingDomain(), cnode
+								.getElement(), false))); // directlyOwned: true
+						// don't need explicit deletion of cnode as parent's view deletion would clean child views as well 
+						// cmd.add(new org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand(getEditingDomain(), cnode));
+						break;
+					}
+				}
+				break;
 			}
 		}
 	}

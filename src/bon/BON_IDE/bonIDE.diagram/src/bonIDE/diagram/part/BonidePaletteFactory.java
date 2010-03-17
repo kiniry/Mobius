@@ -37,6 +37,7 @@ public class BonidePaletteFactory {
 		paletteContainer.add(createArgument6CreationTool());
 		paletteContainer.add(createPreCondition7CreationTool());
 		paletteContainer.add(createPostCondition8CreationTool());
+		paletteContainer.add(createInvariant9CreationTool());
 		return paletteContainer;
 	}
 
@@ -138,8 +139,8 @@ public class BonidePaletteFactory {
 	private ToolEntry createPreCondition7CreationTool() {
 		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
 		types.add(bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008);
-		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.PreCondition7CreationTool_title, null,
-				types);
+		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.PreCondition7CreationTool_title,
+				bonIDE.diagram.part.Messages.PreCondition7CreationTool_desc, types);
 		entry.setId("createPreCondition7CreationTool"); //$NON-NLS-1$
 		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
 				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008));
@@ -153,11 +154,26 @@ public class BonidePaletteFactory {
 	private ToolEntry createPostCondition8CreationTool() {
 		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
 		types.add(bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009);
-		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.PostCondition8CreationTool_title, null,
-				types);
+		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.PostCondition8CreationTool_title,
+				bonIDE.diagram.part.Messages.PostCondition8CreationTool_desc, types);
 		entry.setId("createPostCondition8CreationTool"); //$NON-NLS-1$
 		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
 				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009));
+		entry.setLargeIcon(entry.getSmallIcon());
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
+	private ToolEntry createInvariant9CreationTool() {
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.Invariant_3010);
+		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.Invariant9CreationTool_title,
+				bonIDE.diagram.part.Messages.Invariant9CreationTool_desc, types);
+		entry.setId("createInvariant9CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.Invariant_3010));
 		entry.setLargeIcon(entry.getSmallIcon());
 		return entry;
 	}

@@ -38,7 +38,7 @@
       <tools
           xsi:type="gmftool:CreationTool"
           title="Index"
-          description="Create New Index">
+          description="Create new Index">
         <smallIcon
             xsi:type="gmftool:DefaultImage"/>
         <largeIcon
@@ -47,7 +47,7 @@
       <tools
           xsi:type="gmftool:CreationTool"
           title="Inheritance"
-          description="Create New Inheritance">
+          description="Create new Inheritance">
         <smallIcon
             xsi:type="gmftool:DefaultImage"/>
         <largeIcon
@@ -56,7 +56,7 @@
       <tools
           xsi:type="gmftool:CreationTool"
           title="Argument"
-          description="Create New Argument">
+          description="Create new Argument">
         <smallIcon
             xsi:type="gmftool:DefaultImage"/>
         <largeIcon
@@ -64,7 +64,8 @@
       </tools>
       <tools
           xsi:type="gmftool:CreationTool"
-          title="PreCondition">
+          title="PreCondition"
+          description="Create new PreCondition">
         <smallIcon
             xsi:type="gmftool:DefaultImage"/>
         <largeIcon
@@ -72,7 +73,17 @@
       </tools>
       <tools
           xsi:type="gmftool:CreationTool"
-          title="PostCondition">
+          title="PostCondition"
+          description="Create new PostCondition">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Invariant"
+          description="Create new Invariant">
         <smallIcon
             xsi:type="gmftool:DefaultImage"/>
         <largeIcon

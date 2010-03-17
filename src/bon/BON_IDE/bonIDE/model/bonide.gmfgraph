@@ -8,8 +8,11 @@
     <descriptors
         name="BONClassFigure">
       <actualFigure
-          xsi:type="gmfgraph:Rectangle"
-          name="BONClassFigure">
+          xsi:type="gmfgraph:RoundedRectangle"
+          name="BONClassFigure"
+          lineWidth="2"
+          cornerWidth="12"
+          cornerHeight="12">
         <layout
             xsi:type="gmfgraph:FlowLayout"
             vertical="true"
@@ -24,7 +27,7 @@
             text="&lt;...>">
           <font
               xsi:type="gmfgraph:BasicFont"
-              faceName="LucidaSans"/>
+              faceName="Lucida Sans Unicode"/>
         </children>
         <children
             xsi:type="gmfgraph:Rectangle"
@@ -39,8 +42,6 @@
           <foregroundColor
               xsi:type="gmfgraph:RGBColor"
               red="128"/>
-          <insets
-              bottom="2"/>
         </children>
         <children
             xsi:type="gmfgraph:Rectangle"
@@ -60,10 +61,27 @@
             xsi:type="gmfgraph:Rectangle"
             name="FeatureRectangleFigure">
           <layout
-              xsi:type="gmfgraph:FlowLayout"/>
+              xsi:type="gmfgraph:FlowLayout"
+              vertical="true"
+              matchMinorSize="true"
+              forceSingleLine="true"
+              majorSpacing="0"
+              minorSpacing="0"/>
           <foregroundColor
               xsi:type="gmfgraph:RGBColor"
               red="192"/>
+        </children>
+        <children
+            xsi:type="gmfgraph:Rectangle"
+            name="InvariantRectangleFigure"
+            fill="false">
+          <layout
+              xsi:type="gmfgraph:FlowLayout"
+              vertical="true"
+              matchMinorSize="true"
+              forceSingleLine="true"
+              majorSpacing="0"
+              minorSpacing="0"/>
         </children>
       </actualFigure>
       <accessors
@@ -74,6 +92,8 @@
           figure="//@figures.0/@descriptors.0/@actualFigure/@children.2"/>
       <accessors
           figure="//@figures.0/@descriptors.0/@actualFigure/@children.3"/>
+      <accessors
+          figure="//@figures.0/@descriptors.0/@actualFigure/@children.4"/>
     </descriptors>
     <descriptors
         name="FeatureFigure">
@@ -105,17 +125,37 @@
           <children
               xsi:type="gmfgraph:Label"
               name="FeatureNamesFigure"
-              text="&lt;...>"/>
+              text="&lt;...>">
+            <font
+                xsi:type="gmfgraph:BasicFont"
+                faceName="Lucida Sans Unicode"
+                height="7"/>
+          </children>
           <children
               xsi:type="gmfgraph:Label"
-              name="FeatureModifierFigure"/>
+              name="FeatureModifierFigure">
+            <font
+                xsi:type="gmfgraph:BasicFont"
+                faceName="Lucida Sans Unicode"
+                height="7"/>
+          </children>
           <children
               xsi:type="gmfgraph:Label"
-              name="FeatureTypeFigure"/>
+              name="FeatureTypeFigure">
+            <font
+                xsi:type="gmfgraph:BasicFont"
+                faceName="Lucida Sans Unicode"
+                height="7"/>
+          </children>
         </children>
         <children
             xsi:type="gmfgraph:Label"
-            name="FeatureCommentFigure"/>
+            name="FeatureCommentFigure">
+          <font
+              xsi:type="gmfgraph:BasicFont"
+              faceName="Lucida Sans Unicode"
+              height="7"/>
+        </children>
         <children
             xsi:type="gmfgraph:Rectangle"
             name="FeatureArgumentsRectangleFigure">
@@ -288,16 +328,36 @@
         <children
             xsi:type="gmfgraph:Label"
             name="ArgumentArrowFigure"
-            text="->"/>
+            text="\u2192">
+          <font
+              xsi:type="gmfgraph:BasicFont"
+              faceName="Lucida Sans Unicode"
+              height="7"/>
+        </children>
         <children
             xsi:type="gmfgraph:Label"
-            name="ArgumentNameFigure"/>
+            name="ArgumentNameFigure">
+          <font
+              xsi:type="gmfgraph:BasicFont"
+              faceName="Lucida Sans Unicode"
+              height="7"/>
+        </children>
         <children
             xsi:type="gmfgraph:Label"
-            name="ArgumentCollectionFigure"/>
+            name="ArgumentCollectionFigure">
+          <font
+              xsi:type="gmfgraph:BasicFont"
+              faceName="Lucida Sans Unicode"
+              height="7"/>
+        </children>
         <children
             xsi:type="gmfgraph:Label"
-            name="ArgumentTypeFigure"/>
+            name="ArgumentTypeFigure">
+          <font
+              xsi:type="gmfgraph:BasicFont"
+              faceName="Lucida Sans Unicode"
+              height="7"/>
+        </children>
       </actualFigure>
       <accessors
           figure="//@figures.0/@descriptors.5/@actualFigure/@children.0"/>
@@ -312,14 +372,52 @@
         name="PreConditionFigure">
       <actualFigure
           xsi:type="gmfgraph:Label"
-          name="PreConditionTextFigure"/>
+          name="PreConditionTextFigure">
+        <font
+            xsi:type="gmfgraph:BasicFont"
+            faceName="Lucida Sans Unicode"
+            height="7"/>
+      </actualFigure>
+      <accessors
+          figure="//@figures.0/@descriptors.6/@actualFigure"/>
     </descriptors>
     <descriptors
         name="PostConditionFigure">
       <actualFigure
           xsi:type="gmfgraph:Label"
           name="PostConditionTextFigure"
-          text=""/>
+          text="">
+        <font
+            xsi:type="gmfgraph:BasicFont"
+            faceName="Lucida Sans Unicode"
+            height="7"/>
+      </actualFigure>
+      <accessors
+          figure="//@figures.0/@descriptors.7/@actualFigure"/>
+    </descriptors>
+    <descriptors
+        name="InvariantFigure">
+      <actualFigure
+          xsi:type="gmfgraph:Rectangle"
+          name="InvariantFigure"
+          fill="false">
+        <layout
+            xsi:type="gmfgraph:FlowLayout"
+            majorSpacing="0"
+            minorSpacing="0"/>
+        <children
+            xsi:type="gmfgraph:Label"
+            name="InvariantTextFigure">
+          <font
+              xsi:type="gmfgraph:BasicFont"
+              faceName="Lucida Sans Unicode"
+              height="7"/>
+        </children>
+      </actualFigure>
+      <accessors
+          figure="//@figures.0/@descriptors.8/@actualFigure/@children.0"/>
+      <accessors
+          figure="//@figures.0/@descriptors.8/@actualFigure"/>
     </descriptors>
   </figures>
   <nodes
@@ -340,6 +438,9 @@
   <nodes
       name="Argument"
       figure="ArgumentFigure"/>
+  <nodes
+      name="Invariant"
+      figure="InvariantFigure"/>
   <compartments
       name="ClusterCompartment"
       figure="ClusterFigure"
@@ -372,6 +473,11 @@
       name="PostConditionCompartment"
       figure="FeatureFigure"
       accessor="//@figures.0/@descriptors.1/@accessors.7"/>
+  <compartments
+      name="InvariantCompartment"
+      figure="BONClassFigure"
+      collapsible="true"
+      accessor="//@figures.0/@descriptors.0/@accessors.4"/>
   <labels
       name="ClusterName"
       figure="ClusterFigure"
@@ -444,8 +550,15 @@
       accessor="//@figures.0/@descriptors.5/@accessors.3"/>
   <labels
       name="PreConditionTextLabel"
-      figure="PreConditionFigure"/>
+      figure="PreConditionFigure"
+      accessor="//@figures.0/@descriptors.6/@accessors.0"/>
   <labels
       name="PostConditionTextLabel"
-      figure="PostConditionFigure"/>
+      figure="PostConditionFigure"
+      accessor="//@figures.0/@descriptors.7/@accessors.0"/>
+  <labels
+      name="InvariantTextLabel"
+      figure="InvariantFigure"
+      elementIcon="false"
+      accessor="//@figures.0/@descriptors.8/@accessors.0"/>
 </gmfgraph:Canvas>

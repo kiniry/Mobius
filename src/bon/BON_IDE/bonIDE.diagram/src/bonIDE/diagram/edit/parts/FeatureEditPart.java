@@ -113,24 +113,24 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureNamesEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureFeatureNamesFigure());
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
 			((bonIDE.diagram.edit.parts.FeatureCommentEditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureFeatureCommentFigure());
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureFeatureTypeFigure());
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureNamesEditPart) childEditPart).setLabel(getPrimaryShape()
+					.getFigureFeatureNamesFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
 			((bonIDE.diagram.edit.parts.FeatureModifierEditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureFeatureModifierFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape()
+					.getFigureFeatureTypeFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) {
@@ -158,16 +158,16 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) {

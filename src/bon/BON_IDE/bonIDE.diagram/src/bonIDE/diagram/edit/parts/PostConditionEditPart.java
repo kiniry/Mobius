@@ -163,7 +163,7 @@ public class PostConditionEditPart extends CompartmentEditPart implements ITextA
 	/**
 	 * @generated
 	 */
-	public void setLabel(IFigure
+	public void setLabel(WrappingLabel
 			figure) {
 		unregisterVisuals();
 		setFigure(figure);
@@ -570,38 +570,8 @@ public class PostConditionEditPart extends CompartmentEditPart implements ITextA
 	 * @generated
 	 */
 	protected IFigure createFigure() {
-		IFigure label = createFigurePrim();
-		defaultText = getLabelTextHelper(label);
-		return label;
+		// Parent should assign one using setLabel() method
+		return null;
 	}
-
-	/**
-	 * @generated
-	 */
-	protected IFigure createFigurePrim() {
-		return new PostConditionFigure();
-	}
-
-	/**
-	 * @generated
-	 */
-	public class PostConditionFigure extends WrappingLabel {
-
-		/**
-		 * @generated
-		 */
-		public PostConditionFigure() {
-			this.setText("");
-
-			this.setFont(THIS_FONT);
-
-		}
-
-	}
-
-	/**
-	 * @generated
-	 */
-	static final Font THIS_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
 
 }

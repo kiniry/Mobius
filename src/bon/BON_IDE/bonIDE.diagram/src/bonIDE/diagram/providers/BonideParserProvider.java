@@ -325,6 +325,25 @@ public class BonideParserProvider extends AbstractProvider implements IParserPro
 	/**
 	 * @generated
 	 */
+	private IParser invariantContent_5019Parser;
+
+	/**
+	 * @generated
+	 */
+	private IParser getInvariantContent_5019Parser() {
+		if (invariantContent_5019Parser == null) {
+			EAttribute[] features = new EAttribute[] {
+					bonIDE.BonIDEPackage.eINSTANCE.getInvariant_Content()
+					};
+			bonIDE.diagram.parsers.MessageFormatParser parser = new bonIDE.diagram.parsers.MessageFormatParser(features);
+			invariantContent_5019Parser = parser;
+		}
+		return invariantContent_5019Parser;
+	}
+
+	/**
+	 * @generated
+	 */
 	protected IParser getParser(int visualID) {
 		switch (visualID) {
 		case bonIDE.diagram.edit.parts.ClusterNameEditPart.VISUAL_ID:
@@ -359,6 +378,8 @@ public class BonideParserProvider extends AbstractProvider implements IParserPro
 			return getPreCondition_3008Parser();
 		case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
 			return getPostCondition_3009Parser();
+		case bonIDE.diagram.edit.parts.InvariantContentEditPart.VISUAL_ID:
+			return getInvariantContent_5019Parser();
 		}
 		return null;
 	}
