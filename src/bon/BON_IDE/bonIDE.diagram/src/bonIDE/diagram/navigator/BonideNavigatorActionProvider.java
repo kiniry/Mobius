@@ -115,8 +115,8 @@ public class BonideNavigatorActionProvider extends CommonActionProvider {
 				}
 				if (selectedElement instanceof Diagram) {
 					Diagram diagram = (Diagram) selectedElement;
-					if (bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID
-							.equals(bonIDE.diagram.part.BonideVisualIDRegistry.getModelID(diagram))) {
+					if (bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID.equals(bonIDE.diagram.part.BonideVisualIDRegistry
+							.getModelID(diagram))) {
 						myDiagram = diagram;
 					}
 				}
@@ -137,8 +137,7 @@ public class BonideNavigatorActionProvider extends CommonActionProvider {
 			try {
 				page.openEditor(editorInput, bonIDE.diagram.part.BonideDiagramEditor.ID);
 			} catch (PartInitException e) {
-				bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
-						"Exception while openning diagram", e); //$NON-NLS-1$
+				bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Exception while openning diagram", e); //$NON-NLS-1$
 			}
 		}
 

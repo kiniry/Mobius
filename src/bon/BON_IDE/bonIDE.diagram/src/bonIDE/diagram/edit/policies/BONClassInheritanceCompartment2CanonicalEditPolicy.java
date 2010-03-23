@@ -26,8 +26,8 @@ public class BONClassInheritanceCompartment2CanonicalEditPolicy extends Canonica
 	protected List getSemanticChildrenList() {
 		View viewObject = (View) getHost().getModel();
 		List result = new LinkedList();
-		for (Iterator it = bonIDE.diagram.part.BonideDiagramUpdater
-				.getBONClassInheritanceCompartment_7006SemanticChildren(viewObject).iterator(); it.hasNext();) {
+		for (Iterator it = bonIDE.diagram.part.BonideDiagramUpdater.getBONClassInheritanceCompartment_7006SemanticChildren(viewObject)
+				.iterator(); it.hasNext();) {
 			result.add(((bonIDE.diagram.part.BonideNodeDescriptor) it.next()).getModelElement());
 		}
 		return result;

@@ -29,8 +29,7 @@ public class BonideDomainNavigatorLabelProvider implements ICommonLabelProvider 
 	 */
 	public Image getImage(Object element) {
 		if (element instanceof bonIDE.diagram.navigator.BonideDomainNavigatorItem) {
-			return myAdapterFactoryLabelProvider
-					.getImage(((bonIDE.diagram.navigator.BonideDomainNavigatorItem) element).getEObject());
+			return myAdapterFactoryLabelProvider.getImage(((bonIDE.diagram.navigator.BonideDomainNavigatorItem) element).getEObject());
 		}
 		return null;
 	}
@@ -40,8 +39,7 @@ public class BonideDomainNavigatorLabelProvider implements ICommonLabelProvider 
 	 */
 	public String getText(Object element) {
 		if (element instanceof bonIDE.diagram.navigator.BonideDomainNavigatorItem) {
-			return myAdapterFactoryLabelProvider.getText(((bonIDE.diagram.navigator.BonideDomainNavigatorItem) element)
-					.getEObject());
+			return myAdapterFactoryLabelProvider.getText(((bonIDE.diagram.navigator.BonideDomainNavigatorItem) element).getEObject());
 		}
 		return null;
 	}

@@ -74,8 +74,7 @@ public class IndexClauseEditPart extends ShapeNodeEditPart {
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
-				new bonIDE.diagram.edit.policies.IndexClauseItemSemanticEditPolicy());
+		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE, new bonIDE.diagram.edit.policies.IndexClauseItemSemanticEditPolicy());
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, createLayoutEditPolicy());
 		// XXX need an SCR to runtime to have another abstract superclass that would let children add reasonable editpolicies
 		// removeEditPolicy(org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles.CONNECTION_HANDLES_ROLE);
@@ -125,8 +124,7 @@ public class IndexClauseEditPart extends ShapeNodeEditPart {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.IndexClauseTermsEditPart) {
-			((bonIDE.diagram.edit.parts.IndexClauseTermsEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureIndexTermsFigure());
+			((bonIDE.diagram.edit.parts.IndexClauseTermsEditPart) childEditPart).setLabel(getPrimaryShape().getFigureIndexTermsFigure());
 			return true;
 		}
 		return false;
@@ -376,8 +374,7 @@ public class IndexClauseEditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREINDEXIDENTIFIERFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
+	static final Font FFIGUREINDEXIDENTIFIERFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
 
 	/**
 	 * @generated
@@ -387,7 +384,6 @@ public class IndexClauseEditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREINDEXTERMSFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
+	static final Font FFIGUREINDEXTERMSFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
 
 }

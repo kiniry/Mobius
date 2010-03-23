@@ -56,8 +56,7 @@ public class InvariantEditPart extends ShapeNodeEditPart {
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
-				new bonIDE.diagram.edit.policies.InvariantItemSemanticEditPolicy());
+		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE, new bonIDE.diagram.edit.policies.InvariantItemSemanticEditPolicy());
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, createLayoutEditPolicy());
 		// XXX need an SCR to runtime to have another abstract superclass that would let children add reasonable editpolicies
 		// removeEditPolicy(org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles.CONNECTION_HANDLES_ROLE);
@@ -105,8 +104,7 @@ public class InvariantEditPart extends ShapeNodeEditPart {
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.InvariantContentEditPart) {
-			((bonIDE.diagram.edit.parts.InvariantContentEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureInvariantTextFigure());
+			((bonIDE.diagram.edit.parts.InvariantContentEditPart) childEditPart).setLabel(getPrimaryShape().getFigureInvariantTextFigure());
 			return true;
 		}
 		return false;
@@ -330,7 +328,6 @@ public class InvariantEditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREINVARIANTTEXTFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
+	static final Font FFIGUREINVARIANTTEXTFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
 
 }

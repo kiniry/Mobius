@@ -70,8 +70,7 @@ public class BonideNavigatorItem extends bonIDE.diagram.navigator.BonideAbstract
 	 */
 	public boolean equals(Object obj) {
 		if (obj instanceof bonIDE.diagram.navigator.BonideNavigatorItem) {
-			return EcoreUtil.getURI(getView()).equals(
-					EcoreUtil.getURI(((bonIDE.diagram.navigator.BonideNavigatorItem) obj).getView()));
+			return EcoreUtil.getURI(getView()).equals(EcoreUtil.getURI(((bonIDE.diagram.navigator.BonideNavigatorItem) obj).getView()));
 		}
 		return super.equals(obj);
 	}

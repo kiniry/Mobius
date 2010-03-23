@@ -104,6 +104,10 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 					if (node2 instanceof ie.ucd.bon.ast.Clazz) {
 						createBONClassElement(modelEP, (Clazz) node2);
 					}
+					
+					if(monitor.isCanceled()){
+						throw new InterruptedException();
+					}
 				}
 			}
 		}
@@ -289,7 +293,9 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 				}
 
 				// feature comment
-				newFeature.setComment(" -- " + featSpec.getComment());
+				if (featSpec.getComment() != null) {
+					newFeature.setComment(" -- " + featSpec.getComment());
+				}				
 
 				// feature arguments
 				Iterator<ie.ucd.bon.ast.FeatureArgument> featArgIter = featSpec.arguments.iterator();

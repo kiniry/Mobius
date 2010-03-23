@@ -8,6 +8,7 @@ import org.eclipse.gef.palette.PaletteContainer;
 import org.eclipse.gef.palette.PaletteGroup;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.ToolEntry;
+import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeConnectionTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeCreationTool;
 
 /**
@@ -38,6 +39,9 @@ public class BonidePaletteFactory {
 		paletteContainer.add(createPreCondition7CreationTool());
 		paletteContainer.add(createPostCondition8CreationTool());
 		paletteContainer.add(createInvariant9CreationTool());
+		paletteContainer.add(createInheritance10CreationTool());
+		paletteContainer.add(createAggregation11CreationTool());
+		paletteContainer.add(createAssociation12CreationTool());
 		return paletteContainer;
 	}
 
@@ -181,6 +185,51 @@ public class BonidePaletteFactory {
 	/**
 	 * @generated
 	 */
+	private ToolEntry createInheritance10CreationTool() {
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001);
+		LinkToolEntry entry = new LinkToolEntry(bonIDE.diagram.part.Messages.Inheritance10CreationTool_title,
+				bonIDE.diagram.part.Messages.Inheritance10CreationTool_desc, types);
+		entry.setId("createInheritance10CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001));
+		entry.setLargeIcon(entry.getSmallIcon());
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
+	private ToolEntry createAggregation11CreationTool() {
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002);
+		LinkToolEntry entry = new LinkToolEntry(bonIDE.diagram.part.Messages.Aggregation11CreationTool_title,
+				bonIDE.diagram.part.Messages.Aggregation11CreationTool_desc, types);
+		entry.setId("createAggregation11CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002));
+		entry.setLargeIcon(entry.getSmallIcon());
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
+	private ToolEntry createAssociation12CreationTool() {
+		List/*<IElementType>*/types = new ArrayList/*<IElementType>*/(1);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003);
+		LinkToolEntry entry = new LinkToolEntry(bonIDE.diagram.part.Messages.Association12CreationTool_title,
+				bonIDE.diagram.part.Messages.Association12CreationTool_desc, types);
+		entry.setId("createAssociation12CreationTool"); //$NON-NLS-1$
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003));
+		entry.setLargeIcon(entry.getSmallIcon());
+		return entry;
+	}
+
+	/**
+	 * @generated
+	 */
 	private static class NodeToolEntry extends ToolEntry {
 
 		/**
@@ -201,6 +250,34 @@ public class BonidePaletteFactory {
 		 */
 		public Tool createTool() {
 			Tool tool = new UnspecifiedTypeCreationTool(elementTypes);
+			tool.setProperties(getToolProperties());
+			return tool;
+		}
+	}
+
+	/**
+	 * @generated
+	 */
+	private static class LinkToolEntry extends ToolEntry {
+
+		/**
+		 * @generated
+		 */
+		private final List relationshipTypes;
+
+		/**
+		 * @generated
+		 */
+		private LinkToolEntry(String title, String description, List relationshipTypes) {
+			super(title, description, null, null);
+			this.relationshipTypes = relationshipTypes;
+		}
+
+		/**
+		 * @generated
+		 */
+		public Tool createTool() {
+			Tool tool = new UnspecifiedTypeConnectionTool(relationshipTypes);
 			tool.setProperties(getToolProperties());
 			return tool;
 		}

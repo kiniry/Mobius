@@ -78,8 +78,7 @@ public class BonideVisualIDRegistry {
 		if (domainElement == null) {
 			return -1;
 		}
-		if (bonIDE.BonIDEPackage.eINSTANCE.getModel().isSuperTypeOf(domainElement.eClass())
-				&& isDiagram((bonIDE.Model) domainElement)) {
+		if (bonIDE.BonIDEPackage.eINSTANCE.getModel().isSuperTypeOf(domainElement.eClass()) && isDiagram((bonIDE.Model) domainElement)) {
 			return bonIDE.diagram.edit.parts.ModelEditPart.VISUAL_ID;
 		}
 		return -1;
@@ -406,6 +405,15 @@ public class BonideVisualIDRegistry {
 	public static int getLinkWithClassVisualID(EObject domainElement) {
 		if (domainElement == null) {
 			return -1;
+		}
+		if (bonIDE.BonIDEPackage.eINSTANCE.getInheritanceRel().isSuperTypeOf(domainElement.eClass())) {
+			return bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID;
+		}
+		if (bonIDE.BonIDEPackage.eINSTANCE.getAggregationRel().isSuperTypeOf(domainElement.eClass())) {
+			return bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID;
+		}
+		if (bonIDE.BonIDEPackage.eINSTANCE.getAssociationRel().isSuperTypeOf(domainElement.eClass())) {
+			return bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID;
 		}
 		return -1;
 	}

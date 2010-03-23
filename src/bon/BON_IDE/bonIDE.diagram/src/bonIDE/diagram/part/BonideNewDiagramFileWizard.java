@@ -82,8 +82,7 @@ public class BonideNewDiagramFileWizard extends Wizard {
 
 		diagramRootElementSelectionPage = new DiagramRootElementSelectionPage(
 				bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_RootSelectionPageName);
-		diagramRootElementSelectionPage
-				.setTitle(bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_RootSelectionPageTitle);
+		diagramRootElementSelectionPage.setTitle(bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_RootSelectionPageTitle);
 		diagramRootElementSelectionPage
 				.setDescription(bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_RootSelectionPageDescription);
 		diagramRootElementSelectionPage.setModelElement(diagramRoot);
@@ -112,22 +111,20 @@ public class BonideNewDiagramFileWizard extends Wizard {
 		final Resource diagramResource = resourceSet.createResource(diagramModelURI);
 		AbstractTransactionalCommand command =
 				new AbstractTransactionalCommand(
-				myEditingDomain, bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_InitDiagramCommand,
-				affectedFiles) {
+				myEditingDomain, bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_InitDiagramCommand, affectedFiles) {
 
 			protected CommandResult doExecuteWithResult(
 					IProgressMonitor monitor, IAdaptable info)
 					throws ExecutionException {
-				int diagramVID = bonIDE.diagram.part.BonideVisualIDRegistry
-						.getDiagramVisualID(diagramRootElementSelectionPage.getModelElement());
+				int diagramVID = bonIDE.diagram.part.BonideVisualIDRegistry.getDiagramVisualID(diagramRootElementSelectionPage
+						.getModelElement());
 				if (diagramVID != bonIDE.diagram.edit.parts.ModelEditPart.VISUAL_ID) {
 					return CommandResult.newErrorCommandResult(
 							bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_IncorrectRootError);
 				}
 				Diagram diagram =
 						ViewService.createDiagram(
-						diagramRootElementSelectionPage.getModelElement(),
-						bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID,
+						diagramRootElementSelectionPage.getModelElement(), bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID,
 						bonIDE.diagram.part.BonideDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
 				diagramResource.getContents().add(diagram);
 				return CommandResult.newOKCommandResult();
@@ -139,8 +136,7 @@ public class BonideNewDiagramFileWizard extends Wizard {
 			diagramResource.save(bonIDE.diagram.part.BonideDiagramEditorUtil.getSaveOptions());
 			bonIDE.diagram.part.BonideDiagramEditorUtil.openDiagram(diagramResource);
 		} catch (ExecutionException e) {
-			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
-					"Unable to create model and diagram", e); //$NON-NLS-1$
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Unable to create model and diagram", e); //$NON-NLS-1$
 		} catch (IOException ex) {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
 					"Save operation failed for: " + diagramModelURI, ex); //$NON-NLS-1$

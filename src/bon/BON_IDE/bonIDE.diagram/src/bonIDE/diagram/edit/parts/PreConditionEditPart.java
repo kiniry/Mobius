@@ -108,10 +108,8 @@ public class PreConditionEditPart extends CompartmentEditPart implements ITextAw
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
-				new bonIDE.diagram.edit.policies.PreConditionItemSemanticEditPolicy());
-		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE,
-				new bonIDE.diagram.edit.policies.BonideTextNonResizableEditPolicy());
+		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE, new bonIDE.diagram.edit.policies.PreConditionItemSemanticEditPolicy());
+		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new bonIDE.diagram.edit.policies.BonideTextNonResizableEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ListItemComponentEditPolicy());
 		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new LabelDirectEditPolicy());
 	}
@@ -307,9 +305,8 @@ public class PreConditionEditPart extends CompartmentEditPart implements ITextAw
 	 */
 	public IParser getParser() {
 		if (parser == null) {
-			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-					bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008, getParserElement(),
-					bonIDE.diagram.part.BonideVisualIDRegistry
+			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008,
+					getParserElement(), bonIDE.diagram.part.BonideVisualIDRegistry
 							.getType(bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID));
 		}
 		return parser;

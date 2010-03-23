@@ -152,6 +152,16 @@ public class BonideEditPartFactory implements EditPartFactory {
 
 			case bonIDE.diagram.edit.parts.BONClassInvariantCompartment2EditPart.VISUAL_ID:
 				return new bonIDE.diagram.edit.parts.BONClassInvariantCompartment2EditPart(view);
+
+			case bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.InheritanceRelEditPart(view);
+
+			case bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.AggregationRelEditPart(view);
+
+			case bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.AssociationRelEditPart(view);
+
 			}
 		}
 		return createUnrecognizedEditPart(context, model);

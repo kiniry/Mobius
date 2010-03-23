@@ -88,8 +88,7 @@ public class BONClassNameEditPart extends CompartmentEditPart implements ITextAw
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE,
-				new bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy());
+		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy());
 		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new LabelDirectEditPolicy());
 		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new NonResizableEditPolicy() {
 
@@ -297,9 +296,8 @@ public class BONClassNameEditPart extends CompartmentEditPart implements ITextAw
 	 */
 	public IParser getParser() {
 		if (parser == null) {
-			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-					bonIDE.diagram.providers.BonideElementTypes.BONClass_2002, getParserElement(),
-					bonIDE.diagram.part.BonideVisualIDRegistry
+			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.BONClass_2002,
+					getParserElement(), bonIDE.diagram.part.BonideVisualIDRegistry
 							.getType(bonIDE.diagram.edit.parts.BONClassNameEditPart.VISUAL_ID));
 		}
 		return parser;

@@ -56,8 +56,7 @@ public class InheritanceClauseEditPart extends ShapeNodeEditPart {
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
-				new bonIDE.diagram.edit.policies.InheritanceClauseItemSemanticEditPolicy());
+		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE, new bonIDE.diagram.edit.policies.InheritanceClauseItemSemanticEditPolicy());
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, createLayoutEditPolicy());
 		// XXX need an SCR to runtime to have another abstract superclass that would let children add reasonable editpolicies
 		// removeEditPolicy(org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles.CONNECTION_HANDLES_ROLE);
@@ -101,14 +100,13 @@ public class InheritanceClauseEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabelEditPart) {
-			((bonIDE.diagram.edit.parts.WrappingLabelEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureInheritanceTitleLabel());
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart) {
 			((bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureInheritanceClassListLabel());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabelEditPart) {
+			((bonIDE.diagram.edit.parts.WrappingLabelEditPart) childEditPart).setLabel(getPrimaryShape().getFigureInheritanceTitleLabel());
 			return true;
 		}
 		return false;
@@ -118,10 +116,10 @@ public class InheritanceClauseEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabelEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabelEditPart) {
 			return true;
 		}
 		return false;
@@ -351,13 +349,11 @@ public class InheritanceClauseEditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREINHERITANCETITLELABEL_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
+	static final Font FFIGUREINHERITANCETITLELABEL_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
 
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREINHERITANCECLASSLISTLABEL_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
+	static final Font FFIGUREINHERITANCECLASSLISTLABEL_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
 
 }

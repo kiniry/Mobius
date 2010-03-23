@@ -84,6 +84,18 @@ public class BonideModelingAssistantProvider extends ModelingAssistantProvider {
 		IGraphicalEditPart sourceEditPart =
 				(IGraphicalEditPart) source.getAdapter(
 				IGraphicalEditPart.class);
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.ClusterEditPart) {
+			return ((bonIDE.diagram.edit.parts.ClusterEditPart) sourceEditPart).getMARelTypesOnSource();
+		}
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.BONClassEditPart) {
+			return ((bonIDE.diagram.edit.parts.BONClassEditPart) sourceEditPart).getMARelTypesOnSource();
+		}
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.Cluster2EditPart) {
+			return ((bonIDE.diagram.edit.parts.Cluster2EditPart) sourceEditPart).getMARelTypesOnSource();
+		}
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.BONClass2EditPart) {
+			return ((bonIDE.diagram.edit.parts.BONClass2EditPart) sourceEditPart).getMARelTypesOnSource();
+		}
 		return Collections.EMPTY_LIST;
 	}
 
@@ -94,6 +106,18 @@ public class BonideModelingAssistantProvider extends ModelingAssistantProvider {
 		IGraphicalEditPart targetEditPart =
 				(IGraphicalEditPart) target.getAdapter(
 				IGraphicalEditPart.class);
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.ClusterEditPart) {
+			return ((bonIDE.diagram.edit.parts.ClusterEditPart) targetEditPart).getMARelTypesOnTarget();
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.BONClassEditPart) {
+			return ((bonIDE.diagram.edit.parts.BONClassEditPart) targetEditPart).getMARelTypesOnTarget();
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.Cluster2EditPart) {
+			return ((bonIDE.diagram.edit.parts.Cluster2EditPart) targetEditPart).getMARelTypesOnTarget();
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.BONClass2EditPart) {
+			return ((bonIDE.diagram.edit.parts.BONClass2EditPart) targetEditPart).getMARelTypesOnTarget();
+		}
 		return Collections.EMPTY_LIST;
 	}
 
@@ -108,6 +132,18 @@ public class BonideModelingAssistantProvider extends ModelingAssistantProvider {
 		IGraphicalEditPart targetEditPart =
 				(IGraphicalEditPart) target.getAdapter(
 				IGraphicalEditPart.class);
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.ClusterEditPart) {
+			return ((bonIDE.diagram.edit.parts.ClusterEditPart) sourceEditPart).getMARelTypesOnSourceAndTarget(targetEditPart);
+		}
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.BONClassEditPart) {
+			return ((bonIDE.diagram.edit.parts.BONClassEditPart) sourceEditPart).getMARelTypesOnSourceAndTarget(targetEditPart);
+		}
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.Cluster2EditPart) {
+			return ((bonIDE.diagram.edit.parts.Cluster2EditPart) sourceEditPart).getMARelTypesOnSourceAndTarget(targetEditPart);
+		}
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.BONClass2EditPart) {
+			return ((bonIDE.diagram.edit.parts.BONClass2EditPart) sourceEditPart).getMARelTypesOnSourceAndTarget(targetEditPart);
+		}
 		return Collections.EMPTY_LIST;
 	}
 
@@ -119,6 +155,18 @@ public class BonideModelingAssistantProvider extends ModelingAssistantProvider {
 		IGraphicalEditPart targetEditPart =
 				(IGraphicalEditPart) target.getAdapter(
 				IGraphicalEditPart.class);
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.ClusterEditPart) {
+			return ((bonIDE.diagram.edit.parts.ClusterEditPart) targetEditPart).getMATypesForSource(relationshipType);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.BONClassEditPart) {
+			return ((bonIDE.diagram.edit.parts.BONClassEditPart) targetEditPart).getMATypesForSource(relationshipType);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.Cluster2EditPart) {
+			return ((bonIDE.diagram.edit.parts.Cluster2EditPart) targetEditPart).getMATypesForSource(relationshipType);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.BONClass2EditPart) {
+			return ((bonIDE.diagram.edit.parts.BONClass2EditPart) targetEditPart).getMATypesForSource(relationshipType);
+		}
 		return Collections.EMPTY_LIST;
 	}
 
@@ -130,6 +178,18 @@ public class BonideModelingAssistantProvider extends ModelingAssistantProvider {
 		IGraphicalEditPart sourceEditPart =
 				(IGraphicalEditPart) source.getAdapter(
 				IGraphicalEditPart.class);
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.ClusterEditPart) {
+			return ((bonIDE.diagram.edit.parts.ClusterEditPart) sourceEditPart).getMATypesForTarget(relationshipType);
+		}
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.BONClassEditPart) {
+			return ((bonIDE.diagram.edit.parts.BONClassEditPart) sourceEditPart).getMATypesForTarget(relationshipType);
+		}
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.Cluster2EditPart) {
+			return ((bonIDE.diagram.edit.parts.Cluster2EditPart) sourceEditPart).getMATypesForTarget(relationshipType);
+		}
+		if (sourceEditPart instanceof bonIDE.diagram.edit.parts.BONClass2EditPart) {
+			return ((bonIDE.diagram.edit.parts.BONClass2EditPart) sourceEditPart).getMATypesForTarget(relationshipType);
+		}
 		return Collections.EMPTY_LIST;
 	}
 

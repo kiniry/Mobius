@@ -6,8 +6,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 /**
  * @generated
  */
-public class BONClassFeatureCompartment2ItemSemanticEditPolicy extends
-		bonIDE.diagram.edit.policies.BonideBaseItemSemanticEditPolicy {
+public class BONClassFeatureCompartment2ItemSemanticEditPolicy extends bonIDE.diagram.edit.policies.BonideBaseItemSemanticEditPolicy {
 
 	/**
 	 * @generated

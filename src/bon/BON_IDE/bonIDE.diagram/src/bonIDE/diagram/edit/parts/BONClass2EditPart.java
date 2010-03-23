@@ -1,5 +1,7 @@
 package bonIDE.diagram.edit.parts;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
@@ -65,8 +67,7 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 	protected void createDefaultEditPolicies() {
 		installEditPolicy(EditPolicyRoles.CREATION_ROLE, new CreationEditPolicy());
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
-				new bonIDE.diagram.edit.policies.BONClass2ItemSemanticEditPolicy());
+		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE, new bonIDE.diagram.edit.policies.BONClass2ItemSemanticEditPolicy());
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, createLayoutEditPolicy());
 		// XXX need an SCR to runtime to have another abstract superclass that would let children add reasonable editpolicies
 		// removeEditPolicy(org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles.CONNECTION_HANDLES_ROLE);
@@ -111,8 +112,7 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.BONClassName2EditPart) {
-			((bonIDE.diagram.edit.parts.BONClassName2EditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureBONClassNameFigure());
+			((bonIDE.diagram.edit.parts.BONClassName2EditPart) childEditPart).setLabel(getPrimaryShape().getFigureBONClassNameFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.BONClassIndexCompartmentEditPart) {
@@ -307,6 +307,160 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 	public EditPart getPrimaryChildEditPart() {
 		return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
 				.getType(bonIDE.diagram.edit.parts.BONClassName2EditPart.VISUAL_ID));
+	}
+
+	/**
+	 * @generated
+	 */
+	public List/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/getMARelTypesOnSource() {
+		List/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/types = new ArrayList/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/();
+		types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003);
+		return types;
+	}
+
+	/**
+	 * @generated
+	 */
+	public List/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/getMARelTypesOnSourceAndTarget(IGraphicalEditPart targetEditPart) {
+		List/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/types = new ArrayList/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/();
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.ClusterEditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.BONClassEditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.Cluster2EditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.BONClass2EditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.ClusterEditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.BONClassEditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.Cluster2EditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.BONClass2EditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.ClusterEditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.BONClassEditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.Cluster2EditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003);
+		}
+		if (targetEditPart instanceof bonIDE.diagram.edit.parts.BONClass2EditPart) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003);
+		}
+		return types;
+	}
+
+	/**
+	 * @generated
+	 */
+	public List/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/getMATypesForTarget(IElementType relationshipType) {
+		List/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/types = new ArrayList/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/();
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_2002);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_3001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_2002);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_3001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_2002);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_3001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002);
+		}
+		return types;
+	}
+
+	/**
+	 * @generated
+	 */
+	public List/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/getMARelTypesOnTarget() {
+		List/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/types = new ArrayList/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/();
+		types.add(bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002);
+		types.add(bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003);
+		return types;
+	}
+
+	/**
+	 * @generated
+	 */
+	public List/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/getMATypesForSource(IElementType relationshipType) {
+		List/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/types = new ArrayList/*<org.eclipse.gmf.runtime.emf.type.core.IElementType>*/();
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_2002);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_3001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_2002);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_3001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_2002);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.Cluster_3001);
+		}
+		if (relationshipType == bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003) {
+			types.add(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002);
+		}
+		return types;
 	}
 
 	/**
@@ -518,8 +672,7 @@ public class BONClass2EditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREBONCLASSNAMEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 9,
-			SWT.NORMAL);
+	static final Font FFIGUREBONCLASSNAMEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 9, SWT.NORMAL);
 
 	/**
 	 * @generated

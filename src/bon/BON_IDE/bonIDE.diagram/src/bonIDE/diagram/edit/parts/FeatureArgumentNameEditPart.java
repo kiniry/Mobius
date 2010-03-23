@@ -88,8 +88,7 @@ public class FeatureArgumentNameEditPart extends CompartmentEditPart implements 
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE,
-				new bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy());
+		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy());
 		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new LabelDirectEditPolicy());
 		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new NonResizableEditPolicy() {
 
@@ -299,8 +298,7 @@ public class FeatureArgumentNameEditPart extends CompartmentEditPart implements 
 		if (parser == null) {
 			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
 					bonIDE.diagram.providers.BonideElementTypes.FeatureArgument_3007, getParserElement(),
-					bonIDE.diagram.part.BonideVisualIDRegistry
-							.getType(bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart.VISUAL_ID));
+					bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart.VISUAL_ID));
 		}
 		return parser;
 	}

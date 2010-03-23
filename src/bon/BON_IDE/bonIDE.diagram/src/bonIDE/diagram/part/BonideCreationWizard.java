@@ -100,15 +100,12 @@ public class BonideCreationWizard extends Wizard implements INewWizard {
 	 * @generated
 	 */
 	public void addPages() {
-		diagramModelFilePage = new bonIDE.diagram.part.BonideCreationWizardPage(
-				"DiagramModelFile", getSelection(), "bonide_diagram"); //$NON-NLS-1$ //$NON-NLS-2$
+		diagramModelFilePage = new bonIDE.diagram.part.BonideCreationWizardPage("DiagramModelFile", getSelection(), "bonide_diagram"); //$NON-NLS-1$ //$NON-NLS-2$
 		diagramModelFilePage.setTitle(bonIDE.diagram.part.Messages.BonideCreationWizard_DiagramModelFilePageTitle);
-		diagramModelFilePage
-				.setDescription(bonIDE.diagram.part.Messages.BonideCreationWizard_DiagramModelFilePageDescription);
+		diagramModelFilePage.setDescription(bonIDE.diagram.part.Messages.BonideCreationWizard_DiagramModelFilePageDescription);
 		addPage(diagramModelFilePage);
 
-		domainModelFilePage = new bonIDE.diagram.part.BonideCreationWizardPage(
-				"DomainModelFile", getSelection(), "bonide") { //$NON-NLS-1$ //$NON-NLS-2$
+		domainModelFilePage = new bonIDE.diagram.part.BonideCreationWizardPage("DomainModelFile", getSelection(), "bonide") { //$NON-NLS-1$ //$NON-NLS-2$
 
 			public void setVisible(boolean visible) {
 				if (visible) {
@@ -121,8 +118,7 @@ public class BonideCreationWizard extends Wizard implements INewWizard {
 			}
 		};
 		domainModelFilePage.setTitle(bonIDE.diagram.part.Messages.BonideCreationWizard_DomainModelFilePageTitle);
-		domainModelFilePage
-				.setDescription(bonIDE.diagram.part.Messages.BonideCreationWizard_DomainModelFilePageDescription);
+		domainModelFilePage.setDescription(bonIDE.diagram.part.Messages.BonideCreationWizard_DomainModelFilePageDescription);
 		addPage(domainModelFilePage);
 	}
 
@@ -158,8 +154,7 @@ public class BonideCreationWizard extends Wizard implements INewWizard {
 						bonIDE.diagram.part.Messages.BonideCreationWizardCreationError, null,
 						((CoreException) e.getTargetException()).getStatus());
 			} else {
-				bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
-						"Error creating diagram", e.getTargetException()); //$NON-NLS-1$
+				bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Error creating diagram", e.getTargetException()); //$NON-NLS-1$
 			}
 			return false;
 		}

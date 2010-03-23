@@ -108,10 +108,8 @@ public class PostConditionEditPart extends CompartmentEditPart implements ITextA
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
-				new bonIDE.diagram.edit.policies.PostConditionItemSemanticEditPolicy());
-		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE,
-				new bonIDE.diagram.edit.policies.BonideTextNonResizableEditPolicy());
+		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE, new bonIDE.diagram.edit.policies.PostConditionItemSemanticEditPolicy());
+		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new bonIDE.diagram.edit.policies.BonideTextNonResizableEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ListItemComponentEditPolicy());
 		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new LabelDirectEditPolicy());
 	}
@@ -309,8 +307,7 @@ public class PostConditionEditPart extends CompartmentEditPart implements ITextA
 		if (parser == null) {
 			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
 					bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009, getParserElement(),
-					bonIDE.diagram.part.BonideVisualIDRegistry
-							.getType(bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID));
+					bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID));
 		}
 		return parser;
 	}

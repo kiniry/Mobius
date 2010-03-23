@@ -178,8 +178,7 @@ public class BonideDiagramEditor extends DiagramDocumentEditor implements IGotoM
 			return;
 		}
 		if (provider.isDeleted(input) && original != null) {
-			String message = NLS.bind(bonIDE.diagram.part.Messages.BonideDiagramEditor_SavingDeletedFile, original
-					.getName());
+			String message = NLS.bind(bonIDE.diagram.part.Messages.BonideDiagramEditor_SavingDeletedFile, original.getName());
 			dialog.setErrorMessage(null);
 			dialog.setMessage(message, IMessageProvider.WARNING);
 		}
@@ -201,8 +200,7 @@ public class BonideDiagramEditor extends DiagramDocumentEditor implements IGotoM
 		final IEditorInput newInput = new FileEditorInput(file);
 		// Check if the editor is already open
 		IEditorMatchingStrategy matchingStrategy = getEditorDescriptor().getEditorMatchingStrategy();
-		IEditorReference[] editorRefs = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.getEditorReferences();
+		IEditorReference[] editorRefs = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
 		for (int i = 0; i < editorRefs.length; i++) {
 			if (matchingStrategy.matches(editorRefs[i], newInput)) {
 				MessageDialog.openWarning(shell, bonIDE.diagram.part.Messages.BonideDiagramEditor_SaveAsErrorTitle,
@@ -213,8 +211,8 @@ public class BonideDiagramEditor extends DiagramDocumentEditor implements IGotoM
 		boolean success = false;
 		try {
 			provider.aboutToChange(newInput);
-			getDocumentProvider(newInput).saveDocument(progressMonitor, newInput,
-					getDocumentProvider().getDocument(getEditorInput()), true);
+			getDocumentProvider(newInput)
+					.saveDocument(progressMonitor, newInput, getDocumentProvider().getDocument(getEditorInput()), true);
 			success = true;
 		} catch (CoreException x) {
 			IStatus status = x.getStatus();
@@ -251,8 +249,7 @@ public class BonideDiagramEditor extends DiagramDocumentEditor implements IGotoM
 		Diagram diagram = document.getDiagram();
 		IFile file = WorkspaceSynchronizer.getFile(diagram.eResource());
 		if (file != null) {
-			bonIDE.diagram.navigator.BonideNavigatorItem item = new bonIDE.diagram.navigator.BonideNavigatorItem(
-					diagram, file, false);
+			bonIDE.diagram.navigator.BonideNavigatorItem item = new bonIDE.diagram.navigator.BonideNavigatorItem(diagram, file, false);
 			return new StructuredSelection(item);
 		}
 		return StructuredSelection.EMPTY;

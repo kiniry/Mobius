@@ -338,6 +338,36 @@ public class Messages extends NLS {
 	/**
 	 * @generated
 	 */
+	public static String Inheritance10CreationTool_title;
+
+	/**
+	 * @generated
+	 */
+	public static String Inheritance10CreationTool_desc;
+
+	/**
+	 * @generated
+	 */
+	public static String Aggregation11CreationTool_title;
+
+	/**
+	 * @generated
+	 */
+	public static String Aggregation11CreationTool_desc;
+
+	/**
+	 * @generated
+	 */
+	public static String Association12CreationTool_title;
+
+	/**
+	 * @generated
+	 */
+	public static String Association12CreationTool_desc;
+
+	/**
+	 * @generated
+	 */
 	public static String ClusterClusterCompartmentEditPart_title;
 
 	/**
@@ -404,6 +434,81 @@ public class Messages extends NLS {
 	 * @generated
 	 */
 	public static String CommandName_OpenDiagram;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_Model_1000_links;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_Cluster_2001_incominglinks;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_Cluster_2001_outgoinglinks;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_BONClass_2002_incominglinks;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_BONClass_2002_outgoinglinks;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_Cluster_3001_incominglinks;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_Cluster_3001_outgoinglinks;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_BONClass_3002_incominglinks;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_BONClass_3002_outgoinglinks;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_InheritanceRel_4001_target;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_InheritanceRel_4001_source;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_AggregationRel_4002_target;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_AggregationRel_4002_source;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_AssociationRel_4003_target;
+
+	/**
+	 * @generated
+	 */
+	public static String NavigatorGroupName_AssociationRel_4003_source;
 
 	/**
 	 * @generated

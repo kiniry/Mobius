@@ -106,8 +106,7 @@ public class MessageFormatParser extends bonIDE.diagram.parsers.AbstractParser {
 	 */
 	protected MessageFormat getEditorProcessor() {
 		if (editorProcessor == null) {
-			editorProcessor = new MessageFormat(getEditorPattern() == null ? getDefaultEditablePattern()
-					: getEditorPattern());
+			editorProcessor = new MessageFormat(getEditorPattern() == null ? getDefaultEditablePattern() : getEditorPattern());
 		}
 		return editorProcessor;
 	}
@@ -154,8 +153,7 @@ public class MessageFormatParser extends bonIDE.diagram.parsers.AbstractParser {
 	 */
 	public String getEditString(IAdaptable adapter, int flags) {
 		EObject element = (EObject) adapter.getAdapter(EObject.class);
-		return getEditorProcessor().format(getEditableValues(element), new StringBuffer(), new FieldPosition(0))
-				.toString();
+		return getEditorProcessor().format(getEditableValues(element), new StringBuffer(), new FieldPosition(0)).toString();
 	}
 
 	/**

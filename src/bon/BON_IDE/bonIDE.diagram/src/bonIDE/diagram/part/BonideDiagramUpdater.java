@@ -1,10 +1,15 @@
 package bonIDE.diagram.part;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import java.util.Map;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -420,6 +425,12 @@ public class BonideDiagramUpdater {
 			return getPostCondition_3009ContainedLinks(view);
 		case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
 			return getInvariant_3010ContainedLinks(view);
+		case bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID:
+			return getInheritanceRel_4001ContainedLinks(view);
+		case bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID:
+			return getAggregationRel_4002ContainedLinks(view);
+		case bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID:
+			return getAssociationRel_4003ContainedLinks(view);
 		}
 		return Collections.EMPTY_LIST;
 	}
@@ -451,6 +462,12 @@ public class BonideDiagramUpdater {
 			return getPostCondition_3009IncomingLinks(view);
 		case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
 			return getInvariant_3010IncomingLinks(view);
+		case bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID:
+			return getInheritanceRel_4001IncomingLinks(view);
+		case bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID:
+			return getAggregationRel_4002IncomingLinks(view);
+		case bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID:
+			return getAssociationRel_4003IncomingLinks(view);
 		}
 		return Collections.EMPTY_LIST;
 	}
@@ -482,6 +499,12 @@ public class BonideDiagramUpdater {
 			return getPostCondition_3009OutgoingLinks(view);
 		case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
 			return getInvariant_3010OutgoingLinks(view);
+		case bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID:
+			return getInheritanceRel_4001OutgoingLinks(view);
+		case bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID:
+			return getAggregationRel_4002OutgoingLinks(view);
+		case bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID:
+			return getAssociationRel_4003OutgoingLinks(view);
 		}
 		return Collections.EMPTY_LIST;
 	}
@@ -490,7 +513,12 @@ public class BonideDiagramUpdater {
 	 * @generated
 	 */
 	public static List getModel_1000ContainedLinks(View view) {
-		return Collections.EMPTY_LIST;
+		bonIDE.Model modelElement = (bonIDE.Model) view.getElement();
+		List result = new LinkedList();
+		result.addAll(getContainedTypeModelFacetLinks_InheritanceRel_4001(modelElement));
+		result.addAll(getContainedTypeModelFacetLinks_AggregationRel_4002(modelElement));
+		result.addAll(getContainedTypeModelFacetLinks_AssociationRel_4003(modelElement));
+		return result;
 	}
 
 	/**
@@ -573,29 +601,74 @@ public class BonideDiagramUpdater {
 	/**
 	 * @generated
 	 */
-	public static List getCluster_2001IncomingLinks(View view) {
+	public static List getInheritanceRel_4001ContainedLinks(View view) {
 		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List getAggregationRel_4002ContainedLinks(View view) {
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List getAssociationRel_4003ContainedLinks(View view) {
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List getCluster_2001IncomingLinks(View view) {
+		bonIDE.Cluster modelElement = (bonIDE.Cluster) view.getElement();
+		Map crossReferences = EcoreUtil.CrossReferencer.find(view.eResource().getResourceSet().getResources());
+		List result = new LinkedList();
+		result.addAll(getIncomingTypeModelFacetLinks_InheritanceRel_4001(modelElement, crossReferences));
+		result.addAll(getIncomingTypeModelFacetLinks_AggregationRel_4002(modelElement, crossReferences));
+		result.addAll(getIncomingTypeModelFacetLinks_AssociationRel_4003(modelElement, crossReferences));
+		return result;
 	}
 
 	/**
 	 * @generated
 	 */
 	public static List getBONClass_2002IncomingLinks(View view) {
-		return Collections.EMPTY_LIST;
+		bonIDE.BONClass modelElement = (bonIDE.BONClass) view.getElement();
+		Map crossReferences = EcoreUtil.CrossReferencer.find(view.eResource().getResourceSet().getResources());
+		List result = new LinkedList();
+		result.addAll(getIncomingTypeModelFacetLinks_InheritanceRel_4001(modelElement, crossReferences));
+		result.addAll(getIncomingTypeModelFacetLinks_AggregationRel_4002(modelElement, crossReferences));
+		result.addAll(getIncomingTypeModelFacetLinks_AssociationRel_4003(modelElement, crossReferences));
+		return result;
 	}
 
 	/**
 	 * @generated
 	 */
 	public static List getCluster_3001IncomingLinks(View view) {
-		return Collections.EMPTY_LIST;
+		bonIDE.Cluster modelElement = (bonIDE.Cluster) view.getElement();
+		Map crossReferences = EcoreUtil.CrossReferencer.find(view.eResource().getResourceSet().getResources());
+		List result = new LinkedList();
+		result.addAll(getIncomingTypeModelFacetLinks_InheritanceRel_4001(modelElement, crossReferences));
+		result.addAll(getIncomingTypeModelFacetLinks_AggregationRel_4002(modelElement, crossReferences));
+		result.addAll(getIncomingTypeModelFacetLinks_AssociationRel_4003(modelElement, crossReferences));
+		return result;
 	}
 
 	/**
 	 * @generated
 	 */
 	public static List getBONClass_3002IncomingLinks(View view) {
-		return Collections.EMPTY_LIST;
+		bonIDE.BONClass modelElement = (bonIDE.BONClass) view.getElement();
+		Map crossReferences = EcoreUtil.CrossReferencer.find(view.eResource().getResourceSet().getResources());
+		List result = new LinkedList();
+		result.addAll(getIncomingTypeModelFacetLinks_InheritanceRel_4001(modelElement, crossReferences));
+		result.addAll(getIncomingTypeModelFacetLinks_AggregationRel_4002(modelElement, crossReferences));
+		result.addAll(getIncomingTypeModelFacetLinks_AssociationRel_4003(modelElement, crossReferences));
+		return result;
 	}
 
 	/**
@@ -650,29 +723,70 @@ public class BonideDiagramUpdater {
 	/**
 	 * @generated
 	 */
-	public static List getCluster_2001OutgoingLinks(View view) {
+	public static List getInheritanceRel_4001IncomingLinks(View view) {
 		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List getAggregationRel_4002IncomingLinks(View view) {
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List getAssociationRel_4003IncomingLinks(View view) {
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List getCluster_2001OutgoingLinks(View view) {
+		bonIDE.Cluster modelElement = (bonIDE.Cluster) view.getElement();
+		List result = new LinkedList();
+		result.addAll(getOutgoingTypeModelFacetLinks_InheritanceRel_4001(modelElement));
+		result.addAll(getOutgoingTypeModelFacetLinks_AggregationRel_4002(modelElement));
+		result.addAll(getOutgoingTypeModelFacetLinks_AssociationRel_4003(modelElement));
+		return result;
 	}
 
 	/**
 	 * @generated
 	 */
 	public static List getBONClass_2002OutgoingLinks(View view) {
-		return Collections.EMPTY_LIST;
+		bonIDE.BONClass modelElement = (bonIDE.BONClass) view.getElement();
+		List result = new LinkedList();
+		result.addAll(getOutgoingTypeModelFacetLinks_InheritanceRel_4001(modelElement));
+		result.addAll(getOutgoingTypeModelFacetLinks_AggregationRel_4002(modelElement));
+		result.addAll(getOutgoingTypeModelFacetLinks_AssociationRel_4003(modelElement));
+		return result;
 	}
 
 	/**
 	 * @generated
 	 */
 	public static List getCluster_3001OutgoingLinks(View view) {
-		return Collections.EMPTY_LIST;
+		bonIDE.Cluster modelElement = (bonIDE.Cluster) view.getElement();
+		List result = new LinkedList();
+		result.addAll(getOutgoingTypeModelFacetLinks_InheritanceRel_4001(modelElement));
+		result.addAll(getOutgoingTypeModelFacetLinks_AggregationRel_4002(modelElement));
+		result.addAll(getOutgoingTypeModelFacetLinks_AssociationRel_4003(modelElement));
+		return result;
 	}
 
 	/**
 	 * @generated
 	 */
 	public static List getBONClass_3002OutgoingLinks(View view) {
-		return Collections.EMPTY_LIST;
+		bonIDE.BONClass modelElement = (bonIDE.BONClass) view.getElement();
+		List result = new LinkedList();
+		result.addAll(getOutgoingTypeModelFacetLinks_InheritanceRel_4001(modelElement));
+		result.addAll(getOutgoingTypeModelFacetLinks_AggregationRel_4002(modelElement));
+		result.addAll(getOutgoingTypeModelFacetLinks_AssociationRel_4003(modelElement));
+		return result;
 	}
 
 	/**
@@ -722,6 +836,291 @@ public class BonideDiagramUpdater {
 	 */
 	public static List getInvariant_3010OutgoingLinks(View view) {
 		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List getInheritanceRel_4001OutgoingLinks(View view) {
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List getAggregationRel_4002OutgoingLinks(View view) {
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List getAssociationRel_4003OutgoingLinks(View view) {
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @generated
+	 */
+	private static Collection getContainedTypeModelFacetLinks_InheritanceRel_4001(bonIDE.Model container) {
+		Collection result = new LinkedList();
+		for (Iterator links = container.getRelationships().iterator(); links.hasNext();) {
+			EObject linkObject = (EObject) links.next();
+			if (false == linkObject instanceof bonIDE.InheritanceRel) {
+				continue;
+			}
+			bonIDE.InheritanceRel link = (bonIDE.InheritanceRel) linkObject;
+			if (bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID != bonIDE.diagram.part.BonideVisualIDRegistry
+					.getLinkWithClassVisualID(link)) {
+				continue;
+			}
+			bonIDE.Abstraction dst = link.getTarget();
+			bonIDE.Abstraction src = link.getSource();
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
+					bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001,
+					bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	private static Collection getContainedTypeModelFacetLinks_AggregationRel_4002(bonIDE.Model container) {
+		Collection result = new LinkedList();
+		for (Iterator links = container.getRelationships().iterator(); links.hasNext();) {
+			EObject linkObject = (EObject) links.next();
+			if (false == linkObject instanceof bonIDE.AggregationRel) {
+				continue;
+			}
+			bonIDE.AggregationRel link = (bonIDE.AggregationRel) linkObject;
+			if (bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID != bonIDE.diagram.part.BonideVisualIDRegistry
+					.getLinkWithClassVisualID(link)) {
+				continue;
+			}
+			bonIDE.Abstraction dst = link.getTarget();
+			bonIDE.Abstraction src = link.getSource();
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
+					bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002,
+					bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	private static Collection getContainedTypeModelFacetLinks_AssociationRel_4003(bonIDE.Model container) {
+		Collection result = new LinkedList();
+		for (Iterator links = container.getRelationships().iterator(); links.hasNext();) {
+			EObject linkObject = (EObject) links.next();
+			if (false == linkObject instanceof bonIDE.AssociationRel) {
+				continue;
+			}
+			bonIDE.AssociationRel link = (bonIDE.AssociationRel) linkObject;
+			if (bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID != bonIDE.diagram.part.BonideVisualIDRegistry
+					.getLinkWithClassVisualID(link)) {
+				continue;
+			}
+			bonIDE.Abstraction dst = link.getTarget();
+			bonIDE.Abstraction src = link.getSource();
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
+					bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003,
+					bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	private static Collection getIncomingTypeModelFacetLinks_InheritanceRel_4001(bonIDE.Abstraction target, Map crossReferences) {
+		Collection result = new LinkedList();
+		Collection settings = (Collection) crossReferences.get(target);
+		for (Iterator it = settings.iterator(); it.hasNext();) {
+			EStructuralFeature.Setting setting = (EStructuralFeature.Setting) it.next();
+			if (setting.getEStructuralFeature() != bonIDE.BonIDEPackage.eINSTANCE.getStaticRelationship_Target()
+					|| false == setting.getEObject() instanceof bonIDE.InheritanceRel) {
+				continue;
+			}
+			bonIDE.InheritanceRel link = (bonIDE.InheritanceRel) setting.getEObject();
+			if (bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID != bonIDE.diagram.part.BonideVisualIDRegistry
+					.getLinkWithClassVisualID(link)) {
+				continue;
+			}
+			bonIDE.Abstraction src = link.getSource();
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, target, link,
+					bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001,
+					bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	private static Collection getIncomingTypeModelFacetLinks_AggregationRel_4002(bonIDE.Abstraction target, Map crossReferences) {
+		Collection result = new LinkedList();
+		Collection settings = (Collection) crossReferences.get(target);
+		for (Iterator it = settings.iterator(); it.hasNext();) {
+			EStructuralFeature.Setting setting = (EStructuralFeature.Setting) it.next();
+			if (setting.getEStructuralFeature() != bonIDE.BonIDEPackage.eINSTANCE.getStaticRelationship_Target()
+					|| false == setting.getEObject() instanceof bonIDE.AggregationRel) {
+				continue;
+			}
+			bonIDE.AggregationRel link = (bonIDE.AggregationRel) setting.getEObject();
+			if (bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID != bonIDE.diagram.part.BonideVisualIDRegistry
+					.getLinkWithClassVisualID(link)) {
+				continue;
+			}
+			bonIDE.Abstraction src = link.getSource();
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, target, link,
+					bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002,
+					bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	private static Collection getIncomingTypeModelFacetLinks_AssociationRel_4003(bonIDE.Abstraction target, Map crossReferences) {
+		Collection result = new LinkedList();
+		Collection settings = (Collection) crossReferences.get(target);
+		for (Iterator it = settings.iterator(); it.hasNext();) {
+			EStructuralFeature.Setting setting = (EStructuralFeature.Setting) it.next();
+			if (setting.getEStructuralFeature() != bonIDE.BonIDEPackage.eINSTANCE.getStaticRelationship_Target()
+					|| false == setting.getEObject() instanceof bonIDE.AssociationRel) {
+				continue;
+			}
+			bonIDE.AssociationRel link = (bonIDE.AssociationRel) setting.getEObject();
+			if (bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID != bonIDE.diagram.part.BonideVisualIDRegistry
+					.getLinkWithClassVisualID(link)) {
+				continue;
+			}
+			bonIDE.Abstraction src = link.getSource();
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, target, link,
+					bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003,
+					bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	private static Collection getOutgoingTypeModelFacetLinks_InheritanceRel_4001(bonIDE.Abstraction source) {
+		bonIDE.Model container = null;
+		// Find container element for the link.
+		// Climb up by containment hierarchy starting from the source
+		// and return the first element that is instance of the container class.
+		for (EObject element = source; element != null && container == null; element = element.eContainer()) {
+			if (element instanceof bonIDE.Model) {
+				container = (bonIDE.Model) element;
+			}
+		}
+		if (container == null) {
+			return Collections.EMPTY_LIST;
+		}
+		Collection result = new LinkedList();
+		for (Iterator links = container.getRelationships().iterator(); links.hasNext();) {
+			EObject linkObject = (EObject) links.next();
+			if (false == linkObject instanceof bonIDE.InheritanceRel) {
+				continue;
+			}
+			bonIDE.InheritanceRel link = (bonIDE.InheritanceRel) linkObject;
+			if (bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID != bonIDE.diagram.part.BonideVisualIDRegistry
+					.getLinkWithClassVisualID(link)) {
+				continue;
+			}
+			bonIDE.Abstraction dst = link.getTarget();
+			bonIDE.Abstraction src = link.getSource();
+			if (src != source) {
+				continue;
+			}
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
+					bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001,
+					bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	private static Collection getOutgoingTypeModelFacetLinks_AggregationRel_4002(bonIDE.Abstraction source) {
+		bonIDE.Model container = null;
+		// Find container element for the link.
+		// Climb up by containment hierarchy starting from the source
+		// and return the first element that is instance of the container class.
+		for (EObject element = source; element != null && container == null; element = element.eContainer()) {
+			if (element instanceof bonIDE.Model) {
+				container = (bonIDE.Model) element;
+			}
+		}
+		if (container == null) {
+			return Collections.EMPTY_LIST;
+		}
+		Collection result = new LinkedList();
+		for (Iterator links = container.getRelationships().iterator(); links.hasNext();) {
+			EObject linkObject = (EObject) links.next();
+			if (false == linkObject instanceof bonIDE.AggregationRel) {
+				continue;
+			}
+			bonIDE.AggregationRel link = (bonIDE.AggregationRel) linkObject;
+			if (bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID != bonIDE.diagram.part.BonideVisualIDRegistry
+					.getLinkWithClassVisualID(link)) {
+				continue;
+			}
+			bonIDE.Abstraction dst = link.getTarget();
+			bonIDE.Abstraction src = link.getSource();
+			if (src != source) {
+				continue;
+			}
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
+					bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002,
+					bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	private static Collection getOutgoingTypeModelFacetLinks_AssociationRel_4003(bonIDE.Abstraction source) {
+		bonIDE.Model container = null;
+		// Find container element for the link.
+		// Climb up by containment hierarchy starting from the source
+		// and return the first element that is instance of the container class.
+		for (EObject element = source; element != null && container == null; element = element.eContainer()) {
+			if (element instanceof bonIDE.Model) {
+				container = (bonIDE.Model) element;
+			}
+		}
+		if (container == null) {
+			return Collections.EMPTY_LIST;
+		}
+		Collection result = new LinkedList();
+		for (Iterator links = container.getRelationships().iterator(); links.hasNext();) {
+			EObject linkObject = (EObject) links.next();
+			if (false == linkObject instanceof bonIDE.AssociationRel) {
+				continue;
+			}
+			bonIDE.AssociationRel link = (bonIDE.AssociationRel) linkObject;
+			if (bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID != bonIDE.diagram.part.BonideVisualIDRegistry
+					.getLinkWithClassVisualID(link)) {
+				continue;
+			}
+			bonIDE.Abstraction dst = link.getTarget();
+			bonIDE.Abstraction src = link.getSource();
+			if (src != source) {
+				continue;
+			}
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
+					bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003,
+					bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+		}
+		return result;
 	}
 
 }

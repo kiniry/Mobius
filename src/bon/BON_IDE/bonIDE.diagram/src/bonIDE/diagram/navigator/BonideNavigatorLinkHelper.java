@@ -53,16 +53,15 @@ public class BonideNavigatorLinkHelper implements ILinkHelper {
 	 * @generated
 	 */
 	public IStructuredSelection findSelection(IEditorInput anInput) {
-		IDiagramDocument document = bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().getDocumentProvider()
-				.getDiagramDocument(anInput);
+		IDiagramDocument document = bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().getDocumentProvider().getDiagramDocument(
+				anInput);
 		if (document == null) {
 			return StructuredSelection.EMPTY;
 		}
 		Diagram diagram = document.getDiagram();
 		IFile file = WorkspaceSynchronizer.getFile(diagram.eResource());
 		if (file != null) {
-			bonIDE.diagram.navigator.BonideNavigatorItem item = new bonIDE.diagram.navigator.BonideNavigatorItem(
-					diagram, file, false);
+			bonIDE.diagram.navigator.BonideNavigatorItem item = new bonIDE.diagram.navigator.BonideNavigatorItem(diagram, file, false);
 			return new StructuredSelection(item);
 		}
 		return StructuredSelection.EMPTY;

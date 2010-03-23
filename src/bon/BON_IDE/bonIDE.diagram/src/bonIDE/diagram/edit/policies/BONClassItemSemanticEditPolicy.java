@@ -7,7 +7,10 @@ import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
+import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.ReorientRelationshipRequest;
+import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -30,6 +33,48 @@ public class BONClassItemSemanticEditPolicy extends bonIDE.diagram.edit.policies
 		View view = (View) getHost().getModel();
 		CompositeTransactionalCommand cmd = new CompositeTransactionalCommand(getEditingDomain(), null);
 		cmd.setTransactionNestingEnabled(false);
+		for (Iterator it = view.getTargetEdges().iterator(); it.hasNext();) {
+			Edge incomingLink = (Edge) it.next();
+			if (bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(incomingLink) == bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID) {
+				DestroyElementRequest r = new DestroyElementRequest(incomingLink.getElement(), false);
+				cmd.add(new DestroyElementCommand(r));
+				cmd.add(new DeleteCommand(getEditingDomain(), incomingLink));
+				continue;
+			}
+			if (bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(incomingLink) == bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID) {
+				DestroyElementRequest r = new DestroyElementRequest(incomingLink.getElement(), false);
+				cmd.add(new DestroyElementCommand(r));
+				cmd.add(new DeleteCommand(getEditingDomain(), incomingLink));
+				continue;
+			}
+			if (bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(incomingLink) == bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID) {
+				DestroyElementRequest r = new DestroyElementRequest(incomingLink.getElement(), false);
+				cmd.add(new DestroyElementCommand(r));
+				cmd.add(new DeleteCommand(getEditingDomain(), incomingLink));
+				continue;
+			}
+		}
+		for (Iterator it = view.getSourceEdges().iterator(); it.hasNext();) {
+			Edge outgoingLink = (Edge) it.next();
+			if (bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(outgoingLink) == bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID) {
+				DestroyElementRequest r = new DestroyElementRequest(outgoingLink.getElement(), false);
+				cmd.add(new DestroyElementCommand(r));
+				cmd.add(new DeleteCommand(getEditingDomain(), outgoingLink));
+				continue;
+			}
+			if (bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(outgoingLink) == bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID) {
+				DestroyElementRequest r = new DestroyElementRequest(outgoingLink.getElement(), false);
+				cmd.add(new DestroyElementCommand(r));
+				cmd.add(new DeleteCommand(getEditingDomain(), outgoingLink));
+				continue;
+			}
+			if (bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(outgoingLink) == bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID) {
+				DestroyElementRequest r = new DestroyElementRequest(outgoingLink.getElement(), false);
+				cmd.add(new DestroyElementCommand(r));
+				cmd.add(new DeleteCommand(getEditingDomain(), outgoingLink));
+				continue;
+			}
+		}
 		EAnnotation annotation = view.getEAnnotation("Shortcut"); //$NON-NLS-1$
 		if (annotation == null) {
 			// there are indirectly referenced children, need extra commands: false
@@ -56,8 +101,7 @@ public class BONClassItemSemanticEditPolicy extends bonIDE.diagram.edit.policies
 					Node cnode = (Node) cit.next();
 					switch (bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(cnode)) {
 					case bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID:
-						cmd.add(new DestroyElementCommand(new DestroyElementRequest(getEditingDomain(), cnode
-								.getElement(), false))); // directlyOwned: true
+						cmd.add(new DestroyElementCommand(new DestroyElementRequest(getEditingDomain(), cnode.getElement(), false))); // directlyOwned: true
 						// don't need explicit deletion of cnode as parent's view deletion would clean child views as well 
 						// cmd.add(new org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand(getEditingDomain(), cnode));
 						break;
@@ -69,8 +113,7 @@ public class BONClassItemSemanticEditPolicy extends bonIDE.diagram.edit.policies
 					Node cnode = (Node) cit.next();
 					switch (bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(cnode)) {
 					case bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID:
-						cmd.add(new DestroyElementCommand(new DestroyElementRequest(getEditingDomain(), cnode
-								.getElement(), false))); // directlyOwned: true
+						cmd.add(new DestroyElementCommand(new DestroyElementRequest(getEditingDomain(), cnode.getElement(), false))); // directlyOwned: true
 						// don't need explicit deletion of cnode as parent's view deletion would clean child views as well 
 						// cmd.add(new org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand(getEditingDomain(), cnode));
 						break;
@@ -82,8 +125,7 @@ public class BONClassItemSemanticEditPolicy extends bonIDE.diagram.edit.policies
 					Node cnode = (Node) cit.next();
 					switch (bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(cnode)) {
 					case bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID:
-						cmd.add(new DestroyElementCommand(new DestroyElementRequest(getEditingDomain(), cnode
-								.getElement(), false))); // directlyOwned: true
+						cmd.add(new DestroyElementCommand(new DestroyElementRequest(getEditingDomain(), cnode.getElement(), false))); // directlyOwned: true
 						// don't need explicit deletion of cnode as parent's view deletion would clean child views as well 
 						// cmd.add(new org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand(getEditingDomain(), cnode));
 						break;
@@ -95,8 +137,7 @@ public class BONClassItemSemanticEditPolicy extends bonIDE.diagram.edit.policies
 					Node cnode = (Node) cit.next();
 					switch (bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(cnode)) {
 					case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
-						cmd.add(new DestroyElementCommand(new DestroyElementRequest(getEditingDomain(), cnode
-								.getElement(), false))); // directlyOwned: true
+						cmd.add(new DestroyElementCommand(new DestroyElementRequest(getEditingDomain(), cnode.getElement(), false))); // directlyOwned: true
 						// don't need explicit deletion of cnode as parent's view deletion would clean child views as well 
 						// cmd.add(new org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand(getEditingDomain(), cnode));
 						break;
@@ -105,6 +146,75 @@ public class BONClassItemSemanticEditPolicy extends bonIDE.diagram.edit.policies
 				break;
 			}
 		}
+	}
+
+	/**
+	 * @generated
+	 */
+	protected Command getCreateRelationshipCommand(
+			CreateRelationshipRequest req) {
+		Command command = req.getTarget() == null ?
+				getStartCreateRelationshipCommand(req) : getCompleteCreateRelationshipCommand(req);
+		return command != null ? command : super.getCreateRelationshipCommand(req);
+	}
+
+	/**
+	 * @generated
+	 */
+	protected Command getStartCreateRelationshipCommand(
+			CreateRelationshipRequest req) {
+		if (bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001 == req.getElementType()) {
+			return getGEFWrapper(new bonIDE.diagram.edit.commands.InheritanceRelCreateCommand(req,
+					req.getSource(), req.getTarget()));
+		}
+		if (bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002 == req.getElementType()) {
+			return getGEFWrapper(new bonIDE.diagram.edit.commands.AggregationRelCreateCommand(req,
+					req.getSource(), req.getTarget()));
+		}
+		if (bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003 == req.getElementType()) {
+			return getGEFWrapper(new bonIDE.diagram.edit.commands.AssociationRelCreateCommand(req,
+					req.getSource(), req.getTarget()));
+		}
+		return null;
+	}
+
+	/**
+	 * @generated
+	 */
+	protected Command getCompleteCreateRelationshipCommand(
+			CreateRelationshipRequest req) {
+		if (bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001 == req.getElementType()) {
+			return getGEFWrapper(new bonIDE.diagram.edit.commands.InheritanceRelCreateCommand(req,
+					req.getSource(), req.getTarget()));
+		}
+		if (bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002 == req.getElementType()) {
+			return getGEFWrapper(new bonIDE.diagram.edit.commands.AggregationRelCreateCommand(req,
+					req.getSource(), req.getTarget()));
+		}
+		if (bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003 == req.getElementType()) {
+			return getGEFWrapper(new bonIDE.diagram.edit.commands.AssociationRelCreateCommand(req,
+					req.getSource(), req.getTarget()));
+		}
+		return null;
+	}
+
+	/**
+	 * Returns command to reorient EClass based link. New link target or source
+	 * should be the domain model element associated with this node.
+	 * 
+	 * @generated
+	 */
+	protected Command getReorientRelationshipCommand(
+			ReorientRelationshipRequest req) {
+		switch (getVisualID(req)) {
+		case bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID:
+			return getGEFWrapper(new bonIDE.diagram.edit.commands.InheritanceRelReorientCommand(req));
+		case bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID:
+			return getGEFWrapper(new bonIDE.diagram.edit.commands.AggregationRelReorientCommand(req));
+		case bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID:
+			return getGEFWrapper(new bonIDE.diagram.edit.commands.AssociationRelReorientCommand(req));
+		}
+		return super.getReorientRelationshipCommand(req);
 	}
 
 }

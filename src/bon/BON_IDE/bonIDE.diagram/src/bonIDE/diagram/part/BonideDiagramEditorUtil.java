@@ -72,8 +72,7 @@ public class BonideDiagramEditorUtil {
 		IResource workspaceResource = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(path));
 		if (workspaceResource instanceof IFile) {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			return null != page.openEditor(new FileEditorInput((IFile) workspaceResource),
-					bonIDE.diagram.part.BonideDiagramEditor.ID);
+			return null != page.openEditor(new FileEditorInput((IFile) workspaceResource), bonIDE.diagram.part.BonideDiagramEditor.ID);
 		}
 		return false;
 	}
@@ -88,8 +87,7 @@ public class BonideDiagramEditorUtil {
 		try {
 			file.setCharset("UTF-8", new NullProgressMonitor()); //$NON-NLS-1$
 		} catch (CoreException e) {
-			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
-					"Unable to set charset for file " + file.getFullPath(), e); //$NON-NLS-1$
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Unable to set charset for file " + file.getFullPath(), e); //$NON-NLS-1$
 		}
 	}
 
@@ -126,8 +124,7 @@ public class BonideDiagramEditorUtil {
 	 * @generated
 	 */
 	public static void runWizard(Shell shell, Wizard wizard, String settingsKey) {
-		IDialogSettings pluginDialogSettings = bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance()
-				.getDialogSettings();
+		IDialogSettings pluginDialogSettings = bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().getDialogSettings();
 		IDialogSettings wizardDialogSettings = pluginDialogSettings.getSection(settingsKey);
 		if (wizardDialogSettings == null) {
 			wizardDialogSettings = pluginDialogSettings.addNewSection(settingsKey);
@@ -151,8 +148,7 @@ public class BonideDiagramEditorUtil {
 		final String diagramName = diagramURI.lastSegment();
 		AbstractTransactionalCommand command = new AbstractTransactionalCommand(editingDomain,
 				bonIDE.diagram.part.Messages.BonideDiagramEditorUtil_CreateDiagramCommandLabel, Collections.EMPTY_LIST) {
-			protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
-					throws ExecutionException {
+			protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 				bonIDE.Model model = createInitialModel();
 				attachModelToResource(model, modelResource);
 
@@ -171,18 +167,15 @@ public class BonideDiagramEditorUtil {
 					diagramResource.save(bonIDE.diagram.part.BonideDiagramEditorUtil.getSaveOptions());
 				} catch (IOException e) {
 
-					bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
-							"Unable to store model and diagram resources", e); //$NON-NLS-1$
+					bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Unable to store model and diagram resources", e); //$NON-NLS-1$
 				}
 				return CommandResult.newOKCommandResult();
 			}
 		};
 		try {
-			OperationHistoryFactory.getOperationHistory().execute(command, new SubProgressMonitor(progressMonitor, 1),
-					null);
+			OperationHistoryFactory.getOperationHistory().execute(command, new SubProgressMonitor(progressMonitor, 1), null);
 		} catch (ExecutionException e) {
-			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
-					"Unable to create model and diagram", e); //$NON-NLS-1$
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Unable to create model and diagram", e); //$NON-NLS-1$
 		}
 		setCharset(WorkspaceSynchronizer.getFile(modelResource));
 		setCharset(WorkspaceSynchronizer.getFile(diagramResource));
@@ -225,8 +218,7 @@ public class BonideDiagramEditorUtil {
 		}
 
 		if (!editParts.isEmpty()) {
-			diagramPart.getDiagramGraphicalViewer().reveal(
-					firstPrimary != null ? firstPrimary : (EditPart) editParts.get(0));
+			diagramPart.getDiagramGraphicalViewer().reveal(firstPrimary != null ? firstPrimary : (EditPart) editParts.get(0));
 		}
 	}
 

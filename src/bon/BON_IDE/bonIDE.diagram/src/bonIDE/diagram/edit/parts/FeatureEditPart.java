@@ -68,8 +68,7 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	protected void createDefaultEditPolicies() {
 		installEditPolicy(EditPolicyRoles.CREATION_ROLE, new CreationEditPolicy());
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
-				new bonIDE.diagram.edit.policies.FeatureItemSemanticEditPolicy());
+		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE, new bonIDE.diagram.edit.policies.FeatureItemSemanticEditPolicy());
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, createLayoutEditPolicy());
 		// XXX need an SCR to runtime to have another abstract superclass that would let children add reasonable editpolicies
 		// removeEditPolicy(org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles.CONNECTION_HANDLES_ROLE);
@@ -114,23 +113,20 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureCommentEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureFeatureCommentFigure());
+			((bonIDE.diagram.edit.parts.FeatureCommentEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureCommentFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureNamesEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureFeatureNamesFigure());
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureModifierEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureFeatureModifierFigure());
+			((bonIDE.diagram.edit.parts.FeatureNamesEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureNamesFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureFeatureTypeFigure());
+			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureTypeFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureModifierEditPart) childEditPart)
+					.setLabel(getPrimaryShape().getFigureFeatureModifierFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) {
@@ -164,18 +160,16 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) {
 			IFigure pane = getPrimaryShape().getFigurePostConditionsRectangeFigure();
 			setupContentPane(pane); // FIXME each comparment should handle his content pane in his own way 
-			pane
-					.remove(((bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) childEditPart)
-							.getFigure());
+			pane.remove(((bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) childEditPart).getFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeaturePreConditionCompartmentEditPart) {
@@ -632,26 +626,22 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREFEATURENAMESFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
+	static final Font FFIGUREFEATURENAMESFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
 
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREFEATUREMODIFIERFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
+	static final Font FFIGUREFEATUREMODIFIERFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
 
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREFEATURETYPEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
+	static final Font FFIGUREFEATURETYPEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
 
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREFEATURECOMMENTFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7,
-			SWT.NORMAL);
+	static final Font FFIGUREFEATURECOMMENTFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
 
 	/**
 	 * @generated

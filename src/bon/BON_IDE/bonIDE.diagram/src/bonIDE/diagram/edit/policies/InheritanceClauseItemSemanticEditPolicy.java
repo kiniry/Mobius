@@ -11,8 +11,7 @@ import org.eclipse.gmf.runtime.notation.View;
 /**
  * @generated
  */
-public class InheritanceClauseItemSemanticEditPolicy extends
-		bonIDE.diagram.edit.policies.BonideBaseItemSemanticEditPolicy {
+public class InheritanceClauseItemSemanticEditPolicy extends bonIDE.diagram.edit.policies.BonideBaseItemSemanticEditPolicy {
 
 	/**
 	 * @generated

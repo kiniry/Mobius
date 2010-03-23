@@ -110,13 +110,12 @@ public class BonideBaseItemSemanticEditPolicy extends SemanticEditPolicy {
 	 */
 	private Command getEditHelperCommand(IEditCommandRequest request, Command editPolicyCommand) {
 		if (editPolicyCommand != null) {
-			ICommand command = editPolicyCommand instanceof ICommandProxy ? ((ICommandProxy) editPolicyCommand)
-					.getICommand() : new CommandProxy(editPolicyCommand);
+			ICommand command = editPolicyCommand instanceof ICommandProxy ? ((ICommandProxy) editPolicyCommand).getICommand()
+					: new CommandProxy(editPolicyCommand);
 			request.setParameter(bonIDE.diagram.edit.helpers.BonideBaseEditHelper.EDIT_POLICY_COMMAND, command);
 		}
 		IElementType requestContextElementType = getContextElementType(request);
-		request.setParameter(bonIDE.diagram.edit.helpers.BonideBaseEditHelper.CONTEXT_ELEMENT_TYPE,
-				requestContextElementType);
+		request.setParameter(bonIDE.diagram.edit.helpers.BonideBaseEditHelper.CONTEXT_ELEMENT_TYPE, requestContextElementType);
 		ICommand command = requestContextElementType.getEditCommand(request);
 		request.setParameter(bonIDE.diagram.edit.helpers.BonideBaseEditHelper.EDIT_POLICY_COMMAND, null);
 		request.setParameter(bonIDE.diagram.edit.helpers.BonideBaseEditHelper.CONTEXT_ELEMENT_TYPE, null);
@@ -133,8 +132,7 @@ public class BonideBaseItemSemanticEditPolicy extends SemanticEditPolicy {
 	 * @generated
 	 */
 	private IElementType getContextElementType(IEditCommandRequest request) {
-		IElementType requestContextElementType = bonIDE.diagram.providers.BonideElementTypes
-				.getElementType(getVisualID(request));
+		IElementType requestContextElementType = bonIDE.diagram.providers.BonideElementTypes.getElementType(getVisualID(request));
 		return requestContextElementType != null ? requestContextElementType : myElementType;
 	}
 
@@ -279,6 +277,48 @@ public class BonideBaseItemSemanticEditPolicy extends SemanticEditPolicy {
 	 * @generated
 	 */
 	public static class LinkConstraints {
+
+		/**
+		 * @generated
+		 */
+		public static boolean canCreateInheritanceRel_4001(bonIDE.Model container, bonIDE.Abstraction source, bonIDE.Abstraction target) {
+			return canExistInheritanceRel_4001(container, source, target);
+		}
+
+		/**
+		 * @generated
+		 */
+		public static boolean canCreateAggregationRel_4002(bonIDE.Model container, bonIDE.Abstraction source, bonIDE.Abstraction target) {
+			return canExistAggregationRel_4002(container, source, target);
+		}
+
+		/**
+		 * @generated
+		 */
+		public static boolean canCreateAssociationRel_4003(bonIDE.Model container, bonIDE.Abstraction source, bonIDE.Abstraction target) {
+			return canExistAssociationRel_4003(container, source, target);
+		}
+
+		/**
+		 * @generated
+		 */
+		public static boolean canExistInheritanceRel_4001(bonIDE.Model container, bonIDE.Abstraction source, bonIDE.Abstraction target) {
+			return true;
+		}
+
+		/**
+		 * @generated
+		 */
+		public static boolean canExistAggregationRel_4002(bonIDE.Model container, bonIDE.Abstraction source, bonIDE.Abstraction target) {
+			return true;
+		}
+
+		/**
+		 * @generated
+		 */
+		public static boolean canExistAssociationRel_4003(bonIDE.Model container, bonIDE.Abstraction source, bonIDE.Abstraction target) {
+			return true;
+		}
 
 	}
 

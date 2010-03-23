@@ -58,8 +58,8 @@ public class BonideDomainNavigatorContentProvider implements ICommonContentProvi
 	 * @generated
 	 */
 	public BonideDomainNavigatorContentProvider() {
-		myAdapterFctoryContentProvier = new AdapterFactoryContentProvider(bonIDE.diagram.part.BonideDiagramEditorPlugin
-				.getInstance().getItemProvidersAdapterFactory());
+		myAdapterFctoryContentProvier = new AdapterFactoryContentProvider(bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance()
+				.getItemProvidersAdapterFactory());
 		TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
 		myEditingDomain = (AdapterFactoryEditingDomain) editingDomain;
 		myEditingDomain.setResourceToReadOnlyMap(new HashMap() {
@@ -176,8 +176,7 @@ public class BonideDomainNavigatorContentProvider implements ICommonContentProvi
 
 		if (parentElement instanceof bonIDE.diagram.navigator.BonideDomainNavigatorItem) {
 			return wrapEObjects(myAdapterFctoryContentProvier
-					.getChildren(((bonIDE.diagram.navigator.BonideDomainNavigatorItem) parentElement).getEObject()),
-					parentElement);
+					.getChildren(((bonIDE.diagram.navigator.BonideDomainNavigatorItem) parentElement).getEObject()), parentElement);
 		}
 		return EMPTY_ARRAY;
 	}

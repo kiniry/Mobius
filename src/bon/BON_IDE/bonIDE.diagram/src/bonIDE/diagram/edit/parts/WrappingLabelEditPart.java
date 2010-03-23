@@ -88,8 +88,7 @@ public class WrappingLabelEditPart extends CompartmentEditPart implements ITextA
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE,
-				new bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy());
+		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy());
 		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new LabelDirectEditPolicy());
 		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new NonResizableEditPolicy() {
 
@@ -298,8 +297,7 @@ public class WrappingLabelEditPart extends CompartmentEditPart implements ITextA
 	public IParser getParser() {
 		if (parser == null) {
 			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-					bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005, getParserElement(),
-					CommonParserHint.DESCRIPTION);
+					bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005, getParserElement(), CommonParserHint.DESCRIPTION);
 		}
 		return parser;
 	}

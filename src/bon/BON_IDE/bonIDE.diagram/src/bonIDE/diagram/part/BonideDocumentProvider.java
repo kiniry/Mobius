@@ -67,8 +67,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 			throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0,
 					NLS.bind(
 					bonIDE.diagram.part.Messages.BonideDocumentProvider_IncorrectInputError,
-					new Object[] { element,
-					"org.eclipse.ui.part.FileEditorInput", "org.eclipse.emf.common.ui.URIEditorInput" }), //$NON-NLS-1$ //$NON-NLS-2$ 
+					new Object[] { element, "org.eclipse.ui.part.FileEditorInput", "org.eclipse.emf.common.ui.URIEditorInput" }), //$NON-NLS-1$ //$NON-NLS-2$ 
 					null));
 		}
 		IEditorInput editorInput = (IEditorInput) element;
@@ -88,8 +87,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 			throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0,
 					NLS.bind(
 					bonIDE.diagram.part.Messages.BonideDocumentProvider_IncorrectInputError,
-					new Object[] { element,
-					"org.eclipse.ui.part.FileEditorInput", "org.eclipse.emf.common.ui.URIEditorInput" }), //$NON-NLS-1$ //$NON-NLS-2$ 
+					new Object[] { element, "org.eclipse.ui.part.FileEditorInput", "org.eclipse.emf.common.ui.URIEditorInput" }), //$NON-NLS-1$ //$NON-NLS-2$ 
 					null));
 		}
 		IDocument document = createEmptyDocument();
@@ -145,9 +143,9 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 	private TransactionalEditingDomain createEditingDomain() {
 		TransactionalEditingDomain editingDomain = DiagramEditingDomainFactory.getInstance().createEditingDomain();
 		editingDomain.setID("bonIDE.diagram.EditingDomain"); //$NON-NLS-1$
-		final NotificationFilter diagramResourceModifiedFilter = NotificationFilter.createNotifierFilter(
-				editingDomain.getResourceSet()).and(NotificationFilter.createEventTypeFilter(Notification.ADD)).and(
-				NotificationFilter.createFeatureFilter(ResourceSet.class, ResourceSet.RESOURCE_SET__RESOURCES));
+		final NotificationFilter diagramResourceModifiedFilter = NotificationFilter.createNotifierFilter(editingDomain.getResourceSet())
+				.and(NotificationFilter.createEventTypeFilter(Notification.ADD)).and(
+						NotificationFilter.createFeatureFilter(ResourceSet.class, ResourceSet.RESOURCE_SET__RESOURCES));
 		editingDomain.getResourceSet().eAdapters().add(new Adapter() {
 
 			private Notifier myTarger;
@@ -229,10 +227,8 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 					thrownExcp = (CoreException) e;
 				} else {
 					String msg = e.getLocalizedMessage();
-					thrownExcp = new CoreException(
-							new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0,
-									msg != null ? msg
-									: bonIDE.diagram.part.Messages.BonideDocumentProvider_DiagramLoadingError, e));
+					thrownExcp = new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0,
+							msg != null ? msg : bonIDE.diagram.part.Messages.BonideDocumentProvider_DiagramLoadingError, e));
 				}
 				throw thrownExcp;
 			}
@@ -240,8 +236,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 			throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0,
 					NLS.bind(
 					bonIDE.diagram.part.Messages.BonideDocumentProvider_IncorrectInputError,
-					new Object[] { element,
-					"org.eclipse.ui.part.FileEditorInput", "org.eclipse.emf.common.ui.URIEditorInput" }), //$NON-NLS-1$ //$NON-NLS-2$ 
+					new Object[] { element, "org.eclipse.ui.part.FileEditorInput", "org.eclipse.emf.common.ui.URIEditorInput" }), //$NON-NLS-1$ //$NON-NLS-2$ 
 					null));
 		}
 	}
@@ -297,16 +292,15 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 		ResourceSetInfo info = getResourceSetInfo(element);
 		if (info != null) {
 			Collection/*<org.eclipse.core.resources.IFile>*/files2Validate = new ArrayList/*<org.eclipse.core.resources.IFile>*/();
-			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it
-					.hasNext();) {
+			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it.hasNext();) {
 				Resource nextResource = (Resource) it.next();
 				IFile file = WorkspaceSynchronizer.getFile(nextResource);
 				if (file != null && file.isReadOnly()) {
 					files2Validate.add(file);
 				}
 			}
-			ResourcesPlugin.getWorkspace().validateEdit(
-					(IFile[]) files2Validate.toArray(new IFile[files2Validate.size()]), computationContext);
+			ResourcesPlugin.getWorkspace().validateEdit((IFile[]) files2Validate.toArray(new IFile[files2Validate.size()]),
+					computationContext);
 		}
 
 		super.doValidateState(element, computationContext);
@@ -363,8 +357,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 	protected void updateCache(Object element) throws CoreException {
 		ResourceSetInfo info = getResourceSetInfo(element);
 		if (info != null) {
-			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it
-					.hasNext();) {
+			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it.hasNext();) {
 				Resource nextResource = (Resource) it.next();
 				IFile file = WorkspaceSynchronizer.getFile(nextResource);
 				if (file != null && file.isReadOnly()) {
@@ -408,8 +401,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 		ResourceSetInfo info = getResourceSetInfo(element);
 		if (info != null) {
 			Collection/*<org.eclipse.core.runtime.jobs.ISchedulingRule>*/rules = new ArrayList/*<org.eclipse.core.runtime.jobs.ISchedulingRule>*/();
-			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it
-					.hasNext();) {
+			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it.hasNext();) {
 				Resource nextResource = (Resource) it.next();
 				IFile file = WorkspaceSynchronizer.getFile(nextResource);
 				if (file != null) {
@@ -428,8 +420,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 		ResourceSetInfo info = getResourceSetInfo(element);
 		if (info != null) {
 			Collection/*<org.eclipse.core.runtime.jobs.ISchedulingRule>*/rules = new ArrayList/*<org.eclipse.core.runtime.jobs.ISchedulingRule>*/();
-			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it
-					.hasNext();) {
+			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it.hasNext();) {
 				Resource nextResource = (Resource) it.next();
 				IFile file = WorkspaceSynchronizer.getFile(nextResource);
 				if (file != null) {
@@ -448,8 +439,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 		ResourceSetInfo info = getResourceSetInfo(element);
 		if (info != null) {
 			Collection/*<org.eclipse.core.runtime.jobs.ISchedulingRule>*/rules = new ArrayList/*<org.eclipse.core.runtime.jobs.ISchedulingRule>*/();
-			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it
-					.hasNext();) {
+			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it.hasNext();) {
 				Resource nextResource = (Resource) it.next();
 				IFile file = WorkspaceSynchronizer.getFile(nextResource);
 				if (file != null) {
@@ -468,16 +458,14 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 		ResourceSetInfo info = getResourceSetInfo(element);
 		if (info != null) {
 			Collection/*<org.eclipse.core.runtime.jobs.ISchedulingRule>*/files = new ArrayList/*<org.eclipse.core.runtime.jobs.ISchedulingRule>*/();
-			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it
-					.hasNext();) {
+			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it.hasNext();) {
 				Resource nextResource = (Resource) it.next();
 				IFile file = WorkspaceSynchronizer.getFile(nextResource);
 				if (file != null) {
 					files.add(file);
 				}
 			}
-			return ResourcesPlugin.getWorkspace().getRuleFactory().validateEditRule(
-					(IFile[]) files.toArray(new IFile[files.size()]));
+			return ResourcesPlugin.getWorkspace().getRuleFactory().validateEditRule((IFile[]) files.toArray(new IFile[files.size()]));
 		}
 		return null;
 	}
@@ -510,8 +498,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 	protected void doSynchronize(Object element, IProgressMonitor monitor) throws CoreException {
 		ResourceSetInfo info = getResourceSetInfo(element);
 		if (info != null) {
-			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it
-					.hasNext();) {
+			for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it.hasNext();) {
 				Resource nextResource = (Resource) it.next();
 				handleElementChanged(info, nextResource, monitor);
 			}
@@ -536,10 +523,9 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 			info.stopResourceListening();
 			fireElementStateChanging(element);
 			try {
-				monitor.beginTask(bonIDE.diagram.part.Messages.BonideDocumentProvider_SaveDiagramTask, info
-						.getResourceSet().getResources().size() + 1); //"Saving diagram"
-				for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it
-						.hasNext();) {
+				monitor.beginTask(bonIDE.diagram.part.Messages.BonideDocumentProvider_SaveDiagramTask, info.getResourceSet().getResources()
+						.size() + 1); //"Saving diagram"
+				for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it.hasNext();) {
 					Resource nextResource = (Resource) it.next();
 					monitor.setTaskName(NLS.bind(
 							bonIDE.diagram.part.Messages.BonideDocumentProvider_SaveNextResourceTask,
@@ -549,8 +535,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 							nextResource.save(bonIDE.diagram.part.BonideDiagramEditorUtil.getSaveOptions());
 						} catch (IOException e) {
 							fireElementStateChangeFailed(element);
-							throw new CoreException(new Status(IStatus.ERROR,
-									bonIDE.diagram.part.BonideDiagramEditorPlugin.ID,
+							throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID,
 									EditorStatusCodes.RESOURCE_FAILURE, e.getLocalizedMessage(), null));
 						}
 					}
@@ -578,8 +563,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 				throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0,
 						NLS.bind(
 						bonIDE.diagram.part.Messages.BonideDocumentProvider_IncorrectInputError,
-						new Object[] { element,
-						"org.eclipse.ui.part.FileEditorInput", "org.eclipse.emf.common.ui.URIEditorInput" }), //$NON-NLS-1$ //$NON-NLS-2$ 
+						new Object[] { element, "org.eclipse.ui.part.FileEditorInput", "org.eclipse.emf.common.ui.URIEditorInput" }), //$NON-NLS-1$ //$NON-NLS-2$ 
 						null));
 			}
 			if (false == document instanceof IDiagramDocument) {
@@ -592,15 +576,12 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 								"Incorrect document used: " + document + " instead of org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			IDiagramDocument diagramDocument = (IDiagramDocument) document;
-			final Resource newResource = diagramDocument.getEditingDomain().getResourceSet().createResource(
-					newResoruceURI);
+			final Resource newResource = diagramDocument.getEditingDomain().getResourceSet().createResource(newResoruceURI);
 			final Diagram diagramCopy = (Diagram) EcoreUtil.copy(diagramDocument.getDiagram());
 			try {
 				new AbstractTransactionalCommand(diagramDocument.getEditingDomain(), NLS.bind(
-						bonIDE.diagram.part.Messages.BonideDocumentProvider_SaveAsOperation, diagramCopy.getName()),
-						affectedFiles) {
-					protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
-							throws ExecutionException {
+						bonIDE.diagram.part.Messages.BonideDocumentProvider_SaveAsOperation, diagramCopy.getName()), affectedFiles) {
+					protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 						newResource.getContents().add(diagramCopy);
 						return CommandResult.newOKCommandResult();
 					}
@@ -608,12 +589,12 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 				newResource.save(bonIDE.diagram.part.BonideDiagramEditorUtil.getSaveOptions());
 			} catch (ExecutionException e) {
 				fireElementStateChangeFailed(element);
-				throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0,
-						e.getLocalizedMessage(), null));
+				throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0, e
+						.getLocalizedMessage(), null));
 			} catch (IOException e) {
 				fireElementStateChangeFailed(element);
-				throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0,
-						e.getLocalizedMessage(), null));
+				throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0, e
+						.getLocalizedMessage(), null));
 			}
 			newResource.unload();
 		}
@@ -655,8 +636,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 	 */
 	protected void handleElementMoved(IEditorInput input, URI uri) {
 		if (input instanceof FileEditorInput) {
-			IFile newFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-					new Path(URI.decode(uri.path())).removeFirstSegments(1));
+			IFile newFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(URI.decode(uri.path())).removeFirstSegments(1));
 			fireElementMoved(input, newFile == null ? null : new FileEditorInput(newFile));
 			return;
 		}
@@ -783,8 +763,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 		 * @generated
 		 */
 		public Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/getLoadedResourcesIterator() {
-			return new ArrayList/*<org.eclipse.emf.ecore.resource.Resource>*/(getResourceSet().getResources())
-					.iterator();
+			return new ArrayList/*<org.eclipse.emf.ecore.resource.Resource>*/(getResourceSet().getResources()).iterator();
 		}
 
 		/**
@@ -994,8 +973,8 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 					Resource resource = (Resource) notification.getNotifier();
 					if (resource.isLoaded()) {
 						boolean modified = false;
-						for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = myInfo
-								.getLoadedResourcesIterator(); it.hasNext() && !modified;) {
+						for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = myInfo.getLoadedResourcesIterator(); it.hasNext()
+								&& !modified;) {
 							Resource nextResource = (Resource) it.next();
 							if (nextResource.isLoaded()) {
 								modified = nextResource.isModified();

@@ -101,6 +101,21 @@ public class BonideElementTypes extends ElementInitializers {
 	/**
 	 * @generated
 	 */
+	public static final IElementType InheritanceRel_4001 = getElementType("bonIDE.diagram.InheritanceRel_4001"); //$NON-NLS-1$
+
+	/**
+	 * @generated
+	 */
+	public static final IElementType AggregationRel_4002 = getElementType("bonIDE.diagram.AggregationRel_4002"); //$NON-NLS-1$
+
+	/**
+	 * @generated
+	 */
+	public static final IElementType AssociationRel_4003 = getElementType("bonIDE.diagram.AssociationRel_4003"); //$NON-NLS-1$
+
+	/**
+	 * @generated
+	 */
 	private static ImageRegistry getImageRegistry() {
 		if (imageRegistry == null) {
 			imageRegistry = new ImageRegistry();
@@ -228,6 +243,12 @@ public class BonideElementTypes extends ElementInitializers {
 			elements.put(PostCondition_3009, bonIDE.BonIDEPackage.eINSTANCE.getPostCondition());
 
 			elements.put(Invariant_3010, bonIDE.BonIDEPackage.eINSTANCE.getInvariant());
+
+			elements.put(InheritanceRel_4001, bonIDE.BonIDEPackage.eINSTANCE.getInheritanceRel());
+
+			elements.put(AggregationRel_4002, bonIDE.BonIDEPackage.eINSTANCE.getAggregationRel());
+
+			elements.put(AssociationRel_4003, bonIDE.BonIDEPackage.eINSTANCE.getAssociationRel());
 		}
 		return (ENamedElement) elements.get(type);
 	}
@@ -257,6 +278,9 @@ public class BonideElementTypes extends ElementInitializers {
 			KNOWN_ELEMENT_TYPES.add(PreCondition_3008);
 			KNOWN_ELEMENT_TYPES.add(PostCondition_3009);
 			KNOWN_ELEMENT_TYPES.add(Invariant_3010);
+			KNOWN_ELEMENT_TYPES.add(InheritanceRel_4001);
+			KNOWN_ELEMENT_TYPES.add(AggregationRel_4002);
+			KNOWN_ELEMENT_TYPES.add(AssociationRel_4003);
 		}
 		return KNOWN_ELEMENT_TYPES.contains(elementType);
 	}
@@ -290,6 +314,12 @@ public class BonideElementTypes extends ElementInitializers {
 			return PostCondition_3009;
 		case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
 			return Invariant_3010;
+		case bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID:
+			return InheritanceRel_4001;
+		case bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID:
+			return AggregationRel_4002;
+		case bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID:
+			return AssociationRel_4003;
 		}
 		return null;
 	}

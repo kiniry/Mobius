@@ -167,8 +167,8 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 			URI fileURI = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
 			Resource resource = myEditingDomain.getResourceSet().getResource(fileURI, true);
 			Collection result = new ArrayList();
-			result.addAll(createNavigatorItems(selectViewsByType(resource.getContents(),
-					bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID), file, false));
+			result.addAll(createNavigatorItems(selectViewsByType(resource.getContents(), bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID),
+					file, false));
 			return result.toArray();
 		}
 
@@ -196,21 +196,39 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 
 		case bonIDE.diagram.edit.parts.ModelEditPart.VISUAL_ID: {
 			Collection result = new ArrayList();
-			Collection connectedViews = getChildrenByType(Collections.singleton(view),
-					bonIDE.diagram.part.BonideVisualIDRegistry
-							.getType(bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID));
+			bonIDE.diagram.navigator.BonideNavigatorGroup links = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_Model_1000_links, "icons/linksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
 			connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getDiagramLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+			links.addChildren(createNavigatorItems(connectedViews, links, false));
+			connectedViews = getDiagramLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+			links.addChildren(createNavigatorItems(connectedViews, links, false));
+			connectedViews = getDiagramLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+			links.addChildren(createNavigatorItems(connectedViews, links, false));
+			if (!links.isEmpty()) {
+				result.add(links);
+			}
 			return result.toArray();
 		}
 
 		case bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID: {
 			Collection result = new ArrayList();
-			Collection connectedViews = getChildrenByType(Collections.singleton(view),
-					bonIDE.diagram.part.BonideVisualIDRegistry
-							.getType(bonIDE.diagram.edit.parts.ClusterClusterCompartmentEditPart.VISUAL_ID));
+			bonIDE.diagram.navigator.BonideNavigatorGroup incominglinks = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_Cluster_2001_incominglinks,
+					"icons/incomingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			bonIDE.diagram.navigator.BonideNavigatorGroup outgoinglinks = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_Cluster_2001_outgoinglinks,
+					"icons/outgoingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.ClusterClusterCompartmentEditPart.VISUAL_ID));
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
@@ -219,14 +237,43 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			if (!incominglinks.isEmpty()) {
+				result.add(incominglinks);
+			}
+			if (!outgoinglinks.isEmpty()) {
+				result.add(outgoinglinks);
+			}
 			return result.toArray();
 		}
 
 		case bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID: {
 			Collection result = new ArrayList();
-			Collection connectedViews = getChildrenByType(Collections.singleton(view),
-					bonIDE.diagram.part.BonideVisualIDRegistry
-							.getType(bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart.VISUAL_ID));
+			bonIDE.diagram.navigator.BonideNavigatorGroup incominglinks = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_BONClass_2002_incominglinks,
+					"icons/incomingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			bonIDE.diagram.navigator.BonideNavigatorGroup outgoinglinks = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_BONClass_2002_outgoinglinks,
+					"icons/outgoingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassIndexCompartment2EditPart.VISUAL_ID));
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
@@ -245,14 +292,43 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			if (!incominglinks.isEmpty()) {
+				result.add(incominglinks);
+			}
+			if (!outgoinglinks.isEmpty()) {
+				result.add(outgoinglinks);
+			}
 			return result.toArray();
 		}
 
 		case bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID: {
 			Collection result = new ArrayList();
-			Collection connectedViews = getChildrenByType(Collections.singleton(view),
-					bonIDE.diagram.part.BonideVisualIDRegistry
-							.getType(bonIDE.diagram.edit.parts.ClusterClusterCompartment2EditPart.VISUAL_ID));
+			bonIDE.diagram.navigator.BonideNavigatorGroup incominglinks = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_Cluster_3001_incominglinks,
+					"icons/incomingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			bonIDE.diagram.navigator.BonideNavigatorGroup outgoinglinks = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_Cluster_3001_outgoinglinks,
+					"icons/outgoingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.ClusterClusterCompartment2EditPart.VISUAL_ID));
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
@@ -261,14 +337,43 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			if (!incominglinks.isEmpty()) {
+				result.add(incominglinks);
+			}
+			if (!outgoinglinks.isEmpty()) {
+				result.add(outgoinglinks);
+			}
 			return result.toArray();
 		}
 
 		case bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID: {
 			Collection result = new ArrayList();
-			Collection connectedViews = getChildrenByType(Collections.singleton(view),
-					bonIDE.diagram.part.BonideVisualIDRegistry
-							.getType(bonIDE.diagram.edit.parts.BONClassIndexCompartmentEditPart.VISUAL_ID));
+			bonIDE.diagram.navigator.BonideNavigatorGroup incominglinks = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_BONClass_3002_incominglinks,
+					"icons/incomingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			bonIDE.diagram.navigator.BonideNavigatorGroup outgoinglinks = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_BONClass_3002_outgoinglinks,
+					"icons/outgoingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassIndexCompartmentEditPart.VISUAL_ID));
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
@@ -287,14 +392,37 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			connectedViews = getIncomingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			if (!incominglinks.isEmpty()) {
+				result.add(incominglinks);
+			}
+			if (!outgoinglinks.isEmpty()) {
+				result.add(outgoinglinks);
+			}
 			return result.toArray();
 		}
 
 		case bonIDE.diagram.edit.parts.FeatureEditPart.VISUAL_ID: {
 			Collection result = new ArrayList();
-			Collection connectedViews = getChildrenByType(Collections.singleton(view),
-					bonIDE.diagram.part.BonideVisualIDRegistry
-							.getType(bonIDE.diagram.edit.parts.FeatureArgumentCompartmentEditPart.VISUAL_ID));
+			Collection connectedViews = getChildrenByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.FeatureArgumentCompartmentEditPart.VISUAL_ID));
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.FeatureArgumentEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
@@ -308,6 +436,129 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 			connectedViews = getChildrenByType(connectedViews, bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			return result.toArray();
+		}
+
+		case bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID: {
+			Collection result = new ArrayList();
+			bonIDE.diagram.navigator.BonideNavigatorGroup target = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_InheritanceRel_4001_target,
+					"icons/linkTargetNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			bonIDE.diagram.navigator.BonideNavigatorGroup source = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_InheritanceRel_4001_source,
+					"icons/linkSourceNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			if (!target.isEmpty()) {
+				result.add(target);
+			}
+			if (!source.isEmpty()) {
+				result.add(source);
+			}
+			return result.toArray();
+		}
+
+		case bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID: {
+			Collection result = new ArrayList();
+			bonIDE.diagram.navigator.BonideNavigatorGroup target = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_AggregationRel_4002_target,
+					"icons/linkTargetNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			bonIDE.diagram.navigator.BonideNavigatorGroup source = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_AggregationRel_4002_source,
+					"icons/linkSourceNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			if (!target.isEmpty()) {
+				result.add(target);
+			}
+			if (!source.isEmpty()) {
+				result.add(source);
+			}
+			return result.toArray();
+		}
+
+		case bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID: {
+			Collection result = new ArrayList();
+			bonIDE.diagram.navigator.BonideNavigatorGroup target = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_AssociationRel_4003_target,
+					"icons/linkTargetNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			bonIDE.diagram.navigator.BonideNavigatorGroup source = new bonIDE.diagram.navigator.BonideNavigatorGroup(
+					bonIDE.diagram.part.Messages.NavigatorGroupName_AssociationRel_4003_source,
+					"icons/linkSourceNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
+					.getType(bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			if (!target.isEmpty()) {
+				result.add(target);
+			}
+			if (!source.isEmpty()) {
+				result.add(source);
+			}
 			return result.toArray();
 		}
 		}
@@ -410,8 +661,7 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 	 * @generated
 	 */
 	private boolean isOwnView(View view) {
-		return bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID.equals(bonIDE.diagram.part.BonideVisualIDRegistry
-				.getModelID(view));
+		return bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID.equals(bonIDE.diagram.part.BonideVisualIDRegistry.getModelID(view));
 	}
 
 	/**
