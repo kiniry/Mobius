@@ -50,6 +50,8 @@ public class BONST {
 
   public final Map<Clazz,List<FormalGeneric>> genericsMap = new HashMap<Clazz,List<FormalGeneric>>();
   public final TwoDimensionalMap<Clazz, String, FormalGeneric> genericNamesMap = new TwoDimensionalMap<Clazz, String, FormalGeneric>();
+  public final Map<Clazz,List<Type>> filledInGenericsMap = new HashMap<Clazz,List<Type>>();
+  public final TwoDimensionalMap<Clazz, String, Type> filledInGenericNamesMap = new TwoDimensionalMap<Clazz, String, Type>();
 
   /** Maps individual AST nodes to their corresponding indexing clause. */
   public final Map<AstNode,Indexing> indexing = new HashMap<AstNode,Indexing>();
@@ -73,9 +75,6 @@ public class BONST {
     public final Graph<String,String> descriptionGraph = new Graph<String,String>();
 
     public ClusterChart systemChart;
-
-    public final Map<String,String> alternativeClusterDescriptions = new HashMap<String,String>();
-    public final Map<String,String> alternativeClassDescriptions = new HashMap<String,String>();
 
   }
 }

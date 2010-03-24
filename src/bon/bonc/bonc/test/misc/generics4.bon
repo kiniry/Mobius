@@ -6,7 +6,6 @@ component
   class N
     inherit ANY
   end
-  class ANY
   class O
     inherit ANY
   end

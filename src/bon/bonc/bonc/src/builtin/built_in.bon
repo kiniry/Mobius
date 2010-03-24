@@ -1,0 +1,5 @@
+static_diagram BUILT_IN
+component
+  class ANY
+  class NONE
+end

@@ -41,4 +41,11 @@ public class KeyPair<A, B> {
     }
   }
 
+  @Override
+  public String toString() {
+    return "<" + a + "," + b + ">";
+  }
+
+  
+  
 }

@@ -36,7 +36,7 @@ public class BONcAntTask extends MatchingTask {
     
     ParsingTracker tracker = API.parse(files);
     if (tracker.continueFromParse() && typeCheck) {
-      API.typeCheck(tracker, checkInformal, checkFormal, checkConsistency, typeCheck, false);
+      API.typeCheck(tracker, checkInformal, checkFormal, checkConsistency, false);
     }
     
     //TODO print issues, throw BuildException (if necessary)

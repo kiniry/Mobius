@@ -69,8 +69,9 @@ public final class ClassDictionaryGenerator {
         sb.append(newLine);
         sb.append("    ");
         if (classDef.getExplanation() == null || "".equals(classDef.getExplanation())) {
-          String altDesc = st.informal.alternativeClassDescriptions.get(className);
-          sb.append(altDesc == null ? "" : altDesc);
+          Collection<String> altDescs = st.informal.descriptionGraph.get(className);
+          String altDesc = altDescs != null && !altDescs.isEmpty() ? altDescs.iterator().next() : "\"\"";
+          sb.append(altDesc);
         } else {
           sb.append(classDef.getExplanation());
         }

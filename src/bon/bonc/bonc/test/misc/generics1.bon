@@ -1,8 +1,6 @@
 static_diagram A
 component 
 
-  class ANY
-
   class A[X,Y]
 
   class B[X,Y]

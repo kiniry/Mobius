@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon.typechecker;
 
+import ie.ucd.bon.Main;
 import ie.ucd.bon.ast.AbstractVisitorWithAdditions;
 import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.BonSourceFile;
@@ -47,6 +48,7 @@ import ie.ucd.bon.typechecker.errors.NameNotUniqueError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClassChartError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClusterChartError;
 import ie.ucd.bon.util.AstUtil;
+import ie.ucd.bon.util.STUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,8 +111,24 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
         //TODO check if already in a cluster?
       }
 
-      st.genericsMap.put(context.clazz, generics);
-
+      //Deal with the formal generics
+      st.genericsMap.put(node, generics);
+      List<Type> filledInGenerics = new ArrayList<Type>(generics.size());
+      for (FormalGeneric fGeneric : generics) {
+        if (!st.genericNamesMap.containsKey(node, fGeneric.identifier)) {
+          st.genericNamesMap.put(node, fGeneric.identifier, fGeneric);
+          Type filledInType = fGeneric.type == null ? STUtil.anyType(fGeneric.location)
+              : STUtil.fillInPlaceHolders(fGeneric.type, st.filledInGenericNamesMap.getSecondDimension(node), true);
+          st.filledInGenericNamesMap.put(node, fGeneric.identifier, filledInType);
+          filledInGenerics.add(filledInType);
+        } else {
+          problems.addProblem(new DuplicateFormalGenericNameError(fGeneric.location, fGeneric.identifier));
+        }
+      }      
+      st.filledInGenericsMap.put(node, filledInGenerics);
+      Main.logDebug("Original generics for " + name + ": " + generics);
+      Main.logDebug("Filled in generics for " + name + ": " + filledInGenerics);
+      
       Type cType = Type.mk(name.name, AstUtil.formalGenericTypes(generics), loc);
       st.classNameToTypeMap.put(name.name, cType);
       
@@ -118,17 +136,6 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
       visitAll(generics);
       visitNode(classInterface);
       context.clazz = null;
-    }
-  }
-
-  @Override
-  public void visitFormalGeneric(FormalGeneric node, String identifier,
-      Type type, SourceLocation loc) {
-    FormalGeneric other = st.genericNamesMap.get(context.clazz, identifier);
-    if (other == null) {
-      st.genericNamesMap.put(context.clazz, identifier, node);
-    } else {
-      problems.addProblem(new DuplicateFormalGenericNameError(loc, identifier));
     }
   }
 
@@ -284,19 +291,28 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     }
 
     context.clusterChart = node;
-    for (ClassEntry entry : classes) {
-      //TODO check for duplicate class entries
-      st.informal.classClusterGraph.put(entry.getName(), node);
-      st.informal.descriptionGraph.put(entry.getName(), entry.getDescription());
-    }
-    for (ClusterEntry entry : clusters) {
-      //TODO check for duplicate cluster entries
-      st.informal.clusterClusterGraph.put(entry.getName(), node);
-      st.informal.descriptionGraph.put(entry.getName(), entry.getDescription());
-    }
+    visitAll(classes);   //TODO check for duplicate class entries
+    visitAll(clusters);  //TODO check for duplicate cluster entries
     context.clusterChart = null;
 
     indexing(node, indexing);
+  }
+  
+  @Override
+  public void visitClassEntry(ClassEntry node, String name, String description, SourceLocation loc) {
+    st.informal.classClusterGraph.put(name, context.clusterChart);
+    if (!"".equals(description.trim())) {
+      st.informal.descriptionGraph.put(name, description);
+    }
+  }
+  
+
+  @Override
+  public void visitClusterEntry(ClusterEntry node, String name, String description, SourceLocation loc) {
+    st.informal.clusterClusterGraph.put(name, context.clusterChart);
+    if (!"".equals(description.trim())) {
+      st.informal.descriptionGraph.put(name, description);
+    }
   }
 
   @Override
@@ -306,26 +322,11 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     st.clientRelations.add(node);
   }
 
-  @Override
-  public void visitClassEntry(ClassEntry node, String name, String description, SourceLocation loc) {
-    String existingDesc = st.informal.alternativeClassDescriptions.get(name);
-    if (existingDesc == null && !"".equals(description.trim())) {
-      st.informal.alternativeClassDescriptions.put(name, description);
-    }
-  }
-
-  @Override
-  public void visitClusterEntry(ClusterEntry node, String name, String description, SourceLocation loc) {
-    String existingDesc = st.informal.alternativeClusterDescriptions.get(name);
-    if (existingDesc == null && !"".equals(description.trim())) {
-      st.informal.alternativeClusterDescriptions.put(name, description);
-    }
-  }
-
   private void indexing(AstNode node, Indexing indexing) {
     if (indexing != null) {
       st.indexing.put(node, indexing);
     }
   }
+  
 }
 

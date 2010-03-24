@@ -298,17 +298,22 @@
 @Prog-args: {--formal}
 @Location { misc/ }
 @Input { generics4.bon }
-@Output { < InvalidFormalClassTypeError, #File:generics4.bon, 16, 18, T > }
+@Output { < InvalidFormalClassTypeError, #File:generics4.bon, 15, 18, T > }
 
 @Test-name: "Generics #5 - invalid use #3"
-@Prog-args: {--formal}
+@Prog-args: {--formal -d}
 @Location { misc/ }
 @Input { generics5.bon }
-@Output { < InvalidFormalClassTypeError, #File:generics5.bon, 9, 14, S >,
-          < TypeMismatchWithExplanationError, #File:generics5.bon, 9, 14, "Invalid type for generic parameter to A. ", O, S > }
+@Output { < TypeMismatchWithExplanationError, #File:generics5.bon, 9, 14, "Invalid type for generic parameter to A. ", O, S > }
 
 @Test-name: "Generics #6 - invalid use #4"
 @Prog-args: {--formal}
 @Location { misc/ }
 @Input { generics6.bon }
-//Should be an error, line 10
+@Output { < TypeMismatchWithExplanationError, #File:generics6.bon, 9, 15, "Invalid type for generic parameter. ", O, ANY > }
+
+@Test-name: "Generics #7 - invalid use #5"
+@Prog-args: {--formal}
+@Location { misc/ }
+@Input { generics7.bon }
+//Should be an error, line 6

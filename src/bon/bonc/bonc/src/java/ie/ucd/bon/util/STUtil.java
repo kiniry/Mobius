@@ -4,16 +4,26 @@
  */
 package ie.ucd.bon.util;
 
+import ie.ucd.bon.Main;
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
+import ie.ucd.bon.ast.Constants;
 import ie.ucd.bon.ast.FeatureSpecification;
+import ie.ucd.bon.ast.FormalGeneric;
+import ie.ucd.bon.ast.Type;
+import ie.ucd.bon.errorreporting.Problems;
+import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.BONST;
+import ie.ucd.bon.typechecker.InstantiatedClassType;
+import ie.ucd.bon.typechecker.errors.InvalidNumberOfGenericsProvided;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class STUtil {
 
@@ -134,5 +144,22 @@ public class STUtil {
   
   public static Collection<KeyPair<String,FeatureSpecification>> getFeaturesForClass(Clazz clazz, BONST st) {
     return st.featuresMap.getAllPairs(clazz);
+  }
+  
+  public static Type fillInPlaceHolders(Type type, Map<String,Type> placeHoldersMap, boolean allowTopLevelBinder) {
+    Main.logDebug("Type: " + type + ", phm: " + placeHoldersMap);
+    String instantiatedTypeName = 
+      (allowTopLevelBinder && placeHoldersMap.containsKey(type.identifier)) ? 
+            placeHoldersMap.get(type.identifier).identifier 
+          : type.identifier;
+    List<Type> filledInGenerics = new ArrayList<Type>(type.actualGenerics.size());
+    for (Type unin : type.actualGenerics) {
+      filledInGenerics.add(fillInPlaceHolders(unin, placeHoldersMap, true));
+    }
+    return Type.mk(instantiatedTypeName, filledInGenerics, type.location);
+  }
+  
+  public static Type anyType(SourceLocation location) {
+    return Type.mk("ANY", Constants.EMPTY_TYPE_LIST, location);
   }
 }

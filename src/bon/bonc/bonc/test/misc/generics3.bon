@@ -3,10 +3,10 @@ component
   class M
     inherit O
   end
+  class X
   class N
     inherit ANY
   end
-  class ANY
   class O
     inherit ANY
   end

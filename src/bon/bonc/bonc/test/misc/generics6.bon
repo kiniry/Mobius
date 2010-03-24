@@ -1,6 +1,5 @@
 static_diagram A
 component 
-  class ANY
   class O
 
   class LIST[T]

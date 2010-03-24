@@ -1,11 +1,11 @@
 static_diagram A
 component 
-  class ANY
   class O
 
   class A[T->O]
+  class S
 
   class B
-    inherit A[S] --Should be an error
+    inherit A[S] --Should be an error, S is not a subtype of O
   end
 end

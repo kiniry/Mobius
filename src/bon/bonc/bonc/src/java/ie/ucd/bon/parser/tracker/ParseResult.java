@@ -109,4 +109,8 @@ public class ParseResult {
     return severeProblemCount == 0;
   }
 
+  public String toString() {
+    return "Parse result for " + file + (isValidParse() ? " (valid) " : " (invalid) ");
+  }
+  
 }

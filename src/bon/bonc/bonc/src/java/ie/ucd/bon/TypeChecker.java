@@ -17,25 +17,36 @@ public final class TypeChecker {
   /** Prevent instantiation of TypeChecker. */
   private TypeChecker() { }
 
-  public static Problems typeCheck(final ParsingTracker tracker, final boolean typeCheck, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency) {
+  public static Problems typeCheck(final ParsingTracker tracker, final boolean checkInformal, 
+      final boolean checkFormal, final boolean checkConsistency) {
     Problems allProblems = new Problems("ALLTC");
-    
+
     PreliminaryChecker preCheck = new PreliminaryChecker(tracker.getSymbolTable());
     preCheck.runChecks(checkFormal, checkInformal); //TODO checkConsistency
     allProblems.addProblems(preCheck.getProblems());
 
-    TypeCheckerVisitor visitor = new TypeCheckerVisitor(tracker.getSymbolTable());
-    for (ParseResult parse : tracker.getParses()) {
-      parse.getParse().accept(visitor);
+    if (checkInformal) {
+      Main.logDebug("Checking informal.");
+      TypeCheckerVisitor visitor = new TypeCheckerVisitor(tracker.getSymbolTable());
+      for (ParseResult parse : tracker.getParses()) {
+        parse.getParse().accept(visitor);
+      }
+      allProblems.addProblems(visitor.getProblems());
     }
-    allProblems.addProblems(visitor.getProblems());
-    
-    FormalTypeCheckerVisitor formalTCVisitor = new FormalTypeCheckerVisitor(tracker.getSymbolTable());
-    for (ParseResult parse : tracker.getParses()) {
-      parse.getParse().accept(formalTCVisitor);
+
+    if (checkFormal) {
+      Main.logDebug("Checking formal.");
+      FormalTypeCheckerVisitor formalTCVisitor = new FormalTypeCheckerVisitor(tracker.getSymbolTable());
+      for (ParseResult parse : tracker.getParses()) {
+        parse.getParse().accept(formalTCVisitor);
+      }
+      allProblems.addProblems(formalTCVisitor.getProblems());
     }
-    allProblems.addProblems(formalTCVisitor.getProblems());
     
+    if (checkConsistency) {
+      //TODO
+    }
+
     return allProblems;
   }
 

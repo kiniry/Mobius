@@ -7,7 +7,6 @@ import ie.ucd.bon.ast.ClassInterface;
 import ie.ucd.bon.ast.ClassName;
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
-import ie.ucd.bon.ast.Constants;
 import ie.ucd.bon.ast.Expression;
 import ie.ucd.bon.ast.Feature;
 import ie.ucd.bon.ast.FormalGeneric;
@@ -23,15 +22,10 @@ import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.errors.InvalidFormalClassTypeError;
 import ie.ucd.bon.typechecker.errors.InvalidNumberOfGenericsProvided;
 import ie.ucd.bon.typechecker.errors.TypeMismatchWithExplanationError;
-import ie.ucd.bon.util.Converter;
 import ie.ucd.bon.util.HashMapStack;
 import ie.ucd.bon.util.STUtil;
-import ie.ucd.bon.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -61,9 +55,9 @@ public class FormalTypeCheckerVisitor extends AbstractVisitorWithAdditions imple
       Boolean persistent, Boolean interfaced, String comment, SourceLocation loc) {
     context.clazz = node;
 
-    for (FormalGeneric generic : generics) {
-      if (generic.type != null) {
-        checkValidType(generic.type);
+    if (st.filledInGenericsMap.containsKey(node)) {
+      for (Type t : st.filledInGenericsMap.get(node)) {
+        checkValidType(t);
       }
     }
     
@@ -77,147 +71,12 @@ public class FormalTypeCheckerVisitor extends AbstractVisitorWithAdditions imple
       SourceLocation loc) {
 
     for (Type parent : parents) {
-      Clazz parentClazz = st.classes.get(parent.identifier);
-      if (parentClazz == null) {
-        problems.addProblem(new InvalidFormalClassTypeError(parent.getLocation(), parent.getIdentifier()));
-      } else {
-        checkActualGenerics(parent, parentClazz, context.clazz);
-      }
+      Type filledInParent = STUtil.fillInPlaceHolders(parent, st.filledInGenericNamesMap.getSecondDimension(context.clazz), false);
+      checkValidType(filledInParent);
     }
 
     visitAll(features);
     visitAll(invariant);
-  }
-  
-  private boolean checkValidType(Type type) {
-    Clazz c = classForName(type.identifier);
-    if (c == null) {
-      problems.addProblem(new InvalidFormalClassTypeError(type.location.shortenToLength(type.identifier.length()), type.identifier));
-      return false;
-    } else {
-      if (c.generics.size() != type.actualGenerics.size()) {
-        problems.addProblem(new InvalidNumberOfGenericsProvided(type.location, type.identifier, c.generics.size(), type.actualGenerics.size()));
-      }
-      for (Type actual : type.actualGenerics) {
-        if (!checkValidType(actual)) {
-          return false;
-        }
-      }
-      return true;
-    }
-  }
-
-  private Clazz classForName(String name) {
-    return st.classes.get(name);
-  }
-  
-  private void checkActualGenerics(Type inheritsType, Clazz inheritedClazz, Clazz clazzInheriting) {
-    List<Type> actualGenerics = inheritsType.actualGenerics;
-    List<FormalGeneric> formalGenerics = inheritedClazz.generics;
-    
-    //TODO check every type used in actual is valid (i.e. in st or generic binder for this class)
-    
-    if (actualGenerics.size() != formalGenerics.size()) {
-      problems.addProblem(new InvalidNumberOfGenericsProvided(inheritsType.getLocation(), inheritsType.identifier, formalGenerics.size(), actualGenerics.size()));
-      return; //No point in checking further
-    }
-    
-    Map<String,Type> classInheritingBindings = new HashMap<String,Type>();
-    for (FormalGeneric classInheritingGeneric : clazzInheriting.generics) {
-      classInheritingBindings.put(classInheritingGeneric.identifier, 
-                                  classInheritingGeneric.type == null ? 
-                                        Type.mk("ANY", Constants.EMPTY_TYPE_LIST, classInheritingGeneric.location)
-                                      : classInheritingGeneric.type); 
-    }
-    
-    //Instantiate actual type using classes generic type binders
-    List<Type> actualGenericsInst = new ArrayList<Type>();
-    for (Type actualGeneric : actualGenerics) {
-      Type inst = instantiate(actualGeneric, classInheritingBindings);
-      actualGenericsInst.add(inst);
-      checkValidType(inst);
-    }
-    
-    Map<String,Type> binderContext = new HashMap<String,Type>();
-    for (int i=0; i < actualGenericsInst.size(); i++) {
-      Type actualGenericInst = actualGenericsInst.get(i);
-      FormalGeneric formalGeneric = formalGenerics.get(i);
-
-      //Deal with using binders in subsequent formal generics
-      Type formalGenericType = formalGeneric.type;
-      Type formalGenericTypeInst = formalGenericType == null ?
-            Type.mk("ANY", Constants.EMPTY_TYPE_LIST, formalGeneric.location)
-          : instantiate(formalGenericType, binderContext);  
-      Main.logDebug("formalGenericTypeInst = " + StringUtil.prettyPrint(formalGenericTypeInst));
-      
-      //Check compatible types
-      if (!STUtil.isClassAncestorOrEqual(formalGenericTypeInst.identifier, actualGenericInst.identifier, st)) {
-        problems.addProblem(new TypeMismatchWithExplanationError(actualGenericInst.location, "Invalid type for generic parameter to " + inheritsType.identifier + ". ", formalGenericTypeInst.toString(), actualGenericInst.toString()));
-        return;
-      }
-      
-      //Check generics are identical, but at the level of the formalGeneric
-      
-      
-      //Add the actual generic as a new binder
-      binderContext.put(formalGeneric.identifier, actualGenericInst);
-    }
-
-  }
-  
-  private Type deriveParentType(Type actual, Type parent, final BONST st) {
-    //Find inheritance path to actual
-    List<String> inhPathToParent = st.simpleClassInheritanceGraph.findPath(actual.identifier, parent.identifier, Converter.<String>identityConverter());
-    System.out.println("Found inheritance path: " + inhPathToParent + " for " + actual + " to " + parent);
-    Collection<Clazz> inhPathToParentAsClazzes = new Converter<String,Clazz>() {
-      public Clazz convert(String toConvert) {
-        return st.classes.get(toConvert);
-      }
-    }.convert(inhPathToParent);
-    
-    Type current = actual;
-    
-    Iterator<Clazz> inhPathIterator = inhPathToParentAsClazzes.iterator();
-    inhPathIterator.next();
-    while (inhPathIterator.hasNext()) {
-//      current = raiseTo(current, inhPathIterator.next());
-    }
-    
-    return current;
-  }
-  
-//  private Type raiseTo(Type current, Clazz directParent) {
-//    
-//  }
-  
-  private Type instantiate(Type type, Map<String,Type> binders) {
-    Main.logDebug("Type: " + StringUtil.prettyPrint(type));
-    Main.logDebug("Binders: " + binders.toString());
-    String instantiatedTypeName = binders.containsKey(type.identifier) ? binders.get(type.identifier).identifier : type.identifier;
-    List<Type> instantiatedGenerics = new ArrayList<Type>(type.actualGenerics.size());
-    for (Type unin : type.actualGenerics) {
-      instantiatedGenerics.add(instantiate(unin, binders));
-    }
-    return Type.mk(instantiatedTypeName, instantiatedGenerics, type.location);
-  }
-  
-  private boolean identicalType(Type type1, Type type2) {
-    if (!type1.identifier.equals(type2.identifier)) {
-      return false;
-    }
-    List<Type> type1ActualGenerics = type1.actualGenerics;
-    List<Type> type2ActualGenerics = type2.actualGenerics;
-    if (type1ActualGenerics.size() != type2ActualGenerics.size()) {
-      return false;
-    }
-    for (int i=0; i < type1ActualGenerics.size(); i++) {
-      Type type1ActualGeneric = type1ActualGenerics.get(i);
-      Type type2ActualGeneric = type2ActualGenerics.get(i);
-      if (!identicalType(type1ActualGeneric, type2ActualGeneric)) {
-        return false;
-      }
-    }
-    return true;
   }
   
   @Override
@@ -235,6 +94,141 @@ public class FormalTypeCheckerVisitor extends AbstractVisitorWithAdditions imple
     visitAll(components);
   }
   
+  
+  private boolean checkValidType(Type type) {
+    Main.logDebug("Checking " + type + " is a valid type");
+    Clazz c = classForName(type.identifier);
+    if (c == null) {
+      problems.addProblem(new InvalidFormalClassTypeError(type.location.shortenToLength(type.identifier.length()), type.identifier));
+      return false;
+    } else {
+      if (c.generics.size() != type.actualGenerics.size()) {
+        problems.addProblem(new InvalidNumberOfGenericsProvided(type.location, type.identifier, c.generics.size(), type.actualGenerics.size()));
+      }
+      
+      List<Type> filledInGenerics = st.filledInGenericsMap.get(c);
+      if (filledInGenerics != null) {
+        for (int i=0; i < filledInGenerics.size(); i++) {
+          Type actual = type.actualGenerics.get(i);
+          Type formal = filledInGenerics.get(i);
+          
+          if (!checkValidType(actual)) {
+            return false;
+          }
+          InstantiatedClassType ict = instantiateClass(classForName(actual.identifier), actual);
+          if (!checkValidSubtypeOrEqual(ict, formal, "Invalid type for generic parameter. ")) {
+            return false;
+          }
+          
+        }
+      }
+      return true;
+    }
+  }
+
+  private Clazz classForName(String name) {
+    return st.classes.get(name);
+  }
+  
+  private InstantiatedClassType instantiateClass(Clazz c, Type actualType) {
+    Map<String,Type> binders = new HashMap<String,Type>();
+    List<Type> actualGenerics = actualType.actualGenerics;
+    
+    //Check same num of generics
+    if (actualGenerics.size() != c.generics.size()) {
+      problems.addProblem(new InvalidNumberOfGenericsProvided(actualType.getLocation(), actualType.identifier, c.generics.size(), actualGenerics.size()));
+      return null;
+    }
+    
+    for (int i=0; i < c.generics.size(); i++) {
+      FormalGeneric formalGeneric = c.generics.get(i);
+      Type suppliedGeneric = actualGenerics.get(i);
+      
+      //Get actual constraint by filling in binders in type constraint (or ANY if no constraint)
+      Type formalGenericConstraint = formalGeneric.type == null ? 
+          STUtil.anyType(formalGeneric.location) 
+          : STUtil.fillInPlaceHolders(formalGeneric.type, binders, true);
+          
+      Clazz suppliedGenericClazz = classForName(suppliedGeneric.identifier);
+      if (suppliedGenericClazz == null) {
+        return null;
+      }
+      //Check suppliedGeneric is ok for filledInFormalGenericConstraint
+      InstantiatedClassType ict = instantiateClass(suppliedGenericClazz, suppliedGeneric);
+      if (!checkValidSubtypeOrEqual(ict, formalGenericConstraint, "SPOOF")) {
+        return null;
+      }      
+          
+      binders.put(formalGeneric.identifier, suppliedGeneric);
+    }
+
+    return new InstantiatedClassType(c, binders, actualType);
+  }
+  
+  private boolean checkValidSubtypeOrEqual(InstantiatedClassType instType1, Type type2, String notAncestorMessage) {
+    Type type1 = instType1.type;
+    
+    if (type1.identifier.equals(type2.identifier)) {
+      boolean valid = true;
+      for (int i=0; i < type1.actualGenerics.size(); i++) {
+        if (!typeEquality(type1.actualGenerics.get(i),type2.actualGenerics.get(i))) {
+          //TODO problem
+          valid = false;
+        }
+      }
+      if (!valid) {
+        return false;
+      }
+    }    
+    
+    //We're not the exact type, check if subtype
+    if (!STUtil.isClassAncestorOrEqual(type2.identifier, type1.identifier, st)) {
+      problems.addProblem(new TypeMismatchWithExplanationError(type1.location, notAncestorMessage, type2.toString(), type1.toString()));
+      return false;
+    }
+
+    //We're a subtype, so we must raise ourself one level towards the ancestor, then ask again
+    Clazz type1Clazz = classForName(type1.identifier);
+    if (type1Clazz == null) {
+      return false;
+    }
+
+    //Find the first parent that has the same ancestor, move to that level
+    boolean found = false;
+    if (type1Clazz.classInterface != null) {
+      for (Type parent : type1Clazz.classInterface.parents) {
+        if (STUtil.isClassAncestorOrEqual(type2.identifier, parent.identifier, st)) {
+          Type parentFilledIn = STUtil.fillInPlaceHolders(parent, instType1.bindersMap, false);
+          InstantiatedClassType ict = instantiateClass(classForName(parent.identifier), parentFilledIn);
+          if (!checkValidSubtypeOrEqual(ict, type2, notAncestorMessage)) {
+            return false;
+          }
+          found = true;
+          break;
+        }
+      }
+    }
+    if (!found) {
+      //TODO - shouldn't happen?
+      return false;
+    }
+    return true;
+  }
+  
+  private boolean typeEquality(Type type1, Type type2) {
+    if (!type1.identifier.equals(type2.identifier)) {
+      return false;
+    }
+    if (type1.actualGenerics.size() != type2.actualGenerics.size()) {
+      return false;
+    }
+    for (int i=0; i < type1.actualGenerics.size(); i++) {
+      if (!typeEquality(type1.actualGenerics.get(i),type2.actualGenerics.get(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
   
   public Problems getProblems() {
     return problems;

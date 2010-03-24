@@ -4,12 +4,15 @@
  */
 package ie.ucd.bon.parser.tracker;
 
+import ie.ucd.bon.Parser;
 import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.typechecker.BONST;
+import ie.ucd.bon.util.FileUtil;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +21,7 @@ import java.util.Vector;
 public class ParsingTracker {
 
   private ParseResult stdParse;
+  private final ParseResult builtInParse;
   private final Vector<ParseResult> parses;
   private final Map<File,ParseResult> parsesMap;
   private final Problems problems;
@@ -40,10 +44,19 @@ public class ParsingTracker {
     finalMessage = null;
 
     symbolTable = new BONST();
+    
+    builtInParse = Parser.parse(new File("<built-in>"), FileUtil.getInputStream("src/builtin/built_in.bon"));
+    Parser.buildSymbolTable(builtInParse, this);
   }
 
   public Collection<ParseResult> getParses() {
     return parses;
+  }
+  
+  public Collection<ParseResult> getParsesIncludingBuiltIn() {
+    Collection<ParseResult> allParses = new ArrayList<ParseResult>(parses.size() + 1);
+    allParses.add(builtInParse);
+    return allParses;
   }
 
   public ParseResult getParseResult(File file) {
@@ -54,13 +67,17 @@ public class ParsingTracker {
   }
 
   public void addParse(File file, ParseResult parse) {
+    parsesMap.put(file, parse);
+    addParse(parse);
+  }
+  
+  public void addStdParse(ParseResult stdParse) {
+    this.stdParse = stdParse;
+    addParse(stdParse);
+  }
+  
+  private void addParse(ParseResult parse) {
     parses.add(parse);
-    if (file == null) {
-      stdParse = parse;
-    } else {
-      parsesMap.put(file, parse);
-    }
-
     severeProblemCount += parse.getSevereProblemCount();
     if (!parse.isValidParse()) {
       containsFailedParses = true;

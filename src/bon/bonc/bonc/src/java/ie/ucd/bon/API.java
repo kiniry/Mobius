@@ -59,7 +59,7 @@ public final class API {
     if (readFromStdIn) {
       ParseResult parseResult = parseInput(SourceReader.getInstance().readStandardInput(), null, tracker, printTiming);
       if (parseResult != null) {
-        tracker.addParse(null, parseResult);
+        tracker.addStdParse(parseResult);
       }
     }
 
@@ -128,6 +128,7 @@ public final class API {
 
     if (genClassDic && printType != BONcOptionsInterface.Print.DIC) {
       String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
+      System.out.println("Class dic: " + classDic);
       File classDicAutoFile = new File("class-dic-auto");
       if (!classDic.equals("")) {
         tracker.addParse(classDicAutoFile, Parser.parse(classDicAutoFile, new ByteArrayInputStream(classDic.getBytes())));
@@ -161,22 +162,26 @@ public final class API {
     }
   }
 
-  public static Problems typeCheck(final ParsingTracker tracker, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency, final boolean typeCheck, final boolean timing) {
-    Main.logDebug("typeCheck: " + typeCheck + ", checkInformal: " + checkInformal + ", checkFormal: " + checkFormal + ", checkConsistency: " + checkConsistency);
+  public static Problems typeCheck(final ParsingTracker tracker, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency, final boolean timing) {
+    Main.logDebug(" checkInformal: " + checkInformal + ", checkFormal: " + checkFormal + ", checkConsistency: " + checkConsistency);
 
     if (timing) {
       long startTime = System.nanoTime();
-      Problems problems = TypeChecker.typeCheck(tracker, typeCheck, checkInformal, checkFormal, checkConsistency);
+      Problems problems = TypeChecker.typeCheck(tracker, checkInformal, checkFormal, checkConsistency);
       long endTime = System.nanoTime();
       System.out.println("Typechecking took: " + StringUtil.timeString(endTime - startTime));
       return problems;
     } else {
-      return TypeChecker.typeCheck(tracker, typeCheck, checkInformal, checkFormal, checkConsistency);
+      return TypeChecker.typeCheck(tracker, checkInformal, checkFormal, checkConsistency);
     }
   }
+  
+  public static Problems typeCheck(final ParsingTracker tracker) {
+    return typeCheck(tracker, true, true, true, false);
+  }
 
-  static Problems typeCheck(final ParsingTracker tracker, final BONcOptionsInterface so, final boolean timing) {
-    return typeCheck(tracker, so.getCheckInformal(), so.getCheckFormal(), so.getCheckConsistency(), so.getTypecheck(), timing);
+  public static Problems typeCheck(final ParsingTracker tracker, final BONcOptionsInterface so, final boolean timing) {
+    return typeCheck(tracker, so.getCheckInformal(), so.getCheckFormal(), so.getCheckConsistency(), timing);
   }
 
   //TODO combined operations for a nicer interface in some situations. For example parseAndTypeCheck(final Collection<File> files, final boolean readFromStdIn, final boolean printTiming

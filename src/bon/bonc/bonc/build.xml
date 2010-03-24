@@ -88,11 +88,17 @@
       <fileset dir="templates/" includes="* */* */*/* */*/*/*"/> 
     </copy>
 
+  	<mkdir dir="${build}/src"/>
+  	<mkdir dir="${build}/src/builtin"/>
+  	<copy todir="${build}/src/builtin" file="${src}/builtin/built_in.bon"/>
+  	
     <echo message="${release-name}-${release-version}" file="${build}/version"/>
 
     <copy todir="${dist}">
       <fileset dir="${src-script}" includes="bonc,bonc.bat,bonc.js,update,my-bonc.example"/>
     </copy>
+  	
+  	
 
     <jar jarfile="${dist}/lib/BON.jar" basedir="${build}">
       <manifest>

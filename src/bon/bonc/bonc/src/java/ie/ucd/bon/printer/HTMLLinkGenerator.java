@@ -26,7 +26,9 @@ public class HTMLLinkGenerator {
     BONST.BONSTInformal st = parsingTracker.getSymbolTable().informal;
     PrintingCountVisitor counter = new PrintingCountVisitor();
     for (ParseResult parse : parsingTracker.getParses()) {
-      parse.getParse().accept(counter);
+      if (parse.getParse() != null) {
+        parse.getParse().accept(counter);
+      }
     }
 
     StringBuilder sb = new StringBuilder();

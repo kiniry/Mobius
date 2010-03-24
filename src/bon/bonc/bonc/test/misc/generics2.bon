@@ -6,11 +6,10 @@ component
   class N
     inherit ANY
   end
-  class ANY
   class O
     inherit ANY
   end
-
+  class X
   class O_SUB
     inherit O
   end
