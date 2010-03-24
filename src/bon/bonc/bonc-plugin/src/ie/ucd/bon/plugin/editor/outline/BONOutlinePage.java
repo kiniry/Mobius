@@ -154,7 +154,7 @@ public class BONOutlinePage extends ContentOutlinePage {
         AstNode aNode = bNode.getValue();
         SourceLocation loc = aNode.getLocation();
         //TODO adjust from eclipse char position?
-        if (loc.getAbsoluteCharPositionStart() <= offset && loc.getAbsoluteCharPositionEnd() >= offset) {
+        if (loc.getAbsoluteCharPositionStart() <= offset && loc.getAbsoluteCharPositionEnd()+1 >= offset) {
           TreeNode[] children = node.getChildren();
           //See if a child node is more exact
           TreeNode found = find(children, offset);

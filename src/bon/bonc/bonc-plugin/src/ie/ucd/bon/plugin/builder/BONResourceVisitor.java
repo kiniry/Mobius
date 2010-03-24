@@ -22,7 +22,6 @@ public class BONResourceVisitor implements IResourceVisitor {
     }
 
     if (resource.getFileExtension() != null && resource.getFileExtension().equalsIgnoreCase("bon")) {
-      //System.out.println("BON Resource!");
       bonResources.add(resource);
     }
 

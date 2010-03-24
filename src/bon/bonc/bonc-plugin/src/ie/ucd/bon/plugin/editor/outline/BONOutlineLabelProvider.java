@@ -3,6 +3,7 @@ package ie.ucd.bon.plugin.editor.outline;
 import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.ClassChart;
 import ie.ucd.bon.ast.Clazz;
+import ie.ucd.bon.ast.ClientRelation;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.FeatureArgument;
@@ -28,7 +29,7 @@ public class BONOutlineLabelProvider implements ILabelProvider {
       BONDocumentOutlineNode node = (BONDocumentOutlineNode)element;
       AstNode value = node.getValue();
       if (value instanceof StaticDiagram) {
-        return null; //TODO
+        return JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_PACKFRAG_ROOT);
       } else if (value instanceof Cluster) {
         return JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_PACKAGE);
       } else if (value instanceof Clazz) {
@@ -66,6 +67,9 @@ public class BONOutlineLabelProvider implements ILabelProvider {
         String args = "(" + StringUtil.appendWithSeparator(AstUtil.nodeToStringConverter.convert(argTypes),",") + ")";
         String returnType = fSpec.hasType == null ? "" : " " + StringUtil.prettyPrint(fSpec.hasType);
         return featureNames + args + returnType; 
+      } else if (value instanceof ClientRelation) {
+        ClientRelation rel = (ClientRelation)value;
+        return rel.client.name + " client " + rel.supplier.name;  
       }
       return "NONE..." + value.getClass();
     }
@@ -88,7 +92,5 @@ public class BONOutlineLabelProvider implements ILabelProvider {
   public void removeListener(ILabelProviderListener listener) {
     // TODO Auto-generated method stub
   }
-
-
 
 }

@@ -1,8 +1,9 @@
 package ie.ucd.bon.plugin.builder;
 
-import ie.ucd.bon.Main;
+import ie.ucd.bon.API;
 import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.errorreporting.Problems;
+import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.plugin.BONPlugin;
 import ie.ucd.bon.plugin.util.PluginUtil;
 import ie.ucd.bon.source.SourceLocation;
@@ -30,7 +31,6 @@ public class BONcBuilder extends IncrementalProjectBuilder {
 
   private static final String BUILDER_ID = BONPlugin.PLUGIN_ID + ".boncbuilder";
   private static final String MARKER_ID = BONPlugin.PLUGIN_ID + ".bonclocproblemmarker";
-  //private static final String NO_LOC_MARKER_ID = BONPlugin.PLUGIN_ID + ".boncproblemmarker";
 
   @SuppressWarnings("unchecked")
   protected IProject[] build(final int kind, final Map args, final IProgressMonitor monitor)
@@ -62,6 +62,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
         delta.accept(changeVisitor);
 
         if (changeVisitor.getChangedBonResources().size() == 0) {
+          //No bon files were changed, don't run
           return;
         }
       }
@@ -70,24 +71,22 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     List<IResource> bonResources = BONResourceVisitor.getBONResources(getProject());
 
     if (bonResources.size() == 0) {
-      //No .bon files, don't run BONc
+      //No .bon files at all, don't run
       return;
     }
 
     Map<File,IResource> pathResourceMap = PluginUtil.getResourceMap(bonResources);
 
-    List<String> boncArgs = new ArrayList<String>();
-    boncArgs.add("-i");
-    boncArgs.add("-d");
-    for (File file : pathResourceMap.keySet()) {
-      boncArgs.add(file.getAbsolutePath());
-    }
-
     getProject().deleteMarkers(MARKER_ID, false, IResource.DEPTH_INFINITE);
 
-    Problems problems = Main.main2(boncArgs.toArray(new String[boncArgs.size()]), false);
+    ParsingTracker tracker = API.parse(pathResourceMap.keySet());
+    if (tracker.continueFromParse()) {
+      API.typeCheck(tracker, true, false, false, false);
+    }    
+    Problems problems = tracker.getErrorsAndWarnings();
     Collection<BONProblem> actualProblems = problems.getProblems();
 
+    //Create a marker for each problem
     try {
       for (BONProblem bonProblem : actualProblems) {
         int severity;
@@ -99,7 +98,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
           severity = IMarker.SEVERITY_INFO;
         }
         SourceLocation location = bonProblem.getLocation();
-        IMarker marker = PluginUtil.createMarker(getProject(), MARKER_ID, location, pathResourceMap, bonProblem.getMessage(), severity);
+        PluginUtil.createMarker(getProject(), MARKER_ID, location, pathResourceMap, bonProblem.getMessage(), severity);
       }
     } catch (Exception e) {
       System.out.println("Exception: " + e);
@@ -179,7 +178,6 @@ public class BONcBuilder extends IncrementalProjectBuilder {
       description.setBuildSpec(newCmds.toArray(new ICommand[newCmds.size()])); 
       try { 
         project.deleteMarkers(MARKER_ID, false, IResource.DEPTH_INFINITE);
-        //project.deleteMarkers(NO_LOC_MARKER_ID, false, IResource.DEPTH_INFINITE);
         project.setDescription(description, null);
       } catch (CoreException e) {
         return;

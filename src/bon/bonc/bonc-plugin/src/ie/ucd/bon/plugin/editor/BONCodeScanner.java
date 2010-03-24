@@ -105,7 +105,6 @@ public class BONCodeScanner extends RuleBasedScanner {
 		rules.add(new EndOfLineRule("--", comment));
 		
 		// Add rule for strings and character constants.
-		//rules.add(new SingleLineRule("\"", "\"", string, '\\'));
 		rules.add(new MultiLineRule("\"", "\"", string, '\\'));
 		rules.add(new SingleLineRule("'", "'", string, '\\'));
 		
