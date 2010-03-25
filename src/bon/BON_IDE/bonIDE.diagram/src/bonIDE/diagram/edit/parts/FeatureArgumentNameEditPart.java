@@ -378,13 +378,13 @@ public class FeatureArgumentNameEditPart extends CompartmentEditPart implements 
 	}
 
 	/**
-	 * @generated
+	 * @generated NOT
 	 */
 	protected void refreshVisuals() {
 		super.refreshVisuals();
 		refreshLabel();
 		refreshFont();
-		refreshFontColor();
+		//refreshFontColor();
 		refreshUnderline();
 		refreshStrikeThrough();
 	}

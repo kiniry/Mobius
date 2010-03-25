@@ -100,13 +100,13 @@ public class InheritanceClauseEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabelEditPart) {
+			((bonIDE.diagram.edit.parts.WrappingLabelEditPart) childEditPart).setLabel(getPrimaryShape().getFigureInheritanceTitleLabel());
+			return true;
+		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart) {
 			((bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart) childEditPart).setLabel(getPrimaryShape()
 					.getFigureInheritanceClassListLabel());
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabelEditPart) {
-			((bonIDE.diagram.edit.parts.WrappingLabelEditPart) childEditPart).setLabel(getPrimaryShape().getFigureInheritanceTitleLabel());
 			return true;
 		}
 		return false;
@@ -116,10 +116,10 @@ public class InheritanceClauseEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabelEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.WrappingLabelEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart) {
 			return true;
 		}
 		return false;
@@ -278,6 +278,7 @@ public class InheritanceClauseEditPart extends ShapeNodeEditPart {
 
 			this.setLayoutManager(layoutThis);
 
+			this.setFill(false);
 			this.setOutline(false);
 			this.setLineWidth(1);
 			createContents();

@@ -377,13 +377,13 @@ public class FeatureModifierEditPart extends CompartmentEditPart implements ITex
 	}
 
 	/**
-	 * @generated
+	 * @generated NOT
 	 */
 	protected void refreshVisuals() {
 		super.refreshVisuals();
 		refreshLabel();
 		refreshFont();
-		refreshFontColor();
+		//refreshFontColor();
 		refreshUnderline();
 		refreshStrikeThrough();
 	}

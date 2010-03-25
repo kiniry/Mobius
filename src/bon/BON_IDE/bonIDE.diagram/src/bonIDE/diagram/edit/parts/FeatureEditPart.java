@@ -112,21 +112,21 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureCommentEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureCommentFigure());
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
 			((bonIDE.diagram.edit.parts.FeatureNamesEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureNamesFigure());
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureTypeFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
 			((bonIDE.diagram.edit.parts.FeatureModifierEditPart) childEditPart)
 					.setLabel(getPrimaryShape().getFigureFeatureModifierFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureCommentEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureCommentFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureTypeFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) {
@@ -154,16 +154,16 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
-			return true;
-		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) {
@@ -391,17 +391,10 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 			layoutThis.setStretchMinorAxis(false);
 			layoutThis.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
 
-			//			ToolbarLayout layoutThis = new ToolbarLayout();
-			//			layoutThis.setStretchMinorAxis(false);
-			//			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
-			//
-			//			layoutThis.setSpacing(0);
-			//			layoutThis.setVertical(true);
-
 			this.setLayoutManager(layoutThis);
-
-			this.setLineWidth(1);
-			this.setForegroundColor(THIS_FORE);
+			this.setOutline(false);
+			//this.setLineWidth(1);
+			//this.setForegroundColor(THIS_FORE);
 			createContents();
 		}
 
@@ -411,6 +404,8 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 		private void createContents() {
 
 			fFigureFeatureSignatureRectangleFigure = new RectangleFigure();
+			fFigureFeatureSignatureRectangleFigure.setFill(false);
+			fFigureFeatureSignatureRectangleFigure.setOutline(false);
 			fFigureFeatureSignatureRectangleFigure.setLineWidth(1);
 			fFigureFeatureSignatureRectangleFigure.setForegroundColor(FFIGUREFEATURESIGNATURERECTANGLEFIGURE_FORE);
 
@@ -427,6 +422,7 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 
 			fFigureFeatureNamesFigure = new WrappingLabel();
 			fFigureFeatureNamesFigure.setText("<...>");
+			fFigureFeatureNamesFigure.setForegroundColor(FFIGUREFEATURENAMESFIGURE_FORE);
 
 			fFigureFeatureNamesFigure.setFont(FFIGUREFEATURENAMESFIGURE_FONT);
 
@@ -434,6 +430,7 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 
 			fFigureFeatureModifierFigure = new WrappingLabel();
 			fFigureFeatureModifierFigure.setText("");
+			fFigureFeatureModifierFigure.setForegroundColor(FFIGUREFEATUREMODIFIERFIGURE_FORE);
 
 			fFigureFeatureModifierFigure.setFont(FFIGUREFEATUREMODIFIERFIGURE_FONT);
 
@@ -441,6 +438,7 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 
 			fFigureFeatureTypeFigure = new WrappingLabel();
 			fFigureFeatureTypeFigure.setText("");
+			fFigureFeatureTypeFigure.setForegroundColor(FFIGUREFEATURETYPEFIGURE_FORE);
 
 			fFigureFeatureTypeFigure.setFont(FFIGUREFEATURETYPEFIGURE_FONT);
 
@@ -448,12 +446,15 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 
 			fFigureFeatureCommentFigure = new WrappingLabel();
 			fFigureFeatureCommentFigure.setText("");
+			fFigureFeatureCommentFigure.setForegroundColor(FFIGUREFEATURECOMMENTFIGURE_FORE);
 
 			fFigureFeatureCommentFigure.setFont(FFIGUREFEATURECOMMENTFIGURE_FONT);
 
 			this.add(fFigureFeatureCommentFigure);
 
 			fFigureFeatureArgumentsRectangleFigure = new RectangleFigure();
+			fFigureFeatureArgumentsRectangleFigure.setFill(false);
+			fFigureFeatureArgumentsRectangleFigure.setOutline(false);
 			fFigureFeatureArgumentsRectangleFigure.setLineWidth(1);
 			fFigureFeatureArgumentsRectangleFigure.setForegroundColor(FFIGUREFEATUREARGUMENTSRECTANGLEFIGURE_FORE);
 
@@ -471,6 +472,8 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 			fFigureFeatureArgumentsRectangleFigure.setLayoutManager(layoutFFigureFeatureArgumentsRectangleFigure);
 
 			fFigurePreConditionsRectangleFigure = new RectangleFigure();
+			fFigurePreConditionsRectangleFigure.setFill(false);
+			fFigurePreConditionsRectangleFigure.setOutline(false);
 			fFigurePreConditionsRectangleFigure.setLineWidth(1);
 			fFigurePreConditionsRectangleFigure.setForegroundColor(FFIGUREPRECONDITIONSRECTANGLEFIGURE_FORE);
 
@@ -488,6 +491,8 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 			fFigurePreConditionsRectangleFigure.setLayoutManager(layoutFFigurePreConditionsRectangleFigure);
 
 			fFigurePostConditionsRectangeFigure = new RectangleFigure();
+			fFigurePostConditionsRectangeFigure.setFill(false);
+			fFigurePostConditionsRectangeFigure.setOutline(false);
 			fFigurePostConditionsRectangeFigure.setLineWidth(1);
 			fFigurePostConditionsRectangeFigure.setForegroundColor(FFIGUREPOSTCONDITIONSRECTANGEFIGURE_FORE);
 
@@ -626,22 +631,42 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREFEATURENAMESFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
+	static final Color FFIGUREFEATURENAMESFIGURE_FORE = new Color(null, 0, 0, 128);
 
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREFEATUREMODIFIERFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
+	static final Font FFIGUREFEATURENAMESFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.ITALIC);
 
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREFEATURETYPEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
+	static final Color FFIGUREFEATUREMODIFIERFIGURE_FORE = new Color(null, 0, 0, 128);
 
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREFEATURECOMMENTFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.NORMAL);
+	static final Font FFIGUREFEATUREMODIFIERFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.ITALIC);
+
+	/**
+	 * @generated
+	 */
+	static final Color FFIGUREFEATURETYPEFIGURE_FORE = new Color(null, 0, 0, 200);
+
+	/**
+	 * @generated
+	 */
+	static final Font FFIGUREFEATURETYPEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 7, SWT.ITALIC);
+
+	/**
+	 * @generated
+	 */
+	static final Color FFIGUREFEATURECOMMENTFIGURE_FORE = new Color(null, 192, 0, 0);
+
+	/**
+	 * @generated
+	 */
+	static final Font FFIGUREFEATURECOMMENTFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 6, SWT.NORMAL);
 
 	/**
 	 * @generated

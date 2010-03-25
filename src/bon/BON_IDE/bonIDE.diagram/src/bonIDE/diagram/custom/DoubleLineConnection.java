@@ -90,7 +90,7 @@ public class DoubleLineConnection extends PolylineConnectionEx {
 		PrecisionPoint startPoint = new PrecisionPoint(connectionPoints.getPoint(0));
 		PrecisionPoint endPoint = new PrecisionPoint(connectionPoints.getPoint(1));
 		
-		float pixelCount = 8;				
+		float pixelCount = 10;				
 
 		double dx = endPoint.x - startPoint.x;
 		double dy = endPoint.y - startPoint.y;

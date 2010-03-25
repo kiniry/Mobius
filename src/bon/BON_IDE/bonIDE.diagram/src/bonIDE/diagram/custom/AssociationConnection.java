@@ -18,7 +18,7 @@ public class AssociationConnection extends DoubleLineConnection {
 		arrowPoints.addPoint(-1, -1);
 		solidArrow.setTemplate(arrowPoints);
 		solidArrow.setFill(true);
-		solidArrow.setScale(2,2);
+		solidArrow.setScale(8,4);
 		
 		setTargetDecoration(solidArrow);
 	}

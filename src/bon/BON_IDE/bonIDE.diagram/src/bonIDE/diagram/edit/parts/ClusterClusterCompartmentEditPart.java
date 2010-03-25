@@ -76,6 +76,15 @@ public class ClusterClusterCompartmentEditPart extends ShapeCompartmentEditPart 
 	/**
 	 * @generated
 	 */
+	public IFigure createFigure() {
+		ResizableCompartmentFigure result = (ResizableCompartmentFigure) super.createFigure();
+		result.setTitleVisibility(false);
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
 		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new ResizableCompartmentEditPolicy());

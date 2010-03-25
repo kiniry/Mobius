@@ -1,11 +1,13 @@
 package bonIDE.diagram.edit.parts;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.graphics.Color;
 
 /**
  * @generated
@@ -50,14 +52,53 @@ public class AssociationRelEditPart extends ConnectionNodeEditPart implements IT
 	 * @generated
 	 */
 	protected Connection createConnectionFigure() {
-		return new bonIDE.diagram.custom.AssociationConnection();
+		return new AssociationLinkFigure();
 	}
 
 	/**
 	 * @generated
 	 */
-	public bonIDE.diagram.custom.AssociationConnection getPrimaryShape() {
-		return (bonIDE.diagram.custom.AssociationConnection) getFigure();
+	public AssociationLinkFigure getPrimaryShape() {
+		return (AssociationLinkFigure) getFigure();
 	}
+
+	/**
+	 * @generated
+	 */
+	public class AssociationLinkFigure extends bonIDE.diagram.custom.AssociationConnection {
+
+		/**
+		 * @generated
+		 */
+		public AssociationLinkFigure() {
+
+			this.setForegroundColor(THIS_FORE);
+		}
+
+		/**
+		 * @generated
+		 */
+		private boolean myUseLocalCoordinates = false;
+
+		/**
+		 * @generated
+		 */
+		protected boolean useLocalCoordinates() {
+			return myUseLocalCoordinates;
+		}
+
+		/**
+		 * @generated
+		 */
+		protected void setUseLocalCoordinates(boolean useLocalCoordinates) {
+			myUseLocalCoordinates = useLocalCoordinates;
+		}
+
+	}
+
+	/**
+	 * @generated
+	 */
+	static final Color THIS_FORE = new Color(null, 0, 0, 0);
 
 }

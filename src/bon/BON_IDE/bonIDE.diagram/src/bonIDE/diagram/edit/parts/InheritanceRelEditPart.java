@@ -10,6 +10,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.graphics.Color;
 
 /**
  * @generated
@@ -54,14 +55,53 @@ public class InheritanceRelEditPart extends ConnectionNodeEditPart implements IT
 	 * @generated
 	 */
 	protected Connection createConnectionFigure() {
-		return new bonIDE.diagram.custom.InheritanceConnection();
+		return new InheritanceLinkFigure();
 	}
 
 	/**
 	 * @generated
 	 */
-	public bonIDE.diagram.custom.InheritanceConnection getPrimaryShape() {
-		return (bonIDE.diagram.custom.InheritanceConnection) getFigure();
+	public InheritanceLinkFigure getPrimaryShape() {
+		return (InheritanceLinkFigure) getFigure();
 	}
+
+	/**
+	 * @generated
+	 */
+	public class InheritanceLinkFigure extends bonIDE.diagram.custom.InheritanceConnection {
+
+		/**
+		 * @generated
+		 */
+		public InheritanceLinkFigure() {
+
+			this.setForegroundColor(THIS_FORE);
+		}
+
+		/**
+		 * @generated
+		 */
+		private boolean myUseLocalCoordinates = false;
+
+		/**
+		 * @generated
+		 */
+		protected boolean useLocalCoordinates() {
+			return myUseLocalCoordinates;
+		}
+
+		/**
+		 * @generated
+		 */
+		protected void setUseLocalCoordinates(boolean useLocalCoordinates) {
+			myUseLocalCoordinates = useLocalCoordinates;
+		}
+
+	}
+
+	/**
+	 * @generated
+	 */
+	static final Color THIS_FORE = new Color(null, 0, 0, 0);
 
 }

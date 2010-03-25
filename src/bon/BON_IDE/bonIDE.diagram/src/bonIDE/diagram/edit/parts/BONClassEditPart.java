@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.Shape;
@@ -32,9 +33,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -536,25 +535,35 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 
 			this.setLayoutManager(layoutThis);
 
-			this.setCornerDimensions(new Dimension(getMapMode().DPtoLP(12)
-					, getMapMode().DPtoLP(12)));
+			this.setCornerDimensions(new Dimension(getMapMode().DPtoLP(25)
+					, getMapMode().DPtoLP(25)));
 			this.setLineWidth(2);
+			this.setForegroundColor(THIS_FORE);
+			this.setBackgroundColor(THIS_BACK);
+
+			this.setBorder(new MarginBorder(getMapMode().DPtoLP(0)
+					, getMapMode().DPtoLP(1)
+					, getMapMode().DPtoLP(0)
+					, getMapMode().DPtoLP(0)));
 			createContents();
 		}
 
 		/**
-		 * @generated
+		 * @generated NOT
 		 */
 		private void createContents() {
 
 			fFigureBONClassNameFigure = new WrappingLabel();
 			fFigureBONClassNameFigure.setText("<...>");
+			fFigureBONClassNameFigure.setAlignment(PositionConstants.CENTER);
+			fFigureBONClassNameFigure.setForegroundColor(FFIGUREBONCLASSNAMEFIGURE_FORE);
 
 			fFigureBONClassNameFigure.setFont(FFIGUREBONCLASSNAMEFIGURE_FONT);
 
 			this.add(fFigureBONClassNameFigure);
 
 			fFigureIndexRectangleFigure = new RectangleFigure();
+			fFigureIndexRectangleFigure.setFill(false);
 			fFigureIndexRectangleFigure.setLineWidth(1);
 			fFigureIndexRectangleFigure.setForegroundColor(FFIGUREINDEXRECTANGLEFIGURE_FORE);
 
@@ -570,6 +579,7 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 			fFigureIndexRectangleFigure.setLayoutManager(layoutFFigureIndexRectangleFigure);
 
 			fFigureInheritanceRectangleFigure = new RectangleFigure();
+			fFigureInheritanceRectangleFigure.setFill(false);
 			fFigureInheritanceRectangleFigure.setLineWidth(1);
 			fFigureInheritanceRectangleFigure.setForegroundColor(FFIGUREINHERITANCERECTANGLEFIGURE_FORE);
 
@@ -585,6 +595,7 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 			fFigureInheritanceRectangleFigure.setLayoutManager(layoutFFigureInheritanceRectangleFigure);
 
 			fFigureFeatureRectangleFigure = new RectangleFigure();
+			fFigureFeatureRectangleFigure.setFill(false);
 			fFigureFeatureRectangleFigure.setLineWidth(1);
 			fFigureFeatureRectangleFigure.setForegroundColor(FFIGUREFEATURERECTANGLEFIGURE_FORE);
 
@@ -601,6 +612,7 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 
 			fFigureInvariantRectangleFigure = new RectangleFigure();
 			fFigureInvariantRectangleFigure.setFill(false);
+			fFigureInvariantRectangleFigure.setOutline(false);
 			fFigureInvariantRectangleFigure.setLineWidth(1);
 
 			this.add(fFigureInvariantRectangleFigure);
@@ -674,21 +686,36 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	static final Font FFIGUREBONCLASSNAMEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 9, SWT.NORMAL);
+	static final Color THIS_FORE = new Color(null, 96, 96, 96);
 
 	/**
 	 * @generated
 	 */
-	static final Color FFIGUREINDEXRECTANGLEFIGURE_FORE = new Color(null, 128, 0, 0);
+	static final Color THIS_BACK = new Color(null, 222, 222, 255);
 
 	/**
 	 * @generated
 	 */
-	static final Color FFIGUREINHERITANCERECTANGLEFIGURE_FORE = new Color(null, 0, 128, 0);
+	static final Color FFIGUREBONCLASSNAMEFIGURE_FORE = new Color(null, 128, 0, 128);
 
 	/**
 	 * @generated
 	 */
-	static final Color FFIGUREFEATURERECTANGLEFIGURE_FORE = new Color(null, 192, 0, 0);
+	static final Font FFIGUREBONCLASSNAMEFIGURE_FONT = new Font(Display.getCurrent(), "Lucida Sans Unicode", 9, SWT.BOLD);
+
+	/**
+	 * @generated
+	 */
+	static final Color FFIGUREINDEXRECTANGLEFIGURE_FORE = new Color(null, 128, 128, 128);
+
+	/**
+	 * @generated
+	 */
+	static final Color FFIGUREINHERITANCERECTANGLEFIGURE_FORE = new Color(null, 128, 128, 128);
+
+	/**
+	 * @generated
+	 */
+	static final Color FFIGUREFEATURERECTANGLEFIGURE_FORE = new Color(null, 128, 128, 128);
 
 }

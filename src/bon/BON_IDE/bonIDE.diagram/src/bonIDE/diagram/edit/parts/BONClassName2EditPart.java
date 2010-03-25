@@ -377,7 +377,7 @@ public class BONClassName2EditPart extends CompartmentEditPart implements ITextA
 	}
 
 	/**
-	 * @generated
+	 * @generated NOT
 	 */
 	protected void refreshVisuals() {
 		super.refreshVisuals();

@@ -377,13 +377,13 @@ public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwa
 	}
 
 	/**
-	 * @generated
+	 * @generated NOT
 	 */
 	protected void refreshVisuals() {
 		super.refreshVisuals();
 		refreshLabel();
 		refreshFont();
-		refreshFontColor();
+		//refreshFontColor();
 		refreshUnderline();
 		refreshStrikeThrough();
 	}

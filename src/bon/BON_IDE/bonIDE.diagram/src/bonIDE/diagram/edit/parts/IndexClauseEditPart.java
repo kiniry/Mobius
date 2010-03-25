@@ -296,6 +296,7 @@ public class IndexClauseEditPart extends ShapeNodeEditPart {
 
 			this.setLayoutManager(layoutThis);
 
+			this.setFill(false);
 			this.setOutline(false);
 			this.setLineWidth(1);
 			createContents();

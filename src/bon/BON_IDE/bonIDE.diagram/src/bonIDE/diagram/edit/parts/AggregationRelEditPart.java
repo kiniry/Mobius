@@ -6,6 +6,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.graphics.Color;
 
 /**
  * @generated
@@ -50,14 +51,53 @@ public class AggregationRelEditPart extends ConnectionNodeEditPart implements IT
 	 * @generated
 	 */
 	protected Connection createConnectionFigure() {
-		return new bonIDE.diagram.custom.AggregationConnection();
+		return new AggregationLinkFigure();
 	}
 
 	/**
 	 * @generated
 	 */
-	public bonIDE.diagram.custom.AggregationConnection getPrimaryShape() {
-		return (bonIDE.diagram.custom.AggregationConnection) getFigure();
+	public AggregationLinkFigure getPrimaryShape() {
+		return (AggregationLinkFigure) getFigure();
 	}
+
+	/**
+	 * @generated
+	 */
+	public class AggregationLinkFigure extends bonIDE.diagram.custom.AggregationConnection {
+
+		/**
+		 * @generated
+		 */
+		public AggregationLinkFigure() {
+
+			this.setForegroundColor(THIS_FORE);
+		}
+
+		/**
+		 * @generated
+		 */
+		private boolean myUseLocalCoordinates = false;
+
+		/**
+		 * @generated
+		 */
+		protected boolean useLocalCoordinates() {
+			return myUseLocalCoordinates;
+		}
+
+		/**
+		 * @generated
+		 */
+		protected void setUseLocalCoordinates(boolean useLocalCoordinates) {
+			myUseLocalCoordinates = useLocalCoordinates;
+		}
+
+	}
+
+	/**
+	 * @generated
+	 */
+	static final Color THIS_FORE = new Color(null, 0, 0, 0);
 
 }

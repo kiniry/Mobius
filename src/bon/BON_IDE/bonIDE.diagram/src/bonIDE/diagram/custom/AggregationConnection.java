@@ -7,7 +7,7 @@ public class AggregationConnection extends DoubleLineConnection {
 	public AggregationConnection() {
 		super();
 
-		setLineWidth(1);
+		setLineWidth(1);		
 
 		PolygonDecoration curlyBrace = new PolygonDecoration();
 		PointList bracePoints = new PointList();		
@@ -69,7 +69,7 @@ public class AggregationConnection extends DoubleLineConnection {
 //		bracePoints.addPoint(0, 0);				
 		
 		curlyBrace.setTemplate(bracePoints);
-		curlyBrace.setScale(0.75, 0.75);
+		curlyBrace.setScale(0.70, 0.70);
 		curlyBrace.setFill(true);
 		curlyBrace.setLineWidth(1);
 
