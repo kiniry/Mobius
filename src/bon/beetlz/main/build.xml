@@ -1,0 +1,52 @@
+<project name="Beetlz" default="compile" basedir=".">
+  <description>Beetlz Build File</description>
+
+  <property file="beetlz-ant.properties"/>
+
+  <!-- Paths -->
+  <path id="compile.path">
+    <filelist>
+      <file name="${lib-openjml-path}"/>
+      <file name="${lib-bonc-path}"/>
+    </filelist>
+  </path>
+	
+  <target name="init">
+    <echo message="Creating timestamp"/>
+    <tstamp/>
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init" description="compile the source">
+    <javac srcdir="${src-java}" destdir="${build}" target="${java-target-version}" classpathref="compile.path" debug="true"/>
+  </target>
+
+  <target name="dist" depends="compile" description="Generate the distribution">
+    <mkdir dir="${dist}"/>
+    <mkdir dir="${dist}/lib"/>
+
+    <copy todir="${dist}/lib" file="${lib-openjml-path}"/>
+  	<copy todir="${dist}/lib" file="${lib-bonc-path}"/>
+  	<copy todir="${dist}/lib" file="${lib-google-collect-path}"/>
+  	<copy todir="${dist}/lib" file="${lib-clops-path}"/>
+  	<copy todir="${dist}/lib" file="${lib-antlr-path}"/>
+  	
+    <jar jarfile="${dist}/lib/beetlz.jar" basedir="${build}">
+      <manifest>
+        <attribute name="Main-Class" value="main.Main" />
+        <attribute name="Class-Path" value="${lib-openjml} ${lib-bonc} ${lib-antlr} ${lib-google-collect} ${lib-clops}"/>
+      </manifest>
+    </jar>
+  </target>
+	
+  <target name="clean" depends="clean-build,clean-dist"/>
+
+  <target name="clean-build" description="Clean up the build">
+    <delete dir="${build}"/>
+  </target>
+	
+  <target name="clean-dist" description="Clean up">
+    <delete dir="${dist}"/>
+  </target>
+	
+</project>

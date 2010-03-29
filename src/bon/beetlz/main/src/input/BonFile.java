@@ -70,7 +70,7 @@ public class BonFile {
       return true;
     }
     
-    ParsingTracker tracker = API.parse(my_files, false, false);
+    ParsingTracker tracker = API.parse(my_files);
     
     if (tracker.getErrorsAndWarnings().getNumberOfErrors() == 0) {
       LOGGER.config("Successfully compiled BON files."); //$NON-NLS-1$
@@ -83,7 +83,6 @@ public class BonFile {
         BONProblem problem = i.next();
         LOGGER.severe(problem.getLocation().toString());
         LOGGER.severe(problem.getMessage());
-        
       }
       parse_success = false;
     }
