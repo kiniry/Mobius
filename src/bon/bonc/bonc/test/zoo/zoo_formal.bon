@@ -10,7 +10,7 @@ indexing
 -- ENCLOSURE cluster classes
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 static_diagram ZOO           
-component   
+component
 cluster ZOO
 component
 cluster ENCLOSURE_CLUSTER
@@ -120,13 +120,8 @@ component
 	  about:  "An abstract animal.";
 	  author: "Evka";
 	  version: "1";
-	feature  
-	  	weight:VALUE
-	  	feedingFrequency: VALUE
-	  	dummyDummy: VALUE
-	  	ensure
-	  			Result = 10 or Result =20 or Result =30;
-	  		end
+	feature
+	  	weight, feedingFrequency: VALUE
 	  	place: ENCLOSURE
 	  	sleeping: BOOLEAN
 	  	deferred wakeUp
@@ -183,7 +178,7 @@ component
 			-> name: SEQUENCE[SEQUENCE[STRING]]
 		isHappy: BOOLEAN
 	feature{NONE}
-		effective wakeWakeUp
+		wakeWakeUp
 		
 	end 
 	
@@ -233,7 +228,7 @@ component
 	  	countStripes
 		pattern
 		dummy
-		redefined wakeUp
+		wakeUp
 	feature{SNAKE}
 		patternOne: STRING
 		patternTwo: STRING
@@ -275,11 +270,11 @@ component
 			ensure
 				Result /= Void;
 			end
-		redefined getID: INTEGER
+		getID: INTEGER
 		ensure
 			Result /= Void;
 		end
-		redefined setVacation 
+		setVacation 
 		name: STRING
 		ensure
 			Result /= Void;
@@ -347,6 +342,7 @@ component
 	end
 	
 	end
+
 	root class ZOO_CLASS
 	feature
 		zooName: STRING
@@ -357,5 +353,4 @@ component
 	end
 end
 
- 
 end

@@ -10,12 +10,12 @@ indexing
 -- ENCLOSURE cluster classes
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 static_diagram ZOO           
-component 
+component
 cluster ZOO
 component
 cluster ENCLOSURE_CLUSTER
 component
-	class ENCLOSURE 	
+	class ENCLOSURE
 	indexing    
 		about: "some explanation"
 	feature
@@ -42,7 +42,7 @@ component
 	feature
 		temperature: SET[ANY]
 		regulateTemperature
-			-> temps: Set[INTEGER]
+			-> temps: SET[INTEGER]
 		heatUp: SET[SET[STRING]]  
 	end 
 	
@@ -178,7 +178,7 @@ component
 			-> name: SEQUENCE[SEQUENCE[STRING]]
 		isHappy: BOOLEAN
 	feature{NONE}
-		effective wakeWakeUp
+		wakeWakeUp
 		
 	end 
 	
@@ -228,7 +228,7 @@ component
 	  	countStripes
 		pattern
 		dummy
-		redefined wakeUp
+		wakeUp
 	feature{SNAKE}
 		patternOne: STRING
 		patternTwo: STRING
@@ -270,11 +270,11 @@ component
 			ensure
 				Result /= Void;
 			end
-		redefined getID: INTEGER
+		getID: INTEGER
 		ensure
 			Result /= Void;
 		end
-		redefined setVacation 
+		setVacation 
 		name: STRING
 		ensure
 			Result /= Void;
@@ -342,7 +342,7 @@ component
 	end
 	
 	end
-	
+
 	root class ZOO_CLASS
 	feature
 		zooName: STRING
@@ -350,8 +350,7 @@ component
 		countVisitor
 		-> newNumber: INTEGER
 		giveInformation: STRING  
-	end 
+	end
 end
-
 
 end
