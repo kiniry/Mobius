@@ -9,6 +9,7 @@ Package bonIDE <http://www.ucd.ie/bonIDE>
 
   Class Model
     Reference abstractions : Abstraction<<0..*>>
+    Reference relationships : StaticRelationship<<0..*>>
 
   Class Abstraction
 
@@ -59,6 +60,20 @@ Package bonIDE <http://www.ucd.ie/bonIDE>
   Class Invariant
     Attribute content : EString
 
+  Class StaticRelationship
+    Attribute type : RelationshipType
+    Reference source : Abstraction
+    Reference target : Abstraction
+
+  Class InheritanceRel -> StaticRelationship
+
+  Class ClientSupplierRel -> StaticRelationship
+    Attribute name : EString
+
+  Class AggregationRel -> ClientSupplierRel
+
+  Class AssociationRel -> ClientSupplierRel
+
   Enum ImplementationStatus
     Literal Reused = 0
     Literal Persistent = 1
@@ -67,3 +82,8 @@ Package bonIDE <http://www.ucd.ie/bonIDE>
     Literal Interfaced = 4
     Literal Root = 5
     Literal Parameterized = 6
+
+  Enum RelationshipType
+    Literal Inheritance = 0
+    Literal Aggregation = 1
+    Literal Association = 2

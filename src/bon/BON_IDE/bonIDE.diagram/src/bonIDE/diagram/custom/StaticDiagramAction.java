@@ -49,12 +49,12 @@ public class StaticDiagramAction implements IWorkbenchWindowActionDelegate {
 		FileDialog fd = new FileDialog(window.getShell(), SWT.OPEN);
 		fd.setText("Open");
 		fd.setFilterPath(
-				"C:/Documents and Settings/ralph/My Documents/UCD/Thesis/runtime-EclipseApplication/Default");
+				"C:/Documents and Settings/ralph/My Documents/UCD/Thesis");
 		String[] filterExt = { "*.bon", "*.*" };
 		fd.setFilterExtensions(filterExt);
 		String selected = fd.open();
 
-		if( modelEditPart != null ){
+		if( modelEditPart != null ){			
 			BonDiagramElementBuilder.createBONStaticDiagram(selected, modelEditPart, window.getShell());			
 		}		
 	}

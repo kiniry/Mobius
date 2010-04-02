@@ -26,7 +26,7 @@ public class FeatureArgumentCompartmentEditPart extends ListCompartmentEditPart 
 	@Override
 	protected void handleNotificationEvent(Notification event) {
 		// TODO Auto-generated method stub
-		System.out.println("FeatureArgumentEditPart.FeatureArgumentCompartmentEditPart");
+		//System.out.println("FeatureArgumentEditPart.FeatureArgumentCompartmentEditPart");
 		super.handleNotificationEvent(event);
 	}
 

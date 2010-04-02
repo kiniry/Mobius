@@ -80,13 +80,22 @@ public interface BonIDEPackage extends EPackage {
 	int MODEL__ABSTRACTIONS = 0;
 
 	/**
+	 * The feature id for the '<em><b>Relationships</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL__RELATIONSHIPS = 1;
+
+	/**
 	 * The number of structural features of the '<em>Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_FEATURE_COUNT = 1;
+	int MODEL_FEATURE_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link bonIDE.impl.AbstractionImpl <em>Abstraction</em>}' class.
@@ -542,6 +551,263 @@ public interface BonIDEPackage extends EPackage {
 	int INVARIANT_FEATURE_COUNT = 1;
 
 	/**
+	 * The meta object id for the '{@link bonIDE.impl.StaticRelationshipImpl <em>Static Relationship</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see bonIDE.impl.StaticRelationshipImpl
+	 * @see bonIDE.impl.BonIDEPackageImpl#getStaticRelationship()
+	 * @generated
+	 */
+	int STATIC_RELATIONSHIP = 12;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_RELATIONSHIP__TYPE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_RELATIONSHIP__SOURCE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_RELATIONSHIP__TARGET = 2;
+
+	/**
+	 * The number of structural features of the '<em>Static Relationship</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_RELATIONSHIP_FEATURE_COUNT = 3;
+
+	/**
+	 * The meta object id for the '{@link bonIDE.impl.InheritanceRelImpl <em>Inheritance Rel</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see bonIDE.impl.InheritanceRelImpl
+	 * @see bonIDE.impl.BonIDEPackageImpl#getInheritanceRel()
+	 * @generated
+	 */
+	int INHERITANCE_REL = 13;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INHERITANCE_REL__TYPE = STATIC_RELATIONSHIP__TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INHERITANCE_REL__SOURCE = STATIC_RELATIONSHIP__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INHERITANCE_REL__TARGET = STATIC_RELATIONSHIP__TARGET;
+
+	/**
+	 * The number of structural features of the '<em>Inheritance Rel</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INHERITANCE_REL_FEATURE_COUNT = STATIC_RELATIONSHIP_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link bonIDE.impl.ClientSupplierRelImpl <em>Client Supplier Rel</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see bonIDE.impl.ClientSupplierRelImpl
+	 * @see bonIDE.impl.BonIDEPackageImpl#getClientSupplierRel()
+	 * @generated
+	 */
+	int CLIENT_SUPPLIER_REL = 14;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLIENT_SUPPLIER_REL__TYPE = STATIC_RELATIONSHIP__TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLIENT_SUPPLIER_REL__SOURCE = STATIC_RELATIONSHIP__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLIENT_SUPPLIER_REL__TARGET = STATIC_RELATIONSHIP__TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLIENT_SUPPLIER_REL__NAME = STATIC_RELATIONSHIP_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Client Supplier Rel</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLIENT_SUPPLIER_REL_FEATURE_COUNT = STATIC_RELATIONSHIP_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link bonIDE.impl.AggregationRelImpl <em>Aggregation Rel</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see bonIDE.impl.AggregationRelImpl
+	 * @see bonIDE.impl.BonIDEPackageImpl#getAggregationRel()
+	 * @generated
+	 */
+	int AGGREGATION_REL = 15;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATION_REL__TYPE = CLIENT_SUPPLIER_REL__TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATION_REL__SOURCE = CLIENT_SUPPLIER_REL__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATION_REL__TARGET = CLIENT_SUPPLIER_REL__TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATION_REL__NAME = CLIENT_SUPPLIER_REL__NAME;
+
+	/**
+	 * The number of structural features of the '<em>Aggregation Rel</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATION_REL_FEATURE_COUNT = CLIENT_SUPPLIER_REL_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link bonIDE.impl.AssociationRelImpl <em>Association Rel</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see bonIDE.impl.AssociationRelImpl
+	 * @see bonIDE.impl.BonIDEPackageImpl#getAssociationRel()
+	 * @generated
+	 */
+	int ASSOCIATION_REL = 16;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ASSOCIATION_REL__TYPE = CLIENT_SUPPLIER_REL__TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ASSOCIATION_REL__SOURCE = CLIENT_SUPPLIER_REL__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ASSOCIATION_REL__TARGET = CLIENT_SUPPLIER_REL__TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ASSOCIATION_REL__NAME = CLIENT_SUPPLIER_REL__NAME;
+
+	/**
+	 * The number of structural features of the '<em>Association Rel</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ASSOCIATION_REL_FEATURE_COUNT = CLIENT_SUPPLIER_REL_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link bonIDE.ImplementationStatus <em>Implementation Status</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -549,7 +815,18 @@ public interface BonIDEPackage extends EPackage {
 	 * @see bonIDE.impl.BonIDEPackageImpl#getImplementationStatus()
 	 * @generated
 	 */
-	int IMPLEMENTATION_STATUS = 12;
+	int IMPLEMENTATION_STATUS = 17;
+
+
+	/**
+	 * The meta object id for the '{@link bonIDE.RelationshipType <em>Relationship Type</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see bonIDE.RelationshipType
+	 * @see bonIDE.impl.BonIDEPackageImpl#getRelationshipType()
+	 * @generated
+	 */
+	int RELATIONSHIP_TYPE = 18;
 
 
 	/**
@@ -572,6 +849,17 @@ public interface BonIDEPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getModel_Abstractions();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link bonIDE.Model#getRelationships <em>Relationships</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Relationships</em>'.
+	 * @see bonIDE.Model#getRelationships()
+	 * @see #getModel()
+	 * @generated
+	 */
+	EReference getModel_Relationships();
 
 	/**
 	 * Returns the meta object for class '{@link bonIDE.Abstraction <em>Abstraction</em>}'.
@@ -981,6 +1269,100 @@ public interface BonIDEPackage extends EPackage {
 	EAttribute getInvariant_Content();
 
 	/**
+	 * Returns the meta object for class '{@link bonIDE.StaticRelationship <em>Static Relationship</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Static Relationship</em>'.
+	 * @see bonIDE.StaticRelationship
+	 * @generated
+	 */
+	EClass getStaticRelationship();
+
+	/**
+	 * Returns the meta object for the attribute '{@link bonIDE.StaticRelationship#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see bonIDE.StaticRelationship#getType()
+	 * @see #getStaticRelationship()
+	 * @generated
+	 */
+	EAttribute getStaticRelationship_Type();
+
+	/**
+	 * Returns the meta object for the reference '{@link bonIDE.StaticRelationship#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Source</em>'.
+	 * @see bonIDE.StaticRelationship#getSource()
+	 * @see #getStaticRelationship()
+	 * @generated
+	 */
+	EReference getStaticRelationship_Source();
+
+	/**
+	 * Returns the meta object for the reference '{@link bonIDE.StaticRelationship#getTarget <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Target</em>'.
+	 * @see bonIDE.StaticRelationship#getTarget()
+	 * @see #getStaticRelationship()
+	 * @generated
+	 */
+	EReference getStaticRelationship_Target();
+
+	/**
+	 * Returns the meta object for class '{@link bonIDE.InheritanceRel <em>Inheritance Rel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Inheritance Rel</em>'.
+	 * @see bonIDE.InheritanceRel
+	 * @generated
+	 */
+	EClass getInheritanceRel();
+
+	/**
+	 * Returns the meta object for class '{@link bonIDE.ClientSupplierRel <em>Client Supplier Rel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Client Supplier Rel</em>'.
+	 * @see bonIDE.ClientSupplierRel
+	 * @generated
+	 */
+	EClass getClientSupplierRel();
+
+	/**
+	 * Returns the meta object for the attribute '{@link bonIDE.ClientSupplierRel#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see bonIDE.ClientSupplierRel#getName()
+	 * @see #getClientSupplierRel()
+	 * @generated
+	 */
+	EAttribute getClientSupplierRel_Name();
+
+	/**
+	 * Returns the meta object for class '{@link bonIDE.AggregationRel <em>Aggregation Rel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Aggregation Rel</em>'.
+	 * @see bonIDE.AggregationRel
+	 * @generated
+	 */
+	EClass getAggregationRel();
+
+	/**
+	 * Returns the meta object for class '{@link bonIDE.AssociationRel <em>Association Rel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Association Rel</em>'.
+	 * @see bonIDE.AssociationRel
+	 * @generated
+	 */
+	EClass getAssociationRel();
+
+	/**
 	 * Returns the meta object for enum '{@link bonIDE.ImplementationStatus <em>Implementation Status</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -989,6 +1371,16 @@ public interface BonIDEPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getImplementationStatus();
+
+	/**
+	 * Returns the meta object for enum '{@link bonIDE.RelationshipType <em>Relationship Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Relationship Type</em>'.
+	 * @see bonIDE.RelationshipType
+	 * @generated
+	 */
+	EEnum getRelationshipType();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -1029,6 +1421,14 @@ public interface BonIDEPackage extends EPackage {
 		 * @generated
 		 */
 		EReference MODEL__ABSTRACTIONS = eINSTANCE.getModel_Abstractions();
+
+		/**
+		 * The meta object literal for the '<em><b>Relationships</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MODEL__RELATIONSHIPS = eINSTANCE.getModel_Relationships();
 
 		/**
 		 * The meta object literal for the '{@link bonIDE.impl.AbstractionImpl <em>Abstraction</em>}' class.
@@ -1357,6 +1757,88 @@ public interface BonIDEPackage extends EPackage {
 		EAttribute INVARIANT__CONTENT = eINSTANCE.getInvariant_Content();
 
 		/**
+		 * The meta object literal for the '{@link bonIDE.impl.StaticRelationshipImpl <em>Static Relationship</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see bonIDE.impl.StaticRelationshipImpl
+		 * @see bonIDE.impl.BonIDEPackageImpl#getStaticRelationship()
+		 * @generated
+		 */
+		EClass STATIC_RELATIONSHIP = eINSTANCE.getStaticRelationship();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STATIC_RELATIONSHIP__TYPE = eINSTANCE.getStaticRelationship_Type();
+
+		/**
+		 * The meta object literal for the '<em><b>Source</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STATIC_RELATIONSHIP__SOURCE = eINSTANCE.getStaticRelationship_Source();
+
+		/**
+		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STATIC_RELATIONSHIP__TARGET = eINSTANCE.getStaticRelationship_Target();
+
+		/**
+		 * The meta object literal for the '{@link bonIDE.impl.InheritanceRelImpl <em>Inheritance Rel</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see bonIDE.impl.InheritanceRelImpl
+		 * @see bonIDE.impl.BonIDEPackageImpl#getInheritanceRel()
+		 * @generated
+		 */
+		EClass INHERITANCE_REL = eINSTANCE.getInheritanceRel();
+
+		/**
+		 * The meta object literal for the '{@link bonIDE.impl.ClientSupplierRelImpl <em>Client Supplier Rel</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see bonIDE.impl.ClientSupplierRelImpl
+		 * @see bonIDE.impl.BonIDEPackageImpl#getClientSupplierRel()
+		 * @generated
+		 */
+		EClass CLIENT_SUPPLIER_REL = eINSTANCE.getClientSupplierRel();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CLIENT_SUPPLIER_REL__NAME = eINSTANCE.getClientSupplierRel_Name();
+
+		/**
+		 * The meta object literal for the '{@link bonIDE.impl.AggregationRelImpl <em>Aggregation Rel</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see bonIDE.impl.AggregationRelImpl
+		 * @see bonIDE.impl.BonIDEPackageImpl#getAggregationRel()
+		 * @generated
+		 */
+		EClass AGGREGATION_REL = eINSTANCE.getAggregationRel();
+
+		/**
+		 * The meta object literal for the '{@link bonIDE.impl.AssociationRelImpl <em>Association Rel</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see bonIDE.impl.AssociationRelImpl
+		 * @see bonIDE.impl.BonIDEPackageImpl#getAssociationRel()
+		 * @generated
+		 */
+		EClass ASSOCIATION_REL = eINSTANCE.getAssociationRel();
+
+		/**
 		 * The meta object literal for the '{@link bonIDE.ImplementationStatus <em>Implementation Status</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1365,6 +1847,16 @@ public interface BonIDEPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum IMPLEMENTATION_STATUS = eINSTANCE.getImplementationStatus();
+
+		/**
+		 * The meta object literal for the '{@link bonIDE.RelationshipType <em>Relationship Type</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see bonIDE.RelationshipType
+		 * @see bonIDE.impl.BonIDEPackageImpl#getRelationshipType()
+		 * @generated
+		 */
+		EEnum RELATIONSHIP_TYPE = eINSTANCE.getRelationshipType();
 
 	}
 

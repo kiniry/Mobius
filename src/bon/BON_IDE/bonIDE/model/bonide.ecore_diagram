@@ -324,10 +324,6 @@
   <children xmi:type="notation:Shape" xmi:id="_FV5cIDGjEd-XIozCYYGlAQ" type="2001">
     <children xmi:type="notation:DecorationNode" xmi:id="_FV_iwDGjEd-XIozCYYGlAQ" type="5001"/>
     <children xmi:type="notation:BasicCompartment" xmi:id="_FV_iwTGjEd-XIozCYYGlAQ" type="7001">
-      <children xmi:type="notation:Node" xmi:id="_n7IKwDGjEd-XIozCYYGlAQ" type="3001">
-        <element xmi:type="ecore:EAttribute" href="bonide.ecore#//StaticRelationship/name"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_n7IKwTGjEd-XIozCYYGlAQ"/>
-      </children>
       <children xmi:type="notation:Node" xmi:id="_rZqHIDGjEd-XIozCYYGlAQ" type="3001">
         <element xmi:type="ecore:EAttribute" href="bonide.ecore#//StaticRelationship/type"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_rZqHITGjEd-XIozCYYGlAQ"/>
@@ -366,6 +362,10 @@
   <children xmi:type="notation:Shape" xmi:id="_LZdhEDGjEd-XIozCYYGlAQ" type="2001">
     <children xmi:type="notation:DecorationNode" xmi:id="_LZdhEjGjEd-XIozCYYGlAQ" type="5001"/>
     <children xmi:type="notation:BasicCompartment" xmi:id="_LZdhEzGjEd-XIozCYYGlAQ" type="7001">
+      <children xmi:type="notation:Node" xmi:id="_wbC9UDJnEd-mZsV0gCL9JQ" type="3001">
+        <element xmi:type="ecore:EAttribute" href="bonide.ecore#//ClientSupplierRel/name"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_wbC9UTJnEd-mZsV0gCL9JQ"/>
+      </children>
       <styles xmi:type="notation:SortingStyle" xmi:id="_LZdhFDGjEd-XIozCYYGlAQ"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_LZdhFTGjEd-XIozCYYGlAQ"/>
     </children>

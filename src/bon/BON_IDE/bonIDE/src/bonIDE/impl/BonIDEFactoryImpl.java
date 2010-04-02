@@ -71,6 +71,11 @@ public class BonIDEFactoryImpl extends EFactoryImpl implements BonIDEFactory {
 			case BonIDEPackage.PRE_CONDITION: return createPreCondition();
 			case BonIDEPackage.POST_CONDITION: return createPostCondition();
 			case BonIDEPackage.INVARIANT: return createInvariant();
+			case BonIDEPackage.STATIC_RELATIONSHIP: return createStaticRelationship();
+			case BonIDEPackage.INHERITANCE_REL: return createInheritanceRel();
+			case BonIDEPackage.CLIENT_SUPPLIER_REL: return createClientSupplierRel();
+			case BonIDEPackage.AGGREGATION_REL: return createAggregationRel();
+			case BonIDEPackage.ASSOCIATION_REL: return createAssociationRel();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -86,6 +91,8 @@ public class BonIDEFactoryImpl extends EFactoryImpl implements BonIDEFactory {
 		switch (eDataType.getClassifierID()) {
 			case BonIDEPackage.IMPLEMENTATION_STATUS:
 				return createImplementationStatusFromString(eDataType, initialValue);
+			case BonIDEPackage.RELATIONSHIP_TYPE:
+				return createRelationshipTypeFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -101,6 +108,8 @@ public class BonIDEFactoryImpl extends EFactoryImpl implements BonIDEFactory {
 		switch (eDataType.getClassifierID()) {
 			case BonIDEPackage.IMPLEMENTATION_STATUS:
 				return convertImplementationStatusToString(eDataType, instanceValue);
+			case BonIDEPackage.RELATIONSHIP_TYPE:
+				return convertRelationshipTypeToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -211,6 +220,56 @@ public class BonIDEFactoryImpl extends EFactoryImpl implements BonIDEFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public StaticRelationship createStaticRelationship() {
+		StaticRelationshipImpl staticRelationship = new StaticRelationshipImpl();
+		return staticRelationship;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InheritanceRel createInheritanceRel() {
+		InheritanceRelImpl inheritanceRel = new InheritanceRelImpl();
+		return inheritanceRel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ClientSupplierRel createClientSupplierRel() {
+		ClientSupplierRelImpl clientSupplierRel = new ClientSupplierRelImpl();
+		return clientSupplierRel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AggregationRel createAggregationRel() {
+		AggregationRelImpl aggregationRel = new AggregationRelImpl();
+		return aggregationRel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AssociationRel createAssociationRel() {
+		AssociationRelImpl associationRel = new AssociationRelImpl();
+		return associationRel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ImplementationStatus createImplementationStatusFromString(EDataType eDataType, String initialValue) {
 		ImplementationStatus result = ImplementationStatus.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
@@ -223,6 +282,26 @@ public class BonIDEFactoryImpl extends EFactoryImpl implements BonIDEFactory {
 	 * @generated
 	 */
 	public String convertImplementationStatusToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public RelationshipType createRelationshipTypeFromString(EDataType eDataType, String initialValue) {
+		RelationshipType result = RelationshipType.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertRelationshipTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

@@ -116,6 +116,51 @@ public interface BonIDEFactory extends EFactory {
 	Invariant createInvariant();
 
 	/**
+	 * Returns a new object of class '<em>Static Relationship</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Static Relationship</em>'.
+	 * @generated
+	 */
+	StaticRelationship createStaticRelationship();
+
+	/**
+	 * Returns a new object of class '<em>Inheritance Rel</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Inheritance Rel</em>'.
+	 * @generated
+	 */
+	InheritanceRel createInheritanceRel();
+
+	/**
+	 * Returns a new object of class '<em>Client Supplier Rel</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Client Supplier Rel</em>'.
+	 * @generated
+	 */
+	ClientSupplierRel createClientSupplierRel();
+
+	/**
+	 * Returns a new object of class '<em>Aggregation Rel</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Aggregation Rel</em>'.
+	 * @generated
+	 */
+	AggregationRel createAggregationRel();
+
+	/**
+	 * Returns a new object of class '<em>Association Rel</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Association Rel</em>'.
+	 * @generated
+	 */
+	AssociationRel createAssociationRel();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

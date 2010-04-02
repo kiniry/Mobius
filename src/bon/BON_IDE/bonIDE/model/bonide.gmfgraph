@@ -11,8 +11,8 @@
           xsi:type="gmfgraph:RoundedRectangle"
           name="BONClassFigure"
           lineWidth="2"
-          cornerWidth="12"
-          cornerHeight="12">
+          cornerWidth="25"
+          cornerHeight="25">
         <layout
             xsi:type="gmfgraph:FlowLayout"
             vertical="true"
@@ -21,17 +21,35 @@
             minorAlignment="CENTER"
             majorSpacing="0"
             minorSpacing="0"/>
+        <foregroundColor
+            xsi:type="gmfgraph:RGBColor"
+            red="96"
+            green="96"
+            blue="96"/>
+        <backgroundColor
+            xsi:type="gmfgraph:RGBColor"
+            red="222"
+            green="222"
+            blue="255"/>
+        <insets
+            left="1"/>
         <children
             xsi:type="gmfgraph:Label"
             name="BONClassNameFigure"
             text="&lt;...>">
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              red="128"
+              blue="128"/>
           <font
               xsi:type="gmfgraph:BasicFont"
-              faceName="Lucida Sans Unicode"/>
+              faceName="Lucida Sans Unicode"
+              style="BOLD"/>
         </children>
         <children
             xsi:type="gmfgraph:Rectangle"
-            name="IndexRectangleFigure">
+            name="IndexRectangleFigure"
+            fill="false">
           <layout
               xsi:type="gmfgraph:FlowLayout"
               vertical="true"
@@ -41,11 +59,14 @@
               minorSpacing="0"/>
           <foregroundColor
               xsi:type="gmfgraph:RGBColor"
-              red="128"/>
+              red="128"
+              green="128"
+              blue="128"/>
         </children>
         <children
             xsi:type="gmfgraph:Rectangle"
-            name="InheritanceRectangleFigure">
+            name="InheritanceRectangleFigure"
+            fill="false">
           <layout
               xsi:type="gmfgraph:FlowLayout"
               vertical="true"
@@ -55,11 +76,14 @@
               minorSpacing="0"/>
           <foregroundColor
               xsi:type="gmfgraph:RGBColor"
-              green="128"/>
+              red="128"
+              green="128"
+              blue="128"/>
         </children>
         <children
             xsi:type="gmfgraph:Rectangle"
-            name="FeatureRectangleFigure">
+            name="FeatureRectangleFigure"
+            fill="false">
           <layout
               xsi:type="gmfgraph:FlowLayout"
               vertical="true"
@@ -69,11 +93,14 @@
               minorSpacing="0"/>
           <foregroundColor
               xsi:type="gmfgraph:RGBColor"
-              red="192"/>
+              red="128"
+              green="128"
+              blue="128"/>
         </children>
         <children
             xsi:type="gmfgraph:Rectangle"
             name="InvariantRectangleFigure"
+            outline="false"
             fill="false">
           <layout
               xsi:type="gmfgraph:FlowLayout"
@@ -99,7 +126,9 @@
         name="FeatureFigure">
       <actualFigure
           xsi:type="gmfgraph:Rectangle"
-          name="FeatureFigure">
+          name="FeatureFigure"
+          outline="false"
+          fill="false">
         <layout
             xsi:type="gmfgraph:FlowLayout"
             vertical="true"
@@ -113,7 +142,9 @@
             blue="226"/>
         <children
             xsi:type="gmfgraph:Rectangle"
-            name="FeatureSignatureRectangleFigure">
+            name="FeatureSignatureRectangleFigure"
+            outline="false"
+            fill="false">
           <layout
               xsi:type="gmfgraph:FlowLayout"
               forceSingleLine="true"
@@ -126,39 +157,56 @@
               xsi:type="gmfgraph:Label"
               name="FeatureNamesFigure"
               text="&lt;...>">
+            <foregroundColor
+                xsi:type="gmfgraph:RGBColor"
+                blue="128"/>
             <font
                 xsi:type="gmfgraph:BasicFont"
                 faceName="Lucida Sans Unicode"
-                height="7"/>
+                height="7"
+                style="ITALIC"/>
           </children>
           <children
               xsi:type="gmfgraph:Label"
               name="FeatureModifierFigure">
+            <foregroundColor
+                xsi:type="gmfgraph:RGBColor"
+                blue="128"/>
             <font
                 xsi:type="gmfgraph:BasicFont"
                 faceName="Lucida Sans Unicode"
-                height="7"/>
+                height="7"
+                style="ITALIC"/>
           </children>
           <children
               xsi:type="gmfgraph:Label"
               name="FeatureTypeFigure">
+            <foregroundColor
+                xsi:type="gmfgraph:RGBColor"
+                blue="200"/>
             <font
                 xsi:type="gmfgraph:BasicFont"
                 faceName="Lucida Sans Unicode"
-                height="7"/>
+                height="7"
+                style="ITALIC"/>
           </children>
         </children>
         <children
             xsi:type="gmfgraph:Label"
             name="FeatureCommentFigure">
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              red="192"/>
           <font
               xsi:type="gmfgraph:BasicFont"
               faceName="Lucida Sans Unicode"
-              height="7"/>
+              height="6"/>
         </children>
         <children
             xsi:type="gmfgraph:Rectangle"
-            name="FeatureArgumentsRectangleFigure">
+            name="FeatureArgumentsRectangleFigure"
+            outline="false"
+            fill="false">
           <layout
               xsi:type="gmfgraph:FlowLayout"
               majorSpacing="1"
@@ -171,7 +219,9 @@
         </children>
         <children
             xsi:type="gmfgraph:Rectangle"
-            name="PreConditionsRectangleFigure">
+            name="PreConditionsRectangleFigure"
+            outline="false"
+            fill="false">
           <layout
               xsi:type="gmfgraph:FlowLayout"/>
           <foregroundColor
@@ -181,7 +231,9 @@
         </children>
         <children
             xsi:type="gmfgraph:Rectangle"
-            name="PostConditionsRectangeFigure">
+            name="PostConditionsRectangeFigure"
+            outline="false"
+            fill="false">
           <layout
               xsi:type="gmfgraph:FlowLayout"/>
           <foregroundColor
@@ -239,7 +291,8 @@
       <actualFigure
           xsi:type="gmfgraph:Rectangle"
           name="IndexFigure"
-          outline="false">
+          outline="false"
+          fill="false">
         <layout
             xsi:type="gmfgraph:FlowLayout"
             matchMinorSize="true"
@@ -281,7 +334,8 @@
       <actualFigure
           xsi:type="gmfgraph:Rectangle"
           name="InheritanceFigure"
-          outline="false">
+          outline="false"
+          fill="false">
         <layout
             xsi:type="gmfgraph:FlowLayout"
             forceSingleLine="true"
@@ -316,7 +370,9 @@
         name="ArgumentFigure">
       <actualFigure
           xsi:type="gmfgraph:Rectangle"
-          name="ArgumentFigure">
+          name="ArgumentFigure"
+          outline="false"
+          fill="false">
         <layout
             xsi:type="gmfgraph:FlowLayout"
             forceSingleLine="true"
@@ -329,6 +385,9 @@
             xsi:type="gmfgraph:Label"
             name="ArgumentArrowFigure"
             text="\u2192">
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              blue="128"/>
           <font
               xsi:type="gmfgraph:BasicFont"
               faceName="Lucida Sans Unicode"
@@ -337,26 +396,38 @@
         <children
             xsi:type="gmfgraph:Label"
             name="ArgumentNameFigure">
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              blue="128"/>
           <font
               xsi:type="gmfgraph:BasicFont"
               faceName="Lucida Sans Unicode"
-              height="7"/>
+              height="7"
+              style="ITALIC"/>
         </children>
         <children
             xsi:type="gmfgraph:Label"
             name="ArgumentCollectionFigure">
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              blue="200"/>
           <font
               xsi:type="gmfgraph:BasicFont"
               faceName="Lucida Sans Unicode"
-              height="7"/>
+              height="7"
+              style="ITALIC"/>
         </children>
         <children
             xsi:type="gmfgraph:Label"
             name="ArgumentTypeFigure">
+          <foregroundColor
+              xsi:type="gmfgraph:RGBColor"
+              blue="200"/>
           <font
               xsi:type="gmfgraph:BasicFont"
               faceName="Lucida Sans Unicode"
-              height="7"/>
+              height="7"
+              style="ITALIC"/>
         </children>
       </actualFigure>
       <accessors
@@ -400,6 +471,7 @@
       <actualFigure
           xsi:type="gmfgraph:Rectangle"
           name="InvariantFigure"
+          outline="false"
           fill="false">
         <layout
             xsi:type="gmfgraph:FlowLayout"
@@ -418,6 +490,48 @@
           figure="//@figures.0/@descriptors.8/@actualFigure/@children.0"/>
       <accessors
           figure="//@figures.0/@descriptors.8/@actualFigure"/>
+    </descriptors>
+    <descriptors
+        name="InheritanceLinkFigure">
+      <actualFigure
+          xsi:type="gmfgraph:CustomConnection"
+          name="InheritanceLinkConnectionFigure"
+          qualifiedClassName="bonIDE.diagram.custom.InheritanceConnection">
+        <foregroundColor
+            xsi:type="gmfgraph:RGBColor"/>
+      </actualFigure>
+    </descriptors>
+    <descriptors
+        name="AggregationLinkFigure">
+      <actualFigure
+          xsi:type="gmfgraph:CustomConnection"
+          name="AggregationLinkConnectionFigure"
+          qualifiedClassName="bonIDE.diagram.custom.AggregationConnection">
+        <foregroundColor
+            xsi:type="gmfgraph:RGBColor"/>
+      </actualFigure>
+    </descriptors>
+    <descriptors
+        name="AssociationLinkFigure">
+      <actualFigure
+          xsi:type="gmfgraph:CustomConnection"
+          name="AssociationLinkConnectionFigure"
+          qualifiedClassName="bonIDE.diagram.custom.AssociationConnection">
+        <foregroundColor
+            xsi:type="gmfgraph:RGBColor"/>
+      </actualFigure>
+    </descriptors>
+    <descriptors
+        name="AggregationLinkNameFigure">
+      <actualFigure
+          xsi:type="gmfgraph:Label"
+          name="AggregationLinkNameLabel"/>
+    </descriptors>
+    <descriptors
+        name="AssociationLinkNameFigure">
+      <actualFigure
+          xsi:type="gmfgraph:Label"
+          name="AssociationLinkNameLabel"/>
     </descriptors>
   </figures>
   <nodes
@@ -441,11 +555,19 @@
   <nodes
       name="Invariant"
       figure="InvariantFigure"/>
+  <connections
+      name="InheritanceRelationship"
+      figure="InheritanceLinkFigure"/>
+  <connections
+      name="AggregationRelationship"
+      figure="AggregationLinkFigure"/>
+  <connections
+      name="AssociationRelationship"
+      figure="AssociationLinkFigure"/>
   <compartments
       name="ClusterCompartment"
       figure="ClusterFigure"
-      collapsible="true"
-      needsTitle="true"/>
+      collapsible="true"/>
   <compartments
       name="IndexCompartment"
       figure="BONClassFigure"
@@ -561,4 +683,10 @@
       figure="InvariantFigure"
       elementIcon="false"
       accessor="//@figures.0/@descriptors.8/@accessors.0"/>
+  <labels
+      name="AggregationRelationshipLabel"
+      figure="AggregationLinkNameFigure"/>
+  <labels
+      name="AssociationRelationshipLabel"
+      figure="AssociationLinkNameFigure"/>
 </gmfgraph:Canvas>

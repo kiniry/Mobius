@@ -164,6 +164,42 @@ public class BonIDESwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case BonIDEPackage.STATIC_RELATIONSHIP: {
+				StaticRelationship staticRelationship = (StaticRelationship)theEObject;
+				T result = caseStaticRelationship(staticRelationship);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case BonIDEPackage.INHERITANCE_REL: {
+				InheritanceRel inheritanceRel = (InheritanceRel)theEObject;
+				T result = caseInheritanceRel(inheritanceRel);
+				if (result == null) result = caseStaticRelationship(inheritanceRel);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case BonIDEPackage.CLIENT_SUPPLIER_REL: {
+				ClientSupplierRel clientSupplierRel = (ClientSupplierRel)theEObject;
+				T result = caseClientSupplierRel(clientSupplierRel);
+				if (result == null) result = caseStaticRelationship(clientSupplierRel);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case BonIDEPackage.AGGREGATION_REL: {
+				AggregationRel aggregationRel = (AggregationRel)theEObject;
+				T result = caseAggregationRel(aggregationRel);
+				if (result == null) result = caseClientSupplierRel(aggregationRel);
+				if (result == null) result = caseStaticRelationship(aggregationRel);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case BonIDEPackage.ASSOCIATION_REL: {
+				AssociationRel associationRel = (AssociationRel)theEObject;
+				T result = caseAssociationRel(associationRel);
+				if (result == null) result = caseClientSupplierRel(associationRel);
+				if (result == null) result = caseStaticRelationship(associationRel);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -345,6 +381,81 @@ public class BonIDESwitch<T> {
 	 * @generated
 	 */
 	public T caseInvariant(Invariant object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Static Relationship</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Static Relationship</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStaticRelationship(StaticRelationship object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Inheritance Rel</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Inheritance Rel</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInheritanceRel(InheritanceRel object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Client Supplier Rel</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Client Supplier Rel</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseClientSupplierRel(ClientSupplierRel object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Aggregation Rel</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Aggregation Rel</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAggregationRel(AggregationRel object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Association Rel</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Association Rel</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAssociationRel(AssociationRel object) {
 		return null;
 	}
 

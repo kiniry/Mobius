@@ -138,8 +138,6 @@ public class ClusterEditPart extends ShapeNodeEditPart {
 	 */
 	@Override
 	protected void refreshBounds() {
-		System.out.println("refreshBounds");
-
 		// set the cluster name text alignment - it would be preferable to do this in 
 		// ClusterFigure.createContents(), but if it's done here, it's one less method
 		// maintain, and we can leave ClusterFigure.createContents() as '@generated' 

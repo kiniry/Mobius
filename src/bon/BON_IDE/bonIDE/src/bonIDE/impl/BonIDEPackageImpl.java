@@ -7,22 +7,28 @@
 package bonIDE.impl;
 
 import bonIDE.Abstraction;
+import bonIDE.AggregationRel;
+import bonIDE.AssociationRel;
 import bonIDE.BONClass;
 import bonIDE.BonIDEFactory;
 import bonIDE.BonIDEPackage;
+import bonIDE.ClientSupplierRel;
 import bonIDE.Cluster;
 import bonIDE.Feature;
 import bonIDE.FeatureArgument;
 import bonIDE.ImplementationStatus;
 import bonIDE.IndexClause;
 import bonIDE.InheritanceClause;
+import bonIDE.InheritanceRel;
 import bonIDE.Invariant;
 import bonIDE.Model;
 import bonIDE.PostCondition;
 import bonIDE.PreCondition;
+import bonIDE.RelationshipType;
 import bonIDE.Parent;
 import bonIDE.StaticAbstraction;
 
+import bonIDE.StaticRelationship;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -127,7 +133,49 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass staticRelationshipEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass inheritanceRelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass clientSupplierRelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass aggregationRelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass associationRelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EEnum implementationStatusEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum relationshipTypeEEnum = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -206,6 +254,15 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 	 */
 	public EReference getModel_Abstractions() {
 		return (EReference)modelEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getModel_Relationships() {
+		return (EReference)modelEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -555,8 +612,98 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getStaticRelationship() {
+		return staticRelationshipEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStaticRelationship_Type() {
+		return (EAttribute)staticRelationshipEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getStaticRelationship_Source() {
+		return (EReference)staticRelationshipEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getStaticRelationship_Target() {
+		return (EReference)staticRelationshipEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getInheritanceRel() {
+		return inheritanceRelEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getClientSupplierRel() {
+		return clientSupplierRelEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getClientSupplierRel_Name() {
+		return (EAttribute)clientSupplierRelEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getAggregationRel() {
+		return aggregationRelEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getAssociationRel() {
+		return associationRelEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getImplementationStatus() {
 		return implementationStatusEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getRelationshipType() {
+		return relationshipTypeEEnum;
 	}
 
 	/**
@@ -589,6 +736,7 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 		// Create classes and their features
 		modelEClass = createEClass(MODEL);
 		createEReference(modelEClass, MODEL__ABSTRACTIONS);
+		createEReference(modelEClass, MODEL__RELATIONSHIPS);
 
 		abstractionEClass = createEClass(ABSTRACTION);
 
@@ -639,8 +787,23 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 		invariantEClass = createEClass(INVARIANT);
 		createEAttribute(invariantEClass, INVARIANT__CONTENT);
 
+		staticRelationshipEClass = createEClass(STATIC_RELATIONSHIP);
+		createEAttribute(staticRelationshipEClass, STATIC_RELATIONSHIP__TYPE);
+		createEReference(staticRelationshipEClass, STATIC_RELATIONSHIP__SOURCE);
+		createEReference(staticRelationshipEClass, STATIC_RELATIONSHIP__TARGET);
+
+		inheritanceRelEClass = createEClass(INHERITANCE_REL);
+
+		clientSupplierRelEClass = createEClass(CLIENT_SUPPLIER_REL);
+		createEAttribute(clientSupplierRelEClass, CLIENT_SUPPLIER_REL__NAME);
+
+		aggregationRelEClass = createEClass(AGGREGATION_REL);
+
+		associationRelEClass = createEClass(ASSOCIATION_REL);
+
 		// Create enums
 		implementationStatusEEnum = createEEnum(IMPLEMENTATION_STATUS);
+		relationshipTypeEEnum = createEEnum(RELATIONSHIP_TYPE);
 	}
 
 	/**
@@ -674,10 +837,15 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 		clusterEClass.getESuperTypes().add(this.getStaticAbstraction());
 		bonClassEClass.getESuperTypes().add(this.getStaticAbstraction());
 		staticAbstractionEClass.getESuperTypes().add(this.getAbstraction());
+		inheritanceRelEClass.getESuperTypes().add(this.getStaticRelationship());
+		clientSupplierRelEClass.getESuperTypes().add(this.getStaticRelationship());
+		aggregationRelEClass.getESuperTypes().add(this.getClientSupplierRel());
+		associationRelEClass.getESuperTypes().add(this.getClientSupplierRel());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(modelEClass, Model.class, "Model", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getModel_Abstractions(), this.getAbstraction(), null, "abstractions", null, 0, -1, Model.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModel_Relationships(), this.getStaticRelationship(), null, "relationships", null, 0, -1, Model.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(abstractionEClass, Abstraction.class, "Abstraction", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -728,6 +896,20 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 		initEClass(invariantEClass, Invariant.class, "Invariant", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getInvariant_Content(), ecorePackage.getEString(), "content", null, 0, 1, Invariant.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(staticRelationshipEClass, StaticRelationship.class, "StaticRelationship", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStaticRelationship_Type(), this.getRelationshipType(), "type", null, 0, 1, StaticRelationship.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getStaticRelationship_Source(), this.getAbstraction(), null, "source", null, 0, 1, StaticRelationship.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getStaticRelationship_Target(), this.getAbstraction(), null, "target", null, 0, 1, StaticRelationship.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(inheritanceRelEClass, InheritanceRel.class, "InheritanceRel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(clientSupplierRelEClass, ClientSupplierRel.class, "ClientSupplierRel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getClientSupplierRel_Name(), ecorePackage.getEString(), "name", null, 0, 1, ClientSupplierRel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(aggregationRelEClass, AggregationRel.class, "AggregationRel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(associationRelEClass, AssociationRel.class, "AssociationRel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		// Initialize enums and add enum literals
 		initEEnum(implementationStatusEEnum, ImplementationStatus.class, "ImplementationStatus");
 		addEEnumLiteral(implementationStatusEEnum, ImplementationStatus.REUSED);
@@ -737,6 +919,11 @@ public class BonIDEPackageImpl extends EPackageImpl implements BonIDEPackage {
 		addEEnumLiteral(implementationStatusEEnum, ImplementationStatus.INTERFACED);
 		addEEnumLiteral(implementationStatusEEnum, ImplementationStatus.ROOT);
 		addEEnumLiteral(implementationStatusEEnum, ImplementationStatus.PARAMETERIZED);
+
+		initEEnum(relationshipTypeEEnum, RelationshipType.class, "RelationshipType");
+		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.INHERITANCE);
+		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.AGGREGATION);
+		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.ASSOCIATION);
 
 		// Create resource
 		createResource(eNS_URI);

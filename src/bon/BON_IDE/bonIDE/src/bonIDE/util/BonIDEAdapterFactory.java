@@ -120,6 +120,26 @@ public class BonIDEAdapterFactory extends AdapterFactoryImpl {
 				return createInvariantAdapter();
 			}
 			@Override
+			public Adapter caseStaticRelationship(StaticRelationship object) {
+				return createStaticRelationshipAdapter();
+			}
+			@Override
+			public Adapter caseInheritanceRel(InheritanceRel object) {
+				return createInheritanceRelAdapter();
+			}
+			@Override
+			public Adapter caseClientSupplierRel(ClientSupplierRel object) {
+				return createClientSupplierRelAdapter();
+			}
+			@Override
+			public Adapter caseAggregationRel(AggregationRel object) {
+				return createAggregationRelAdapter();
+			}
+			@Override
+			public Adapter caseAssociationRel(AssociationRel object) {
+				return createAssociationRelAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -304,6 +324,76 @@ public class BonIDEAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createInvariantAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bonIDE.StaticRelationship <em>Static Relationship</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bonIDE.StaticRelationship
+	 * @generated
+	 */
+	public Adapter createStaticRelationshipAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bonIDE.InheritanceRel <em>Inheritance Rel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bonIDE.InheritanceRel
+	 * @generated
+	 */
+	public Adapter createInheritanceRelAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bonIDE.ClientSupplierRel <em>Client Supplier Rel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bonIDE.ClientSupplierRel
+	 * @generated
+	 */
+	public Adapter createClientSupplierRelAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bonIDE.AggregationRel <em>Aggregation Rel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bonIDE.AggregationRel
+	 * @generated
+	 */
+	public Adapter createAggregationRelAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bonIDE.AssociationRel <em>Association Rel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bonIDE.AssociationRel
+	 * @generated
+	 */
+	public Adapter createAssociationRelAdapter() {
 		return null;
 	}
 

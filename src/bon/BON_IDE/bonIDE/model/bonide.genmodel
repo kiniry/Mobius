@@ -15,8 +15,14 @@
       <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//ImplementationStatus/Root"/>
       <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//ImplementationStatus/Parameterized"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bonide.ecore#//RelationshipType">
+      <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//RelationshipType/Inheritance"/>
+      <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//RelationshipType/Aggregation"/>
+      <genEnumLiterals ecoreEnumLiteral="bonide.ecore#//RelationshipType/Association"/>
+    </genEnums>
     <genClasses ecoreClass="bonide.ecore#//Model">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//Model/abstractions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bonide.ecore#//Model/relationships"/>
     </genClasses>
     <genClasses image="false" ecoreClass="bonide.ecore#//Abstraction"/>
     <genClasses ecoreClass="bonide.ecore#//Cluster">
@@ -65,5 +71,16 @@
     <genClasses ecoreClass="bonide.ecore#//Invariant">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//Invariant/content"/>
     </genClasses>
+    <genClasses ecoreClass="bonide.ecore#//StaticRelationship">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//StaticRelationship/type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bonide.ecore#//StaticRelationship/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bonide.ecore#//StaticRelationship/target"/>
+    </genClasses>
+    <genClasses ecoreClass="bonide.ecore#//InheritanceRel"/>
+    <genClasses ecoreClass="bonide.ecore#//ClientSupplierRel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bonide.ecore#//ClientSupplierRel/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bonide.ecore#//AggregationRel"/>
+    <genClasses ecoreClass="bonide.ecore#//AssociationRel"/>
   </genPackages>
 </genmodel:GenModel>
