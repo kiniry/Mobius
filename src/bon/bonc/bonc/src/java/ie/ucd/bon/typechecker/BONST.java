@@ -71,6 +71,7 @@ public class BONST {
     public final Graph<String,ClusterChart> clusterClusterGraph = new Graph<String,ClusterChart>();
 
     public final Graph<ClassChart,String> classInheritanceGraph = new Graph<ClassChart,String>();
+    public final Graph<String,String> simpleClassInheritanceGraph = new Graph<String,String>();
 
     public final Graph<String,String> descriptionGraph = new Graph<String,String>();
 

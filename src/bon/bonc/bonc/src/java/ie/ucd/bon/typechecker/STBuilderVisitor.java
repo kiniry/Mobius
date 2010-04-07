@@ -253,7 +253,8 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
       if (parent.equals(name)) {
         problems.addProblem(new ClassCannotHaveSelfAsParentError(node.getReportingLocation(), name.getName()));
       } else {
-        st.informal.classInheritanceGraph.put(node, parent.getName());
+        st.informal.classInheritanceGraph.put(node, parent.name);
+        st.informal.simpleClassInheritanceGraph.put(name.name, parent.name);
       }
     }
 
