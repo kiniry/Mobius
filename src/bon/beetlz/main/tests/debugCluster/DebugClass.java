@@ -4,17 +4,12 @@ import java.awt.Button;
 
 
 public /*@ pure @*/ class DebugClass extends Button { 
-  
-    private /*@ spec_public @*/ String name;
-    
-    public String getName() {return null;}
-    
-    public DebugClass() {}
-    
-   
+//@ public model instance non_null pus.util.List _list;
 
-    //public int Hello() {return 0;}
-    //public boolean hello() {return false;}
+  //@ensures Result.size > 0 && Result.size <= 3; 
+  public void hello() {}
+  
+  public void Hello() {}
 
   
 }

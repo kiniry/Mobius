@@ -10,7 +10,7 @@ public class BeetlzTest extends TestCase {
     System.out.println("****************** test comparison *********************");
     String[] my_args = {
         "-source", "both",
-        //"-verbose",
+        "-verbose",
         "-userSettings", "test/custom_file.txt",
         "-files", "test"
         };
