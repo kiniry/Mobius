@@ -11,8 +11,6 @@ component
     inherit ANY
   end
 
-  class LIST[T]
-
   class A[X->O,Y->LIST[X]]
 
   class B[T->ANY]

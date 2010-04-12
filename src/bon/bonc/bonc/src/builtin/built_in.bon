@@ -1,5 +1,111 @@
-static_diagram BUILT_IN
-component
-  class ANY
-  class NONE
+--TODO:
+--     Automatic inheritance from ANY.
+
+cluster_chart BUILT_IN
+  cluster KERNEL description ""
+  cluster STRUCTURES description "Basic data structures"
 end
+
+cluster_chart KERNEL
+  class ANY description "Base type"
+  class VALUE description ""
+  class BOOLEAN description ""
+  class STRING description ""
+  class FILE description ""
+
+  cluster NUMBERS description ""
+end
+
+cluster_chart STRUCTURES
+  class ARRAY description ""
+  class TABLE description ""
+  class TREE description ""
+  class SET description ""
+  class LIST description ""
+  class TUPLE description ""
+end
+
+cluster_chart NUMBERS
+  class NUMBER description ""
+  class INTEGER description ""
+  class FLOAT description ""
+end
+
+class_chart ANY
+end
+
+class_chart VALUE
+end
+
+class_chart NUMBER
+  inherit VALUE
+end
+
+class_chart BOOLEAN
+  inherit NUMBER
+end
+
+class_chart INTEGER
+  inherit NUMBER
+end
+
+class_chart FLOAT
+  inherit NUMBER
+end
+
+class_chart STRING
+  inherit VALUE
+end
+
+class_chart FILE
+end
+
+class_chart ARRAY
+end
+
+class_chart TUPLE
+end
+
+class_chart TABLE
+end
+
+class_chart TREE
+end
+
+class_chart SET
+end
+
+class_chart LIST
+end
+
+static_diagram
+component
+  cluster KERNEL
+  component
+    class ANY
+    class NONE
+    class VALUE
+    class BOOLEAN
+    class STRING
+    class VALUE
+    class FILE
+    
+    cluster NUMBERS
+    component
+      class NUMBER inherit VALUE end
+      class INTEGER inherit NUMBER end
+      class FLOAT inherit NUMBER end
+    end
+  end
+  
+  cluster STRUCTURES
+  component
+    class ARRAY
+    class TABLE
+    class TREE
+    class SET
+    class LIST[T]
+    class TUPLE
+  end
+end
+

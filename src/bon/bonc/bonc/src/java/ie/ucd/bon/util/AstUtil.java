@@ -13,6 +13,7 @@ import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.StaticDiagram;
 import ie.ucd.bon.ast.Type;
+import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.source.SourceReader;
 
@@ -79,6 +80,11 @@ public class AstUtil {
       types.add(generic.getType());
     }
     return types;
+  }
+  
+  public static boolean isBuiltin(AstNode node) {
+    SourceLocation location = node.location;
+    return location.getFileName() != null && location.getFileName().equals(ParsingTracker.FAKE_BUILTIN_FILENAME);
   }
 
 }

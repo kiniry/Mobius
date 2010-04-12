@@ -14,8 +14,6 @@ component
     inherit O
   end
 
-  class LIST[T]
-
   class A[X->O,Y->LIST[X]]
 
   class B[T->O_SUB]

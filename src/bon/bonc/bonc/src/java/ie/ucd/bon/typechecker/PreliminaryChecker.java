@@ -15,6 +15,7 @@ import ie.ucd.bon.typechecker.errors.CycleInRelationsError;
 import ie.ucd.bon.typechecker.informal.errors.ClassNotInAnyClusterError;
 import ie.ucd.bon.typechecker.informal.errors.ClusterNotInAnyClusterOrSystemError;
 import ie.ucd.bon.typechecker.informal.errors.SystemNotDefinedError;
+import ie.ucd.bon.util.AstUtil;
 import ie.ucd.bon.util.Converter;
 
 import java.util.Collection;
@@ -122,7 +123,7 @@ public class PreliminaryChecker {
     for (String clusterName : allClusterNames) {
       if (!st.informal.clusterClusterGraph.containsKey(clusterName)) {
         ClusterChart cluster = st.informal.clusters.get(clusterName);
-        if (!cluster.getIsSystem()) {
+        if (!cluster.getIsSystem() && !AstUtil.isBuiltin(cluster)) { //TODO instead filter all issues that are from builtin source?
           problems.addProblem(new ClusterNotInAnyClusterOrSystemError(cluster.getReportingLocation(), clusterName));
         }
       }

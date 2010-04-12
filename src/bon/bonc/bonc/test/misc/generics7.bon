@@ -1,6 +1,5 @@
 static_diagram A
 component 
-  class LIST[T]
   class A[X, Y->LIST[X]]
   class B[K]
     inherit A[K,LIST[ANY]] --Should be an issue since K may not be ANY

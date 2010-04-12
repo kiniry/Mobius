@@ -10,8 +10,6 @@ component
     inherit ANY
   end
 
-  class LIST[T]
-
   class A[T->LIST[T]] --The T in LIST[T] is not a known type
 
 end

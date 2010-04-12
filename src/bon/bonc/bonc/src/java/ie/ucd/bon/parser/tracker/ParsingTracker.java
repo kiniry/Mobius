@@ -20,6 +20,8 @@ import java.util.Vector;
 
 public class ParsingTracker {
 
+  public static final String FAKE_BUILTIN_FILENAME = "<built-in>";
+  
   private ParseResult stdParse;
   private final ParseResult builtInParse;
   private final Vector<ParseResult> parses;
@@ -45,7 +47,7 @@ public class ParsingTracker {
 
     symbolTable = new BONST();
     
-    builtInParse = Parser.parse(new File("<built-in>"), FileUtil.getInputStream("src/builtin/built_in.bon"));
+    builtInParse = Parser.parse(new File(FAKE_BUILTIN_FILENAME), FileUtil.getInputStream("src/builtin/built_in.bon"));
     Parser.buildSymbolTable(builtInParse, this);
   }
 
