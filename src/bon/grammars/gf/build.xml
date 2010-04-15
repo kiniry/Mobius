@@ -11,7 +11,11 @@
   <property file="gf.properties"/>
 
   <path id="compile.path">
-    <filelist dir="${lib}" files="commons-lang-2.4.jar"/>
+    <filelist dir="${lib}" files="${junit} ${commons}"/>
+  </path>
+  <path id="test.path">
+  	<path refid="compile.path"/>
+  	<pathelement location="${src-java}"/>
   </path>
 
   <target name="init">
@@ -22,6 +26,7 @@
   
   <target name="compile" depends="init" description="compile the source">
 	<javac srcdir="${src-java}" destdir="${build}" target="${java-target-version}" classpathref="compile.path"/>
+  	<javac srcdir="${src-test}" destdir="${build}" target="${java-target-version}" classpathref="compile.path"/>
   </target>
 
   <target name="javadocs" depends="init" description="Generate javadocs">
@@ -41,7 +46,7 @@
     </copy>
 
     <copy todir="${dist}/lib">
-      <fileset dir="${lib}/" includes="commons-lang-2.4.jar"/>
+      <fileset dir="${lib}/" includes="${commons}"/>
     </copy>
 
     
