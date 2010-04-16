@@ -1,0 +1,28 @@
+import bonIDE;
+
+context BONClass WARNING "Class name cannot be blank":	
+	name.length < 10;
+	
+context BONClass WARNING "Feature arguments must be typed":
+	features.arguments.forAll(a1|a1.type != "");
+	
+context Model ERROR "Class cannot inherit from itself":		
+	!relationships.typeSelect(InheritanceRel).exists(relation| (relation.source == relation.target));
+	
+context Model ERROR "Class names must be unique":	
+	abstractions.typeSelect(BONClass).forAll(class1|!abstractions.typeSelect(BONClass).exists(class2| (class1 != class2) && (class1.name == class2.name) ));
+	
+
+
+	
+		
+	
+	
+
+
+
+	
+
+
+		
+	

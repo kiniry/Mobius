@@ -53,8 +53,7 @@ public class BonideNavigatorLinkHelper implements ILinkHelper {
 	 * @generated
 	 */
 	public IStructuredSelection findSelection(IEditorInput anInput) {
-		IDiagramDocument document = bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().getDocumentProvider().getDiagramDocument(
-				anInput);
+		IDiagramDocument document = bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().getDocumentProvider().getDiagramDocument(anInput);
 		if (document == null) {
 			return StructuredSelection.EMPTY;
 		}

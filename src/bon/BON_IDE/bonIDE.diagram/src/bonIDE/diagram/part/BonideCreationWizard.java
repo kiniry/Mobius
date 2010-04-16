@@ -91,8 +91,7 @@ public class BonideCreationWizard extends Wizard implements INewWizard {
 		this.workbench = workbench;
 		this.selection = selection;
 		setWindowTitle(bonIDE.diagram.part.Messages.BonideCreationWizardTitle);
-		setDefaultPageImageDescriptor(bonIDE.diagram.part.BonideDiagramEditorPlugin
-				.getBundledImageDescriptor("icons/wizban/NewBonIDEWizard.gif")); //$NON-NLS-1$
+		setDefaultPageImageDescriptor(bonIDE.diagram.part.BonideDiagramEditorPlugin.getBundledImageDescriptor("icons/wizban/NewBonIDEWizard.gif")); //$NON-NLS-1$
 		setNeedsProgressMonitor(true);
 	}
 

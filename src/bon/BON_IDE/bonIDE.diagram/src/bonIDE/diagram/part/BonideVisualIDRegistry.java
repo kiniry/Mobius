@@ -57,8 +57,7 @@ public class BonideVisualIDRegistry {
 			return Integer.parseInt(type);
 		} catch (NumberFormatException e) {
 			if (Boolean.TRUE.toString().equalsIgnoreCase(Platform.getDebugOption(DEBUG_KEY))) {
-				bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError(
-						"Unable to parse view type as a visualID number: " + type);
+				bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Unable to parse view type as a visualID number: " + type);
 			}
 		}
 		return -1;
@@ -392,6 +391,16 @@ public class BonideVisualIDRegistry {
 				return true;
 			}
 			if (bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.AggregationRelNameEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID:
+			if (bonIDE.diagram.edit.parts.AssociationRelNameEditPart.VISUAL_ID == nodeVisualID) {
 				return true;
 			}
 			break;

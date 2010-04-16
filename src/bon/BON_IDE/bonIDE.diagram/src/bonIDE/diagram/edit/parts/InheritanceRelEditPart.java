@@ -75,7 +75,8 @@ public class InheritanceRelEditPart extends ConnectionNodeEditPart implements IT
 		 */
 		public InheritanceLinkFigure() {
 
-			this.setForegroundColor(THIS_FORE);
+			this.setForegroundColor(THIS_FORE
+					);
 		}
 
 		/**

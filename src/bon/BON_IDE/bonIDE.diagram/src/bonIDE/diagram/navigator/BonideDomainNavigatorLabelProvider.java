@@ -15,8 +15,8 @@ public class BonideDomainNavigatorLabelProvider implements ICommonLabelProvider 
 	/**
 	 * @generated
 	 */
-	private AdapterFactoryLabelProvider myAdapterFactoryLabelProvider = new AdapterFactoryLabelProvider(
-			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().getItemProvidersAdapterFactory());
+	private AdapterFactoryLabelProvider myAdapterFactoryLabelProvider = new AdapterFactoryLabelProvider(bonIDE.diagram.part.BonideDiagramEditorPlugin
+			.getInstance().getItemProvidersAdapterFactory());
 
 	/**
 	 * @generated

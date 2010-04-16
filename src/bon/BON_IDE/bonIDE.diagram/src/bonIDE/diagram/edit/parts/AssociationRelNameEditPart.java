@@ -1,9 +1,9 @@
 package bonIDE.diagram.edit.parts;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.draw2d.ConnectionLocator;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Point;
@@ -14,20 +14,18 @@ import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.handles.MoveHandle;
-import org.eclipse.gef.handles.NonResizableHandleKit;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParserEditStatus;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserEditStatus;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableLabelEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
@@ -48,12 +46,12 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @generated
  */
-public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwareEditPart {
+public class AssociationRelNameEditPart extends LabelEditPart implements ITextAwareEditPart {
 
 	/**
 	 * @generated
 	 */
-	public static final int VISUAL_ID = 5013;
+	public static final int VISUAL_ID = 6002;
 
 	/**
 	 * @generated
@@ -78,7 +76,15 @@ public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwa
 	/**
 	 * @generated
 	 */
-	public FeatureTypeEditPart(View view) {
+	static {
+		registerSnapBackPosition(bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.AssociationRelNameEditPart.VISUAL_ID),
+				new Point(0, 40));
+	}
+
+	/**
+	 * @generated
+	 */
+	public AssociationRelNameEditPart(View view) {
 		super(view);
 	}
 
@@ -87,25 +93,26 @@ public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwa
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy());
-		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new LabelDirectEditPolicy());
-		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new NonResizableEditPolicy() {
+		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE,
+				new LabelDirectEditPolicy());
+		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE,
+				new bonIDE.diagram.edit.policies.BonideTextSelectionEditPolicy());
+		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE,
+				new NonResizableLabelEditPolicy() {
 
 			protected List createSelectionHandles() {
-				List handles = new ArrayList();
-				NonResizableHandleKit.addMoveHandle((GraphicalEditPart) getHost(), handles);
-				((MoveHandle) handles.get(0)).setBorder(null);
-				return handles;
-			}
-
-			public Command getCommand(Request request) {
-				return null;
-			}
-
-			public boolean understandsRequest(Request request) {
-				return false;
+				MoveHandle mh = new MoveHandle((GraphicalEditPart) getHost());
+				mh.setBorder(null);
+				return Collections.singletonList(mh);
 			}
 		});
+	}
+
+	/**
+	 * @generated
+	 */
+	public int getKeyPoint() {
+		return ConnectionLocator.MIDDLE;
 	}
 
 	/**
@@ -120,12 +127,9 @@ public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwa
 	}
 
 	/**
-	 * @generated NOT
+	 * @generated
 	 */
 	protected void setLabelTextHelper(IFigure figure, String text) {
-
-		text = ":" + text;
-
 		if (figure instanceof WrappingLabel) {
 			((WrappingLabel) figure).setText(text);
 		} else {
@@ -158,7 +162,7 @@ public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwa
 	/**
 	 * @generated
 	 */
-	public void setLabel(WrappingLabel
+	public void setLabel(IFigure
 			figure) {
 		unregisterVisuals();
 		setFigure(figure);
@@ -192,7 +196,11 @@ public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwa
 	 * @generated
 	 */
 	protected Image getLabelIcon() {
-		return null;
+		EObject parserElement = getParserElement();
+		if (parserElement == null) {
+			return null;
+		}
+		return bonIDE.diagram.providers.BonideElementTypes.getImage(parserElement.eClass());
 	}
 
 	/**
@@ -299,8 +307,9 @@ public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwa
 	 */
 	public IParser getParser() {
 		if (parser == null) {
-			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.Feature_3006,
-					getParserElement(), bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.FeatureTypeEditPart.VISUAL_ID));
+			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003,
+					getParserElement(), bonIDE.diagram.part.BonideVisualIDRegistry
+							.getType(bonIDE.diagram.edit.parts.AssociationRelNameEditPart.VISUAL_ID));
 		}
 		return parser;
 	}
@@ -380,13 +389,13 @@ public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwa
 	}
 
 	/**
-	 * @generated NOT
+	 * @generated
 	 */
 	protected void refreshVisuals() {
 		super.refreshVisuals();
 		refreshLabel();
 		refreshFont();
-		//refreshFontColor();
+		refreshFontColor();
 		refreshUnderline();
 		refreshStrikeThrough();
 	}
@@ -501,23 +510,7 @@ public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwa
 	 * @generated
 	 */
 	private View getFontStyleOwnerView() {
-		return (View) getModel();
-	}
-
-	/**
-	 * @generated
-	 */
-	protected void addNotationalListeners() {
-		super.addNotationalListeners();
-		addListenerFilter("PrimaryView", this, getPrimaryView()); //$NON-NLS-1$
-	}
-
-	/**
-	 * @generated
-	 */
-	protected void removeNotationalListeners() {
-		super.removeNotationalListeners();
-		removeListenerFilter("PrimaryView"); //$NON-NLS-1$
+		return getPrimaryView();
 	}
 
 	/**
@@ -560,8 +553,16 @@ public class FeatureTypeEditPart extends CompartmentEditPart implements ITextAwa
 	 * @generated
 	 */
 	protected IFigure createFigure() {
-		// Parent should assign one using setLabel() method
-		return null;
+		IFigure label = createFigurePrim();
+		defaultText = getLabelTextHelper(label);
+		return label;
+	}
+
+	/**
+	 * @generated
+	 */
+	protected IFigure createFigurePrim() {
+		return new WrappingLabel();
 	}
 
 }

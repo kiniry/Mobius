@@ -262,9 +262,11 @@ public class InvariantEditPart extends ShapeNodeEditPart {
 
 			FlowLayout layoutThis = new FlowLayout();
 			layoutThis.setStretchMinorAxis(false);
-			layoutThis.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			layoutThis.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP
+					);
 
-			layoutThis.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			layoutThis.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP
+					);
 			layoutThis.setMajorSpacing(0);
 			layoutThis.setMinorSpacing(0);
 			layoutThis.setHorizontal(true);

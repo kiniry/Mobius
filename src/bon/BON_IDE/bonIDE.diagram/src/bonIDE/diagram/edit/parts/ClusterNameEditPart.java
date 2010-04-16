@@ -254,13 +254,14 @@ public class ClusterNameEditPart extends CompartmentEditPart implements ITextAwa
 					final EObject element = getParserElement();
 					final IParser parser = getParser();
 					try {
-						IParserEditStatus valid = (IParserEditStatus) getEditingDomain().runExclusive(
+						IParserEditStatus valid =
+								(IParserEditStatus) getEditingDomain().runExclusive(
 								new RunnableWithResult.Impl() {
 
 							public void run() {
 								setResult(parser.isValidEditString(new EObjectAdapter(element), (String) value));
-								}
-														});
+							}
+						});
 						return valid.getCode() == ParserEditStatus.EDITABLE ? null : valid.getMessage();
 					} catch (InterruptedException ie) {
 						ie.printStackTrace();
@@ -296,8 +297,7 @@ public class ClusterNameEditPart extends CompartmentEditPart implements ITextAwa
 	public IParser getParser() {
 		if (parser == null) {
 			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001,
-					getParserElement(), bonIDE.diagram.part.BonideVisualIDRegistry
-							.getType(bonIDE.diagram.edit.parts.ClusterNameEditPart.VISUAL_ID));
+					getParserElement(), bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.ClusterNameEditPart.VISUAL_ID));
 		}
 		return parser;
 	}
@@ -369,8 +369,8 @@ public class ClusterNameEditPart extends CompartmentEditPart implements ITextAwa
 							performDirectEdit();
 						}
 					}
-					}
-								});
+				}
+			});
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

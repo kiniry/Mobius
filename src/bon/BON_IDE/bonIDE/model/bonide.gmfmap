@@ -322,6 +322,13 @@
   <links>
     <domainMetaElement
         href="bonide.ecore#//AggregationRel"/>
+    <labelMappings
+        xsi:type="gmfmap:FeatureLabelMapping">
+      <diagramLabel
+          href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#AggregationRelationshipLabel"/>
+      <features
+          href="bonide.ecore#//ClientSupplierRel/name"/>
+    </labelMappings>
     <containmentFeature
         href="bonide.ecore#//Model/relationships"/>
     <tool
@@ -339,6 +346,13 @@
   <links>
     <domainMetaElement
         href="bonide.ecore#//AssociationRel"/>
+    <labelMappings
+        xsi:type="gmfmap:FeatureLabelMapping">
+      <diagramLabel
+          href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/bonIDE/model/bonide.gmfgraph#AssociationRelationshipLabel"/>
+      <features
+          href="bonide.ecore#//ClientSupplierRel/name"/>
+    </labelMappings>
     <containmentFeature
         href="bonide.ecore#//Model/relationships"/>
     <tool

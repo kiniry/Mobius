@@ -145,8 +145,7 @@ public class BonideViewProvider extends AbstractProvider implements IViewProvide
 				}
 			}
 		}
-		return bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID == visualID
-				|| bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID == visualID
+		return bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID == visualID || bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID == visualID
 				|| bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID == visualID
 				|| bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID == visualID
 				|| bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID == visualID
@@ -191,7 +190,7 @@ public class BonideViewProvider extends AbstractProvider implements IViewProvide
 	}
 
 	/**
-	 * @generated NOT
+	 * @generated
 	 */
 	public Node createNode(IAdaptable semanticAdapter, View containerView, String semanticHint, int index,
 			boolean persisted, PreferencesHint preferencesHint) {
@@ -202,7 +201,6 @@ public class BonideViewProvider extends AbstractProvider implements IViewProvide
 		} else {
 			visualID = bonIDE.diagram.part.BonideVisualIDRegistry.getVisualID(semanticHint);
 		}
-
 		switch (visualID) {
 		case bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID:
 			return createCluster_2001(domainElement, containerView, index, persisted, preferencesHint);
@@ -293,6 +291,7 @@ public class BonideViewProvider extends AbstractProvider implements IViewProvide
 		Node node = NotationFactory.eINSTANCE.createNode();
 		node.getStyles().add(NotationFactory.eINSTANCE.createDescriptionStyle());
 		node.getStyles().add(NotationFactory.eINSTANCE.createFontStyle());
+		node.getStyles().add(NotationFactory.eINSTANCE.createFillStyle());
 		node.setLayoutConstraint(NotationFactory.eINSTANCE.createBounds());
 		node.setType(bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID));
 		ViewUtil.insertChildView(containerView, node, index, persisted);
@@ -310,6 +309,8 @@ public class BonideViewProvider extends AbstractProvider implements IViewProvide
 			org.eclipse.swt.graphics.RGB fontRGB = PreferenceConverter.getColor(prefStore, IPreferenceConstants.PREF_FONT_COLOR);
 			nodeFontStyle.setFontColor(FigureUtilities.RGBToInteger(fontRGB).intValue());
 		}
+		org.eclipse.swt.graphics.RGB fillRGB = PreferenceConverter.getColor(prefStore, IPreferenceConstants.PREF_FILL_COLOR);
+		ViewUtil.setStructuralFeatureValue(node, NotationPackage.eINSTANCE.getFillStyle_FillColor(), FigureUtilities.RGBToInteger(fillRGB));
 		Node label5004 = createLabel(node, bonIDE.diagram.part.BonideVisualIDRegistry
 				.getType(bonIDE.diagram.edit.parts.BONClassNameEditPart.VISUAL_ID));
 		createCompartment(node, bonIDE.diagram.part.BonideVisualIDRegistry
@@ -365,6 +366,7 @@ public class BonideViewProvider extends AbstractProvider implements IViewProvide
 		Node node = NotationFactory.eINSTANCE.createNode();
 		node.getStyles().add(NotationFactory.eINSTANCE.createDescriptionStyle());
 		node.getStyles().add(NotationFactory.eINSTANCE.createFontStyle());
+		node.getStyles().add(NotationFactory.eINSTANCE.createFillStyle());
 		node.setLayoutConstraint(NotationFactory.eINSTANCE.createBounds());
 		node.setType(bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID));
 		ViewUtil.insertChildView(containerView, node, index, persisted);
@@ -381,6 +383,8 @@ public class BonideViewProvider extends AbstractProvider implements IViewProvide
 			org.eclipse.swt.graphics.RGB fontRGB = PreferenceConverter.getColor(prefStore, IPreferenceConstants.PREF_FONT_COLOR);
 			nodeFontStyle.setFontColor(FigureUtilities.RGBToInteger(fontRGB).intValue());
 		}
+		org.eclipse.swt.graphics.RGB fillRGB = PreferenceConverter.getColor(prefStore, IPreferenceConstants.PREF_FILL_COLOR);
+		ViewUtil.setStructuralFeatureValue(node, NotationPackage.eINSTANCE.getFillStyle_FillColor(), FigureUtilities.RGBToInteger(fillRGB));
 		Node label5001 = createLabel(node, bonIDE.diagram.part.BonideVisualIDRegistry
 				.getType(bonIDE.diagram.edit.parts.BONClassName2EditPart.VISUAL_ID));
 		createCompartment(node, bonIDE.diagram.part.BonideVisualIDRegistry
@@ -673,6 +677,12 @@ public class BonideViewProvider extends AbstractProvider implements IViewProvide
 		if (routing != null) {
 			ViewUtil.setStructuralFeatureValue(edge, NotationPackage.eINSTANCE.getRoutingStyle_Routing(), routing);
 		}
+		Node label6001 = createLabel(edge, bonIDE.diagram.part.BonideVisualIDRegistry
+				.getType(bonIDE.diagram.edit.parts.AggregationRelNameEditPart.VISUAL_ID));
+		label6001.setLayoutConstraint(NotationFactory.eINSTANCE.createLocation());
+		Location location6001 = (Location) label6001.getLayoutConstraint();
+		location6001.setX(0);
+		location6001.setY(40);
 		return edge;
 	}
 
@@ -709,6 +719,12 @@ public class BonideViewProvider extends AbstractProvider implements IViewProvide
 		if (routing != null) {
 			ViewUtil.setStructuralFeatureValue(edge, NotationPackage.eINSTANCE.getRoutingStyle_Routing(), routing);
 		}
+		Node label6002 = createLabel(edge, bonIDE.diagram.part.BonideVisualIDRegistry
+				.getType(bonIDE.diagram.edit.parts.AssociationRelNameEditPart.VISUAL_ID));
+		label6002.setLayoutConstraint(NotationFactory.eINSTANCE.createLocation());
+		Location location6002 = (Location) label6002.getLayoutConstraint();
+		location6002.setX(0);
+		location6002.setY(40);
 		return edge;
 	}
 

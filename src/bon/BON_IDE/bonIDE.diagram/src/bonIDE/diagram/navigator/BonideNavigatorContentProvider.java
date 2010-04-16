@@ -73,8 +73,8 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 			}
 		};
 		myWorkspaceSynchronizer = new WorkspaceSynchronizer(editingDomain, new WorkspaceSynchronizer.Delegate() {
-				public void dispose() {
-				}
+			public void dispose() {
+			}
 
 			public boolean handleResourceChanged(final Resource resource) {
 				for (Iterator it = myEditingDomain.getResourceSet().getResources().iterator(); it.hasNext();) {
@@ -85,7 +85,7 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 					myViewer.getControl().getDisplay().asyncExec(myViewerRefreshRunnable);
 				}
 				return true;
-				}
+			}
 
 			public boolean handleResourceDeleted(Resource resource) {
 				for (Iterator it = myEditingDomain.getResourceSet().getResources().iterator(); it.hasNext();) {
@@ -96,7 +96,7 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 					myViewer.getControl().getDisplay().asyncExec(myViewerRefreshRunnable);
 				}
 				return true;
-				}
+			}
 
 			public boolean handleResourceMoved(Resource resource, final URI newURI) {
 				for (Iterator it = myEditingDomain.getResourceSet().getResources().iterator(); it.hasNext();) {
@@ -107,8 +107,8 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 					myViewer.getControl().getDisplay().asyncExec(myViewerRefreshRunnable);
 				}
 				return true;
-				}
-						});
+			}
+		});
 	}
 
 	/**
@@ -167,8 +167,8 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 			URI fileURI = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
 			Resource resource = myEditingDomain.getResourceSet().getResource(fileURI, true);
 			Collection result = new ArrayList();
-			result.addAll(createNavigatorItems(selectViewsByType(resource.getContents(), bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID),
-					file, false));
+			result.addAll(createNavigatorItems(selectViewsByType(resource.getContents(), bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID), file,
+					false));
 			return result.toArray();
 		}
 
@@ -442,11 +442,9 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 		case bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID: {
 			Collection result = new ArrayList();
 			bonIDE.diagram.navigator.BonideNavigatorGroup target = new bonIDE.diagram.navigator.BonideNavigatorGroup(
-					bonIDE.diagram.part.Messages.NavigatorGroupName_InheritanceRel_4001_target,
-					"icons/linkTargetNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+					bonIDE.diagram.part.Messages.NavigatorGroupName_InheritanceRel_4001_target, "icons/linkTargetNavigatorGroup.gif", parentElement); //$NON-NLS-1$
 			bonIDE.diagram.navigator.BonideNavigatorGroup source = new bonIDE.diagram.navigator.BonideNavigatorGroup(
-					bonIDE.diagram.part.Messages.NavigatorGroupName_InheritanceRel_4001_source,
-					"icons/linkSourceNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+					bonIDE.diagram.part.Messages.NavigatorGroupName_InheritanceRel_4001_source, "icons/linkSourceNavigatorGroup.gif", parentElement); //$NON-NLS-1$
 			Collection connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID));
 			target.addChildren(createNavigatorItems(connectedViews, target, true));
@@ -483,11 +481,9 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 		case bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID: {
 			Collection result = new ArrayList();
 			bonIDE.diagram.navigator.BonideNavigatorGroup target = new bonIDE.diagram.navigator.BonideNavigatorGroup(
-					bonIDE.diagram.part.Messages.NavigatorGroupName_AggregationRel_4002_target,
-					"icons/linkTargetNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+					bonIDE.diagram.part.Messages.NavigatorGroupName_AggregationRel_4002_target, "icons/linkTargetNavigatorGroup.gif", parentElement); //$NON-NLS-1$
 			bonIDE.diagram.navigator.BonideNavigatorGroup source = new bonIDE.diagram.navigator.BonideNavigatorGroup(
-					bonIDE.diagram.part.Messages.NavigatorGroupName_AggregationRel_4002_source,
-					"icons/linkSourceNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+					bonIDE.diagram.part.Messages.NavigatorGroupName_AggregationRel_4002_source, "icons/linkSourceNavigatorGroup.gif", parentElement); //$NON-NLS-1$
 			Collection connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID));
 			target.addChildren(createNavigatorItems(connectedViews, target, true));
@@ -524,11 +520,9 @@ public class BonideNavigatorContentProvider implements ICommonContentProvider {
 		case bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID: {
 			Collection result = new ArrayList();
 			bonIDE.diagram.navigator.BonideNavigatorGroup target = new bonIDE.diagram.navigator.BonideNavigatorGroup(
-					bonIDE.diagram.part.Messages.NavigatorGroupName_AssociationRel_4003_target,
-					"icons/linkTargetNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+					bonIDE.diagram.part.Messages.NavigatorGroupName_AssociationRel_4003_target, "icons/linkTargetNavigatorGroup.gif", parentElement); //$NON-NLS-1$
 			bonIDE.diagram.navigator.BonideNavigatorGroup source = new bonIDE.diagram.navigator.BonideNavigatorGroup(
-					bonIDE.diagram.part.Messages.NavigatorGroupName_AssociationRel_4003_source,
-					"icons/linkSourceNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+					bonIDE.diagram.part.Messages.NavigatorGroupName_AssociationRel_4003_source, "icons/linkSourceNavigatorGroup.gif", parentElement); //$NON-NLS-1$
 			Collection connectedViews = getLinksTargetByType(Collections.singleton(view), bonIDE.diagram.part.BonideVisualIDRegistry
 					.getType(bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID));
 			target.addChildren(createNavigatorItems(connectedViews, target, true));

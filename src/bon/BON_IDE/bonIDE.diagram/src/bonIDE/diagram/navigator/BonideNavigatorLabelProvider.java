@@ -73,18 +73,15 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 		case bonIDE.diagram.edit.parts.ModelEditPart.VISUAL_ID:
 			return getImage("Navigator?Diagram?http://www.ucd.ie/bonIDE?Model", bonIDE.diagram.providers.BonideElementTypes.Model_1000); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.ClusterEditPart.VISUAL_ID:
-			return getImage(
-					"Navigator?TopLevelNode?http://www.ucd.ie/bonIDE?Cluster", bonIDE.diagram.providers.BonideElementTypes.Cluster_2001); //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.ucd.ie/bonIDE?Cluster", bonIDE.diagram.providers.BonideElementTypes.Cluster_2001); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.BONClassEditPart.VISUAL_ID:
-			return getImage(
-					"Navigator?TopLevelNode?http://www.ucd.ie/bonIDE?BONClass", bonIDE.diagram.providers.BonideElementTypes.BONClass_2002); //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.ucd.ie/bonIDE?BONClass", bonIDE.diagram.providers.BonideElementTypes.BONClass_2002); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.Cluster2EditPart.VISUAL_ID:
 			return getImage("Navigator?Node?http://www.ucd.ie/bonIDE?Cluster", bonIDE.diagram.providers.BonideElementTypes.Cluster_3001); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.BONClass2EditPart.VISUAL_ID:
 			return getImage("Navigator?Node?http://www.ucd.ie/bonIDE?BONClass", bonIDE.diagram.providers.BonideElementTypes.BONClass_3002); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.IndexClauseEditPart.VISUAL_ID:
-			return getImage(
-					"Navigator?Node?http://www.ucd.ie/bonIDE?IndexClause", bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003); //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.ucd.ie/bonIDE?IndexClause", bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.InheritanceClauseEditPart.VISUAL_ID:
 			return getImage(
 					"Navigator?Node?http://www.ucd.ie/bonIDE?InheritanceClause", bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005); //$NON-NLS-1$
@@ -94,22 +91,17 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 			return getImage(
 					"Navigator?Node?http://www.ucd.ie/bonIDE?FeatureArgument", bonIDE.diagram.providers.BonideElementTypes.FeatureArgument_3007); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID:
-			return getImage(
-					"Navigator?Node?http://www.ucd.ie/bonIDE?PreCondition", bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008); //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.ucd.ie/bonIDE?PreCondition", bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID:
-			return getImage(
-					"Navigator?Node?http://www.ucd.ie/bonIDE?PostCondition", bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009); //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.ucd.ie/bonIDE?PostCondition", bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.InvariantEditPart.VISUAL_ID:
 			return getImage("Navigator?Node?http://www.ucd.ie/bonIDE?Invariant", bonIDE.diagram.providers.BonideElementTypes.Invariant_3010); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID:
-			return getImage(
-					"Navigator?Link?http://www.ucd.ie/bonIDE?InheritanceRel", bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001); //$NON-NLS-1$
+			return getImage("Navigator?Link?http://www.ucd.ie/bonIDE?InheritanceRel", bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID:
-			return getImage(
-					"Navigator?Link?http://www.ucd.ie/bonIDE?AggregationRel", bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002); //$NON-NLS-1$
+			return getImage("Navigator?Link?http://www.ucd.ie/bonIDE?AggregationRel", bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002); //$NON-NLS-1$
 		case bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID:
-			return getImage(
-					"Navigator?Link?http://www.ucd.ie/bonIDE?AssociationRel", bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003); //$NON-NLS-1$
+			return getImage("Navigator?Link?http://www.ucd.ie/bonIDE?AssociationRel", bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003); //$NON-NLS-1$
 		}
 		return getImage("Navigator?UnknownElement", null); //$NON-NLS-1$
 	}
@@ -205,12 +197,11 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getCluster_2001Text(View view) {
-		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001,
-				view.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
-						.getType(bonIDE.diagram.edit.parts.ClusterNameEditPart.VISUAL_ID));
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001, view
+				.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+				.getType(bonIDE.diagram.edit.parts.ClusterNameEditPart.VISUAL_ID));
 		if (parser != null) {
-			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE
-					.intValue());
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 5003); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -221,12 +212,11 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getBONClass_2002Text(View view) {
-		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.BONClass_2002,
-				view.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
-						.getType(bonIDE.diagram.edit.parts.BONClassNameEditPart.VISUAL_ID));
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.BONClass_2002, view
+				.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+				.getType(bonIDE.diagram.edit.parts.BONClassNameEditPart.VISUAL_ID));
 		if (parser != null) {
-			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE
-					.intValue());
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 5004); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -237,12 +227,11 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getCluster_3001Text(View view) {
-		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.Cluster_3001,
-				view.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
-						.getType(bonIDE.diagram.edit.parts.ClusterName2EditPart.VISUAL_ID));
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.Cluster_3001, view
+				.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+				.getType(bonIDE.diagram.edit.parts.ClusterName2EditPart.VISUAL_ID));
 		if (parser != null) {
-			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE
-					.intValue());
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 5002); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -253,12 +242,11 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getBONClass_3002Text(View view) {
-		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002,
-				view.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
-						.getType(bonIDE.diagram.edit.parts.BONClassName2EditPart.VISUAL_ID));
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002, view
+				.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+				.getType(bonIDE.diagram.edit.parts.BONClassName2EditPart.VISUAL_ID));
 		if (parser != null) {
-			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE
-					.intValue());
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 5001); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -269,12 +257,11 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getIndexClause_3003Text(View view) {
-		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-				bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003, view.getElement() != null ? view.getElement() : view,
-				bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart.VISUAL_ID));
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.IndexClause_3003, view
+				.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+				.getType(bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart.VISUAL_ID));
 		if (parser != null) {
-			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE
-					.intValue());
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 5005); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -285,12 +272,10 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getInheritanceClause_3005Text(View view) {
-		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-				bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005, view.getElement() != null ? view.getElement() : view,
-				CommonParserHint.DESCRIPTION);
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005,
+				view.getElement() != null ? view.getElement() : view, CommonParserHint.DESCRIPTION);
 		if (parser != null) {
-			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE
-					.intValue());
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 5009); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -301,12 +286,11 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getFeature_3006Text(View view) {
-		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.Feature_3006,
-				view.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
-						.getType(bonIDE.diagram.edit.parts.FeatureNamesEditPart.VISUAL_ID));
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.Feature_3006, view
+				.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+				.getType(bonIDE.diagram.edit.parts.FeatureNamesEditPart.VISUAL_ID));
 		if (parser != null) {
-			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE
-					.intValue());
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 5011); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -317,12 +301,10 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getFeatureArgument_3007Text(View view) {
-		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-				bonIDE.diagram.providers.BonideElementTypes.FeatureArgument_3007, view.getElement() != null ? view.getElement() : view,
-				CommonParserHint.DESCRIPTION);
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.FeatureArgument_3007,
+				view.getElement() != null ? view.getElement() : view, CommonParserHint.DESCRIPTION);
 		if (parser != null) {
-			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE
-					.intValue());
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 5015); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -333,12 +315,11 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getPreCondition_3008Text(View view) {
-		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-				bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008, view.getElement() != null ? view.getElement() : view,
-				bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID));
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.PreCondition_3008, view
+				.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+				.getType(bonIDE.diagram.edit.parts.PreConditionEditPart.VISUAL_ID));
 		if (parser != null) {
-			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE
-					.intValue());
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 3008); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -349,12 +330,11 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getPostCondition_3009Text(View view) {
-		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-				bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009, view.getElement() != null ? view.getElement() : view,
-				bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID));
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.PostCondition_3009, view
+				.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+				.getType(bonIDE.diagram.edit.parts.PostConditionEditPart.VISUAL_ID));
 		if (parser != null) {
-			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE
-					.intValue());
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 3009); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -365,12 +345,11 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getInvariant_3010Text(View view) {
-		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-				bonIDE.diagram.providers.BonideElementTypes.Invariant_3010, view.getElement() != null ? view.getElement() : view,
-				bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.InvariantContentEditPart.VISUAL_ID));
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.Invariant_3010, view
+				.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+				.getType(bonIDE.diagram.edit.parts.InvariantContentEditPart.VISUAL_ID));
 		if (parser != null) {
-			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE
-					.intValue());
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 5019); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -394,11 +373,13 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getAggregationRel_4002Text(View view) {
-		bonIDE.AggregationRel domainModelElement = (bonIDE.AggregationRel) view.getElement();
-		if (domainModelElement != null) {
-			return domainModelElement.getName();
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002,
+				view.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+						.getType(bonIDE.diagram.edit.parts.AggregationRelNameEditPart.VISUAL_ID));
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
-			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("No domain element for view with visualID = " + 4002); //$NON-NLS-1$
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 6001); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
 		}
 	}
@@ -407,11 +388,13 @@ public class BonideNavigatorLabelProvider extends LabelProvider implements IComm
 	 * @generated
 	 */
 	private String getAssociationRel_4003Text(View view) {
-		bonIDE.AssociationRel domainModelElement = (bonIDE.AssociationRel) view.getElement();
-		if (domainModelElement != null) {
-			return domainModelElement.getName();
+		IParser parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003,
+				view.getElement() != null ? view.getElement() : view, bonIDE.diagram.part.BonideVisualIDRegistry
+						.getType(bonIDE.diagram.edit.parts.AssociationRelNameEditPart.VISUAL_ID));
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view), ParserOptions.NONE.intValue());
 		} else {
-			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("No domain element for view with visualID = " + 4003); //$NON-NLS-1$
+			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Parser was not found for label " + 6002); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
 		}
 	}

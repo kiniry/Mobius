@@ -258,13 +258,14 @@ public class IndexClauseIdentifierEditPart extends CompartmentEditPart implement
 					final EObject element = getParserElement();
 					final IParser parser = getParser();
 					try {
-						IParserEditStatus valid = (IParserEditStatus) getEditingDomain().runExclusive(
+						IParserEditStatus valid =
+								(IParserEditStatus) getEditingDomain().runExclusive(
 								new RunnableWithResult.Impl() {
 
 							public void run() {
 								setResult(parser.isValidEditString(new EObjectAdapter(element), (String) value));
-								}
-														});
+							}
+						});
 						return valid.getCode() == ParserEditStatus.EDITABLE ? null : valid.getMessage();
 					} catch (InterruptedException ie) {
 						ie.printStackTrace();
@@ -373,8 +374,8 @@ public class IndexClauseIdentifierEditPart extends CompartmentEditPart implement
 							performDirectEdit();
 						}
 					}
-					}
-								});
+				}
+			});
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

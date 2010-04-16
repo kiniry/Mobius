@@ -23,6 +23,7 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.PersistViewsCommand;
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectionViewAndElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
@@ -44,6 +45,7 @@ import com.google.common.collect.Multimap;
 import bonIDE.Abstraction;
 import bonIDE.BONClass;
 import bonIDE.StaticAbstraction;
+import bonIDE.diagram.edit.parts.AggregationRelEditPart;
 import bonIDE.diagram.edit.parts.BONClass2EditPart;
 import bonIDE.diagram.edit.parts.BONClassEditPart;
 import bonIDE.diagram.edit.parts.BONClassName2EditPart;
@@ -51,6 +53,7 @@ import bonIDE.diagram.edit.parts.BONClassNameEditPart;
 import bonIDE.diagram.edit.parts.ClusterEditPart;
 import bonIDE.diagram.edit.parts.ModelEditPart;
 import bonIDE.diagram.providers.BonideElementTypes;
+import bonIDE.impl.AggregationRelImpl;
 import bonIDE.impl.BONClassImpl;
 import bonIDE.impl.BonIDEFactoryImpl;
 import bonIDE.impl.ClusterImpl;
@@ -172,11 +175,13 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 		Collection<ClientRelation> clientRelations = bonST.clientRelations;
 
 		for (ClientRelation relation : clientRelations) {
-			String relationName = relation.getSemanticLabel();
+			 
+			// relation.getSemanticLabel() presumably should give us the label text for 
+			// aggregation and association links, but it's always null. a bug in the AST?
 
 			GraphicalEditPart sourceEP = getClassEditPartByClassName(relation.client.name.getName());
 			GraphicalEditPart targetEP = getClassEditPartByClassName(relation.supplier.name.getName());
-
+			
 			if (sourceEP == null || targetEP == null) {
 				continue;
 			}
@@ -192,14 +197,35 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 				break;
 			}
 		}
+		
+		for( Clazz bonClass : bonST.classes.values()){
+			
+			GraphicalEditPart sourceEP = getClassEditPartByClassName(bonClass.name.getName());
+			
+			if( bonClass.classInterface != null && bonClass.classInterface.parents != null){
+				for(Type parent:bonClass.classInterface.parents){					
+					GraphicalEditPart targetEP = getClassEditPartByClassName(parent.identifier);
+					
+					if (sourceEP == null || targetEP == null) {
+						continue;
+					}
+					
+					createInheritanceLinkNotationView(sourceEP, targetEP);
+				}							
+			}
+		}
 	}
 
 	private void createAssociationLinkNotationView(GraphicalEditPart sourceEP, GraphicalEditPart targetEP) {
+		
+
 		CreateConnectionViewAndElementRequest linkReq = new CreateConnectionViewAndElementRequest(
 				BonideElementTypes.AssociationRel_4003,
 				((IHintedType) BonideElementTypes.AssociationRel_4003).getSemanticHint(),
 				modelEP.getDiagramPreferencesHint());
 
+		
+		
 		ICommand createSubTopicsCmd = new DeferredCreateConnectionViewAndElementCommand(
 				linkReq, sourceEP, targetEP, modelEP.getViewer());
 
@@ -213,6 +239,21 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 		CreateConnectionViewAndElementRequest linkReq = new CreateConnectionViewAndElementRequest(
 				BonideElementTypes.AggregationRel_4002,
 				((IHintedType) BonideElementTypes.AggregationRel_4002).getSemanticHint(),
+				modelEP.getDiagramPreferencesHint());
+
+		ICommand createSubTopicsCmd = new DeferredCreateConnectionViewAndElementCommand(
+				linkReq, sourceEP, targetEP, modelEP.getViewer());
+
+		CompoundCommand compCmd = new CompoundCommand("Create Link");
+
+		compCmd.add(new ICommandProxy(createSubTopicsCmd));
+		modelEP.getDiagramEditDomain().getDiagramCommandStack().execute(compCmd);
+	}
+	
+	private void createInheritanceLinkNotationView(GraphicalEditPart sourceEP, GraphicalEditPart targetEP) {
+		CreateConnectionViewAndElementRequest linkReq = new CreateConnectionViewAndElementRequest(
+				BonideElementTypes.InheritanceRel_4001,
+				((IHintedType) BonideElementTypes.InheritanceRel_4001).getSemanticHint(),
 				modelEP.getDiagramPreferencesHint());
 
 		ICommand createSubTopicsCmd = new DeferredCreateConnectionViewAndElementCommand(
@@ -274,7 +315,7 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 	}
 
 	private void createBONClusterAndContentsNotationView(bonIDE.Cluster clusterModel) {
-
+		
 		CreateViewRequest.ViewDescriptor viewDescriptor = new CreateViewRequest.ViewDescriptor(
 				new EObjectAdapter(clusterModel),
 				org.eclipse.gmf.runtime.notation.Node.class,
@@ -287,6 +328,8 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 		CreateViewRequest createViewRequest = new CreateViewRequest(viewDescriptor);
 		Command createViewCommand = modelEP.getCommand(createViewRequest);
 
+		DiagramCommandStack dcs = modelEP.getDiagramEditDomain().getDiagramCommandStack();
+		
 		modelEP.getDiagramEditDomain().getDiagramCommandStack().execute(createViewCommand);
 
 		// add the cluster to the model
@@ -320,8 +363,9 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 
 	public BONClass createBONClassElement(Clazz ASTClassNode) {
 
-		BONClassImpl newClass = (BONClassImpl) BonIDEFactoryImpl.eINSTANCE.createBONClass();
-		newClass.setName(ASTClassNode.name.getName());
+		BONClassImpl newClass = (BONClassImpl) BonIDEFactoryImpl.eINSTANCE.createBONClass();		
+		newClass.setName(ASTClassNode.name.getName() + getClassModifier(ASTClassNode));
+		
 
 		ClassInterface ASTClassInterface = ASTClassNode.getClassInterface();
 
@@ -528,6 +572,26 @@ public class BonDiagramElementBuilder implements IRunnableWithProgress {
 			break;
 		}
 
+		return (modString);
+	}
+	
+	private String getClassModifier(Clazz ASTClassNode){
+		String modString;
+
+		switch (ASTClassNode.mod) {
+		case DEFERRED:
+			modString = " *";
+			break;
+		case EFFECTIVE:
+			modString = " +";
+			break;
+		default:
+			// TODO: this is unfinished - there are other modifiers
+			modString = "";
+			break;
+			
+		}
+		
 		return (modString);
 	}
 };

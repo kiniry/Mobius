@@ -876,8 +876,7 @@ public class BonideDiagramUpdater {
 			}
 			bonIDE.Abstraction dst = link.getTarget();
 			bonIDE.Abstraction src = link.getSource();
-			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
-					bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001,
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link, bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001,
 					bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
 		}
 		return result;
@@ -900,8 +899,7 @@ public class BonideDiagramUpdater {
 			}
 			bonIDE.Abstraction dst = link.getTarget();
 			bonIDE.Abstraction src = link.getSource();
-			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
-					bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002,
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link, bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002,
 					bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
 		}
 		return result;
@@ -924,8 +922,7 @@ public class BonideDiagramUpdater {
 			}
 			bonIDE.Abstraction dst = link.getTarget();
 			bonIDE.Abstraction src = link.getSource();
-			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
-					bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003,
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link, bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003,
 					bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
 		}
 		return result;
@@ -950,8 +947,7 @@ public class BonideDiagramUpdater {
 			}
 			bonIDE.Abstraction src = link.getSource();
 			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, target, link,
-					bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001,
-					bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
+					bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001, bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
 		}
 		return result;
 	}
@@ -975,8 +971,7 @@ public class BonideDiagramUpdater {
 			}
 			bonIDE.Abstraction src = link.getSource();
 			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, target, link,
-					bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002,
-					bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
+					bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002, bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
 		}
 		return result;
 	}
@@ -1000,8 +995,7 @@ public class BonideDiagramUpdater {
 			}
 			bonIDE.Abstraction src = link.getSource();
 			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, target, link,
-					bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003,
-					bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
+					bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003, bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
 		}
 		return result;
 	}
@@ -1038,8 +1032,7 @@ public class BonideDiagramUpdater {
 			if (src != source) {
 				continue;
 			}
-			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
-					bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001,
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link, bonIDE.diagram.providers.BonideElementTypes.InheritanceRel_4001,
 					bonIDE.diagram.edit.parts.InheritanceRelEditPart.VISUAL_ID));
 		}
 		return result;
@@ -1077,8 +1070,7 @@ public class BonideDiagramUpdater {
 			if (src != source) {
 				continue;
 			}
-			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
-					bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002,
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link, bonIDE.diagram.providers.BonideElementTypes.AggregationRel_4002,
 					bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID));
 		}
 		return result;
@@ -1116,8 +1108,7 @@ public class BonideDiagramUpdater {
 			if (src != source) {
 				continue;
 			}
-			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link,
-					bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003,
+			result.add(new bonIDE.diagram.part.BonideLinkDescriptor(src, dst, link, bonIDE.diagram.providers.BonideElementTypes.AssociationRel_4003,
 					bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID));
 		}
 		return result;

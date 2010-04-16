@@ -159,8 +159,14 @@ public class BonideEditPartFactory implements EditPartFactory {
 			case bonIDE.diagram.edit.parts.AggregationRelEditPart.VISUAL_ID:
 				return new bonIDE.diagram.edit.parts.AggregationRelEditPart(view);
 
+			case bonIDE.diagram.edit.parts.AggregationRelNameEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.AggregationRelNameEditPart(view);
+
 			case bonIDE.diagram.edit.parts.AssociationRelEditPart.VISUAL_ID:
 				return new bonIDE.diagram.edit.parts.AssociationRelEditPart(view);
+
+			case bonIDE.diagram.edit.parts.AssociationRelNameEditPart.VISUAL_ID:
+				return new bonIDE.diagram.edit.parts.AssociationRelNameEditPart(view);
 
 			}
 		}

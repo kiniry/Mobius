@@ -24,12 +24,12 @@ public class BonideNavigatorItem extends bonIDE.diagram.navigator.BonideAbstract
 					return ((bonIDE.diagram.navigator.BonideNavigatorItem) adaptableObject).getView();
 				}
 				return null;
-				}
+			}
 
 			public Class[] getAdapterList() {
 				return supportedTypes;
-				}
-						}, bonIDE.diagram.navigator.BonideNavigatorItem.class);
+			}
+		}, bonIDE.diagram.navigator.BonideNavigatorItem.class);
 	}
 
 	/**

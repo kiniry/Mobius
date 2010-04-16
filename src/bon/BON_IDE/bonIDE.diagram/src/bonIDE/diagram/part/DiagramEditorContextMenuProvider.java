@@ -59,8 +59,8 @@ public class DiagramEditorContextMenuProvider extends DiagramContextMenuProvider
 							DiagramEditorContextMenuProvider.this, part);
 					menu.remove(ActionIds.ACTION_DELETE_FROM_MODEL);
 					menu.appendToGroup("editGroup", deleteAction);
-					}
-								});
+				}
+			});
 		} catch (Exception e) {
 			bonIDE.diagram.part.BonideDiagramEditorPlugin.getInstance().logError("Error building context menu", e);
 		}

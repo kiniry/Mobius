@@ -119,8 +119,7 @@ public class IndexClauseEditPart extends ShapeNodeEditPart {
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart) {
-			((bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart) childEditPart).setLabel(getPrimaryShape()
-					.getFigureIndexIdentifierFigure());
+			((bonIDE.diagram.edit.parts.IndexClauseIdentifierEditPart) childEditPart).setLabel(getPrimaryShape().getFigureIndexIdentifierFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.IndexClauseTermsEditPart) {
@@ -289,7 +288,8 @@ public class IndexClauseEditPart extends ShapeNodeEditPart {
 
 			ToolbarLayout layoutThis = new ToolbarLayout();
 			layoutThis.setStretchMinorAxis(true);
-			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
+			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT
+					);
 
 			layoutThis.setSpacing(2);
 			layoutThis.setVertical(false);
@@ -309,7 +309,8 @@ public class IndexClauseEditPart extends ShapeNodeEditPart {
 
 			fFigureIndexIdentifierFigure = new WrappingLabel();
 			fFigureIndexIdentifierFigure.setText("");
-			fFigureIndexIdentifierFigure.setForegroundColor(FFIGUREINDEXIDENTIFIERFIGURE_FORE);
+			fFigureIndexIdentifierFigure.setForegroundColor(FFIGUREINDEXIDENTIFIERFIGURE_FORE
+					);
 
 			fFigureIndexIdentifierFigure.setFont(FFIGUREINDEXIDENTIFIERFIGURE_FONT);
 
@@ -317,7 +318,8 @@ public class IndexClauseEditPart extends ShapeNodeEditPart {
 
 			fFigureIndexTermsFigure = new WrappingLabel();
 			fFigureIndexTermsFigure.setText("");
-			fFigureIndexTermsFigure.setForegroundColor(FFIGUREINDEXTERMSFIGURE_FORE);
+			fFigureIndexTermsFigure.setForegroundColor(FFIGUREINDEXTERMSFIGURE_FORE
+					);
 
 			fFigureIndexTermsFigure.setFont(FFIGUREINDEXTERMSFIGURE_FONT);
 

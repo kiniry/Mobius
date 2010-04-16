@@ -37,6 +37,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gef;visibility:=reexport,
  org.eclipse.gmf.runtime.draw2d.ui;visibility:=reexport,
  org.eclipse.ui,
- ie.ucd.bon.bonc
+ ie.ucd.bon.bonc,
+ org.eclipse.emf.validation;visibility:=reexport
 Eclipse-LazyStart: true
 Import-Package: ie.ucd.bon.ast

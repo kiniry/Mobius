@@ -362,8 +362,7 @@ public class Cluster2EditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	public EditPart getPrimaryChildEditPart() {
-		return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
-				.getType(bonIDE.diagram.edit.parts.ClusterName2EditPart.VISUAL_ID));
+		return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.ClusterName2EditPart.VISUAL_ID));
 	}
 
 	/**
@@ -543,11 +542,13 @@ public class Cluster2EditPart extends ShapeNodeEditPart {
 			this.setLayoutManager(layoutThis);
 
 			this.setCornerDimensions(new Dimension(getMapMode().DPtoLP(8)
-					, getMapMode().DPtoLP(8)));
+					, getMapMode().DPtoLP(8)
+					));
 			this.setLineWidth(1);
 			this.setLineStyle(Graphics.LINE_DASH);
 			this.setMinimumSize(new Dimension(getMapMode().DPtoLP(18)
-					, getMapMode().DPtoLP(18)));
+					, getMapMode().DPtoLP(18)
+					));
 			createContents();
 		}
 

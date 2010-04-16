@@ -254,13 +254,14 @@ public class InheritanceClauseParentNamesEditPart extends CompartmentEditPart im
 					final EObject element = getParserElement();
 					final IParser parser = getParser();
 					try {
-						IParserEditStatus valid = (IParserEditStatus) getEditingDomain().runExclusive(
+						IParserEditStatus valid =
+								(IParserEditStatus) getEditingDomain().runExclusive(
 								new RunnableWithResult.Impl() {
 
 							public void run() {
 								setResult(parser.isValidEditString(new EObjectAdapter(element), (String) value));
-								}
-														});
+							}
+						});
 						return valid.getCode() == ParserEditStatus.EDITABLE ? null : valid.getMessage();
 					} catch (InterruptedException ie) {
 						ie.printStackTrace();
@@ -295,9 +296,8 @@ public class InheritanceClauseParentNamesEditPart extends CompartmentEditPart im
 	 */
 	public IParser getParser() {
 		if (parser == null) {
-			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-					bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005, getParserElement(),
-					bonIDE.diagram.part.BonideVisualIDRegistry
+			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.InheritanceClause_3005,
+					getParserElement(), bonIDE.diagram.part.BonideVisualIDRegistry
 							.getType(bonIDE.diagram.edit.parts.InheritanceClauseParentNamesEditPart.VISUAL_ID));
 		}
 		return parser;
@@ -370,8 +370,8 @@ public class InheritanceClauseParentNamesEditPart extends CompartmentEditPart im
 							performDirectEdit();
 						}
 					}
-					}
-								});
+				}
+			});
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

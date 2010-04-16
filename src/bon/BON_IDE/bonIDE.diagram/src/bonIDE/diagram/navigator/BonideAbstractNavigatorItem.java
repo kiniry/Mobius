@@ -28,12 +28,12 @@ public abstract class BonideAbstractNavigatorItem extends PlatformObject {
 					return propertySheetPageContributor;
 				}
 				return null;
-				}
+			}
 
 			public Class[] getAdapterList() {
 				return supportedTypes;
-				}
-						}, bonIDE.diagram.navigator.BonideAbstractNavigatorItem.class);
+			}
+		}, bonIDE.diagram.navigator.BonideAbstractNavigatorItem.class);
 	}
 
 	/**

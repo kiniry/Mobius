@@ -117,9 +117,8 @@ public class FeatureArgumentCompartmentEditPart extends ListCompartmentEditPart 
 		layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
 		rcf.getContentPane().setLayoutManager(layout);
 
-		Insets myInsets = rcf.getContentPane().getInsets();
-
 		rcf.setTitleVisibility(false);
+		rcf.setBorder(null);
 		adjustVisibility();
 		return rcf;
 	}
@@ -129,8 +128,7 @@ public class FeatureArgumentCompartmentEditPart extends ListCompartmentEditPart 
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
-				new bonIDE.diagram.edit.policies.FeatureArgumentCompartmentItemSemanticEditPolicy());
+		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE, new bonIDE.diagram.edit.policies.FeatureArgumentCompartmentItemSemanticEditPolicy());
 		installEditPolicy(EditPolicyRoles.CREATION_ROLE, new CreationEditPolicy());
 		installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE, new DragDropEditPolicy());
 		installEditPolicy(EditPolicyRoles.CANONICAL_ROLE, new bonIDE.diagram.edit.policies.FeatureArgumentCompartmentCanonicalEditPolicy());

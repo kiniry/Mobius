@@ -143,20 +143,20 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 	private TransactionalEditingDomain createEditingDomain() {
 		TransactionalEditingDomain editingDomain = DiagramEditingDomainFactory.getInstance().createEditingDomain();
 		editingDomain.setID("bonIDE.diagram.EditingDomain"); //$NON-NLS-1$
-		final NotificationFilter diagramResourceModifiedFilter = NotificationFilter.createNotifierFilter(editingDomain.getResourceSet())
-				.and(NotificationFilter.createEventTypeFilter(Notification.ADD)).and(
-						NotificationFilter.createFeatureFilter(ResourceSet.class, ResourceSet.RESOURCE_SET__RESOURCES));
+		final NotificationFilter diagramResourceModifiedFilter = NotificationFilter.createNotifierFilter(editingDomain.getResourceSet()).and(
+				NotificationFilter.createEventTypeFilter(Notification.ADD)).and(
+				NotificationFilter.createFeatureFilter(ResourceSet.class, ResourceSet.RESOURCE_SET__RESOURCES));
 		editingDomain.getResourceSet().eAdapters().add(new Adapter() {
 
 			private Notifier myTarger;
 
 			public Notifier getTarget() {
 				return myTarger;
-				}
+			}
 
 			public boolean isAdapterForType(Object type) {
 				return false;
-				}
+			}
 
 			public void notifyChanged(Notification notification) {
 				if (diagramResourceModifiedFilter.matches(notification)) {
@@ -165,11 +165,11 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 						((Resource) value).setTrackingModification(true);
 					}
 				}
-				}
+			}
 
 			public void setTarget(Notifier newTarget) {
 				myTarger = newTarget;
-				}
+			}
 
 		});
 
@@ -299,8 +299,7 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 					files2Validate.add(file);
 				}
 			}
-			ResourcesPlugin.getWorkspace().validateEdit((IFile[]) files2Validate.toArray(new IFile[files2Validate.size()]),
-					computationContext);
+			ResourcesPlugin.getWorkspace().validateEdit((IFile[]) files2Validate.toArray(new IFile[files2Validate.size()]), computationContext);
 		}
 
 		super.doValidateState(element, computationContext);
@@ -523,8 +522,8 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 			info.stopResourceListening();
 			fireElementStateChanging(element);
 			try {
-				monitor.beginTask(bonIDE.diagram.part.Messages.BonideDocumentProvider_SaveDiagramTask, info.getResourceSet().getResources()
-						.size() + 1); //"Saving diagram"
+				monitor.beginTask(bonIDE.diagram.part.Messages.BonideDocumentProvider_SaveDiagramTask,
+						info.getResourceSet().getResources().size() + 1); //"Saving diagram"
 				for (Iterator/*<org.eclipse.emf.ecore.resource.Resource>*/it = info.getLoadedResourcesIterator(); it.hasNext();) {
 					Resource nextResource = (Resource) it.next();
 					monitor.setTaskName(NLS.bind(
@@ -589,12 +588,10 @@ public class BonideDocumentProvider extends AbstractDocumentProvider implements 
 				newResource.save(bonIDE.diagram.part.BonideDiagramEditorUtil.getSaveOptions());
 			} catch (ExecutionException e) {
 				fireElementStateChangeFailed(element);
-				throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0, e
-						.getLocalizedMessage(), null));
+				throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0, e.getLocalizedMessage(), null));
 			} catch (IOException e) {
 				fireElementStateChangeFailed(element);
-				throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0, e
-						.getLocalizedMessage(), null));
+				throw new CoreException(new Status(IStatus.ERROR, bonIDE.diagram.part.BonideDiagramEditorPlugin.ID, 0, e.getLocalizedMessage(), null));
 			}
 			newResource.unload();
 		}

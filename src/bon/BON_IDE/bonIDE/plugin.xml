@@ -16,5 +16,15 @@
             class="bonIDE.BonIDEPackage"
             genModel="model/bonide.genmodel"/>
    </extension>
+   <extension
+         point="org.eclipse.xtend.typesystem.emf.checks">
+      <metaModel
+            nsURI="http://www.ucd.ie/bonIDE"
+            override="false">
+         <checkFile
+               path="model/BONModelConstraints.chk">
+         </checkFile>
+      </metaModel>
+   </extension>
 
 </plugin>

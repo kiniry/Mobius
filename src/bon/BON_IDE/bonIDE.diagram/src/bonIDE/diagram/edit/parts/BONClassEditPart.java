@@ -307,8 +307,7 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	public EditPart getPrimaryChildEditPart() {
-		return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
-				.getType(bonIDE.diagram.edit.parts.BONClassNameEditPart.VISUAL_ID));
+		return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.BONClassNameEditPart.VISUAL_ID));
 	}
 
 	/**
@@ -522,13 +521,14 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 		private RectangleFigure fFigureInvariantRectangleFigure;
 
 		/**
-		 * @generated
+		 * @generated NOT
 		 */
 		public BONClassFigure() {
 
 			ToolbarLayout layoutThis = new ToolbarLayout();
 			layoutThis.setStretchMinorAxis(true);
-			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
+			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_CENTER
+					);
 
 			layoutThis.setSpacing(0);
 			layoutThis.setVertical(true);
@@ -536,15 +536,17 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 			this.setLayoutManager(layoutThis);
 
 			this.setCornerDimensions(new Dimension(getMapMode().DPtoLP(25)
-					, getMapMode().DPtoLP(25)));
+					, getMapMode().DPtoLP(25)
+					));
 			this.setLineWidth(2);
 			this.setForegroundColor(THIS_FORE);
-			this.setBackgroundColor(THIS_BACK);
+			//this.setBackgroundColor(THIS_BACK);
 
 			this.setBorder(new MarginBorder(getMapMode().DPtoLP(0)
 					, getMapMode().DPtoLP(1)
 					, getMapMode().DPtoLP(0)
-					, getMapMode().DPtoLP(0)));
+					, getMapMode().DPtoLP(0)
+					));
 			createContents();
 		}
 
@@ -687,11 +689,6 @@ public class BONClassEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	static final Color THIS_FORE = new Color(null, 96, 96, 96);
-
-	/**
-	 * @generated
-	 */
-	static final Color THIS_BACK = new Color(null, 222, 222, 255);
 
 	/**
 	 * @generated

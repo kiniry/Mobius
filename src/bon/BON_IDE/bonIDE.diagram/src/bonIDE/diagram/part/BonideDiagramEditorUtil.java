@@ -154,8 +154,7 @@ public class BonideDiagramEditorUtil {
 
 				Diagram diagram = ViewService.createDiagram(
 						model,
-						bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID,
-						bonIDE.diagram.part.BonideDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
+						bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID, bonIDE.diagram.part.BonideDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
 				if (diagram != null) {
 					diagramResource.getContents().add(diagram);
 					diagram.setName(diagramName);
@@ -346,8 +345,7 @@ public class BonideDiagramEditorUtil {
 			if (elements.size() == element2ViewMap.size())
 				return element2ViewMap;
 
-			if (parentView.isSetElement() && !element2ViewMap.containsKey(parentView.getElement())
-					&& elements.contains(parentView.getElement())) {
+			if (parentView.isSetElement() && !element2ViewMap.containsKey(parentView.getElement()) && elements.contains(parentView.getElement())) {
 				element2ViewMap.put(parentView.getElement(), parentView);
 				if (elements.size() == element2ViewMap.size())
 					return element2ViewMap;

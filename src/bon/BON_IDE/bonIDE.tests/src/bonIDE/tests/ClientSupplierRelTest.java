@@ -7,27 +7,17 @@
 package bonIDE.tests;
 
 import bonIDE.BonIDEFactory;
-import bonIDE.Parent;
-
-import junit.framework.TestCase;
+import bonIDE.ClientSupplierRel;
 
 import junit.textui.TestRunner;
 
 /**
  * <!-- begin-user-doc -->
- * A test case for the model object '<em><b>Parent</b></em>'.
+ * A test case for the model object '<em><b>Client Supplier Rel</b></em>'.
  * <!-- end-user-doc -->
  * @generated
  */
-public class ParentTest extends TestCase {
-
-	/**
-	 * The fixture for this Parent test case.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected Parent fixture = null;
+public class ClientSupplierRelTest extends StaticRelationshipTest {
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -35,37 +25,28 @@ public class ParentTest extends TestCase {
 	 * @generated
 	 */
 	public static void main(String[] args) {
-		TestRunner.run(ParentTest.class);
+		TestRunner.run(ClientSupplierRelTest.class);
 	}
 
 	/**
-	 * Constructs a new Parent test case with the given name.
+	 * Constructs a new Client Supplier Rel test case with the given name.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ParentTest(String name) {
+	public ClientSupplierRelTest(String name) {
 		super(name);
 	}
 
 	/**
-	 * Sets the fixture for this Parent test case.
+	 * Returns the fixture for this Client Supplier Rel test case.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void setFixture(Parent fixture) {
-		this.fixture = fixture;
-	}
-
-	/**
-	 * Returns the fixture for this Parent test case.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected Parent getFixture() {
-		return fixture;
+	@Override
+	protected ClientSupplierRel getFixture() {
+		return (ClientSupplierRel)fixture;
 	}
 
 	/**
@@ -76,7 +57,7 @@ public class ParentTest extends TestCase {
 	 */
 	@Override
 	protected void setUp() throws Exception {
-		setFixture(BonIDEFactory.eINSTANCE.createParent());
+		setFixture(BonIDEFactory.eINSTANCE.createClientSupplierRel());
 	}
 
 	/**
@@ -90,4 +71,4 @@ public class ParentTest extends TestCase {
 		setFixture(null);
 	}
 
-} //ParentTest
+} //ClientSupplierRelTest

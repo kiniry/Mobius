@@ -55,8 +55,7 @@ public class BonidePaletteFactory {
 		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.Cluster1CreationTool_title,
 				bonIDE.diagram.part.Messages.Cluster1CreationTool_desc, types);
 		entry.setId("createCluster1CreationTool"); //$NON-NLS-1$
-		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
-				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001));
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.Cluster_2001));
 		entry.setLargeIcon(entry.getSmallIcon());
 		return entry;
 	}
@@ -71,8 +70,7 @@ public class BonidePaletteFactory {
 		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.BONClass2CreationTool_title,
 				bonIDE.diagram.part.Messages.BONClass2CreationTool_desc, types);
 		entry.setId("createBONClass2CreationTool"); //$NON-NLS-1$
-		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
-				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002));
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.BONClass_3002));
 		entry.setLargeIcon(entry.getSmallIcon());
 		return entry;
 	}
@@ -86,8 +84,7 @@ public class BonidePaletteFactory {
 		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.Feature3CreationTool_title,
 				bonIDE.diagram.part.Messages.Feature3CreationTool_desc, types);
 		entry.setId("createFeature3CreationTool"); //$NON-NLS-1$
-		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
-				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.Feature_3006));
+		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.Feature_3006));
 		entry.setLargeIcon(entry.getSmallIcon());
 		return entry;
 	}
@@ -176,8 +173,9 @@ public class BonidePaletteFactory {
 		NodeToolEntry entry = new NodeToolEntry(bonIDE.diagram.part.Messages.Invariant9CreationTool_title,
 				bonIDE.diagram.part.Messages.Invariant9CreationTool_desc, types);
 		entry.setId("createInvariant9CreationTool"); //$NON-NLS-1$
-		entry.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
-				.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.Invariant_3010));
+		entry
+				.setSmallIcon(bonIDE.diagram.providers.BonideElementTypes
+						.getImageDescriptor(bonIDE.diagram.providers.BonideElementTypes.Invariant_3010));
 		entry.setLargeIcon(entry.getSmallIcon());
 		return entry;
 	}

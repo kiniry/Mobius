@@ -33,12 +33,12 @@ public class BonideDomainNavigatorItem extends PlatformObject {
 				}
 
 				return null;
-				}
+			}
 
 			public Class[] getAdapterList() {
 				return supportedTypes;
-				}
-						}, bonIDE.diagram.navigator.BonideDomainNavigatorItem.class);
+			}
+		}, bonIDE.diagram.navigator.BonideDomainNavigatorItem.class);
 	}
 
 	/**
@@ -91,8 +91,7 @@ public class BonideDomainNavigatorItem extends PlatformObject {
 	 */
 	public boolean equals(Object obj) {
 		if (obj instanceof bonIDE.diagram.navigator.BonideDomainNavigatorItem) {
-			return EcoreUtil.getURI(getEObject()).equals(
-					EcoreUtil.getURI(((bonIDE.diagram.navigator.BonideDomainNavigatorItem) obj).getEObject()));
+			return EcoreUtil.getURI(getEObject()).equals(EcoreUtil.getURI(((bonIDE.diagram.navigator.BonideDomainNavigatorItem) obj).getEObject()));
 		}
 		return super.equals(obj);
 	}

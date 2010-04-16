@@ -255,13 +255,14 @@ public class FeatureArgumentNameEditPart extends CompartmentEditPart implements 
 					final EObject element = getParserElement();
 					final IParser parser = getParser();
 					try {
-						IParserEditStatus valid = (IParserEditStatus) getEditingDomain().runExclusive(
+						IParserEditStatus valid =
+								(IParserEditStatus) getEditingDomain().runExclusive(
 								new RunnableWithResult.Impl() {
 
 							public void run() {
 								setResult(parser.isValidEditString(new EObjectAdapter(element), (String) value));
-								}
-														});
+							}
+						});
 						return valid.getCode() == ParserEditStatus.EDITABLE ? null : valid.getMessage();
 					} catch (InterruptedException ie) {
 						ie.printStackTrace();
@@ -296,9 +297,9 @@ public class FeatureArgumentNameEditPart extends CompartmentEditPart implements 
 	 */
 	public IParser getParser() {
 		if (parser == null) {
-			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(
-					bonIDE.diagram.providers.BonideElementTypes.FeatureArgument_3007, getParserElement(),
-					bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart.VISUAL_ID));
+			parser = bonIDE.diagram.providers.BonideParserProvider.getParser(bonIDE.diagram.providers.BonideElementTypes.FeatureArgument_3007,
+					getParserElement(), bonIDE.diagram.part.BonideVisualIDRegistry
+							.getType(bonIDE.diagram.edit.parts.FeatureArgumentNameEditPart.VISUAL_ID));
 		}
 		return parser;
 	}
@@ -370,8 +371,8 @@ public class FeatureArgumentNameEditPart extends CompartmentEditPart implements 
 							performDirectEdit();
 						}
 					}
-					}
-								});
+				}
+			});
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

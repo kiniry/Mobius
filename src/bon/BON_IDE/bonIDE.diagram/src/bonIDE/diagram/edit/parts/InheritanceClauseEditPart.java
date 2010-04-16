@@ -242,8 +242,7 @@ public class InheritanceClauseEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	public EditPart getPrimaryChildEditPart() {
-		return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
-				.getType(bonIDE.diagram.edit.parts.WrappingLabelEditPart.VISUAL_ID));
+		return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.WrappingLabelEditPart.VISUAL_ID));
 	}
 
 	/**
@@ -271,7 +270,8 @@ public class InheritanceClauseEditPart extends ShapeNodeEditPart {
 
 			ToolbarLayout layoutThis = new ToolbarLayout();
 			layoutThis.setStretchMinorAxis(false);
-			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
+			layoutThis.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT
+					);
 
 			layoutThis.setSpacing(2);
 			layoutThis.setVertical(false);

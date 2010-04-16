@@ -344,6 +344,44 @@ public class BonideParserProvider extends AbstractProvider implements IParserPro
 	/**
 	 * @generated
 	 */
+	private IParser aggregationRelName_6001Parser;
+
+	/**
+	 * @generated
+	 */
+	private IParser getAggregationRelName_6001Parser() {
+		if (aggregationRelName_6001Parser == null) {
+			EAttribute[] features = new EAttribute[] {
+					bonIDE.BonIDEPackage.eINSTANCE.getClientSupplierRel_Name()
+					};
+			bonIDE.diagram.parsers.MessageFormatParser parser = new bonIDE.diagram.parsers.MessageFormatParser(features);
+			aggregationRelName_6001Parser = parser;
+		}
+		return aggregationRelName_6001Parser;
+	}
+
+	/**
+	 * @generated
+	 */
+	private IParser associationRelName_6002Parser;
+
+	/**
+	 * @generated
+	 */
+	private IParser getAssociationRelName_6002Parser() {
+		if (associationRelName_6002Parser == null) {
+			EAttribute[] features = new EAttribute[] {
+					bonIDE.BonIDEPackage.eINSTANCE.getClientSupplierRel_Name()
+					};
+			bonIDE.diagram.parsers.MessageFormatParser parser = new bonIDE.diagram.parsers.MessageFormatParser(features);
+			associationRelName_6002Parser = parser;
+		}
+		return associationRelName_6002Parser;
+	}
+
+	/**
+	 * @generated
+	 */
 	protected IParser getParser(int visualID) {
 		switch (visualID) {
 		case bonIDE.diagram.edit.parts.ClusterNameEditPart.VISUAL_ID:
@@ -380,6 +418,10 @@ public class BonideParserProvider extends AbstractProvider implements IParserPro
 			return getPostCondition_3009Parser();
 		case bonIDE.diagram.edit.parts.InvariantContentEditPart.VISUAL_ID:
 			return getInvariantContent_5019Parser();
+		case bonIDE.diagram.edit.parts.AggregationRelNameEditPart.VISUAL_ID:
+			return getAggregationRelName_6001Parser();
+		case bonIDE.diagram.edit.parts.AssociationRelNameEditPart.VISUAL_ID:
+			return getAssociationRelName_6002Parser();
 		}
 		return null;
 	}

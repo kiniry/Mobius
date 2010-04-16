@@ -26,11 +26,6 @@
             red="96"
             green="96"
             blue="96"/>
-        <backgroundColor
-            xsi:type="gmfgraph:RGBColor"
-            red="222"
-            green="222"
-            blue="255"/>
         <insets
             left="1"/>
         <children
@@ -449,8 +444,6 @@
             faceName="Lucida Sans Unicode"
             height="7"/>
       </actualFigure>
-      <accessors
-          figure="//@figures.0/@descriptors.6/@actualFigure"/>
     </descriptors>
     <descriptors
         name="PostConditionFigure">
@@ -463,8 +456,6 @@
             faceName="Lucida Sans Unicode"
             height="7"/>
       </actualFigure>
-      <accessors
-          figure="//@figures.0/@descriptors.7/@actualFigure"/>
     </descriptors>
     <descriptors
         name="InvariantFigure">
@@ -672,12 +663,10 @@
       accessor="//@figures.0/@descriptors.5/@accessors.3"/>
   <labels
       name="PreConditionTextLabel"
-      figure="PreConditionFigure"
-      accessor="//@figures.0/@descriptors.6/@accessors.0"/>
+      figure="PreConditionFigure"/>
   <labels
       name="PostConditionTextLabel"
-      figure="PostConditionFigure"
-      accessor="//@figures.0/@descriptors.7/@accessors.0"/>
+      figure="PostConditionFigure"/>
   <labels
       name="InvariantTextLabel"
       figure="InvariantFigure"

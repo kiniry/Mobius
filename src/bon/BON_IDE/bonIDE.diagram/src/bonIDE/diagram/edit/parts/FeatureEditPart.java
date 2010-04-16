@@ -112,21 +112,20 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean addFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureNamesEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureNamesFigure());
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureModifierEditPart) childEditPart)
-					.setLabel(getPrimaryShape().getFigureFeatureModifierFigure());
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureTypeFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
 			((bonIDE.diagram.edit.parts.FeatureCommentEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureCommentFigure());
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
-			((bonIDE.diagram.edit.parts.FeatureTypeEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureTypeFigure());
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureNamesEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureNamesFigure());
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
+			((bonIDE.diagram.edit.parts.FeatureModifierEditPart) childEditPart).setLabel(getPrimaryShape().getFigureFeatureModifierFigure());
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) {
@@ -154,16 +153,16 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
-			return true;
-		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureCommentEditPart) {
 			return true;
 		}
-		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureTypeEditPart) {
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureNamesEditPart) {
+			return true;
+		}
+		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeatureModifierEditPart) {
 			return true;
 		}
 		if (childEditPart instanceof bonIDE.diagram.edit.parts.FeaturePostConditionCompartmentEditPart) {
@@ -313,8 +312,7 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 	 * @generated
 	 */
 	public EditPart getPrimaryChildEditPart() {
-		return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry
-				.getType(bonIDE.diagram.edit.parts.FeatureNamesEditPart.VISUAL_ID));
+		return getChildBySemanticHint(bonIDE.diagram.part.BonideVisualIDRegistry.getType(bonIDE.diagram.edit.parts.FeatureNamesEditPart.VISUAL_ID));
 	}
 
 	/**
@@ -407,13 +405,15 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 			fFigureFeatureSignatureRectangleFigure.setFill(false);
 			fFigureFeatureSignatureRectangleFigure.setOutline(false);
 			fFigureFeatureSignatureRectangleFigure.setLineWidth(1);
-			fFigureFeatureSignatureRectangleFigure.setForegroundColor(FFIGUREFEATURESIGNATURERECTANGLEFIGURE_FORE);
+			fFigureFeatureSignatureRectangleFigure.setForegroundColor(FFIGUREFEATURESIGNATURERECTANGLEFIGURE_FORE
+					);
 
 			this.add(fFigureFeatureSignatureRectangleFigure);
 
 			ToolbarLayout layoutFFigureFeatureSignatureRectangleFigure = new ToolbarLayout();
 			layoutFFigureFeatureSignatureRectangleFigure.setStretchMinorAxis(false);
-			layoutFFigureFeatureSignatureRectangleFigure.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
+			layoutFFigureFeatureSignatureRectangleFigure.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT
+					);
 
 			layoutFFigureFeatureSignatureRectangleFigure.setSpacing(0);
 			layoutFFigureFeatureSignatureRectangleFigure.setVertical(false);
@@ -422,7 +422,8 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 
 			fFigureFeatureNamesFigure = new WrappingLabel();
 			fFigureFeatureNamesFigure.setText("<...>");
-			fFigureFeatureNamesFigure.setForegroundColor(FFIGUREFEATURENAMESFIGURE_FORE);
+			fFigureFeatureNamesFigure.setForegroundColor(FFIGUREFEATURENAMESFIGURE_FORE
+					);
 
 			fFigureFeatureNamesFigure.setFont(FFIGUREFEATURENAMESFIGURE_FONT);
 
@@ -430,7 +431,8 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 
 			fFigureFeatureModifierFigure = new WrappingLabel();
 			fFigureFeatureModifierFigure.setText("");
-			fFigureFeatureModifierFigure.setForegroundColor(FFIGUREFEATUREMODIFIERFIGURE_FORE);
+			fFigureFeatureModifierFigure.setForegroundColor(FFIGUREFEATUREMODIFIERFIGURE_FORE
+					);
 
 			fFigureFeatureModifierFigure.setFont(FFIGUREFEATUREMODIFIERFIGURE_FONT);
 
@@ -438,7 +440,8 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 
 			fFigureFeatureTypeFigure = new WrappingLabel();
 			fFigureFeatureTypeFigure.setText("");
-			fFigureFeatureTypeFigure.setForegroundColor(FFIGUREFEATURETYPEFIGURE_FORE);
+			fFigureFeatureTypeFigure.setForegroundColor(FFIGUREFEATURETYPEFIGURE_FORE
+					);
 
 			fFigureFeatureTypeFigure.setFont(FFIGUREFEATURETYPEFIGURE_FONT);
 
@@ -446,7 +449,8 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 
 			fFigureFeatureCommentFigure = new WrappingLabel();
 			fFigureFeatureCommentFigure.setText("");
-			fFigureFeatureCommentFigure.setForegroundColor(FFIGUREFEATURECOMMENTFIGURE_FORE);
+			fFigureFeatureCommentFigure.setForegroundColor(FFIGUREFEATURECOMMENTFIGURE_FORE
+					);
 
 			fFigureFeatureCommentFigure.setFont(FFIGUREFEATURECOMMENTFIGURE_FONT);
 
@@ -456,15 +460,18 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 			fFigureFeatureArgumentsRectangleFigure.setFill(false);
 			fFigureFeatureArgumentsRectangleFigure.setOutline(false);
 			fFigureFeatureArgumentsRectangleFigure.setLineWidth(1);
-			fFigureFeatureArgumentsRectangleFigure.setForegroundColor(FFIGUREFEATUREARGUMENTSRECTANGLEFIGURE_FORE);
+			fFigureFeatureArgumentsRectangleFigure.setForegroundColor(FFIGUREFEATUREARGUMENTSRECTANGLEFIGURE_FORE
+					);
 
 			this.add(fFigureFeatureArgumentsRectangleFigure);
 
 			FlowLayout layoutFFigureFeatureArgumentsRectangleFigure = new FlowLayout();
 			layoutFFigureFeatureArgumentsRectangleFigure.setStretchMinorAxis(false);
-			layoutFFigureFeatureArgumentsRectangleFigure.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			layoutFFigureFeatureArgumentsRectangleFigure.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP
+					);
 
-			layoutFFigureFeatureArgumentsRectangleFigure.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			layoutFFigureFeatureArgumentsRectangleFigure.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP
+					);
 			layoutFFigureFeatureArgumentsRectangleFigure.setMajorSpacing(1);
 			layoutFFigureFeatureArgumentsRectangleFigure.setMinorSpacing(1);
 			layoutFFigureFeatureArgumentsRectangleFigure.setHorizontal(true);
@@ -475,15 +482,18 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 			fFigurePreConditionsRectangleFigure.setFill(false);
 			fFigurePreConditionsRectangleFigure.setOutline(false);
 			fFigurePreConditionsRectangleFigure.setLineWidth(1);
-			fFigurePreConditionsRectangleFigure.setForegroundColor(FFIGUREPRECONDITIONSRECTANGLEFIGURE_FORE);
+			fFigurePreConditionsRectangleFigure.setForegroundColor(FFIGUREPRECONDITIONSRECTANGLEFIGURE_FORE
+					);
 
 			this.add(fFigurePreConditionsRectangleFigure);
 
 			FlowLayout layoutFFigurePreConditionsRectangleFigure = new FlowLayout();
 			layoutFFigurePreConditionsRectangleFigure.setStretchMinorAxis(false);
-			layoutFFigurePreConditionsRectangleFigure.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			layoutFFigurePreConditionsRectangleFigure.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP
+					);
 
-			layoutFFigurePreConditionsRectangleFigure.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			layoutFFigurePreConditionsRectangleFigure.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP
+					);
 			layoutFFigurePreConditionsRectangleFigure.setMajorSpacing(5);
 			layoutFFigurePreConditionsRectangleFigure.setMinorSpacing(5);
 			layoutFFigurePreConditionsRectangleFigure.setHorizontal(true);
@@ -494,15 +504,18 @@ public class FeatureEditPart extends ShapeNodeEditPart {
 			fFigurePostConditionsRectangeFigure.setFill(false);
 			fFigurePostConditionsRectangeFigure.setOutline(false);
 			fFigurePostConditionsRectangeFigure.setLineWidth(1);
-			fFigurePostConditionsRectangeFigure.setForegroundColor(FFIGUREPOSTCONDITIONSRECTANGEFIGURE_FORE);
+			fFigurePostConditionsRectangeFigure.setForegroundColor(FFIGUREPOSTCONDITIONSRECTANGEFIGURE_FORE
+					);
 
 			this.add(fFigurePostConditionsRectangeFigure);
 
 			FlowLayout layoutFFigurePostConditionsRectangeFigure = new FlowLayout();
 			layoutFFigurePostConditionsRectangeFigure.setStretchMinorAxis(false);
-			layoutFFigurePostConditionsRectangeFigure.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			layoutFFigurePostConditionsRectangeFigure.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP
+					);
 
-			layoutFFigurePostConditionsRectangeFigure.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP);
+			layoutFFigurePostConditionsRectangeFigure.setMajorAlignment(FlowLayout.ALIGN_LEFTTOP
+					);
 			layoutFFigurePostConditionsRectangeFigure.setMajorSpacing(5);
 			layoutFFigurePostConditionsRectangeFigure.setMinorSpacing(5);
 			layoutFFigurePostConditionsRectangeFigure.setHorizontal(true);

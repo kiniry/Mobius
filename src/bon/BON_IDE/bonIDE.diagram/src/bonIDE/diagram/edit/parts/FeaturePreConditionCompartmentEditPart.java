@@ -1,7 +1,6 @@
 package bonIDE.diagram.edit.parts;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
@@ -33,13 +32,6 @@ public class FeaturePreConditionCompartmentEditPart extends ListCompartmentEditP
 	}
 
 	/**
-	 * @generated
-	 */
-	protected boolean hasModelChildrenChanged(Notification evt) {
-		return false;
-	}
-
-	/**
 	 * @generated NOT
 	 */
 	protected void adjustVisibility() {
@@ -52,34 +44,31 @@ public class FeaturePreConditionCompartmentEditPart extends ListCompartmentEditP
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#addChild
-	 * (org.eclipse.gef.EditPart, int)
-	 * 
-	 * @generated NOT
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#addChild(org.eclipse.gef.EditPart, int)
 	 */
 	@Override
 	protected void addChild(EditPart child, int index) {
+		// TODO Auto-generated method stub
 		super.addChild(child, index);
 		adjustVisibility();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.gef.editparts.AbstractEditPart#removeChild(org.eclipse.gef
-	 * .EditPart)
-	 * 
-	 * @generated NOT
+	/* (non-Javadoc)
+	 * @see org.eclipse.gef.editparts.AbstractEditPart#removeChild(org.eclipse.gef.EditPart)
 	 */
 	@Override
 	protected void removeChild(EditPart child) {
+		// TODO Auto-generated method stub
 		super.removeChild(child);
 		adjustVisibility();
+	}
+
+	/**
+	 * @generated
+	 */
+	protected boolean hasModelChildrenChanged(Notification evt) {
+		return false;
 	}
 
 	/**
@@ -107,9 +96,8 @@ public class FeaturePreConditionCompartmentEditPart extends ListCompartmentEditP
 		layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
 		rcf.getContentPane().setLayoutManager(layout);
 
-		Insets myInsets = rcf.getContentPane().getInsets();
-
 		rcf.setTitleVisibility(false);
+		rcf.setBorder(null);
 		adjustVisibility();
 		return rcf;
 	}
@@ -119,12 +107,10 @@ public class FeaturePreConditionCompartmentEditPart extends ListCompartmentEditP
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
-				new bonIDE.diagram.edit.policies.FeaturePreConditionCompartmentItemSemanticEditPolicy());
+		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE, new bonIDE.diagram.edit.policies.FeaturePreConditionCompartmentItemSemanticEditPolicy());
 		installEditPolicy(EditPolicyRoles.CREATION_ROLE, new CreationEditPolicy());
 		installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE, new DragDropEditPolicy());
-		installEditPolicy(EditPolicyRoles.CANONICAL_ROLE,
-				new bonIDE.diagram.edit.policies.FeaturePreConditionCompartmentCanonicalEditPolicy());
+		installEditPolicy(EditPolicyRoles.CANONICAL_ROLE, new bonIDE.diagram.edit.policies.FeaturePreConditionCompartmentCanonicalEditPolicy());
 	}
 
 	/**

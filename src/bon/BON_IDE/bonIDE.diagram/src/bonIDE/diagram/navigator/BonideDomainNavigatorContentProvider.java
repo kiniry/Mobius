@@ -78,8 +78,8 @@ public class BonideDomainNavigatorContentProvider implements ICommonContentProvi
 			}
 		};
 		myWorkspaceSynchronizer = new WorkspaceSynchronizer(editingDomain, new WorkspaceSynchronizer.Delegate() {
-				public void dispose() {
-				}
+			public void dispose() {
+			}
 
 			public boolean handleResourceChanged(final Resource resource) {
 				for (Iterator it = myEditingDomain.getResourceSet().getResources().iterator(); it.hasNext();) {
@@ -90,7 +90,7 @@ public class BonideDomainNavigatorContentProvider implements ICommonContentProvi
 					myViewer.getControl().getDisplay().asyncExec(myViewerRefreshRunnable);
 				}
 				return true;
-				}
+			}
 
 			public boolean handleResourceDeleted(Resource resource) {
 				for (Iterator it = myEditingDomain.getResourceSet().getResources().iterator(); it.hasNext();) {
@@ -101,7 +101,7 @@ public class BonideDomainNavigatorContentProvider implements ICommonContentProvi
 					myViewer.getControl().getDisplay().asyncExec(myViewerRefreshRunnable);
 				}
 				return true;
-				}
+			}
 
 			public boolean handleResourceMoved(Resource resource, final URI newURI) {
 				for (Iterator it = myEditingDomain.getResourceSet().getResources().iterator(); it.hasNext();) {
@@ -112,8 +112,8 @@ public class BonideDomainNavigatorContentProvider implements ICommonContentProvi
 					myViewer.getControl().getDisplay().asyncExec(myViewerRefreshRunnable);
 				}
 				return true;
-				}
-						});
+			}
+		});
 	}
 
 	/**
@@ -175,8 +175,8 @@ public class BonideDomainNavigatorContentProvider implements ICommonContentProvi
 		}
 
 		if (parentElement instanceof bonIDE.diagram.navigator.BonideDomainNavigatorItem) {
-			return wrapEObjects(myAdapterFctoryContentProvier
-					.getChildren(((bonIDE.diagram.navigator.BonideDomainNavigatorItem) parentElement).getEObject()), parentElement);
+			return wrapEObjects(myAdapterFctoryContentProvier.getChildren(((bonIDE.diagram.navigator.BonideDomainNavigatorItem) parentElement)
+					.getEObject()), parentElement);
 		}
 		return EMPTY_ARRAY;
 	}
@@ -188,8 +188,9 @@ public class BonideDomainNavigatorContentProvider implements ICommonContentProvi
 		Collection result = new ArrayList();
 		for (int i = 0; i < objects.length; i++) {
 			if (objects[i] instanceof EObject) {
-				result.add(new bonIDE.diagram.navigator.BonideDomainNavigatorItem((EObject) objects[i], parentElement,
-						myAdapterFctoryContentProvier));
+				result
+						.add(new bonIDE.diagram.navigator.BonideDomainNavigatorItem((EObject) objects[i], parentElement,
+								myAdapterFctoryContentProvier));
 			}
 		}
 		return result.toArray();

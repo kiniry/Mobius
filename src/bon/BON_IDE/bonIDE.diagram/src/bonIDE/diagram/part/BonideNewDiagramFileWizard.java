@@ -60,8 +60,7 @@ public class BonideNewDiagramFileWizard extends Wizard {
 		assert editingDomain != null : "Editing domain must be specified"; //$NON-NLS-1$
 
 		myFileCreationPage = new
-				WizardNewFileCreationPage(bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_CreationPageName,
-				StructuredSelection.EMPTY);
+				WizardNewFileCreationPage(bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_CreationPageName, StructuredSelection.EMPTY);
 		myFileCreationPage.setTitle(bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_CreationPageTitle);
 		myFileCreationPage.setDescription(NLS.bind(
 				bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_CreationPageDescription,
@@ -83,8 +82,7 @@ public class BonideNewDiagramFileWizard extends Wizard {
 		diagramRootElementSelectionPage = new DiagramRootElementSelectionPage(
 				bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_RootSelectionPageName);
 		diagramRootElementSelectionPage.setTitle(bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_RootSelectionPageTitle);
-		diagramRootElementSelectionPage
-				.setDescription(bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_RootSelectionPageDescription);
+		diagramRootElementSelectionPage.setDescription(bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_RootSelectionPageDescription);
 		diagramRootElementSelectionPage.setModelElement(diagramRoot);
 
 		myEditingDomain = editingDomain;
@@ -116,8 +114,7 @@ public class BonideNewDiagramFileWizard extends Wizard {
 			protected CommandResult doExecuteWithResult(
 					IProgressMonitor monitor, IAdaptable info)
 					throws ExecutionException {
-				int diagramVID = bonIDE.diagram.part.BonideVisualIDRegistry.getDiagramVisualID(diagramRootElementSelectionPage
-						.getModelElement());
+				int diagramVID = bonIDE.diagram.part.BonideVisualIDRegistry.getDiagramVisualID(diagramRootElementSelectionPage.getModelElement());
 				if (diagramVID != bonIDE.diagram.edit.parts.ModelEditPart.VISUAL_ID) {
 					return CommandResult.newErrorCommandResult(
 							bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_IncorrectRootError);
@@ -175,11 +172,9 @@ public class BonideNewDiagramFileWizard extends Wizard {
 			}
 			boolean result = ViewService.getInstance().provides(
 					new CreateDiagramViewOperation(
-							new EObjectAdapter(selectedModelElement),
-							bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID,
-							bonIDE.diagram.part.BonideDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT));
-			setErrorMessage(result ? null
-					: bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_RootSelectionPageInvalidSelectionMessage);
+					new EObjectAdapter(selectedModelElement),
+					bonIDE.diagram.edit.parts.ModelEditPart.MODEL_ID, bonIDE.diagram.part.BonideDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT));
+			setErrorMessage(result ? null : bonIDE.diagram.part.Messages.BonideNewDiagramFileWizard_RootSelectionPageInvalidSelectionMessage);
 			return result;
 		}
 	}
