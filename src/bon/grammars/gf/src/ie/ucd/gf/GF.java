@@ -11,8 +11,8 @@ import org.apache.commons.lang.SystemUtils;
 public class GF {
 	
   private static final String BINARY_PATH = "binaries/";
-  private static final String OSX_BINARY = "gf-3.0-mac-noreadline";
-  private static final String LINUX_BINARY = "gf-linux";
+  private static final String OSX_BINARY = "gf-3.1-mac";
+  private static final String LINUX_BINARY = "gf-3.1-linux-i486";
   private static final String WINDOWS_BINARY = "gf.exe";
  
   
