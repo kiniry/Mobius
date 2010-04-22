@@ -34,11 +34,9 @@ abstract BONAbs = DictEngAbs ** {
     One,Two,Three:Number;
     AtMost,AtLeast: NumeralAdverb;
     
-        --AtMost :  N -> Digits -> Phrase;
+        
     --QuestVerbNoun : V -> N -> Phrase;
-    --AtMost :  N -> Digits -> Phrase;
-    --IsItAdj : Adjetive -> Phrase;
-    --DoesItVerb : V -> Phrase;
+    
     
    
   
