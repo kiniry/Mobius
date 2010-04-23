@@ -38,10 +38,8 @@ public class GF {
     } else if (SystemUtil.IS_OS_MAC) {
       return createProcess(OSX_BINARY);
     } else if (SystemUtil.IS_OS_LINUX_32) {
-      System.out.println("x32");
       return createProcess(LINUX_X32_BINARY);
     } else if (SystemUtil.IS_OS_LINUX_64) {
-      System.out.println("x64");
       return createProcess(LINUX_X64_BINARY);
     } else {
       System.out.println("Unrecognised operating system. Unable to create gf process.");
