@@ -6,13 +6,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-import org.apache.commons.lang.SystemUtils;
-
 public class GF {
 	
   private static final String BINARY_PATH = "binaries/";
   private static final String OSX_BINARY = "gf-3.1-mac";
-  private static final String LINUX_BINARY = "gf-3.1-linux-i486";
+  private static final String LINUX_X32_BINARY = "gf-3.1-linux-i486";
+  private static final String LINUX_X64_BINARY = "gf-3.1-linux-x86_64";
   private static final String WINDOWS_BINARY = "gf.exe";
  
   
@@ -34,12 +33,16 @@ public class GF {
   }
   
   public static GFProcess createPlatformSpecificProcess() {
-    if (SystemUtils.IS_OS_WINDOWS) {
+    if (SystemUtil.IS_OS_WINDOWS) {
       return createProcess(WINDOWS_BINARY);
-    } else if (SystemUtils.IS_OS_MAC) {
+    } else if (SystemUtil.IS_OS_MAC) {
       return createProcess(OSX_BINARY);
-    } else if (SystemUtils.IS_OS_LINUX) {
-      return createProcess(LINUX_BINARY);
+    } else if (SystemUtil.IS_OS_LINUX_32) {
+      System.out.println("x32");
+      return createProcess(LINUX_X32_BINARY);
+    } else if (SystemUtil.IS_OS_LINUX_64) {
+      System.out.println("x64");
+      return createProcess(LINUX_X64_BINARY);
     } else {
       System.out.println("Unrecognised operating system. Unable to create gf process.");
       return null;

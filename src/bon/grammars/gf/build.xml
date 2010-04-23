@@ -11,7 +11,7 @@
   <property file="gf.properties"/>
 
   <path id="compile.path">
-    <filelist dir="${lib}" files="${junit} ${commons}"/>
+    <filelist dir="${lib}" files="${junit}"/>
   </path>
   <path id="test.path">
   	<path refid="compile.path"/>
@@ -44,16 +44,10 @@
     <copy todir="${build}/gf_source">
           <fileset dir="${gf_source}" includes="*"/> 
     </copy>
-
-    <copy todir="${dist}/lib">
-      <fileset dir="${lib}/" includes="${commons}"/>
-    </copy>
-
     
     <jar jarfile="${dist}/lib/GF.jar" basedir="${build}">
       <manifest>
         <attribute name="Main-Class" value="ie.ucd.gf.GF" />
-        <attribute name="Class-Path" value="commons-lang-2.4.jar"/>
       </manifest>
     </jar>
   </target>
