@@ -119,7 +119,7 @@ public class PrintSpec extends SrcTool
     PrettyPrint.inst.print(fos, sig.getCompilationUnit());
   }
 
-  public final void frontEndToolProcessing(/*@non_null*/ArrayList args) {
+  public final void frontEndToolProcessing(ArrayList args) {
     /*
      * At this point, all options have already been processed and
      * the front end has been initialized.

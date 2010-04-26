@@ -1,16 +1,15 @@
-Javafe, a revision of the Java front end of the original DEC/SRC
-ESC/Java developed at DEC/Compaq/HP.  The original revisions were
-performed by David Cok and Joe Kiniry. Additional minor revisions were
-made by Dermot Cochran.  You can read the general background on the
-original DEC/SRC ESC/Java in README.txt.
+Javafe, a revision of the Java front end of the original DEC/SRC ESC/Java 
+developed at DEC/Compaq/HP.  The original revisions were performed by David Cok 
+and Joe Kiniry. Additional minor revisions were made by Dermot Cochran.  You 
+can read the general background on the original DEC/SRC ESC/Java in README.txt.
 
-If you obtained Javafe as part of a binary release, you should ignore
-this file and consult README.release for installation and execution
-instructions concerning the release.
+If you obtained Javafe as part of a binary release, you should 
+ignore this file and consult README.release for installation and 
+execution instructions concerning the release.
 
-This document is meant to describe the source release of Javafe, thus
-the paths herein are in reference to the source release, not the
-binary release.
+This document is meant to describe the source release of
+Javafe, thus the paths herein are in reference to the source
+release, not the binary release.
 
 ----------------------------------------------------------------------------
 
@@ -18,8 +17,23 @@ OTHER DOCUMENTATION
 
 Each major subdirectory of this release contains a README file.  For
 the most part these are original, untouched readmes as provided by
-Compaq/H.P. as part of the "Java Programming Toolkit Source Release."
+Compaq/H.P. as part of the "Java Programming Toolkit Source Release".
 When necessary we have updated them for correctness and clarity.
+
+The original design documentation for ESC/Java was made available by
+H.P. in 2Q 2003.  We have added that documentation in its original
+form to the subversion repository in docs/design-notes.  Note that
+these are, for the most part, historically illuminating short
+documents about the high-level design decisions and goals for ESC/Java
+and related tools, but they are in no way complete, prescriptive, or
+accurate with respect to the current architecture.
+
+The new "ESC/Java2 User's Manual" is found in the file
+docs/Escjava2-UsersManual.pdf in the source release.
+
+The "ESC/Java Implementation Notes" are a running summary of the work
+that has gone on to make ESC/Java2, based upon the semi-open sourced
+ESC/Java 1 from November, 2001 a reality.
 
 ----------------------------------------------------------------------------
 
@@ -35,11 +49,9 @@ for more information.
 ESC/Java2 and Javafe developers communicate on the ESCJava-Developers mailing
 list, hosted at UCD.
 
-To make a new bug report, either register in the Mobius Trac and use
-the "Create New Ticket" page:
-  https://mobius.ucd.ie/trac/newticket
-or sent an email to: 
-  mobius-ticket AT mobius DOT ucd DOT ie 
+To make a new bug report sent an email to: 
+
+mobius-ticket AT mobius DOT ucd DOT ie 
 
 ----------------------------------------------------------------------------
 
@@ -47,6 +59,8 @@ OBTAINING THE ORIGINAL SOURCE FOR SRC's "Java Programming Toolkit
 Source Release" (which includes Javafe):
 
 The source has been available from
+  http://www.research.compaq.com/downloads.html 
+or
   http://www.hpl.hp.com/downloads/crl/jtk/
 
 The availability can be intermittent.  Note the license restrictions
@@ -62,7 +76,8 @@ in this README file.
 
 To obtain access to the subversion distribution, you will need:
 - a sufficiently current version of Subversion
-- development tools and a VM for Java 1.4-1.7
+- development tools and a VM for Java 1.4 or Java 1.5 (this release has not 
+  been not tested with the Java 1.6 VM)
 - a working version of SSH, in order to securely transfer files to and
   from the subversion repository
 - Building it will require other UNIX tools: e.g. flex, cc, diff,
@@ -82,7 +97,7 @@ b) Create an account on the Mobius Trac server located at
 c) Execute a subversion checkout on the server (replacing the characters
    'username' in the command below with your Mobius Trac username):
  
-   svn co https://username@mobius.ucd.ie/repos/src/mobius.esc/Javafe/trunk
+   svn co https://username@mobius.ucd.ie/repos/src/Javafe/trunk
 
 ----------------------------------------------------------------------------
 
@@ -127,22 +142,23 @@ b) for Makefiles, by creating a file $JAVAFE_ROOT/Makefile.local
 
 The required variables are:
 
-JAVAFE_ROOT - defined to be the absolute path to the Javafe directory
+JAVAFE_ROOT - defined to be the absolute path to the Javafe
+        directory
 
-        The Makefile and shell scripts make a guess at an appropriate
-	value for some platforms, but defining it yourself will avoid
-	the warning messages.
+        The Makefile and shell scripts make a guess at an
+	appropriate value for some platforms, but defining it yourself
+	will avoid the warning messages.
 
 Additionally the following variable is important:
 
 JAVAFE_SPECS - defined to be a classpath containing directories or jar
-	files of JML specification files.  If there is no definition
-	provided, the executables will use the location of a snapshot
-	of the specifications from the JML project that is included in
-	the JavaFE release.
+	files of JML specification files.  If there is no definition 
+	provided, the executables will use the location of a snapshot 
+	of the specifications from the JML project that is included 
+	in the JavaFE release.
 
-	You may instead want to obtain a current copy of the
-	specification files provided by the JML project and define
+	You may instead want to obtain a current copy of
+	the specification files provided by the JML project and define
 	this variable to reference them.  If you use the JML
 	specification files (in .../JML/JML2/specs) you also need the
 	model files that are rooted at .../JML/JML2.  You may also
@@ -155,13 +171,13 @@ JAVAFE_SPECS - defined to be a classpath containing directories or jar
         Simplify beyond the limits of its capability.  Thus, we
         strongly suggest you do *not* set ESC_SPECS to any value.
 
-	[JavaFE will append this classpath to the sourcepath if a
-	sourcepath is specified; otherwise it is appended to the
+	[ JavaFE will append this classpath to the sourcepath if a
+	sourcepath is specified; otherwise it is appended to the 
 	classpath used to find the files on which ESC/Java2 operates.]
 
 When a release is built, these two variables are used:
 
-JAVAFE_PROJECT - the name of the project, e.g., 'ESCTools'
+JAVAFE_PROJECT - the name of the project, e.g. 'ESCTools'
 JAVAFE_VERSION - the version number
 
 The two values of the two variables are used to create a string that
@@ -173,32 +189,32 @@ There are other variables you may set to alter your working
 environment.  Those that are executables must be on your path:
 
 JAVA - set to the name of a java VM executable.  By default this is
-       'java'.
+        'java'.
 
 JAVAC - set to the name of a java compiler.  By default this is
-       'javac', but an alternate value might be, for example, 'jikes'
+        'javac', but an alternate value might be, for example, 'jikes'
 
 JAVADOC - set to the name of the javadoc executable.  By default this
-       is 'javadoc', but you may want to use 'jmldoc' if you have a
-       copy of the JML project.
+	is 'javadoc', but you may want to use 'jmldoc' if you have a
+	copy of the JML project.
 
 JDK_BINARIES - the value is an alternate set of directories (in
-      classpath form) that will be used in place of the system defined
-      set of Java system class files.  Typically the tools can find
-      this out from the Java environment.
+        classpath form) that will be used in place of the system
+        defined set of Java system class files.  Typically the tools
+        can find this out from the Java environment.
 
 JDK_SOURCES - the directory that contains the source files for the
-      Java system classes.  This is currently just used in testing,
-      though it could also be used in static checking.
+        Java system classes.  This is currently just used in testing,
+        though it could also be used in static checking.
 
 JUNIT_LIB - the location of the JUnit library, used in compiling and
-      running some of the tests that are JUnit based.  There is a
-      version of the JUnit library included in the CVS distribution,
-      but you can substitute your own by defining this variable.  All
-      testing is performed with the version included in CVS.
+        running some of the tests that are JUnit based.  There is a
+        version of the JUnit library included in the CVS distribution,
+        but you can substitute your own by defining this variable.
+        All testing is performed with the version included in CVS.
 
 ANT_LIB - the location of the Ant jar file, used in compiling the
-      Javafe Ant task.
+        Javafe Ant task.
 
 ----------------------------------------------------------------------------
 

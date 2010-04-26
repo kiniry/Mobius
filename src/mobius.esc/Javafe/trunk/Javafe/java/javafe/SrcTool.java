@@ -77,7 +77,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      *                                                 *
      **************************************************/
 
-    public /*@non_null*/Options makeOptions() {
+    public Options makeOptions() {
     	return new SrcToolOptions();
     }
 

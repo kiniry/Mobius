@@ -800,12 +800,11 @@ public class PrepTypeDeclaration {
 						TypeSig typeSig = TypeSig
 								.getSig((TypeName) overridingMethod.returnType);
 
-						// Allow covariant inheritance in Java 1.5+
+						// Allow covariant inheritance in Java 1.5
 						if (!typeSig.isSubtypeOf(TypeSig
-                                                                         .getSig((TypeName) superMethod.returnType))
-                                                    || (System.getProperty("java.version").indexOf("1.7") == -1)
-                                                    || (System.getProperty("java.version").indexOf("1.6") == -1)
-                                                    || (System.getProperty("java.version").indexOf("1.5") == -1)) {
+								.getSig((TypeName) superMethod.returnType))
+								|| (System.getProperty("java.version").indexOf(
+										"1.5") == -1)) {
 
 							ErrorSet.error(overridingMethod.loc,
 									"Different or incompatible return types"

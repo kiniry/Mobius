@@ -44,7 +44,7 @@ public class FilterCorrelatedReader extends CorrelatedReader
     /** Returns the file underlying this correlated reader.
      */
 
-    public /*@non_null*/GenericFile getFile() {
+    public GenericFile getFile() {
         return child.getFile();
     }
 
@@ -87,7 +87,7 @@ public class FilterCorrelatedReader extends CorrelatedReader
         marked = false;
     }
 
-    public /*@non_null*/CorrelatedReader createReaderFromMark(int discard)
+    public CorrelatedReader createReaderFromMark(int discard)
             throws IndexOutOfBoundsException {
         return child.createReaderFromMark(discard);
     }
