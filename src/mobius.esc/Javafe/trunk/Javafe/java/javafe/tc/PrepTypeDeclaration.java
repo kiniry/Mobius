@@ -1020,6 +1020,7 @@ public class PrepTypeDeclaration {
 
 	public static boolean isRecentJava() {
 	  String version = System.getProperty("java.version");
-	  return (version.indexOf("1.5") != -1) || (version.indexOf("1.6") != -1);
+	  return (version.indexOf("1.5") != -1) || 
+            (version.indexOf("1.6") != -1) || (version.indexOf("1.7") != -1);
 	}
 }

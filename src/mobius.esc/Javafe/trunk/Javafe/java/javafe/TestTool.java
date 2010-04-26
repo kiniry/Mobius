@@ -37,7 +37,7 @@ public class TestTool extends SrcTool {
      */
     public String name() { return "TestTool"; }
     
-    public javafe.Options makeOptions() { return new Options(); }
+    public /*@non_null*/javafe.Options makeOptions() { return new Options(); }
     
     //+@ requires options != null;
     public final /*@non_null*/javafe.TestTool.Options options() { //@ nowarn NonNullResult;
