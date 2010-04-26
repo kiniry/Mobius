@@ -362,12 +362,11 @@ releases-notests:
 source-release: cleanup alldocs
 	@echo "Creating source release..."
 	cp -rf ${JAVAFE_SPECS} ${RELTEMP} 
-#   Copy all source code, tests, libs, Makefiles, ChangeLog, etc. 
+#   Copy all source code, tests, libs, Makefiles, etc. 
 	cp -rf ${UTILS_SOURCE_DIR} ${RELTEMP}
 	cp -rf ${JAVAFE_ROOT}/Javafe ${RELTEMP}
 	cp Makefile ${RELTEMP}
 	cp Makefile.defs ${RELTEMP}
-	cp ChangeLog ${RELTEMP}
 	cp -rf docs ${RELTEMP}
 	cp -rf specs* ${RELTEMP}
 	cp license.txt ${RELTEMP}
