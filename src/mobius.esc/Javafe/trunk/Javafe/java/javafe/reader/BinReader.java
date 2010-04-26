@@ -60,7 +60,8 @@ public class BinReader extends Reader {
 		javafe.util.Info.out("[loading " + target.getHumanName() + "]");
 
 		// Use BCEL to parse Java 1.5 and later bytecode
-		if ((System.getProperty("java.version").indexOf("1.6") != -1)||
+		if ((System.getProperty("java.version").indexOf("1.7") != -1)||
+                    (System.getProperty("java.version").indexOf("1.6") != -1)||
 		    (System.getProperty("java.version").indexOf("1.5") != -1)) {
 
 			BCELReader bcelReader = new BCELReader();

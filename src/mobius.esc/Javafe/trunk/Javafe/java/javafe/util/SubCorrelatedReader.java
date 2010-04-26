@@ -28,7 +28,7 @@ public class SubCorrelatedReader extends BufferedCorrelatedReader
   /** Returns the file underlying this correlated reader.
    */
 
-  public GenericFile getFile() {
+  public /*@non_null*/GenericFile getFile() {
     return file;
   }
 

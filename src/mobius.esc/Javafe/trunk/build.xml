@@ -28,7 +28,7 @@
   </description>
 
   <property name="project" value="Javafe"/>
-  <property name="version" value="v2.0.6-December-2007"/>
+  <property name="version" value="v2.0.11-April-2010"/>
 
   <property name="libs_dir" value="${basedir}/Utils"/>
 

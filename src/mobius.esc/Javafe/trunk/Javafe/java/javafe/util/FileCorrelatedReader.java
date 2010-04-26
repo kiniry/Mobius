@@ -260,7 +260,7 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
      * Returns the file underlying this correlated reader.
      */
 
-    public GenericFile getFile() {
+    public /*@non_null*/GenericFile getFile() {
         return file;
     }
 }
