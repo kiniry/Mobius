@@ -111,7 +111,7 @@ export TEXI2PDF ?= texi2pdf
 export JAVAFE_PROJECT ?= Javafe
 export JAVAFE_VERSION ?= 2.0.11
 
-export COPYRIGHT = 'Javafe<br />&copy; 2010 IT University of Copenhagen<br />&copy; 2007,2008,2009,2010 Joseph Kiniry<br/>&copy; 2003,2004,2005,2006 David Cok and Joseph Kiniry<br />&copy; 2005,2006,2007,2008,2009 UCD Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
+export COPYRIGHT = 'Javafe<br />&copy; 2010 IT University of Copenhagen<br />&copy; 2007,2008,2009,2010 Joseph Kiniry<br/>&copy; 2003,2004,2005,2006 David Cok and Joseph Kiniry<br />&copy; 2005,2006,2007,2008,2009 University College Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
 
 ##########################################################################
 ## The following definitions are used in various Makefiles and should
@@ -125,7 +125,7 @@ export COPYRIGHT = 'Javafe<br />&copy; 2010 IT University of Copenhagen<br />&co
 ## information files we use for such.
 export JAVADOC_GEN_DIR = ${JAVAFE_ROOT}/docs/api
 export JMLDOC_GEN_DIR = ${JAVAFE_ROOT}/docs/jmlapi
-export DOCS_STYLESHEET = ${JAVAFE_ROOT}/docs/escjava.css
+export DOCS_STYLESHEET = ${JAVAFE_ROOT}/docs/javafe.css
 
 ## Definitions for Utils
 export UTILS_SOURCE_DIR = ${JAVAFE_ROOT}/Utils
