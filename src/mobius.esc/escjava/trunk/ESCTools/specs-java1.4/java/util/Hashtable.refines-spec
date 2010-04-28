@@ -111,13 +111,13 @@ public class Hashtable extends Dictionary
       @   normal_behavior
       @     ensures \fresh(\result); 
       @*/
-    public /*@ pure @*/ synchronized Enumeration keys(); 
+    public /*@ pure non_null @*/ synchronized Enumeration keys(); 
  
     /*@ also 
       @   normal_behavior
       @     ensures \fresh(\result);  
       @*/
-    public /*@ pure @*/ synchronized Enumeration elements(); 
+    public /*@ pure non_null @*/ synchronized Enumeration elements(); 
 
     /*@ also
       @   public behavior
@@ -160,10 +160,10 @@ public class Hashtable extends Dictionary
       @       ensures_redundantly \result != this;
       @*/
     // FIXME - what about loadFactor, initialCapacity?
-    public /*@ pure @*/ synchronized Object clone(); 
+    public /*@ pure non_null @*/ synchronized Object clone(); 
 
     // FIXME - needs a more specific spec
-    public synchronized String toString();
+    public synchronized /*@ non_null @*/ String toString();
 
     // specification inherited
     public Set keySet();
@@ -179,6 +179,4 @@ public class Hashtable extends Dictionary
 
    // specification inherited
     public synchronized int hashCode();
-
-
 }

@@ -137,14 +137,13 @@ public class Throwable extends Object
       @*/
     public synchronized Throwable initCause(Throwable cause);
 
-    /*@ 
-      @ also public normal_behavior
+    /*@ also public normal_behavior
       @   requires \typeof(this) == \type(Throwable);
       @   ensures _message == null ==> \result.equals(this.getClass().theString);
       @   ensures _message != null ==> \result.equals(this.getClass().theString + ": " + _message);
       @ 
       @*/
-    public /*@ pure @*/ String toString();
+    public /*@ pure non_null @*/ String toString();
 
     // FIXME - need to indicate that the output streams are modified and not
     // other stuff

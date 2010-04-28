@@ -72,12 +72,12 @@ public abstract class AbstractList extends AbstractCollection implements List {
     // Iterators
 
     // specification inherited from List
-    public /*@ pure @*//*@non_null*/ Iterator iterator();
+    public /*@ pure non_null*/ Iterator iterator();
 
-    public /*@ pure @*/ ListIterator listIterator();
+    public /*@ pure non_null @*/ ListIterator listIterator();
 
     // specification inherited from List
-    public /*@ pure @*/ ListIterator listIterator(final int index);
+    public /*@ pure non_null @*/ ListIterator listIterator(final int index);
 
     // specification inherited from List
     public /*@ pure @*/ List subList(int fromIndex, int toIndex);
@@ -138,14 +138,12 @@ class SubList extends AbstractList {
 
     public boolean addAll(int index, Collection c);
 
-    public Iterator iterator();
+    public /*@ pure non_null @*/ Iterator iterator();
 
-    public ListIterator listIterator(int index);
+    public /*@ pure non_null @*/ ListIterator listIterator(int index);
 
-    public List subList(int fromIndex, int toIndex);
+    public /*@ pure @*/ List subList(int fromIndex, int toIndex);
 }
-
-
 
 class RandomAccessSubList extends SubList implements RandomAccess {
 

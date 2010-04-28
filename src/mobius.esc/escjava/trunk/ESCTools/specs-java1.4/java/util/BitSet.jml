@@ -285,7 +285,7 @@ public class BitSet implements Cloneable, java.io.Serializable{
       @                              isSet(content,i)); */
     /*@   ensures ((BitSet)\result).cardinality() == cardinality();
       @*/
-    public Object clone();
+    public /*@ non_null @*/ Object clone();
 
     /*@ also public normal_behavior
       @   requires o != null && o instanceof BitSet; */
@@ -308,7 +308,7 @@ public class BitSet implements Cloneable, java.io.Serializable{
       @   // for which the bit is set
       @*/
     //@ pure
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     /*@ public normal_behavior
       @   requires 0 <= fromIndex && 0 <= toIndex;

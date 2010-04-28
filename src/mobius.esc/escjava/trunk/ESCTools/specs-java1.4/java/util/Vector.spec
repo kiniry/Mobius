@@ -435,7 +435,7 @@ public class Vector extends AbstractList
       @ ensures ((Vector)\result).elementType == elementType;
       @ ensures (\forall int i;0<=i && i<elementCount; get(i) == ((Vector)\result).get(i));
       @*/
-    public /*@ pure @*/ synchronized Object clone(); // Overrides Object
+    public /*@ pure non_null @*/ synchronized Object clone(); // Overrides Object
 
     /*@ also public normal_behavior
       @    ensures \result != null && \fresh(\result);
@@ -443,7 +443,7 @@ public class Vector extends AbstractList
       @      && (\forall int i; 0 <= i && i < size();
       @                         \result[i] == get(i));
       @*/
-    public /*@ pure @*/ synchronized Object[] toArray();
+    public /*@ pure non_null @*/ synchronized Object[] toArray();
 
     /*@ also
       @ public normal_behavior
@@ -473,7 +473,7 @@ public class Vector extends AbstractList
       @         && \result[elementCount] == null;
       @    |}
       @*/
-    public synchronized Object[] toArray(Object[] a);
+    public synchronized /*@ non_null @*/ Object[] toArray(Object[] a);
 
      // FIXME - all inherited?
     /*@ also
@@ -598,7 +598,7 @@ public class Vector extends AbstractList
       @    assignable privateState;
       @    ensures (* \result is a string representation of this Vector *);
       @*/
-    public synchronized String toString();
+    public synchronized /*@ non_null @*/ String toString();
 
     // specification inherited from List
     //@ pure

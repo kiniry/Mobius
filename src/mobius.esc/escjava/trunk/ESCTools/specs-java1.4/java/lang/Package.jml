@@ -147,9 +147,10 @@ public class Package {
     // FIXME -- needs a spec
     public /*@ pure @*/ int hashCode();
 
-    //@ also
-    //@ ensures \result.startsWith("package " + getName());
-    public /*@ pure @*/ String toString();
+    /*@ also
+      @ ensures \result.startsWith("package " + getName());
+      @*/
+    public /*@ pure non_null @*/ String toString();
 
 
     /*@ normal_behavior

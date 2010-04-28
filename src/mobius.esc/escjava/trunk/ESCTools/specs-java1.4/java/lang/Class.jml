@@ -39,7 +39,7 @@ public final class Class implements java.io.Serializable {
       @        && (* \result is the name of this class object *);
       @*/
     //@ pure
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     /// *@ also public normal_behavior
       // @   ensures \result <==> (this == o);

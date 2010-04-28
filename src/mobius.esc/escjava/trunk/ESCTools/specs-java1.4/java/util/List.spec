@@ -65,7 +65,7 @@ public interface List extends Collection {
       @                \result.hasNext(i) && \result.nthNextElement(i)
       @                 == toArray()[i]);
       @*/
-    /*@ pure @*/ Iterator iterator();
+    /*@ pure non_null @*/ Iterator iterator();
 
     /*@ also
       @  public normal_behavior
@@ -74,8 +74,7 @@ public interface List extends Collection {
       @   ensures \result.length == size();
       @   //-@ ensures (\forall int i; 0<=i && i < size(); \result[i] == get(content,i));
       @*/
-    //@ pure
-    Object[] toArray();
+    /*@ pure non_null @*/ Object[] toArray();
 
     /*@ also
       @ public normal_behavior
@@ -105,7 +104,7 @@ public interface List extends Collection {
 
               // FIXME - spec the exceptions
       @*/
-    Object[] toArray(Object[] a) throws NullPointerException;
+    /*@ non_null @*/ Object[] toArray(Object[] a) throws NullPointerException;
 
     /*@ also public normal_behavior
       @   requires \typeof(o) <: elementType;
@@ -343,7 +342,7 @@ public interface List extends Collection {
       @   ensures \result.elementType == elementType;
       @   ensures containsNull == \result.returnsNull;
       @*/
-    /*@ pure @*/ /*@ non_null @*/ ListIterator listIterator();
+    /*@ pure non_null @*/ ListIterator listIterator();
 
     /* FIXME @ 
       @ public normal_behavior
@@ -361,7 +360,7 @@ public interface List extends Collection {
       @     ensures \result.elementType == elementType;
       @     ensures containsNull == \result.returnsNull;
       @*/
-    /*@ pure @*/ /*@ non_null @*/ ListIterator listIterator(int index);
+    /*@ pure non_null @*/ ListIterator listIterator(int index);
 
     // FIXME - changes to a sublist affect the list it is a sublist of!!!
     /*@ public normal_behavior

@@ -67,7 +67,7 @@ public class Date implements java.io.Serializable, Cloneable, Comparable {
        @   assignable \nothing;
        @   ensures \fresh(\result) && \result.equals(this);
        @*/
-    public Object clone();
+    public /*@ non_null @*/ Object clone();
     
     /** @deprecated as of JDK 1.1 */
     public static long UTC(int year, int month, int date,
@@ -208,7 +208,7 @@ public class Date implements java.io.Serializable, Cloneable, Comparable {
        @   assignable \nothing;
        @   ensures (* \result is the String representation of Date *);
        @*/
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     /** @deprecated as of JDK 1.1 */
     public String toLocaleString();

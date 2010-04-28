@@ -271,12 +271,12 @@ public /*@ pure @*/ class BigInteger extends Number implements Comparable {
 
     //@  ensures \result != null;
     //@ ensures  parse(\result,radix).equals(this);
-    public String toString(int radix);
+    public /*@ non_null @*/ String toString(int radix);
 
     //@ also
     //@ ensures \result != null;
     //@ ensures  parse(\result,10).equals(this);
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     //@ ensures convert(\result).equals(this);
     //@ ensures_redundantly this.equals(\old(this));

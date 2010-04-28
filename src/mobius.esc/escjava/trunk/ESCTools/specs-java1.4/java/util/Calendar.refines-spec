@@ -484,12 +484,12 @@ public abstract class Calendar implements Serializable, Cloneable {
        @        assignable \nothing;
        @        ensures \fresh(\result) && \result.equals(this);
        @*/
-    public Object clone();
+    public /*@ non_null @*/ Object clone();
 
     /*@ also
        @ public normal_behavior
        @        assignable \nothing;
        @        ensures (* \result is the String representation of Calendar *);
        @*/
-    public /*@ pure @*/ String toString();
+    public /*@ pure non_null @*/ String toString();
 }

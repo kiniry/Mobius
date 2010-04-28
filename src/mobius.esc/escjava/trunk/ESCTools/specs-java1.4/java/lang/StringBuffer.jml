@@ -413,7 +413,7 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     // !FIXME! not sure this is really pure, but CharSequence requires purity
     //@  assignable \nothing;
     //@  ensures \result.equals(accumulatedString);
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     public synchronized void setLength(int i);
 

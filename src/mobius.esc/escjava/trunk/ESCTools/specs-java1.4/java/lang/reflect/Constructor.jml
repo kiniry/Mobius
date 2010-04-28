@@ -59,7 +59,7 @@ class Constructor extends AccessibleObject implements Member {
 
     public /*@ pure @*/ int hashCode();
 
-    public /*@ pure @*/ String toString();
+    public /*@ pure non_null @*/ String toString();
 
     public /*@ non_null @*/ Object newInstance(Object[] initargs)
 	throws InstantiationException, IllegalAccessException,

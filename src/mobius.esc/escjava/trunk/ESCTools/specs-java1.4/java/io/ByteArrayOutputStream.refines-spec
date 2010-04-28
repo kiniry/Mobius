@@ -21,56 +21,26 @@ public class ByteArrayOutputStream extends java.io.OutputStream {
       @*/
     public ByteArrayOutputStream(int Param0);
 
-    /*@
-      @ 
-      @*/
     public int size();
 
-    /*@
-      @ 
-      @*/
     public void close()
         throws java.io.IOException;
 
-    /*@
-      @ 
-      @*/
     public synchronized void reset();
 
-    /*@
-      @ 
-      @*/
     public synchronized byte[] toByteArray();
 
-    /*@
-      @ 
-      @*/
     public synchronized void write(int Param0);
 
-    /*@
-      @ 
-      @*/
     public synchronized void write(byte[] Param0, int Param1, int Param2);
 
-    /*@
-      @ 
-      @*/
     public synchronized void writeTo(java.io.OutputStream Param0)
         throws java.io.IOException;
 
-    /*@
-      @ 
-      @*/
-    public java.lang.String toString();
+    public /*@ non_null @*/ java.lang.String toString();
 
-    /*@
-      @ 
-      @*/
-    public java.lang.String toString(int Param0);
+    public /*@ non_null @*/ java.lang.String toString(int Param0);
 
-    /*@
-      @ 
-      @*/
-    public java.lang.String toString(java.lang.String Param0)
+    public /*@ non_null @*/ java.lang.String toString(java.lang.String Param0)
         throws java.io.UnsupportedEncodingException;
 }
