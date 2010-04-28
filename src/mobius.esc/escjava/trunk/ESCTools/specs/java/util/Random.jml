@@ -1,9 +1,0 @@
-package java.util;
-
-//@ author Mikolas Janota
-public interface Random {
-
-   //@ ensures \result < n;
-   //@ ensures \result >=0;
-   int nextInt(int n);
-}
