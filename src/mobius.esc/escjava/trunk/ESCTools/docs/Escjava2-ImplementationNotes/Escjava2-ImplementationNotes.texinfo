@@ -13,14 +13,14 @@
 @email{cok@@frontiernet.net}
 
 @author Joseph R. Kiniry
-@email{joseph.kiniry@@ucd.ie}
+@email{kiniry@@acm.org}
 
 @author Dermot Cochran
-@email{Dermot.Cochran@@ucd.ie}
+@email{dero@@itu.dk}
 
 @sp 1
 
-@center October 2008
+@center April 2010
 
 @sp 2
 
@@ -53,7 +53,8 @@ F.3.1 [@i{Logics and Meanings of Programs}]
 
 @sp 1
 
-Copyright @copyright{} 2003-2004 David R. Cok, 2005-2008 Joseph R. Kiniry, 2008 Dermot Cochran
+Copyright @copyright{} 2003-2004 David R. Cok, 2005-2008, 2010 Joseph
+R. Kiniry, 2008 Dermot Cochran
 
 @sp 4
 
@@ -479,9 +480,11 @@ Security of Systems group at the Radboud University Nijmegen (what used
 to be known as Katholieke Universiteit Nijmegen or the University of
 Nijmegen) in Nijmegen, Netherlands.
 (@url{http://www.niii.kun.nl/sos/research/escjava/}).  The project is
-now hosted by the Systems Research Group in the School of
-Computer Science and Informatics at University College Dublin from version 2.0a8
-onward. (@url{http://kind.ucd.ie/})
+now hosted by the Systems Research Group in the School of Computer
+Science and Informatics at University College Dublin from version 2.0a8
+to 2.0.5 (2009).  It is now hosted by the IT University of Copenhagen,
+as Joe Kiniry moved there in January, 2010.
+(@url{http://kindsoftware.com/})
 
 The work of producing ESC/Java2 stands on the very much more
 considerable effort of the ESC/Java team in conceiving of and
@@ -533,7 +536,7 @@ the grammar and semantics of JML.  JML is available at
 
 @cindex Javafe
 @item The Java 1.4 front-end for ESC/Java2
-@uref{http://kind.ucd.ie/products/opensource/JavaFE/}.
+@uref{http://kindsoftware.com/products/opensource/JavaFE/}.
 @end itemize
 
 @c ---------Contacts ------------------
@@ -552,7 +555,7 @@ Further information about JML and ESC/Java2 can be obtained from these sources.
         @*@center @email{jmlspecs-developers@@lists.sourceforge.net}
 @item The ESC/Java2 mailing list on sourceforge: 
         @*@center @email{jmlspecs-escjava@@lists.sourceforge.net}
-@item The Kind Software website: @uref{http://kind.ucd.ie/products/opensource/ESCJava2/}
+@item The Kind Software website: @uref{http://kindsoftware.com/products/opensource/ESCJava2/}
 @end itemize
 
 JML utilized (the Java subset of) the multijava compiler.
@@ -574,7 +577,7 @@ There are three essential items that you need in order to run ESC/Java2:
 a build of ESC/Java2 itself, an executable for Simplify for your
 platform, and a version of the JML specifications for the Java system
 classes.  These are available together as a single release from the Kind Software
-ESC/Java2 website (@url{http://kind.ucd.ie/products/opensource/ESCJava2/}).
+ESC/Java2 website (@url{http://kindsoftware.com/products/opensource/ESCJava2/}).
 However, you may want to substitute an alternate version of the JML
 specifications that you generate yourself or you obtain from the JML
 website.  The specifications included with ESC/Java2 are a snapshot of
@@ -623,7 +626,7 @@ and options.
 
 5. Using the Eclipse plugin for ESC/Java2, which is a component of the 
 MOBIUS Program Verification Environment (PVE) for Eclipse:  
-@uref{http://kind.ucd.ie/products/opensource/Mobius}
+@uref{http://kindsoftware.com/products/opensource/Mobius}
 
 @c ------ chapter Status of JML features --------
 @node  Status, features, Running ESCJava2, Top

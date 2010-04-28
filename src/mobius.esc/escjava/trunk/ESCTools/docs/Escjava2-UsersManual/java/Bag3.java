@@ -4,7 +4,7 @@ package eu.etaps.tutorial.bags;
  * A bag of integers.
  *
  * @author The DEC SRC ESC/Java research teams (noemail@hp.com)
- * @author Joe Kiniry (kiniry@ucd.ie)
+ * @author Joe Kiniry (kiniry@acm.org)
  * @version ETAPS-01042007
  */
 class Bag3 {

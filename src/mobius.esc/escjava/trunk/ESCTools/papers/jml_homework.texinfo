@@ -168,7 +168,7 @@ The Extended Static Checker for Java (ESC/Java version 1).
 The Open Source Extended Static Checker for Java (ESC/Java version 2, or
 ESC/Java2 for short) from the KindSoftware Group at the University
 College Dublin.
-@uref{http://kind.ucd.ie/products/opensource/ESCJava2/}
+@uref{http://kindsoftware.com/products/opensource/ESCJava2/}
 @item
 The LOOP compiler from the SoS Group at the University of Nijmegen.
 @uref{http://www.cs.kun.nl/sos/}

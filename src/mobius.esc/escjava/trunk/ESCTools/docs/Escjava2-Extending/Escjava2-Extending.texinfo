@@ -52,6 +52,8 @@ Attribution-NonCommercial-ShareAlike 2.0 license.  See
 
 Copyright @copyright{} 2004 Joseph R. Kiniry and University College
 Dublin.
+Copyright @copyright{} 2010 Joseph R. Kiniry and IT University of
+Copenhagen.
 
 @quotation
 You are free:
@@ -97,18 +99,18 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 
 @titlepage
 @title Extending ESC/Java2
-@subtitle Edition $Revision$, November 2004
+@subtitle Edition $Revision$, April 2010
 @subtitle This document describes how to extend ESC/Java2 version 2.0a8 and later.
-@author Joseph R. Kiniry <joseph.kiniry@@ucd.ie>
+@author Joseph R. Kiniry <kiniry@@acm.org>
 
 @c The following two commands start the copyright page.
 @page
 @vskip 0pt plus 1filll
 @insertcopying
 
-@c To be published by the KindSoftware Research Group, Department of
-@c Computer Science, University College Dublin as technical report TBD
-@c See @uref{http://secure.ucd.ie/}
+@c To be published by the KindSoftware Research Group, Software
+@c Development Group, IT University of Copenhagen as technical report
+@c See @uref{http://kindsoftware.com/}
 @end titlepage
 
 @c metadata used in HTML

@@ -60,6 +60,9 @@ Jim Saxe, and Compaq Computer Corporation.
 Portions Copyright @copyright{} 2007, 2008 Joseph R. Kiniry and University
 College Dublin.
 
+Portions Copyright @copyright{} 2010 Joseph R. Kiniry and IT University
+of Copenhagen.
+
 @b{Original Compaq limitation of liability:} This publication and the
 software it describes are provided ``as is'' without warranty of any
 kind, express or implied, including, but not limited to, the implied
@@ -139,18 +142,18 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 
 @titlepage
 @title The ESC/Java2 User's Manual
-@subtitle Edition $Revision$, begun April 2007
+@subtitle Edition $Revision$, April 2010
 @subtitle This document describes the ESC/Java2 version 2.0b0 and later.
-@author Joseph R. Kiniry <kiniry@@ucd.ie>
+@author Joseph R. Kiniry <kiniry@@acm.org>
 
 @c The following two commands start the copyright page.
 @page
 @vskip 0pt plus 1filll
 @insertcopying
 
-@c To be published by the KindSoftware Research Group, Department of
-@c Computer Science, University College Dublin as technical report TBD
-@c See @uref{http://kind.ucd.ie/}
+@c To be published by the KindSoftware Research Group, Software
+@c Development Group, IT University of Copenhagen as technical report
+@c See @uref{http://kindsoftware.com/}
 @end titlepage
 
 @c metadata used in HTML

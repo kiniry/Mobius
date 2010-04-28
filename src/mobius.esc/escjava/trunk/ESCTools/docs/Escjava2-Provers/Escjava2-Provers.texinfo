@@ -61,6 +61,9 @@ Nijmegen.
 Copyright @copyright{} 2004,2005 Joseph R. Kiniry and University
 College Dublin.
 
+Copyright @copyright{} 2010 Joseph R. Kiniry and IT University of
+Copenhagen.
+
 @quotation
 You are free:
 @itemize
@@ -106,7 +109,7 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 @titlepage
 @title The Provers of ESC/Java2
 @subtitle Their Necessary Functionality, Interfaces, and Use
-@subtitle Edition $Revision$, May 2004
+@subtitle Edition $Revision$, April 2010
 @subtitle This document describes the provers of ESC/Java2 version 2.0a7.
 @author Joseph R. Kiniry <kiniry@@acm.org>
 
@@ -115,9 +118,9 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 @vskip 0pt plus 1filll
 @insertcopying
 
-@c To be published by the KindSoftware Research Group, Department of
-@c Computer Science, University College Dublin as technical report TBD
-@c See @uref{http://secure.ucd.ie/}
+@c To be published by the KindSoftware Research Group, Software
+@c Development Group, IT University of Copenhagen as technical report
+@c See @uref{http://kindsoftware.com/}
 @end titlepage
 
 @c metadata used in HTML
