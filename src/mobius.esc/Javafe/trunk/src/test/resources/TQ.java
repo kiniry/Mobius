@@ -1,3 +1,0 @@
-package Q;
-
-class T{}

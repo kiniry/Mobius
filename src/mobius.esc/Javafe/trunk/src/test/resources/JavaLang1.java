@@ -1,3 +1,0 @@
-import java.lang.*;		// Not an error
-
-class JavaLang1 extends Exception {}	// Even when we use a class...
