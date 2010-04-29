@@ -148,9 +148,8 @@ public abstract class ClassFileParser implements ClassFileConstants {
 	is called exactly once for each field.  It is called after
 	"set_num_fields". */
     //@ requires 0 <= i;
-    //@ requires type != null;
-    //@ requires fname != null;
-    protected abstract void set_field(int i, String fname, String type,int mod)
+    protected abstract void set_field(int i, /*@ non_null @*/ String fname,
+                                      /*@ non_null @*/ String type,int mod)
 	throws ClassFormatError;
 
     /** Set the initializer for "i"th field defined by this class.
@@ -178,9 +177,8 @@ public abstract class ClassFileParser implements ClassFileConstants {
 	is called exactly once for each method.  It is called after
 	"set_num_methods". */
     //@ requires 0 <= i;
-    //@ requires sig != null && mname != null;
-    protected abstract void set_method(int i, String mname, String sig,
-				       int mod)
+    protected abstract void set_method(int i, /*@ non_null @*/ String mname,
+                                       /*@ non_null @*/ String sig, int mod)
 	throws ClassFormatError;
 
     /** Set the body for "i"th method defined by this class.
@@ -211,9 +209,8 @@ public abstract class ClassFileParser implements ClassFileConstants {
         this method, it must read exactly "n" bytes from the input
         stream.  This routine is called after "set_method(i)". */
     //@ requires 0 <= i;
-    //@ requires aname != null && stream != null;
-    protected void set_method_attribute(int i, String aname,
-					DataInput stream, int n)
+    protected void set_method_attribute(int i, /*@ non_null @*/ String aname,
+					/*@ non_null @*/ DataInput stream, int n)
 	throws IOException, ClassFormatError
     {
 	stream.skipBytes(n);

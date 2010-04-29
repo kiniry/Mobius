@@ -264,24 +264,24 @@ public class TypeSig extends Type
      * The name of the package we belong to.  Always non-null.
      */
     //@ invariant \nonnullelements(packageName);
-    public /*public readonly non_null */ String[] packageName;
+    public /*@ non_null */ String[] packageName;
 
     /**
      * Our enclosing type or null iff we are a package-member type.
      */
-    public /*public readonly*/ /*@ nullable */ TypeSig enclosingType;
+    public /*@ nullable */ TypeSig enclosingType;
 
     /**
      * Our simple name or null if we are an anonymous type.
      */
-    public /*public readonly*/ /*@ nullable */ String simpleName;
+    public /*@ nullable */ String simpleName;
 
     /**
      * Are we a direct member of a package or a type? <p>
      *
      * (Otherwise, we are a block-level type or an anonymous type.) <p>
      */
-    public /*public readonly*/ boolean member;
+    public boolean member;
 
 
     /**

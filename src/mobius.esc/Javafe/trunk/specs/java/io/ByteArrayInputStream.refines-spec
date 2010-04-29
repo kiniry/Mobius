@@ -31,9 +31,8 @@ public class ByteArrayInputStream extends InputStream {
       @    ensures mark == 0;
       @    ensures markPosition == mark && markLimit == buf.length;
       @    ensures valid();
-      @ pure
       @*/
-    public /*@ non_null pure @*/ ByteArrayInputStream(/*@ non_null @*/ byte[] bytes);
+    public /*@ pure @*/ ByteArrayInputStream(/*@ non_null @*/ byte[] bytes);
 
     /*@ public normal_behavior
       @    ensures initialInputStream();

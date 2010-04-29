@@ -2287,8 +2287,7 @@ public abstract class Name extends ASTNode
      * Return our printname, which will be of one of the forms X, X.Y,
      * X.Y.Z, ...
      */
-    //@ pure
-    public abstract /*@non_null*/ String printName();
+    public abstract /*@ pure non_null @*/ String printName();
 
     /**
      * Return a hash code for <code>this</code> such that two
@@ -2301,7 +2300,7 @@ public abstract class Name extends ASTNode
      * Return true if <code>other</code> is a <code>Name</code> that
      * is component-wise equal to <code>this</code>.
      */
-    public abstract boolean equals(/*@nullable \readonly*/Object other);
+    public abstract boolean equals(/*@ nullable @*/ Object other);
 
     /**
      * The number of identifiers we contain.
@@ -2460,7 +2459,7 @@ public class SimpleName extends Name
     return id.toString();
   }
 
-    public boolean equals(/*@nullable \readonly*/Object other) {
+    public boolean equals(/*@ nullable \readonly @*/ Object other) {
 	if (other instanceof SimpleName)
 	    return id == ((SimpleName)other).id;
 	else
@@ -2567,7 +2566,7 @@ public class CompoundName extends Name
   /** Return true if <code>other</code> is a <code>Name</code> that
     is component-wise equal to <code>this</code>. */
 
-  public boolean equals(/*@nullable \readonly*/Object other) {
+  public boolean equals(/*@ nullable @*/Object other) {
     if (other instanceof CompoundName) {
       Name o = (CompoundName)other;
       int sz = this.ids.size();
