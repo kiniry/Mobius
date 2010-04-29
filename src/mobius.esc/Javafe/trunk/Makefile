@@ -269,19 +269,19 @@ jml: build
 	-$(JML) \
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath $(call canonicalize,${JAVAFE_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${BCEL_LIB}) \
-	  --assignable --Assignable --purity --defaultNonNull \
+	  --assignable --Assignable --purity --defaultNonNull -E parse \
 	  --keepGoing --source 1.4 --Quiet --recursive \
 	  $(JML_PACKAGES)
 
 #===============================================================================
 ## JMLc targets:
 #
-.PHONY: jmlc jmlc_utils jmlc_fe jmlc_ej jmlc_with_new_semantics
+.PHONY: jmlc jmlc_utils jmlc_fe
 
 # FIXME: Javafe Makefiles should be adapted like the Utils Makefile
 # so that the build target's behavior is altered when USE_JMLC is defined.
 
-jmlc: jmlc_utils jmlc_fe jmlc_ej jmlc_with_new_semantics
+jmlc: jmlc_utils jmlc_fe
 
 jmlc_utils:
 	$(MAKE) USE_JMLC=1 -C Utils buildall
@@ -293,7 +293,8 @@ jmlc_fe: ${JAVAFE_CLASSFILES4RAC}
 		JMLC_FLAGS+=' --excludefiles "^(ASTNode|TypeDeclElem)\.java"' \
 		jmlc1
 
-# Apply jmlc to one TARGET at a time; class files are to be saved in JMLC_CLASSFILES_DIR.
+# Apply jmlc to one TARGET at a time; class files are to be saved in
+# JMLC_CLASSFILES_DIR.
 jmlc1:
 	$(JMLC) \
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
@@ -306,16 +307,12 @@ jmlc1:
 	  $(TARGET) \
 	  && touch .jmlc
 
-# Some files cannot be compiled under the current/old semantics because the generated code
-# has a try/catch block that is beyond the limits of the VM.  Hence, we compile these files
-# separately using the new semantics (-T).
-jmlc_with_new_semantics:
-	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
-		TARGET='Javafe/java/javafe/ast/ASTNode.java' \
-		JMLC_FLAGS+=' --efficientRAC' jmlc1
-	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
-		TARGET='Javafe/java/javafe/ast/TypeDeclElem.java' \
-		JMLC_FLAGS+=' --efficientRAC' jmlc1
+# Some files cannot be compiled under the old semantics (-O) because
+# the generated code has a try/catch block that is beyond the limits
+# of the VM.  Hence, if you wish to use the old semantics, you must
+# compile these files separately using the new semantics (no -O
+# switch).  The files in question are javafe/ast/ASTNode.java
+# and javafe/ast/TypeDeclElem.java.
 
 ${JAVAFE_CLASSFILES4RAC}:
 	mkdir ${JAVAFE_CLASSFILES4RAC}
