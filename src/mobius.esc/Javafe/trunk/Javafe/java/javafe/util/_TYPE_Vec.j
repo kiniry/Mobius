@@ -59,7 +59,7 @@ public class  _TYPE_Vec {
     /*@ invariant 0 <= count 
       @        && count <= elements.length
       @        && (\forall int i; (0<=i & i<count) ==> elements[i]!=null);
-      @ invariant \typeof(elements) == \type(Expr[]);
+      @ invariant \typeof(elements) == \type(javafe.ast.Expr[]);
       @ invariant elements.owner == this;
       @*/
 
