@@ -53,7 +53,7 @@ ifndef ALLTESTS
 	@echo tests NOT INCLUDED - ALLTESTS not defined: ` grep -v '^#' skipunlessall`
 endif
 	@for t in ${FILELIST} ; do \
-		echo -n '.' ; \
+		/bin/echo -n '.' ; \
 		${MAKE} --no-print-directory do$$t ; \
 	done
 	@echo " "
