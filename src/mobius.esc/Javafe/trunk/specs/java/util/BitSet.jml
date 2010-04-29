@@ -288,32 +288,29 @@ public class BitSet implements Cloneable, java.io.Serializable{
     public Object clone();
 
     /*@ also public normal_behavior
-      @   requires o != null && o instanceof BitSet; */
+      @   requires o instanceof BitSet; */
     /*-@  ensures \result <==> (\forall int i; 
       @			0<=i;
       @             	isSet(content,i) == isSet(((BitSet)o).content,i)); */
     /*@   ensures \result ==> (cardinality() == ((BitSet)o).cardinality());
       @ also public normal_behavior
-      @   requires o != null && !(o instanceof BitSet);
+      @   requires !(o instanceof BitSet);
       @   ensures !\result;
       @*/
-    //@ pure
-    public boolean equals(Object o);
+    public /*@ pure @*/ boolean equals(/*@ non_null @*/ Object o);
 
     /*@ also public normal_behavior
-      @   ensures \result != null && \result.length() > 0;
+      @   ensures \result.length() > 0;
       @   ensures \result.charAt(0) == '{';
       @   ensures \result.charAt(\result.length()-1) == '}';
       @   // within the braces is a comma+space separated list of indices
       @   // for which the bit is set
       @*/
-    //@ pure
-    public String toString();
+    public /*@ pure non_null @*/ String toString();
 
     /*@ public normal_behavior
       @   requires 0 <= fromIndex && 0 <= toIndex;
-      @   requires fromIndex <= toIndex;
-      @   ensures \result != null; */
+      @   requires fromIndex <= toIndex; */
     /*-@  ensures (\forall int i; 0<=i && i<fromIndex; !isSet(\result.content,i));
       @   ensures (\forall int i; toIndex<=i; !isSet(\result.content,i));
       @   ensures (\forall int i; fromIndex <= i && i < toIndex;
@@ -321,16 +318,13 @@ public class BitSet implements Cloneable, java.io.Serializable{
       @   ensures size(\result.content) >= toIndex; */
     /*@   ensures cardinality() >= \result.cardinality();
       @*/
-    //@ pure
-    public BitSet get(int fromIndex,int toIndex);
+    public /*@ pure non_null @*/ BitSet get(int fromIndex,int toIndex);
 
     /*@ public normal_behavior
-      @   requires b != null;
       @   assignable \not_specified;
       @*/
     /*-@
       @ also public normal_behavior
-      @   requires b != null;
       @   assignable content;
       @   ensures size(content) >=\old(Math.min(size(content),size(b.content)));
       @   ensures (\forall int i; 0<=i;
@@ -342,10 +336,9 @@ public class BitSet implements Cloneable, java.io.Serializable{
       @   requires b == null;
       @   signals_only NullPointerException;
       @*/
-    public void and(BitSet b);
+    public void and(/*@ non_null @*/ BitSet b);
 
     /*@ public normal_behavior
-      @   requires b != null;
       @   assignable \not_specified;
       @*/
     /*-@
@@ -360,10 +353,9 @@ public class BitSet implements Cloneable, java.io.Serializable{
       @   requires b == null;
       @   signals_only NullPointerException;
       @*/
-    public void andNot(BitSet b);
+    public void andNot(/*@ non_null @*/ BitSet b);
 
     /*@ public normal_behavior
-      @   requires b != null;
       @   assignable \not_specified;
       @*/
     /*-@
@@ -379,10 +371,9 @@ public class BitSet implements Cloneable, java.io.Serializable{
       @   requires b == null;
       @   signals_only NullPointerException;
       @*/
-    public void or(BitSet b);
+    public void or(/*@ non_null @*/ BitSet b);
 
     /*@ public normal_behavior
-      @   requires b != null;
       @   assignable \not_specified;
       @*/
     /*-@
@@ -396,11 +387,8 @@ public class BitSet implements Cloneable, java.io.Serializable{
       @   requires b == null;
       @   signals_only NullPointerException;
       @*/
-    public void xor(BitSet b);
+    public void xor(/*@ non_null @*/ BitSet b);
 
-    /*@ public normal_behavior
-      @   requires b != null;
-      @*/
     /*-@
       @ also public normal_behavior
       @   ensures \result <==> (\exists int i; 0<=i ;
@@ -409,7 +397,6 @@ public class BitSet implements Cloneable, java.io.Serializable{
       @   requires b == null;
       @   signals_only NullPointerException;
       @*/
-    //@ pure
-    public boolean intersects(BitSet b);
+    public /*@ pure @*/ boolean intersects(/*@ non_null @*/ BitSet b);
 }
 

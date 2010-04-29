@@ -73,18 +73,15 @@ public /*@ pure @*/ final
       @   ensures parseable(\result,10);
       @   ensures i == parseLong(\result,10);
       @ also public normal_behavior
-      @   ensures \result != null;
       @   ensures i == 0 ==> \result.length() == 1;
       @   ensures i > 0 ==> \result.length() >= 1;
       @   ensures i < 0 ==> \result.length() >= 2;
       @   ensures i == 0 ==> \result.equals("0");
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/
-        String toString(long i, int radix);
+    public static /*@ pure non_null @*/ String toString(long i, int radix);
 
     /*@ public normal_behavior
       @   requires i >= 0;
-      @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures parseable(\result,16);
       @   ensures \result.equals(toString(i,16));
@@ -92,18 +89,16 @@ public /*@ pure @*/ final
       @   ensures \result.length() >= 1;
       @ also public normal_behavior
       @   requires i < 0;
-      @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures \result.length() >= 1;
       @   ensures parseable(\result,16,65);
       @   // FIXME ensures \result.equals(toString(i, 16));
       @   // FIXME ensures parseLong(\result,16) == i;
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/ String toHexString(long i);
+    public static /*@ pure non_null @*/ String toHexString(long i);
 
     /*@ public normal_behavior
       @   requires i >= 0;
-      @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures parseable(\result,8);
       @   ensures \result.equals(toString(i,8));
@@ -111,18 +106,16 @@ public /*@ pure @*/ final
       @   ensures \result.length() >= 1;
       @ also public normal_behavior
       @   requires i < 0;
-      @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures \result.length() >= 1;
       @   ensures parseable(\result,8,65);
       @   // FIXME ensures \result.equals(toString(i + (1<<64), 8, 65));
       @   // FIXME ensures (long)parseLong(\result,8) == i;
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/ String toOctalString(long i);
+    public static /*@ pure non_null @*/ String toOctalString(long i);
 
     /*@ public normal_behavior
       @   requires i >= 0;
-      @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures parseable(\result,2);
       @   ensures \result.equals(toString(i,2));
@@ -130,18 +123,15 @@ public /*@ pure @*/ final
       @   ensures \result.length() >= 1;
       @ also public normal_behavior
       @   requires i < 0;
-      @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures \result.length() >= 1;
       @   ensures parseable(\result,2,65);
       @   // FIXME ensures \result.equals(toString(i, 2));
       @   // FIXME ensures parseLong(\result,2) == i;
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/
-        String toBinaryString(long i);
+    public static /*@ pure non_null @*/ String toBinaryString(long i);
 
     /*@ public normal_behavior
-      @  ensures \result != null;
       @  ensures parseable(\result);
       @  ensures \result.equals(toString(i,10));
       @  ensures i == parseLong(\result, 10);
@@ -150,7 +140,7 @@ public /*@ pure @*/ final
       @  ensures i <  0 ==> \result.length() >= 2;
       @  ensures i == 0 ==> \result.equals("0");
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/ String toString(long i);
+    public static /*@ pure non_null @*/ String toString(long i);
 
 // FIXME - what if radix is out of range - supposed to use 10
     /*@  public normal_behavior
@@ -280,14 +270,13 @@ public /*@ pure @*/ final
       @*/
     public int hashCode();
 
-    /*@ 
-      @   public normal_behavior
-      @     requires i != null && ii != null;
-      @     ensures \result <==> (i.theLong == ii.theLong);
-      @   also
-      @   public normal_behavior
-      @     requires i == null || ii == null;
-      @     ensures \result <==> ( i == ii );
+    /*@ public normal_behavior
+      @   requires i != null && ii != null;
+      @   ensures \result <==> (i.theLong == ii.theLong);
+      @ also
+      @ public normal_behavior
+      @   requires i == null || ii == null;
+      @   ensures \result <==> ( i == ii );
       @*/
     //-@ function
     /*@ public pure static model boolean equalsLong(Long i, Long ii);
@@ -330,11 +319,10 @@ public /*@ pure @*/ final
       @*/
     //@ implies_that
     //@    ensures val != null ==> \result != null;
-    public static /*@ pure @*/ /*@ non_null @*/
+    public static /*@ pure non_null @*/
         Long getLong(String nm, Long val);
 
     /*@ public normal_behavior
-      @ requires anotherLong != null;
       @ {|
       @   requires theLong == anotherLong.longValue();
       @   ensures \result == 0;
@@ -349,11 +337,11 @@ public /*@ pure @*/ final
       @   requires anotherLong == null;
       @   signals_only NullPointerException;
       @*/
-    public int compareTo(Long anotherLong);
+    public int compareTo(/*@ non_null @*/ Long anotherLong);
 
     /*@ also
       @   public normal_behavior
-      @     requires o != null && (o instanceof Long);
+      @     requires (o instanceof Long);
       @     ensures \result == compareTo((Long) o);
       @ also
       @   public exceptional_behavior
@@ -364,7 +352,5 @@ public /*@ pure @*/ final
       @     requires o == null;
       @     signals_only NullPointerException;
       @*/
-    public int compareTo(Object o);
-
-
+    public int compareTo(/*@ non_null @*/ Object o);
 }

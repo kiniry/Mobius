@@ -104,14 +104,12 @@ public class Package {
     public /*@ pure @*/ boolean isSealed();
 
     /*@ public normal_behavior
-      @   requires url != null;
-      @   ensures \result
-      @      <==> sealbase != null && sealbase.equals(url);
+      @   ensures \result <==> sealbase != null && sealbase.equals(url);
       @ also public exceptional_behavior
       @   requires url == null;
       @   signals (NullPointerException);
       @*/
-    public /*@ pure @*/ boolean isSealed(URL url)
+    public /*@ pure @*/ boolean isSealed(/*@ non_null @*/ URL url)
 	throws NullPointerException;
 
     // A version is at least compatible with itself:
@@ -140,7 +138,7 @@ public class Package {
 	    (\exists int i; 0<=i && i < \result.length;
 			\result[i] == getPackage("java.lang"));
     */
-    public /*@ pure @*/ static /*@ non_null @*/ Package[] getPackages();
+    public static /*@ pure non_null @*/ Package[] getPackages();
 
     static /*@ pure @*/ Package getPackage(/*@ non_null @*/ Class c);
 

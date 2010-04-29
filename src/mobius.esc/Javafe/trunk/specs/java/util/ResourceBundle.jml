@@ -29,8 +29,7 @@ public abstract class ResourceBundle {
     
     public ResourceBundle();
 
-    //@ ensures \result != null;
-    public final String getString(String key);
+    public final /*@ non_null @*/ String getString(String key);
     
     public final String[] getStringArray(String key);
     
@@ -40,9 +39,7 @@ public abstract class ResourceBundle {
     
     protected void setParent(ResourceBundle parent);
 
-    //@ assignable \nothing;
-    //@ ensures \result != null;
-    public static final ResourceBundle getBundle(String baseName);
+    public static final /*@ pure non_null @*/ ResourceBundle getBundle(String baseName);
     
     public static final ResourceBundle getBundle(String baseName, Locale locale);
     

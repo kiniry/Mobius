@@ -44,11 +44,10 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     public StringBuffer(int i);
 
     /*@ public normal_behavior
-      @   requires s != null;
       @   ensures this.accumulatedString.equals(s);
       @*/
     //@ pure
-    public StringBuffer(String s);
+    public StringBuffer(/*@ non_null @*/ String s);
 
     /*@ public normal_behavior
       @   modifies accumulatedString;
@@ -80,12 +79,12 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
       @*/
     public synchronized StringBuffer append(String s);
 
-    /*@   public normal_behavior
-      @     requires o != null;
-      @     assignable accumulatedString;
-      @     ensures accumulatedString
-      @            .equals(\old(String.concat(accumulatedString,o.theString)));
-      @     ensures \result == this;
+    /*@ public normal_behavior
+      @   requires o != null;
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(String.concat(accumulatedString,o.theString)));
+      @   ensures \result == this;
       @ also
       @ public normal_behavior
       @   requires o == null;
@@ -190,81 +189,75 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     public synchronized void getChars(int srcBegin, int srcEnd,
                                       char[] dst, int dstBegin);
 
-    /*@   public normal_behavior
-      @     requires str != null;
-      @     ensures \result != -1 <==> (0 <= \result && \result <=
-      @                            accumulatedString.length()-str.length());
-      @     ensures  accumulatedString.startsWith(str, \result);
-      @     ensures (\forall int i; 0<=i && i < \result;
-      @                     !accumulatedString.startsWith(str,i));
+    /*@ public normal_behavior
+      @   ensures \result != -1 <==> (0 <= \result && \result <=
+      @                              accumulatedString.length()-str.length());
+      @   ensures  accumulatedString.startsWith(str, \result);
+      @   ensures (\forall int i; 0<=i && i < \result;
+      @                           !accumulatedString.startsWith(str,i));
       @ also
-      @   public normal_behavior
-      @     requires str != null;
-      @     requires !(\exists int k; 0 <= k && k < accumulatedString.length();
-      @                               accumulatedString.startsWith(str, k));
-      @     ensures \result == -1;
+      @ public normal_behavior
+      @   requires !(\exists int k; 0 <= k && k < accumulatedString.length();
+      @                             accumulatedString.startsWith(str, k));
+      @   ensures \result == -1;
       @*/
-    public /*@ pure @*/ int indexOf(String str);
+    public /*@ pure @*/ int indexOf(/*@ non_null @*/ String str);
 
-    /*@  public normal_behavior
-      @    requires str != null;
-      @    requires (\exists int k; 0 <= k && k < accumulatedString.length();
+    /*@ public normal_behavior
+      @   requires (\exists int k; 0 <= k && k < accumulatedString.length();
+      @                            accumulatedString.startsWith(str, k)
+      @                            && k >= Math.min(fromIndex, str.length()));
+      @   ensures \result
+      @           == (\min int k; 0 <= k && k < accumulatedString.length()
+      @                           && accumulatedString.startsWith(str, k)
+      @                           && k >= Math.min(fromIndex, str.length());
+      @                           k);
+      @ also
+      @ public normal_behavior
+      @   requires !(\exists int k; 0 <= k && k < accumulatedString.length();
       @                             accumulatedString.startsWith(str, k)
       @                             && k >= Math.min(fromIndex, str.length()));
-      @    ensures \result
-      @            == (\min int k; 0 <= k && k < accumulatedString.length()
-      @                            && accumulatedString.startsWith(str, k)
-      @                            && k >= Math.min(fromIndex, str.length());
-      @                            k);
-      @ also
-      @   public normal_behavior
-      @     requires str != null;
-      @     requires !(\exists int k; 0 <= k && k < accumulatedString.length();
-      @                               accumulatedString.startsWith(str, k)
-      @                               && k >= Math.min(fromIndex, str.length()));
-      @     ensures \result == -1;
+      @   ensures \result == -1;
       @*/
-    public /*@ pure @*/ synchronized int indexOf(String str, int fromIndex);
+    public /*@ pure @*/ synchronized int indexOf(/*@ non_null @*/ String str,
+                                                 int fromIndex);
 
-    /*@  public normal_behavior
-      @     requires str != null;
-      @     requires (\exists int k; 0 <= k && k < accumulatedString.length();
-      @                              accumulatedString.startsWith(str, k));
-      @     assignable \nothing;
-      @     ensures \result
-      @             == (\max int k; 0 <= k && k < accumulatedString.length()
-      @                             && accumulatedString.startsWith(str, k);
-      @                             k);
+    /*@ public normal_behavior
+      @   requires (\exists int k; 0 <= k && k < accumulatedString.length();
+      @                            accumulatedString.startsWith(str, k));
+      @   assignable \nothing;
+      @   ensures \result
+      @           == (\max int k; 0 <= k && k < accumulatedString.length()
+      @                           && accumulatedString.startsWith(str, k);
+      @                           k);
       @ also
-      @   public normal_behavior
-      @     requires str != null;
-      @     requires !(\exists int k; 0 <= k && k < accumulatedString.length();
-      @                               accumulatedString.startsWith(str, k));
-      @     assignable \nothing;
-      @     ensures \result == -1;
+      @ public normal_behavior
+      @   requires !(\exists int k; 0 <= k && k < accumulatedString.length();
+      @                             accumulatedString.startsWith(str, k));
+      @   assignable \nothing;
+      @   ensures \result == -1;
       @*/
-    public /*@ pure @*/ synchronized int lastIndexOf(String str);
+    public /*@ pure @*/ synchronized int lastIndexOf(/*@ non_null @*/ String str);
 
-    /*@   public normal_behavior
-      @     requires str != null;
-      @     requires (\exists int k; 0 <= k && k < accumulatedString.length();
-      @                              accumulatedString.startsWith(str, k)
-      @                              && k <= Math.min(fromIndex, str.length()));
-      @     ensures \result
-      @             == (\max int k; 0 <= k && k < accumulatedString.length()
-      @                             && accumulatedString.startsWith(str, k)
-      @                             && k <= Math.min(fromIndex, str.length());
-      @                             k);
+    /*@ public normal_behavior
+      @   requires (\exists int k; 0 <= k && k < accumulatedString.length();
+      @                            accumulatedString.startsWith(str, k)
+      @                            && k <= Math.min(fromIndex, str.length()));
+      @   ensures \result
+      @           == (\max int k; 0 <= k && k < accumulatedString.length()
+      @                           && accumulatedString.startsWith(str, k)
+      @                           && k <= Math.min(fromIndex, str.length());
+      @                           k);
       @ also
-      @   public normal_behavior
-      @     requires str != null;
-      @     requires !(\exists int k; 0 <= k && k < accumulatedString.length();
-      @                               accumulatedString.startsWith(str, k)
-      @                               && k <= Math.min(fromIndex, str.length()));
-      @     assignable \nothing;
-      @     ensures \result == -1;
+      @ public normal_behavior
+      @   requires !(\exists int k; 0 <= k && k < accumulatedString.length();
+      @                             accumulatedString.startsWith(str, k)
+      @                             && k <= Math.min(fromIndex, str.length()));
+      @   assignable \nothing;
+      @   ensures \result == -1;
       @*/
-    public /*@ pure @*/ synchronized int lastIndexOf(String str, int fromIndex);
+    public /*@ pure @*/ synchronized int lastIndexOf(/*@ non_null @*/ String str,
+                                                     int fromIndex);
 
     /*@ also
       @ public normal_behavior

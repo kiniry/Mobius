@@ -23,9 +23,7 @@ public class ByteArrayInputStream extends InputStream {
 
     // CONSTRUCTORS
 
-    /*@
-      @ public normal_behavior
-      @    requires bytes != null;
+    /*@ public normal_behavior
       @    ensures initialInputStream();
       @    ensures buf == bytes;
       @    ensures pos == 0;
@@ -35,11 +33,9 @@ public class ByteArrayInputStream extends InputStream {
       @    ensures valid();
       @ pure
       @*/
-    public ByteArrayInputStream(byte[] bytes);
+    public /*@ non_null pure @*/ ByteArrayInputStream(/*@ non_null @*/ byte[] bytes);
 
-    /*@
-      @ public normal_behavior
-      @    requires bytes != null;
+    /*@ public normal_behavior
       @    ensures initialInputStream();
       @    ensures buf == bytes;
       @    ensures pos == off;
@@ -47,9 +43,8 @@ public class ByteArrayInputStream extends InputStream {
       @    ensures mark == off;
       @    ensures markPosition == mark && markLimit == buf.length;
       @    ensures valid();
-      @ pure
       @*/
-    public ByteArrayInputStream(byte[] bytes, int off, int len);
+    public /*@ pure @*/ ByteArrayInputStream(/*@ non_null @*/ byte[] bytes, int off, int len);
 
     // METHODS
 

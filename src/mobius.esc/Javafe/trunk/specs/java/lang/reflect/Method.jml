@@ -38,15 +38,9 @@ class Method extends AccessibleObject implements Member {
 
     Method copy();
 
-    /*@ also public normal_behavior
-      @   ensures \result != null;
-      @*/
-    public /*@ pure @*/ Class getDeclaringClass();
+    public /*@ pure non_null @*/ Class getDeclaringClass();
 
-    /*@ also public normal_behavior
-      @   ensures \result != null;
-      @*/
-    public /*@ pure @*/ String getName();
+    public /*@ pure non_null @*/ String getName();
 
     public /*@ pure @*/ int getModifiers();
 
@@ -55,15 +49,9 @@ class Method extends AccessibleObject implements Member {
       @*/
     public /*@ pure non_null @*/ Class getReturnType();
 
-    /*@ public normal_behavior
-      @   ensures \result != null;
-      @*/
-    public /*@ pure @*/ Class[] getParameterTypes();
+    public /*@ pure non_null @*/ Class[] getParameterTypes();
 
-    /*@ public normal_behavior
-      @   ensures \result != null;
-      @*/
-    public /*@ pure @*/  Class[] getExceptionTypes();
+    public /*@ pure non_null @*/  Class[] getExceptionTypes();
 
     public /*@ pure @*/ boolean equals(Object obj);
 
@@ -84,7 +72,8 @@ class Method extends AccessibleObject implements Member {
       @ 	getReturnType().isPrimitive() && getReturnType() != void.class 
       @			==> \result != null;
       @*/
-    public Object invoke(Object obj, Object[] args)
+    public /*@ non_null @*/ Object invoke(/*@ non_null @*/ Object obj,
+                                          /*@ non_null @*/ Object[] args)
 	throws IllegalAccessException, IllegalArgumentException,
                InvocationTargetException;
 

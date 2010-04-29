@@ -244,14 +244,14 @@ public /*@ pure @*/ final
 
 	/*@ also
 	  @   public normal_behavior
-	  @     requires obj != null && (obj instanceof Short);
+	  @     requires (obj instanceof Short);
 	  @     ensures \result == (theShort == ((Short) obj).shortValue());
 	  @   also
 	  @   public normal_behavior
 	  @     requires obj == null || !(obj instanceof Short);
 	  @     ensures !\result;
 	  @*/
-	public boolean equals(Object obj) ;
+	public boolean equals(/*@ non_null @*/ Object obj) ;
 
 	/*@ public normal_behavior
 	  @ {|
@@ -269,13 +269,13 @@ public /*@ pure @*/ final
 
 	/*@ also
 	  @     public normal_behavior
-	  @       requires o != null && (o instanceof Short);
+	  @       requires (o instanceof Short);
 	  @       ensures \result == compareTo((Short) o);
 	  @   also
 	  @     public exceptional_behavior
 	  @       requires o == null && !(o instanceof Short);
 	  @       signals(ClassCastException);
 	  @*/
-	public int compareTo(Object o) throws ClassCastException;
+	public int compareTo(/*@ non_null @*/ Object o) throws ClassCastException;
 
     }

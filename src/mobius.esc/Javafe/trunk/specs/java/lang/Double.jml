@@ -36,30 +36,29 @@ public /*@ pure @*/ final class Double extends Number implements Comparable {
 	an infinite or NaN value).
     */
     /*@
-    @     public normal_behavior
-    @	  requires s != null;
-    @	  {|
-    @	    requires s.equals("NaN");
-    @	    ensures !\result;
-    @	  also
-    @	    requires s.equals("");
-    @	    ensures !\result;
-    @	  also
-    @	    requires s.equals("Infinity") || s.equals("-Infinity");
-    @	    ensures !\result;
-    @	  also
-    @	    requires s.equals("0.0") || s.equals("-0.0");
-    @	    ensures \result;
-    @	  also 
-    @	    requires (* parseable to a floating-point double
-    @                     by the IEEE 754 standards *);
-    @	    ensures \result;
-    @	  also
-    @	    requires !(* parseable to a floating-point double
-    @                      by the IEEE 754 standards *);
-    @	    ensures !\result;
-    @	  |}
-    @  public static pure model boolean parseable( String s ) {
+      @     public normal_behavior
+      @	  {|
+      @	    requires s.equals("NaN");
+      @	    ensures !\result;
+      @	  also
+      @	    requires s.equals("");
+      @	    ensures !\result;
+      @	  also
+      @	    requires s.equals("Infinity") || s.equals("-Infinity");
+      @	    ensures !\result;
+      @	  also
+      @	    requires s.equals("0.0") || s.equals("-0.0");
+      @	    ensures \result;
+      @	  also 
+      @	    requires (* parseable to a floating-point double
+      @                     by the IEEE 754 standards *);
+      @	    ensures \result;
+      @	  also
+      @	    requires !(* parseable to a floating-point double
+      @                      by the IEEE 754 standards *);
+      @	    ensures !\result;
+      @	  |}
+      @  public static pure model boolean parseable(non_null String s) {
 	    try { Double d = Double.valueOf(s); return true; }
 	    catch (Exception e) { return false; }
 	}
@@ -89,24 +88,23 @@ public /*@ pure @*/ final class Double extends Number implements Comparable {
     public static /*@ pure @*/ /*@ non_null @*/ String toString(double d);
 
     /*@ public normal_behavior
-      @     requires s != null && parseable(s);
-      @     ensures  \result.equals(new Double(parseDouble(s)));
+      @   requires parseable(s);
+      @   ensures \result.equals(new Double(parseDouble(s)));
       @ also
-      @   public exceptional_behavior
-      @     requires s != null && !parseable(s);
-      @     signals(NumberFormatException);
+      @ public exceptional_behavior
+      @   requires !parseable(s);
+      @   signals (NumberFormatException);
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/ Double valueOf(
-        /*@ non_null @*/ String s)
+    public static /*@ pure non_null @*/ Double valueOf(/*@ non_null @*/ String s)
         throws NumberFormatException;
 
     /*@ public normal_behavior
-      @    requires s != null && parseable(s);
-      @    ensures true;  // FIXME - put some conditions on the result
+      @  requires parseable(s);
+      @  ensures true;  // FIXME - put some conditions on the result
       @ also
       @ public exceptional_behavior
-      @   requires s != null && !parseable(s);
-      @   signals(NumberFormatException);
+      @   requires !parseable(s);
+      @   signals (NumberFormatException);
       @*/
     public static /*@ pure @*/ double parseDouble(/*@ non_null @*/ String s)
         throws NumberFormatException;
@@ -198,14 +196,15 @@ public /*@ pure @*/ final class Double extends Number implements Comparable {
     public int hashCode();
 
     /*@ also
-      @   public normal_behavior
-      @     requires obj != null && (obj instanceof Double);
-      @     ensures \result == identical(theDouble,((Double)obj).doubleValue());
-      @  also public normal_behavior
-      @     requires obj != null && !(obj instanceof Double);
-      @     ensures !\result;
+      @ public normal_behavior
+      @   requires (obj instanceof Double);
+      @   ensures \result == identical(theDouble,((Double)obj).doubleValue());
+      @ also
+      @ public normal_behavior
+      @   requires !(obj instanceof Double);
+      @   ensures !\result;
       @*/
-    public boolean equals(Object obj);
+    public boolean equals(/*@ non_null @*/ Object obj);
 
     /*@ public normal_behavior
       @ {|
@@ -276,7 +275,6 @@ public /*@ pure @*/ final class Double extends Number implements Comparable {
     public static /*@ pure @*/ native double longBitsToDouble(long bits);
 
     /*@ public normal_behavior
-      @     requires anotherDouble != null;
       @     {|
       @       requires anotherDouble.isNaN() && this.isNaN();
       @       ensures \result == 0;
@@ -315,15 +313,15 @@ public /*@ pure @*/ final class Double extends Number implements Comparable {
     public int compareTo(/*@ non_null @*/ Double anotherDouble);
 
     /*@ also
-      @     public normal_behavior
-      @       requires o != null && (o instanceof Double);
-      @       ensures \result == compareTo((Double) o);
-      @   also
-      @     public exceptional_behavior
-      @       requires o == null || !(o instanceof Double);
-      @       signals_only ClassCastException;
+      @ public normal_behavior
+      @   requires (o instanceof Double);
+      @   ensures \result == compareTo((Double) o);
+      @ also
+      @ public exceptional_behavior
+      @   requires o == null || !(o instanceof Double);
+      @   signals_only ClassCastException;
       @*/
-    public int compareTo(Object o);
+    public int compareTo(/*@ non_null @*/ Object o);
     
     /*@ public normal_behavior
       @    assignable \nothing;

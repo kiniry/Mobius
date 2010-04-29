@@ -72,17 +72,15 @@ public  /*@ pure @*/ final
       @   ensures parseable(\result,10);
       @   ensures i == parseInt(\result, 10);
       @ also public normal_behavior
-      @   ensures \result != null;
       @   ensures i == 0 ==> \result.length() == 1;
       @   ensures i >  0 ==> \result.length() >= 1;
       @   ensures i <  0 ==> \result.length() >= 2;
       @   ensures i == 0 ==> \result.equals("0");
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/ String toString(int i,
-                                                                  int radix);
+    public static /*@ pure non_null @*/ String toString(int i,
+                                                        int radix);
 
     /*@ public normal_behavior
-      @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures \result.length() >= 1;
       @ also public normal_behavior
@@ -99,10 +97,9 @@ public  /*@ pure @*/ final
       @   ensures \result.equals(Long.toString(pos_i, 16));
       @   ensures (int)Long.parseLong(\result,16) == i;
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/ String toHexString(int i);
+    public static /*@ pure non_null @*/ String toHexString(int i);
 
     /*@ public normal_behavior
-      @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures \result.length() >= 1;
       @ also public normal_behavior
@@ -119,10 +116,9 @@ public  /*@ pure @*/ final
       @   ensures \result.equals(Long.toString(pos_i, 8));
       @   ensures (int)Long.parseLong(\result,8) == i;
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/ String toOctalString(int i);
+    public static /*@ pure non_null @*/ String toOctalString(int i);
 
     /*@ public normal_behavior
-      @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures \result.length() >= 1;
       @ also public normal_behavior
@@ -139,11 +135,10 @@ public  /*@ pure @*/ final
       @   ensures \result.equals(Long.toString(pos_i, 2));
       @   ensures (int)Long.parseLong(\result,2) == i;
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/ String toBinaryString(int i);
+    public static /*@ pure non_null @*/ String toBinaryString(int i);
             
 
     /*@ public normal_behavior
-      @   ensures \result != null;
       @   ensures parseable(\result);
       @   ensures \result.equals(toString(i, 10));
       @   ensures i == parseInt(\result, 10);
@@ -152,7 +147,7 @@ public  /*@ pure @*/ final
       @   ensures i <  0 ==> \result.length() >= 2;
       @   ensures i == 0 ==> \result.equals("0");
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/ String toString(int i);
+    public static /*@ pure non_null @*/ String toString(int i);
 
     /*@  public normal_behavior
       @    requires parseable(s, radix);
@@ -270,41 +265,37 @@ public  /*@ pure @*/ final
       @*/
     public int hashCode();
    
-    /*@ 
-      @   public normal_behavior
-      @     requires i != null && ii != null;
-      @     ensures \result <==> (i.theInteger == ii.theInteger);
-      @   also
-      @   public normal_behavior
-      @     requires i==null || ii== null;
-      @     ensures \result <==> (i == ii);
+    /*@ public normal_behavior
+      @   ensures \result <==> (i.theInteger == ii.theInteger);
+      @ also
+      @ public normal_behavior
+      @   requires i == null || ii == null;
+      @   ensures \result <==> (i == ii);
       @ pure //-@ function
-      @ public model static boolean equalsInteger(Integer i, Integer ii);
+      @ public model static boolean equalsInteger(non_null Integer i, non_null Integer ii);
       @*/
 
     /*@ also
       @   public normal_behavior
-      @     requires obj != null && (obj instanceof Integer);
+      @     requires (obj instanceof Integer);
       @     ensures \result <==> equalsInteger(this,(Integer)obj);
       @   also
       @   public normal_behavior
       @     requires obj == null || !(obj instanceof Integer);
       @     ensures !\result;
       @*/
-    public boolean equals(Object obj);
+    public boolean equals(/*@ non_null @*/ Object obj);
   
     /*@ public normal_behavior
       @   ensures (\result == null && getInteger(nm,null) == null) ||
-      @           \result.equals(getInteger(nm, null));
+      @            \result.equals(getInteger(nm, null));
       @*/
-    public static /*@ pure @*/
-        Integer getInteger(String nm);
+    public static /*@ pure @*/ Integer getInteger(String nm);
 
     /*@ public normal_behavior
       @   ensures \result.equals(getInteger(nm, new Integer(val)));
       @*/
-    public static /*@ pure @*/ 
-        Integer getInteger(String nm, int val);
+    public static /*@ pure @*/ Integer getInteger(String nm, int val);
 
     /*@ public normal_behavior
       @   requires nm != null && !nm.equals("") 
@@ -336,7 +327,6 @@ public  /*@ pure @*/ final
         throws NumberFormatException;
 
     /*@ public normal_behavior
-      @ requires anotherInteger != null;
       @ {|
       @   requires theInteger == anotherInteger.intValue();
       @   ensures \result == 0;
@@ -351,20 +341,20 @@ public  /*@ pure @*/ final
       @   requires anotherInteger == null;
       @   signals_only NullPointerException;
       @*/
-    public int compareTo(Integer anotherInteger);
+    public int compareTo(/*@ non_null @*/ Integer anotherInteger);
             
     /*@ also
       @   public normal_behavior
-      @     requires o != null && (o instanceof Integer);
+      @     requires (o instanceof Integer);
       @     ensures \result == compareTo((Integer) o);
       @ also
       @   public exceptional_behavior
-      @     requires o != null && !(o instanceof Integer);
+      @     requires !(o instanceof Integer);
       @     signals_only ClassCastException;
       @ also public exceptional_behavior
       @   requires o == null;
       @   signals_only NullPointerException;
       @*/
-    public int compareTo(Object o);
+    public int compareTo(/*@ non_null @*/ Object o);
 
 }

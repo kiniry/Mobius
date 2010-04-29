@@ -174,7 +174,6 @@ public class Throwable extends Object
     public /*@ pure @*//*@non_null*/ StackTraceElement[] getStackTrace();
 
     /*@ public normal_behavior
-      @   requires stackTrace != null;
       @   requires \nonnullelements(stackTrace);
       @   assignable _stackTrace;
       @   ensures _stackTrace.equals (stackTrace);
@@ -189,5 +188,5 @@ public class Throwable extends Object
       @   assignable \nothing;
       @   signals_only NullPointerException;
       @*/
-    public void setStackTrace(StackTraceElement[] stackTrace);
+    public void setStackTrace(/*@ non_null @*/ StackTraceElement[] stackTrace);
 }

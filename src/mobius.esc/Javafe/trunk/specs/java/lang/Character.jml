@@ -235,17 +235,17 @@ public /*@ pure @*/ final
 
     /*@ also
       @  public normal_behavior
-      @   ensures \result !=null && \result.equals(String.valueOf(ch_));
+      @   ensures \result.equals(String.valueOf(ch_));
       @   ensures \result.charAt(0) == ch_;
       @*/
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     /*@ 
       @  public normal_behavior
-      @   ensures \result !=null && \result.equals(String.valueOf(c));
+      @   ensures \result.equals(String.valueOf(c));
       @   ensures \result.charAt(0) == c;
       @*/
-    public static /*@ pure @*/ String toString(char c);
+    public static /*@ pure non_null @*/ String toString(char c);
 
     /*@  public normal_behavior
       @   ensures \result <==> getType(ch) == LOWERCASE_LETTER;

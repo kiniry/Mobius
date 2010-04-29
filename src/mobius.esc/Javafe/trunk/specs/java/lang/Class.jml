@@ -35,11 +35,10 @@ public final class Class implements java.io.Serializable {
     private Class();
 
     /*@ also public normal_behavior
-      @   ensures \result != null && !\result.equals("")
+      @   ensures !\result.equals("")
       @        && (* \result is the name of this class object *);
       @*/
-    //@ pure
-    public String toString();
+    public /*@ pure non_null @*/ String toString();
 
     /// *@ also public normal_behavior
       // @   ensures \result <==> (this == o);
@@ -48,13 +47,10 @@ public final class Class implements java.io.Serializable {
     //public boolean equals(Object o);
 
     /*@   public normal_behavior
-      @     requires className != null
-      @         && (* a class named className has been or can be loaded
-      @               by the defining loader of the current class *);
-      @     ensures \result != null;
+      @     requires (* a class named className has been or can be loaded
+      @                 by the defining loader of the current class *);
       @ also
       @   public behavior
-      @     requires className != null;
       @     ensures true;
       @     signals_only ClassNotFoundException;
             // JML does not allow Errors in specs
@@ -65,18 +61,14 @@ public final class Class implements java.io.Serializable {
       @     signals (ClassNotFoundException)
       @               (* if className can't be located *);
       @*/
-    //@ pure
-    public static /*@ non_null @*/
+    public static /*@ pure non_null @*/
         Class forName(/*@ non_null @*/ String className)
         throws ClassNotFoundException;
 
     /*@   public normal_behavior
-      @     requires name != null && loader != null
-      @         && (* a class named name has been/can be loaded by loader *);
-      @     ensures \result != null;
+      @     requires (* a class named name has been/can be loaded by loader *);
       @ also
       @   public behavior
-      @     requires name != null && loader != null;
       @     ensures true;
       @     signals_only ClassNotFoundException;
             // JML does not allow Errors in specs
@@ -191,31 +183,24 @@ public final class Class implements java.io.Serializable {
     public /*@ pure non_null @*/ Constructor getConstructor(Class[] parameterTypes)
         throws NoSuchMethodException, SecurityException;
 
-    //@ ensures \result != null;
     //@ ensures \nonnullelements(\result);
-    public /*@ pure @*/ Class[] getDeclaredClasses() throws SecurityException;
+    public /*@ pure non_null @*/ Class[] getDeclaredClasses() throws SecurityException;
 
-    //@ ensures \result != null;
     //@ ensures \nonnullelements(\result);
-    public /*@ pure @*/ Field[] getDeclaredFields() throws SecurityException;
+    public /*@ pure non_null @*/ Field[] getDeclaredFields() throws SecurityException;
 
-    //@ ensures \result != null;
     //@ ensures \nonnullelements(\result);
-    public /*@ pure @*/ Method[] getDeclaredMethods() throws SecurityException;
+    public /*@ pure non_null @*/ Method[] getDeclaredMethods() throws SecurityException;
 
     public /*@ pure @*/ Constructor[] getDeclaredConstructors() throws SecurityException;
 
-
-    //@ non_null
-    public /*@ pure @*/ Field getDeclaredField(String name)
+    public /*@ pure non_null @*/ Field getDeclaredField(String name)
         throws NoSuchFieldException, SecurityException;
 
-    //@ non_null
-    public /*@ pure @*/ Method getDeclaredMethod(String name, Class[] parameterTypes)
+    public /*@ pure non_null @*/ Method getDeclaredMethod(String name, Class[] parameterTypes)
         throws NoSuchMethodException, SecurityException;
 
-    //@ non_null
-    public /*@ pure @*/ Constructor getDeclaredConstructor(Class[] parameterTypes)
+    public /*@ pure non_null @*/ Constructor getDeclaredConstructor(Class[] parameterTypes)
         throws NoSuchMethodException, SecurityException;
 
     public /*@ pure @*/ InputStream getResourceAsStream(String name);

@@ -36,29 +36,28 @@ public /*@ pure @*/ final class Float extends Number implements Comparable {
 	an infinite or NaN value).
     */
     /*@   public normal_behavior
-    @     requires s != null;
-    @     {|
-    @       requires s.equals("NaN");
-    @       ensures !\result;
-    @     also
-    @       requires s.equals("Infinity") || s.equals("-Infinity");
-    @       ensures !\result;
-    @     also
-    @	    requires s.equals("");
-    @       ensures !\result;
-    @	  also
-    @       requires s.equals("0.0") || s.equals("-0.0");
-    @       ensures \result;
-    @     also 
-    @       requires (* s is parseable to a float
-    @                     by the IEEE 754 standards *);
-    @       ensures \result;
-    @     also
-    @       requires !(* s is parseable to a float
-    @                      by the IEEE 754 standards *);
-    @       ensures !\result;
-    @     |}
-    @  public static model pure boolean parseable( String s ) {
+      @     {|
+      @       requires s.equals("NaN");
+      @       ensures !\result;
+      @     also
+      @       requires s.equals("Infinity") || s.equals("-Infinity");
+      @       ensures !\result;
+      @     also
+      @	    requires s.equals("");
+      @       ensures !\result;
+      @	  also
+      @       requires s.equals("0.0") || s.equals("-0.0");
+      @       ensures \result;
+      @     also 
+      @       requires (* s is parseable to a float
+      @                     by the IEEE 754 standards *);
+      @       ensures \result;
+      @     also
+      @       requires !(* s is parseable to a float
+      @                      by the IEEE 754 standards *);
+      @       ensures !\result;
+      @     |}
+      @  public static model pure boolean parseable(non_null String s) {
 	    try { Float d = Float.valueOf(s); return true; }
 	    catch (Exception e) { return false; }
 	}
@@ -91,30 +90,29 @@ public /*@ pure @*/ final class Float extends Number implements Comparable {
     public static /*@ pure @*/ /*@ non_null @*/ String toString(float f);
 
     /*@ public normal_behavior
-      @   requires s != null && parseable(s);
-      @   ensures  \result.equals(new Float(parseFloat(s)));
+      @   requires parseable(s);
+      @   ensures \result.equals(new Float(parseFloat(s)));
       @ also
       @ public exceptional_behavior
-      @   requires s != null && !parseable(s);
-      @   signals(NumberFormatException);
+      @   requires !parseable(s);
+      @   signals (NumberFormatException);
       @*/
-    public static /*@ pure @*/ /*@ non_null @*/ Float valueOf(
-        /*@ non_null @*/ String s)
+    public static /*@ pure non_null @*/ Float valueOf(/*@ non_null @*/ String s)
         throws NumberFormatException;
 
     /*@ public normal_behavior
-      @    requires s != null && parseable(s);
-      @    ensures true;  // FIXME - put some conditions on the result
+      @   requires parseable(s);
+      @   ensures true;  // FIXME - put some conditions on the result
       @ also
       @ public exceptional_behavior
-      @   requires s != null && !parseable(s);
+      @   requires !parseable(s);
       @   signals(NumberFormatException);
       @*/
     public static /*@ pure @*/ float parseFloat(/*@ non_null @*/ String s)
         throws NumberFormatException;
 
     /*@ public normal_behavior
-      @   ensures \result ==  !(v == v);
+      @   ensures \result == !(v == v);
       @*/
     public static /*@ pure @*/ boolean isNaN(float v);
 
@@ -206,14 +204,15 @@ public /*@ pure @*/ final class Float extends Number implements Comparable {
     public int hashCode();
 
     /*@ also
-      @   public normal_behavior
-      @     requires obj != null && (obj instanceof Float);
-      @     ensures \result == identical(theFloat, ((Float)obj).floatValue());
-      @  also public normal_behavior
-      @     requires obj != null && !(obj instanceof Float);
-      @     ensures !\result;
+      @ public normal_behavior
+      @   requires (obj instanceof Float);
+      @   ensures \result == identical(theFloat, ((Float)obj).floatValue());
+      @ also
+      @ public normal_behavior
+      @   requires !(obj instanceof Float);
+      @   ensures !\result;
       @*/
-    public boolean equals(Object obj);
+    public boolean equals(/*@ non_null @*/ Object obj);
 
     /*@ public normal_behavior
       @ {|
@@ -280,7 +279,6 @@ public /*@ pure @*/ final class Float extends Number implements Comparable {
     public static /*@ pure @*/ native float intBitsToFloat(int bits);
 
     /*@ public normal_behavior
-      @   requires anotherFloat != null;
       @   {|
       @     requires this.isNaN() && anotherFloat.isNaN();
       @     ensures \result == 0;
@@ -320,14 +318,14 @@ public /*@ pure @*/ final class Float extends Number implements Comparable {
 
     /*@ also
       @   public normal_behavior
-      @     requires o != null && (o instanceof Float);
+      @     requires (o instanceof Float);
       @     ensures \result == compareTo((Float) o);
       @  also
       @   public exceptional_behavior
       @     requires o == null || !(o instanceof Float);
       @     signals_only ClassCastException;
       @*/
-    public int compareTo(Object o);
+    public int compareTo(/*@ non_null @*/ Object o);
 
     /*@ public normal_behavior
       @    assignable \nothing;
