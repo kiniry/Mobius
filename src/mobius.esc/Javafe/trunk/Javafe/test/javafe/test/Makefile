@@ -23,7 +23,7 @@ clean:
 typecheckJDK: typecheckOldJDK typecheckJDK14
 
 typecheckOldJDK:
-	-for d in ${JDK_PRE14_SOURCES}; do \
+	@for d in ${JDK_PRE14_SOURCES}; do \
 	    echo "===== type checking $${d}" ;\
 	    if [ -e $${d} ]; then \
 	    (cd $${d} && \
@@ -39,7 +39,7 @@ typecheckOldJDK:
 	done
 
 typecheckJDK14:
-	-for d in ${JDK_14_SOURCES}; do \
+	@for d in ${JDK_14_SOURCES}; do \
 	    echo "===== type checking $${d}" ;\
 	    if [ -e $${d} ]; then \
 	    (cd $${d} && \
@@ -60,13 +60,13 @@ typecheckJavafe:
 	@echo "===== type checking the Javafe package ====="
 	@cd ${JAVAFE_ROOT}/Javafe/java && \
 		for d in ast parser tc util filespace reader genericfile ; do \
-		echo -n "$${d}	" ;\
+		/bin/echo -n "$${d}	" ;\
 		echo `find javafe/$${d} -name '*.java'` | xargs \
 			${JAVA} -classpath $(call canonicalize,../classfiles${EXTRA_CP}:${BCEL_LIB}) javafe.test.Print \
 			-classpath "${call canonicalize,.:../../Utils:${EXTRA_CP}:${BCEL_LIB}}" \
 			-typecheck -noprint  ;\
 		done 
-	@echo -n "javafe/.	"
+	@/bin/echo -n "javafe/.	"
 	@cd ${JAVAFE_ROOT}/Javafe/java && \
 		${JAVA} -classpath $(call canonicalize,../classfiles${EXTRA_CP}:${BCEL_LIB}) javafe.test.Print \
 		-classpath "${call canonicalize,.:../../Utils:${EXTRA_CP}:${BCEL_LIB}}" \
