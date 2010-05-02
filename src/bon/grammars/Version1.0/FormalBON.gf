@@ -41,7 +41,7 @@
 	IsTheNounVerb quantifier noun verb = {s =  verb.s ++ ":" ++ "BOOLEAN" ++ "(" ++ quantifier.s ++ noun.s ++")"};
 	HowManyNoun idet noun = {s = noun.s ++ ":" ++ idet.s};
         WhichNoun iquant noun =   {s = iquant.s ++ ":" ++ noun.s};
-        --CommandVerbNoun  verb2 noun  =mkPhr(mkQS(mkCl (passiveVP verb2 (mkNP noun))));
+        --VerbNoun  verb2 noun  =mkPhr(mkQS(mkCl (passiveVP verb2 (mkNP noun))));
        
         --Commands
         ShortCommand imp  = {s = imp.s};
@@ -57,7 +57,13 @@
 	ItHasNumberAtLeast  pronoun verb2 numeraladverb number noun =  {s = noun.s ++".count" ++ numeraladverb.s  ++ number.s ++ "(" ++ pronoun.s ++verb2.s  ++")"};
 	NounHasNumber quantifier noun1 verb2  number noun2 = {s = noun2.s ++ ".count" ++ "=" ++ number.s ++"(" ++ quantifier.s ++noun1.s ++ verb2.s ++")"};--REMOVE SPACE
         ItHasNumber  pronoun verb2  number noun = {s = noun.s ++ ".count" ++ "="  ++ number.s ++"(" ++ pronoun.s ++ verb2.s ++ ")"};
-       	
+       	TheNounExists noun  =  {s=  noun.s ++ "/= VOID" };
+       	ANounExists noun  =  {s=  noun.s ++ "/= VOID" };
+       	NoNounExists noun  =  {s=  noun.s ++ "= VOID" };
+       	TheNounIsNoun noun1 noun2 = {s=  noun1.s ++ "=" ++ noun2.s };
+	TheNounIsNotNoun noun1 noun2 = {s=  noun1.s ++ "/=" ++ noun2.s };
+	ANounIsNoun noun1 noun2 = {s=  noun1.s ++ "=" ++ noun2.s };
+        ANounIsNotNoun noun1 noun2 = {s=  noun1.s ++ "/=" ++ noun2.s };
        	
        	--Noun Phrases
        	PronounNounPhrase  pronoun noun = {s = noun.s ++ pronoun.s};

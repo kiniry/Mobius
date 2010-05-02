@@ -46,10 +46,10 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     IsTheNounVerb: Quantifier -> Noun -> Verb -> Phrase;
     HowManyNoun :IDeterminer -> Noun -> Phrase;
     WhichNoun : IQuantifier -> Noun  -> Phrase;
+    VerbNoun: Verb2 -> Noun -> Phrase;
     
     
     --Commands
-    CommandVerbNoun: Verb2 -> Noun -> Phrase;
     ShortCommand:Imperative -> Phrase;
     ActionCommand : V -> Imperative;
     ActionNounCommand : V2 ->  N -> Imperative;
@@ -67,6 +67,13 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     ItHasNumberAtLeast:  Pronoun -> Verb2 -> NumeralAdverb -> Number -> Noun -> Sentence;
     NounHasNumber: Quantifier ->Noun -> Verb2 -> Number -> Noun -> Sentence;
     ItHasNumber:  Pronoun -> Verb2 -> Number -> Noun -> Sentence;
+    TheNounExists:  Noun -> Sentence;
+    ANounExists:  Noun -> Sentence;
+    NoNounExists: Noun -> Sentence;
+    TheNounIsNoun:Noun ->Noun ->Sentence;
+    TheNounIsNotNoun:Noun ->Noun ->Sentence;
+    ANounIsNoun:Noun ->Noun ->Sentence;
+    ANounIsNotNoun:Noun ->Noun ->Sentence;
     
     
     --Noun Phrases
@@ -85,13 +92,13 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     
     
     
-
+    
     What,Who:Interrogative;
     Its:Pronoun;
     Which : IQuantifier;
     HowMany: IDeterminer;
     AtMost,AtLeast: NumeralAdverb;
-    The,A_Quant,That,This,No: Quantifier;
+    The,QuantA,That,This,No: Quantifier;
     FullStop,Exclamation,QuestionMark: Punctuation;
     Can,Must: ComplementVerb;
     

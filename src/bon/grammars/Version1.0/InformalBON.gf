@@ -41,7 +41,7 @@
        IsTheNounVerb quantifier noun verb = mkPhr(mkQS  (mkQCl (mkCl (mkNP  (mkDet quantifier)  noun) verb )));
        HowManyNoun idet noun = mkPhr(mkQS  (mkQCl (mkIP idet noun)));
        WhichNoun iquant noun =   mkPhr(mkQS  (mkQCl (mkIP iquant noun )));
-       CommandVerbNoun  verb2 noun  =mkPhr(mkQS(mkCl (passiveVP verb2 (mkNP noun))));
+       VerbNoun  verb2 noun  =mkPhr(mkQS(mkCl (passiveVP verb2 (mkNP noun))));
       
        --Commands
        ShortCommand imp  = mkPhr( imp);
@@ -56,8 +56,13 @@
        NounHasNumberAtMost quantifier noun1 verb2 numeraladverb number noun2 = mkS( mkCl(mkNP (mkDet quantifier) noun1) verb2 (mkNP  (mkCard numeraladverb (mkCard number)) noun2));
        ItHasNumberAtLeast  pronoun verb2 numeraladverb number noun = mkS( mkCl(mkNP pronoun) verb2 (mkNP  (mkCard numeraladverb (mkCard number)) noun));
        NounHasNumber quantifier noun1 verb2  number noun2 = mkS( mkCl(mkNP (mkDet quantifier) noun1) verb2 (mkNP  (mkCard number) noun2));
-       
-       
+       TheNounExists  noun  =  mkS ( mkCl(mkNP (mkDet the_Quant) noun) exist_V);
+       ANounExists noun  =  mkS( mkCl(mkNP (mkDet a_Quant) noun) exist_V);
+       NoNounExists  noun  =  mkS ( mkCl(mkNP (mkDet no_Quant) noun) exist_V);
+       TheNounIsNoun noun1 noun2 = mkS ( mkCl(mkNP (mkDet the_Quant) noun1) (mkVP (mkNP (mkDet a_Quant) noun2)));
+       TheNounIsNotNoun noun1 noun2 = mkS negativePol ( mkCl(mkNP (mkDet the_Quant) noun1) (mkVP (mkNP (mkDet a_Quant) noun2)));
+       ANounIsNoun noun1 noun2 = mkS ( mkCl(mkNP (mkDet a_Quant) noun1) (mkVP (mkNP (mkDet a_Quant) noun2)));
+       ANounIsNotNoun noun1 noun2 = mkS negativePol ( mkCl(mkNP (mkDet a_Quant) noun1) (mkVP (mkNP (mkDet a_Quant) noun2)));
        
        -- NounPhrases
        
@@ -78,7 +83,7 @@
        Action v = v;
        TwoPlaceAction v2 = v2;
        ModifyAction adv = adv;
-       
+              
        --Interrogative
        What = whatSg_IP;
        Who = whoSg_IP;
@@ -100,7 +105,7 @@
        
        --Quantifier
        The = the_Quant;
-       A_Quant = a_Quant;
+       QuantA = a_Quant;
        That = that_Quant;
        This = this_Quant;
        No = no_Quant;
