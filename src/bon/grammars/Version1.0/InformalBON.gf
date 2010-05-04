@@ -1,7 +1,7 @@
     --# -path=.:../alltenses
 
     
-    concrete InformalBON of BONAbs = DictEng,NumeralEng ** open SyntaxEng,ParadigmsEng in{
+    concrete InformalBON of BONAbs = DictEng,BONTermsEng,NumeralEng ** open SyntaxEng,ParadigmsEng in{
   
       lincat
         Output = Text;       
@@ -36,6 +36,7 @@
        MakeTextSentence  sentence = mkText sentence;
        --MakeSentenceFromList conjunction sentencelist = mkS conjunction sentencelist;
        MakeSentenceConj conjunction sentence1 sentence2 = mkS conjunction sentence1 sentence2;
+       MakeSentenceifConj sentence1 sentence2 = mkS if_then_Conj sentence1 sentence2;
        --MakeSentenceList sentence1 sentence2 = mkListS sentence1 sentence2;
        --AddToSentenceList sentence sentencelist = mkListS sentence sentencelist;
        
@@ -79,6 +80,14 @@
        TheNounIsNotNoun noun1 noun2 = mkS negativePol ( mkCl(mkNP (mkDet the_Quant) noun1) (mkVP (mkNP (mkDet a_Quant) noun2)));
        ANounIsNoun noun1 noun2 = mkS ( mkCl(mkNP (mkDet a_Quant) noun1) (mkVP (mkNP (mkDet a_Quant) noun2)));
        ANounIsNotNoun noun1 noun2 = mkS negativePol ( mkCl(mkNP (mkDet a_Quant) noun1) (mkVP (mkNP (mkDet a_Quant) noun2)));
+       ItIsVerb verbphrase = mkS (mkCl verbphrase);
+       NounIsVerb noun verbphrase = mkS (mkCl (mkNP  (mkDet the_Quant)  noun) verbphrase);
+       ItIsVerbAdv verbphrase adverb = mkS (mkCl (mkVP verbphrase adverb));
+       NounIsVerbAdv noun verbphrase adverb = mkS (mkCl (mkNP  (mkDet the_Quant)  noun) (mkVP verbphrase adverb));
+       ItIsNotVerb verbphrase = mkS negativePol (mkCl verbphrase);
+       NounIsNotVerb noun verbphrase = mkS negativePol (mkCl (mkNP  (mkDet the_Quant)  noun) verbphrase);
+       ItIsNotVerbAdv verbphrase adverb = mkS negativePol(mkCl (mkVP verbphrase adverb));
+       NounIsNotVerbAdv noun verbphrase adverb = mkS negativePol (mkCl (mkNP  (mkDet the_Quant)  noun) (mkVP verbphrase adverb));
        
        -- NounPhrases
        
@@ -139,6 +148,9 @@
        
        --Conjunctios
        ConjunctionOr = or_Conj;
-       ConjunctionAnd = and_Conj;	      
+       ConjunctionAnd = and_Conj;
+       ConjunctionIf = if_then_Conj;
+       ConjunctionXor = mkConj "exlcusive or";
+       ConjunctionSuchThat = mkConj "such that";
 	
     } 

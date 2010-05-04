@@ -1,7 +1,7 @@
     --# -path=.:../alltenses
 
     
-    concrete FormalBON of BONAbs = DictEng, NumeralEng ** open SyntaxEng,ParadigmsEng in {
+    concrete FormalBON of BONAbs = DictEng,BONTermsEng,NumeralEng ** open SyntaxEng,ParadigmsEng in {
 
       lincat
         Output = { s : Str};      
@@ -34,6 +34,7 @@
        	MakeTextSentence  sentence = {s = sentence.s};
        	--MakeSentenceFromList conjunction sentencelist = {s = sentencelist.s ++ conjunction.s};
 	MakeSentenceConj conjunction sentence1 sentence2 = {s = sentence1.s ++ conjunction.s ++ sentence2.s};
+	MakeSentenceifConj sentence1 sentence2 = {s = "for_all" ++ sentence1.s ++ "it_holds" ++ sentence2.s};
 	--MakeSentenceList sentence1 sentence2 = {s = sentence1.s ++ "," ++ sentence2.s};
         --AddToSentenceList sentence sentencelist = {s = sentencelist.s ++ "," ++ sentence.s};
       
@@ -75,8 +76,20 @@
        	NoNounExists noun  =  {s=  noun.s ++ "= VOID" };
        	TheNounIsNoun noun1 noun2 = {s=  noun1.s ++ "=" ++ noun2.s };
 	TheNounIsNotNoun noun1 noun2 = {s=  noun1.s ++ "/=" ++ noun2.s };
-	ANounIsNoun noun1 noun2 = {s=  noun1.s ++ "=" ++ noun2.s };
-        ANounIsNotNoun noun1 noun2 = {s=  noun1.s ++ "/=" ++ noun2.s };
+	ANounIsNoun noun1 noun2 = {s=  noun1.s ++ "member_of" ++ noun2.s };
+        ANounIsNotNoun noun1 noun2 = {s=  noun1.s ++ "not member_of" ++ noun2.s };
+        ItIsVerb verbphrase = {s =  verbphrase.s };
+	NounIsVerb noun verbphrase ={s=  noun.s ++ "." ++ verbphrase.s};
+	ItIsVerbAdv verbphrase adverb = {s= verbphrase.s ++ "_" ++ adverb.s};
+        NounIsVerbAdv noun verbphrase adverb = {s= noun.s ++ "." ++ verbphrase.s ++ "_" ++ adverb.s};
+       	ItIsNotVerb verbphrase = {s = "not" ++  verbphrase.s };
+	NounIsNotVerb noun verbphrase ={s=  "not" ++ noun.s ++ "." ++ verbphrase.s};
+	ItIsNotVerbAdv verbphrase adverb = {s= "not" ++ verbphrase.s ++ "_" ++ adverb.s};
+        NounIsNotVerbAdv noun verbphrase adverb = {s= "not" ++ noun.s ++ "." ++ verbphrase.s ++ "_" ++ adverb.s};
+       	
+       	
+       	
+       	
        	
        	--Noun Phrases
        	PronounNounPhrase  pronoun noun = {s = noun.s ++ pronoun.s};
@@ -136,7 +149,10 @@
         --Conjunctions
         ConjunctionOr = {s = "or"} ;
         ConjunctionAnd = {s = "and"} ;
-
+	ConjunctionIf = {s = "it_holds"};
+	ConjunctionXor = {s = "xor"};
+	ConjunctionSuchThat = {s = "such that"};
+        
         
                
     }

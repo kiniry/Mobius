@@ -1,4 +1,4 @@
-abstract BONAbs = DictEngAbs, Numeral ** {
+abstract BONAbs = DictEngAbs,BONTermsAbs, Numeral ** {
 
   flags startcat=Output;
 
@@ -39,6 +39,7 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     MakeTextSentence : Sentence -> Output;
     --MakeSentenceFromList : Conjunction -> SentenceList -> Sentence;
     MakeSentenceConj : Conjunction -> Sentence -> Sentence -> Sentence;
+    MakeSentenceifConj : Sentence -> Sentence -> Sentence;
     --MakeSentenceList : Sentence -> Sentence -> SentenceList;
     --AddToSentenceList : Sentence -> SentenceList -> SentenceList;
     
@@ -67,9 +68,6 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     ActionCommand : V -> Imperative;
     ActionNounCommand : V2 ->  N -> Imperative;
     ModifyActionCommand : V -> Adv -> Imperative;
-   
-    
-    
     
     --Constraints
     
@@ -89,7 +87,14 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     TheNounIsNotNoun:Noun ->Noun ->Sentence;
     ANounIsNoun:Noun ->Noun ->Sentence;
     ANounIsNotNoun:Noun ->Noun ->Sentence;
-    
+    ItIsVerb : VerbPhrase -> Sentence;
+    NounIsVerb : Noun -> VerbPhrase -> Sentence;
+    ItIsVerbAdv : VerbPhrase -> Adverb -> Sentence;
+    NounIsVerbAdv : Noun -> VerbPhrase -> Adverb -> Sentence;
+    ItIsNotVerb : VerbPhrase -> Sentence;
+    NounIsNotVerb : Noun -> VerbPhrase -> Sentence;
+    ItIsNotVerbAdv : VerbPhrase -> Adverb -> Sentence;
+    NounIsNotVerbAdv : Noun -> VerbPhrase -> Adverb -> Sentence;
     
     --Noun Phrases
     PronounNounPhrase : Pronoun ->Noun -> NounPhrase;
@@ -104,10 +109,7 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     TwoPlaceAction : V2 -> Verb2;
     Numbers : Digits -> Number;
     
-    
-    
-    
-    
+    --Catagagories 
     What,Who:Interrogative;
     Its:Pronoun;
     Which : IQuantifier;
@@ -116,7 +118,7 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     The,QuantA,That,This,No: Quantifier;
     FullStop,Exclamation,QuestionMark: Punctuation;
     Can,Must: ComplementVerb;
-    ConjunctionOr, ConjunctionAnd : Conjunction;
+    ConjunctionOr, ConjunctionAnd,ConjunctionIf,ConjunctionXor,ConjunctionSuchThat: Conjunction;
     --More,Less: CAdverb;
     
     
