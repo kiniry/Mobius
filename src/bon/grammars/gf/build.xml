@@ -42,9 +42,16 @@
     </copy>
     <mkdir dir="${build}/gf_source"/>
     <copy todir="${build}/gf_source">
-          <fileset dir="${gf_source}" includes="*"/> 
+          <fileset dir="${gf_source}" includes="*"/>
+    </copy>
+
+    <copy todir="${dist}/lib">
+      <fileset dir="${lib}/" includes="${commons}"/>
     </copy>
     
+    <copy  tofile="${build}/gf.properties" file="gf.properties"/>
+
+  
     <jar jarfile="${dist}/lib/GF.jar" basedir="${build}">
       <manifest>
         <attribute name="Main-Class" value="ie.ucd.gf.GF" />

@@ -22,6 +22,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.util.Enumeration;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 
@@ -32,6 +35,10 @@ public final class FileUtil {
    */
   private FileUtil() { }
 
+  private static final String GF_SOURCE_FOLDERS = "gf-files-folder";
+  private static final String GF_SOURCE_RESOURCES = "gf_source/";
+  private static final String GF_SOURCE_DESTINATION = getGFFileDirectory();
+  
   public static boolean checkDirExists(File dir) {
     if (dir.isDirectory()) {
       return true;
@@ -64,6 +71,9 @@ public final class FileUtil {
       c = FileUtil.class;
     }
     return c.getClassLoader().getResourceAsStream(filePath);
+    
+    
+   
   }
 
   public static String readToString(Reader r) throws IOException {
@@ -188,5 +198,75 @@ public final class FileUtil {
     }
   }
   
+  
+public static boolean copyGFSourceFiles() {
+		boolean filesCopied = false;
+	    try {
+	  			ResourceBundle rb = ResourceBundle.getBundle("gf_source.gf_files");
+	  			
+	  			Enumeration gfFiles = rb.getKeys();
+	  			String sourceDir = "gf_source/"  ;
+	  			File gfDirectory = new File(GF_SOURCE_DESTINATION);
+	  			if (!gfDirectory.isDirectory()){
+	  				if (!gfDirectory.mkdir()){
+		  				throw new SecurityException();			
+	  				}
+	  			}
+	  			gfDirectory.deleteOnExit();
+	  			while (gfFiles.hasMoreElements()) {
+	  			    String key = (String)gfFiles.nextElement();
+	  			    String value = rb.getString(key);
+	  			    System.out.println("key = " + key + ", " + 
+	  					       "value = " + value);
+		    	    File dstPath = new File(GF_SOURCE_DESTINATION + value);
+		    	    filesCopied = copyResourceToExternalFile(sourceDir + value, dstPath,GF.class);
+	  			}
 
+	    } catch (MissingResourceException e) {
+	    	System.out.println(e);
+		    }
+		catch (SecurityException e){
+			System.out.println("Could not create Directory " + GF_SOURCE_DESTINATION );
+		}
+		
+		return filesCopied;
+	  }
+
+/* (non-Javadoc)
+ * @see ie.ucd.gf.api.GfCommands#getGFFileDirectory()
+ * Returns the directory where the BON GF files will
+ * be copied, to be used by GF.
+ */
+public static String getGFFileDirectory() {
+	
+	String filesLocation = "";
+	try {
+			ResourceBundle rb = ResourceBundle.getBundle("gf");
+			 filesLocation = rb.getString(GF_SOURCE_FOLDERS);
+		}catch (MissingResourceException e){
+		      System.out.println("Error reading gf.properties " + e);
+		}
+		return filesLocation;
+}
+
+public static boolean removeGFFileDirectory() {
+	
+	String gfSource = GF_SOURCE_DESTINATION;
+	gfSource = gfSource.substring(0,gfSource.length() -1); //remove last forward slash "/"
+	System.out.println("Directory to be deleted : " + gfSource);
+	File gfDirectory = new File(gfSource);
+	return gfDirectory.delete();
+}
+  
+
+public static boolean updateBONTerms() {
+	
+	String bonSource = "gf_Source/BONTermsAbs.gf";
+	
+	File bonTermFile = new File(bonSource);
+	return bonTermFile.exists();
+	
+}
+  
+  
 }

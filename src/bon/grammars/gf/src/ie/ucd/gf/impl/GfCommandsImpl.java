@@ -1,17 +1,31 @@
 package ie.ucd.gf.impl;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
+import java.util.MissingResourceException;
 
+import ie.ucd.gf.FileUtil;
 import ie.ucd.gf.GF;
 import ie.ucd.gf.GFProcess;
 import ie.ucd.gf.api.GfCommands;
 
+/**
+ * @author Aidan
+ *
+ */
 public class GfCommandsImpl implements GfCommands {
 	
-	 
-	GFProcess process = GF.createPlatformSpecificProcess();
 	private String output = "";
-
+	private String filesLocation = "";
+	public final static String PARSE_FROM = "p -lang=";
+	public final static String LINEARIZE_TO = " | l -lang=";
+	public final static String FILE_EXTENSION = ".gfo";
+	public final static String IMPORT = "i ";
+	public final static String LINKING = "linking ... OK";
+	
+	boolean gfFilesexported = FileUtil.copyGFSourceFiles();
+	GFProcess process = GF.createPlatformSpecificProcess();
+	
 	
 
 
@@ -19,7 +33,8 @@ public class GfCommandsImpl implements GfCommands {
 	public String importLanguage(String language) throws IOException{
 		
 		try{
-			language = language + FILE_EXTENSION;
+			filesLocation = FileUtil.getGFFileDirectory();
+			language = filesLocation + language + FILE_EXTENSION;
 			output = process.importLanguage(IMPORT + language);
 			
 		}catch (IOException e) {
@@ -56,6 +71,9 @@ public class GfCommandsImpl implements GfCommands {
 		process.quitProcess();
 		
 	}
+
+
+
 
 
 

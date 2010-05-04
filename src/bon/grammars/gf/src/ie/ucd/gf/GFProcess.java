@@ -207,6 +207,9 @@ public class GFProcess {
   	public void quitProcess() throws IOException {
   		  //giveInput("q" + LINE_SEPARATOR);
   		process.destroy();
+  		if (!FileUtil.removeGFFileDirectory()){
+  			System.out.println("Could not delete GF Source Files from : " + FileUtil.getGFFileDirectory() );
+  		}
   	  }
   	
 }
