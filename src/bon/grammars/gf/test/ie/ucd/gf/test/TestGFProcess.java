@@ -1,3 +1,5 @@
+package ie.ucd.gf.test;
+
 import java.io.IOException;
 
 import ie.ucd.gf.FileUtil;
