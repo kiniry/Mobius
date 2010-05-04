@@ -7,6 +7,7 @@
         Output = { s : Str};      
         Phrase= {s : Str};
         Sentence = {s : Str};
+        SentenceList = {s : Str};
         Noun = {s : Str};
         Interrogative= {s : Str};
         Adjetive = {s : Str};
@@ -24,21 +25,31 @@
 	Adverb = {s : Str};
     	Punctuation = {s : Str};
     	NounPhrase = {s : Str};
+    	Conjunction = {s : Str};
   
       lin
 	
        --Overall
-       	MakeTextPunct phrase punctuation = {s = phrase.s};
-       	MakeText phrase = {s = phrase.s};
+       	MakeText phrase punctuation = {s = phrase.s};
        	MakeTextSentence  sentence = {s = sentence.s};
+       	--MakeSentenceFromList conjunction sentencelist = {s = sentencelist.s ++ conjunction.s};
+	MakeSentenceConj conjunction sentence1 sentence2 = {s = sentence1.s ++ conjunction.s ++ sentence2.s};
+	--MakeSentenceList sentence1 sentence2 = {s = sentence1.s ++ "," ++ sentence2.s};
+        --AddToSentenceList sentence sentencelist = {s = sentencelist.s ++ "," ++ sentence.s};
       
         --Queries
-        QuestNoun  i nounphrase  = {s = nounphrase.s ++ i.s };
+        WhatQuestValue = {s = "value : INTEGER" };
+        WhatQuestNoun  nounphrase  = {s = nounphrase.s ++ "VALUE" };
+        WhoQuestNoun  nounphrase  = {s = nounphrase.s ++ "SET[]" };
         IsItAdj adjetive = {s = adjetive.s ++ ":" ++ "BOOLEAN"};
        	DoesItVerb verb = {s =  verb.s  ++ ":" ++ "BOOLEAN"};
        	IsItVerb verbphrase = {s = verbphrase.s  ++ ":" ++ "BOOLEAN"};
-       	IsNounNoun quantifier noun1 noun2 = {s = noun2.s ++ ":" ++ "VALUE" ++ "(" ++ quantifier.s ++ noun1.s ++")"};
-	IsTheNounVerb quantifier noun verb = {s =  verb.s ++ ":" ++ "BOOLEAN" ++ "(" ++ quantifier.s ++ noun.s ++")"};
+       	IsNounVerb noun verbphrase = {s = verbphrase.s  ++ ":" ++ "BOOLEAN"};
+       	IsItVerbAdv verbphrase adverb = {s = verbphrase.s  ++ "_" ++ adverb.s ++ ":" ++ "BOOLEAN"};
+       	IsNounVerbAdv noun verbphrase adverb = {s = verbphrase.s  ++ "_" ++ adverb.s ++ ":" ++ "BOOLEAN"};
+       	IsTheNounANoun  noun1 noun2 = {s = noun1.s ++ ":" ++ "SET[" ++ noun2.s ++ "]" };
+       	IsANounANoun  noun1 noun2 = {s = noun1.s ++ ":" ++ "SET[" ++ noun2.s ++ "]" };
+	DoesTheNounVerb noun verb = {s =  verb.s ++ ":" ++ "BOOLEAN" ++ "("  ++ noun.s ++")"};
 	HowManyNoun idet noun = {s = noun.s ++ ":" ++ idet.s};
         WhichNoun iquant noun =   {s = iquant.s ++ ":" ++ noun.s};
         --VerbNoun  verb2 noun  =mkPhr(mkQS(mkCl (passiveVP verb2 (mkNP noun))));
@@ -51,12 +62,14 @@
 
        	--Constraints
        	AtMostLeast  numeraladverb number noun = {s = noun.s ++ ".count" ++ numeraladverb.s  ++ number.s};
-       	--CanMust complementverb verb = mkS( mkCl(mkVP  complementverb (mkVP verb)));
+       	CanMust complementverb verb = {s = complementverb.s ++ verb.s};
         --CannotMustnot complementverb verb = mkS negativePol ( mkCl(mkVP  complementverb (mkVP verb)));
-        NounHasNumberAtMost quantifier noun1 verb2 numeraladverb number noun2 = {s = noun2.s ++ ".count" ++ numeraladverb.s  ++ number.s ++"(" ++ quantifier.s ++verb2.s ++ noun1.s ++")"};
-	ItHasNumberAtLeast  pronoun verb2 numeraladverb number noun =  {s = noun.s ++".count" ++ numeraladverb.s  ++ number.s ++ "(" ++ pronoun.s ++verb2.s  ++")"};
-	NounHasNumber quantifier noun1 verb2  number noun2 = {s = noun2.s ++ ".count" ++ "=" ++ number.s ++"(" ++ quantifier.s ++noun1.s ++ verb2.s ++")"};--REMOVE SPACE
-        ItHasNumber  pronoun verb2  number noun = {s = noun.s ++ ".count" ++ "="  ++ number.s ++"(" ++ pronoun.s ++ verb2.s ++ ")"};
+        ANounHasNumberAtMost noun1  numeraladverb number noun2 = {s = noun2.s ++ ".count" ++ numeraladverb.s  ++ number.s };
+        TheNounHasNumberAtMost noun1  numeraladverb number noun2 = {s = noun2.s ++ ".count" ++ numeraladverb.s  ++ number.s };
+        ANounHasNumber noun1  number noun2 = {s = noun2.s ++ ".count" ++ "=" ++ number.s };
+        TheNounHasNumber noun1  number noun2 = {s = noun2.s ++ ".count" ++ "=" ++ number.s };
+        ItHasNumber number noun = {s = noun.s ++".count" ++ "=" ++ number.s };
+	ItHasNumberAtLeast  numeraladverb number noun =  {s = noun.s ++".count" ++ numeraladverb.s  ++ number.s };
        	TheNounExists noun  =  {s=  noun.s ++ "/= VOID" };
        	ANounExists noun  =  {s=  noun.s ++ "/= VOID" };
        	NoNounExists noun  =  {s=  noun.s ++ "= VOID" };
@@ -82,7 +95,7 @@
         --Verb
         Action v = mkUtt(mkVP v);
         TwoPlaceAction v2 = mkUtt(reflexiveVP v2);
-        ModifyAction adv = mkUtt(mkVP adv);
+        ModifyAction adv = mkUtt(mkVP adv) ;
         
         
         
@@ -101,8 +114,8 @@
 	--Numeral Adverbs
 	AtMost = {s = "<="};
         AtLeast = {s = ">="};
-        --MoreThan = {s = ">"};
-        --LessThan = {s = ">"};
+        MoreThan = {s = ">"};
+        LessThan = {s = "<"};
         
         --Quantifiers
         The = {s = "the"};
@@ -119,6 +132,10 @@
        --Complement_Verb
         Can = {s = "can"} ;
         Must = {s = "must"} ;
+        
+        --Conjunctions
+        ConjunctionOr = {s = "or"} ;
+        ConjunctionAnd = {s = "and"} ;
 
         
                

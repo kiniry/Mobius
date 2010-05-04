@@ -7,6 +7,7 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     Output;
     Phrase; 
     Sentence;
+    SentenceList;
     Interrogative ;
     Noun;
     Adjetive;
@@ -24,6 +25,8 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     Adverb;
     Punctuation;
     NounPhrase;
+    Conjunction;
+    CAdverb ;
     
     
    
@@ -32,18 +35,28 @@ abstract BONAbs = DictEngAbs, Numeral ** {
   fun
   
     --Overall  
-    MakeTextPunct : Phrase -> Punctuation -> Output;  
-    MakeText : Phrase -> Output;
+    MakeText : Phrase -> Punctuation -> Output;  
     MakeTextSentence : Sentence -> Output;
+    --MakeSentenceFromList : Conjunction -> SentenceList -> Sentence;
+    MakeSentenceConj : Conjunction -> Sentence -> Sentence -> Sentence;
+    --MakeSentenceList : Sentence -> Sentence -> SentenceList;
+    --AddToSentenceList : Sentence -> SentenceList -> SentenceList;
     
     
     --Queries
-    QuestNoun :  Interrogative ->NounPhrase -> Phrase;
+    WhatIsTheNounsNoun : Noun -> Noun -> Phrase;
+    WhatQuestValue: Phrase;
+    WhatQuestNoun :  NounPhrase -> Phrase;
+    WhoQuestNoun :  NounPhrase -> Phrase;
     DoesItVerb : Verb -> Phrase;
+    DoesTheNounVerb : Noun -> Verb -> Phrase;
     IsItVerb : VerbPhrase -> Phrase;
+    IsNounVerb : Noun -> VerbPhrase -> Phrase;
+    IsItVerbAdv : VerbPhrase -> Adverb -> Phrase;
+    IsNounVerbAdv : Noun -> VerbPhrase -> Adverb -> Phrase;
     IsItAdj : Adjetive -> Phrase;
-    IsNounNoun: Quantifier -> Noun -> Noun -> Phrase;
-    IsTheNounVerb: Quantifier -> Noun -> Verb -> Phrase;
+    IsTheNounANoun:  Noun -> Noun -> Phrase;
+    IsANounANoun:  Noun -> Noun -> Phrase;
     HowManyNoun :IDeterminer -> Noun -> Phrase;
     WhichNoun : IQuantifier -> Noun  -> Phrase;
     VerbNoun: Verb2 -> Noun -> Phrase;
@@ -63,10 +76,12 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     CanMust : ComplementVerb -> Verb -> Sentence;
     CannotMustnot : ComplementVerb -> Verb -> Sentence;
     AtMostLeast : NumeralAdverb -> Number -> Noun -> Sentence;
-    NounHasNumberAtMost: Quantifier ->Noun -> Verb2 -> NumeralAdverb -> Number -> Noun -> Sentence;
-    ItHasNumberAtLeast:  Pronoun -> Verb2 -> NumeralAdverb -> Number -> Noun -> Sentence;
-    NounHasNumber: Quantifier ->Noun -> Verb2 -> Number -> Noun -> Sentence;
-    ItHasNumber:  Pronoun -> Verb2 -> Number -> Noun -> Sentence;
+    ANounHasNumberAtMost: Noun ->  NumeralAdverb -> Number -> Noun -> Sentence;
+    TheNounHasNumberAtMost: Noun ->  NumeralAdverb -> Number -> Noun -> Sentence;
+    ItHasNumberAtLeast:   NumeralAdverb -> Number -> Noun -> Sentence;
+    ItHasNumber:Number -> Noun -> Sentence;
+    ANounHasNumber: Noun ->  Number -> Noun -> Sentence;
+    TheNounHasNumber: Noun ->  Number -> Noun -> Sentence;
     TheNounExists:  Noun -> Sentence;
     ANounExists:  Noun -> Sentence;
     NoNounExists: Noun -> Sentence;
@@ -97,10 +112,12 @@ abstract BONAbs = DictEngAbs, Numeral ** {
     Its:Pronoun;
     Which : IQuantifier;
     HowMany: IDeterminer;
-    AtMost,AtLeast: NumeralAdverb;
+    AtMost,AtLeast,MoreThan,LessThan: NumeralAdverb;
     The,QuantA,That,This,No: Quantifier;
     FullStop,Exclamation,QuestionMark: Punctuation;
     Can,Must: ComplementVerb;
+    ConjunctionOr, ConjunctionAnd : Conjunction;
+    --More,Less: CAdverb;
     
     
     

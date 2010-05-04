@@ -7,6 +7,7 @@
         Output = Text;       
         Phrase = Phr;
         Sentence = S;
+        SentenceList = ListS;
         Interrogative=IP;
         Noun = CN;
         Adjetive = AP;
@@ -22,23 +23,35 @@
     	Quantifier = Quant;
     	Imperative = Imp;
     	Adverb = Adv;
+    	CAdverb = CAdv;
     	Punctuation = Punct;
     	NounPhrase = NP;
+    	Conjunction = Conj;
+    	
         
       lin
        
        --Overall
-       MakeTextPunct phrase punctuation = mkText phrase punctuation;
-       MakeText phrase = mkText phrase;
+       MakeText phrase punctuation = mkText phrase punctuation;
        MakeTextSentence  sentence = mkText sentence;
+       --MakeSentenceFromList conjunction sentencelist = mkS conjunction sentencelist;
+       MakeSentenceConj conjunction sentence1 sentence2 = mkS conjunction sentence1 sentence2;
+       --MakeSentenceList sentence1 sentence2 = mkListS sentence1 sentence2;
+       --AddToSentenceList sentence sentencelist = mkListS sentence sentencelist;
        
        --Queries
-       QuestNoun i nounphrase =mkPhr(mkQS (mkQCl i nounphrase));
+       WhatQuestNoun  nounphrase =mkPhr(mkQS (mkQCl whatSg_IP nounphrase));
+       WhatQuestValue  =mkPhr(mkQS (mkQCl whatSg_IP (mkNP it_Pron (mkCN value_N))));
+       WhoQuestNoun  nounphrase =mkPhr(mkQS (mkQCl whoPl_IP nounphrase));
        IsItAdj adjetive = mkPhr(mkQS (mkCl(mkVP adjetive)));
        DoesItVerb verb = mkPhr(mkQS  (mkCl (mkVP verb)));
+       DoesTheNounVerb noun verb = mkPhr(mkQS  (mkCl (mkNP (mkDet the_Quant) noun) (mkVP verb)));
        IsItVerb verbphrase = mkPhr(mkQS  (mkCl verbphrase));
-       IsNounNoun quantifier noun1 noun2 = mkPhr(mkQS (mkCl (mkNP  (mkDet quantifier)  noun1) (mkNP (mkDet a_Quant) noun2)));
-       IsTheNounVerb quantifier noun verb = mkPhr(mkQS  (mkQCl (mkCl (mkNP  (mkDet quantifier)  noun) verb )));
+       IsNounVerb noun verbphrase = mkPhr(mkQS  (mkCl (mkNP  (mkDet the_Quant)  noun) verbphrase));
+       IsItVerbAdv verbphrase adverb = mkPhr(mkQS  (mkCl (mkVP verbphrase adverb)));
+       IsNounVerbAdv noun verbphrase adverb = mkPhr(mkQS  (mkCl (mkNP  (mkDet the_Quant)  noun) (mkVP verbphrase adverb)));
+       IsTheNounANoun noun1 noun2 = mkPhr(mkQS (mkCl (mkNP  (mkDet the_Quant)  noun1) (mkNP (mkDet a_Quant) noun2)));
+       IsANounANoun noun1 noun2 = mkPhr(mkQS (mkCl (mkNP  (mkDet a_Quant)  noun1) (mkNP (mkDet a_Quant) noun2)));
        HowManyNoun idet noun = mkPhr(mkQS  (mkQCl (mkIP idet noun)));
        WhichNoun iquant noun =   mkPhr(mkQS  (mkQCl (mkIP iquant noun )));
        VerbNoun  verb2 noun  =mkPhr(mkQS(mkCl (passiveVP verb2 (mkNP noun))));
@@ -51,11 +64,14 @@
        
        --Constraint
        AtMostLeast  numeraladverb number noun = mkS( mkCl(mkNP  (mkCard numeraladverb (mkCard number)) noun));
-       CanMust complementverb verb = mkS( mkCl(mkVP  complementverb (mkVP verb)));
+       CanMust complementverb verb = mkS( mkCl(mkVP  complementverb (mkVP verb)));	
        CannotMustnot complementverb verb = mkS negativePol ( mkCl(mkVP  complementverb (mkVP verb)));
-       NounHasNumberAtMost quantifier noun1 verb2 numeraladverb number noun2 = mkS( mkCl(mkNP (mkDet quantifier) noun1) verb2 (mkNP  (mkCard numeraladverb (mkCard number)) noun2));
-       ItHasNumberAtLeast  pronoun verb2 numeraladverb number noun = mkS( mkCl(mkNP pronoun) verb2 (mkNP  (mkCard numeraladverb (mkCard number)) noun));
-       NounHasNumber quantifier noun1 verb2  number noun2 = mkS( mkCl(mkNP (mkDet quantifier) noun1) verb2 (mkNP  (mkCard number) noun2));
+       ANounHasNumberAtMost  noun1 numeraladverb number noun2 = mkS( mkCl(mkNP (mkDet a_Quant) noun1) have_V2 (mkNP  (mkCard numeraladverb (mkCard number)) noun2));
+       TheNounHasNumberAtMost  noun1 numeraladverb number noun2 = mkS( mkCl(mkNP (mkDet the_Quant) noun1) have_V2 (mkNP  (mkCard numeraladverb (mkCard number)) noun2));
+       ItHasNumberAtLeast  numeraladverb number noun = mkS( mkCl(mkNP it_Pron) have_V2 (mkNP  (mkCard numeraladverb (mkCard number)) noun));
+       ItHasNumber  number noun = mkS( mkCl(mkNP it_Pron) have_V2 (mkNP  (mkCard number) noun));
+       ANounHasNumber  noun1 number noun2 = mkS( mkCl(mkNP (mkDet a_Quant) noun1) have_V2 (mkNP  (mkCard number) noun2));
+       TheNounHasNumber  noun1 number noun2 = mkS( mkCl(mkNP (mkDet the_Quant) noun1) have_V2 (mkNP  (mkCard number) noun2));
        TheNounExists  noun  =  mkS ( mkCl(mkNP (mkDet the_Quant) noun) exist_V);
        ANounExists noun  =  mkS( mkCl(mkNP (mkDet a_Quant) noun) exist_V);
        NoNounExists  noun  =  mkS ( mkCl(mkNP (mkDet no_Quant) noun) exist_V);
@@ -86,7 +102,7 @@
               
        --Interrogative
        What = whatSg_IP;
-       Who = whoSg_IP;
+       Who = whoPl_IP;
        Which = which_IQuant;
        HowMany = how8many_IDet;
       
@@ -100,8 +116,10 @@
        --Numeral Adverb
        AtMost = at_most_AdN;
        AtLeast = at_least_AdN;
-       --more = mkAdN more_CAdv;
-       --Less = mkAdN less_CAdv;
+       MoreThan = mkAdN "more than";
+       LessThan = mkAdN "less than";
+       --More = more_CAdv;
+       --Less = less_CAdv;
        
        --Quantifier
        The = the_Quant;
@@ -118,6 +136,9 @@
        --Complement_Verb
        Can = can_VV;
        Must = must_VV;
-	      
+       
+       --Conjunctios
+       ConjunctionOr = or_Conj;
+       ConjunctionAnd = and_Conj;	      
 	
     } 
