@@ -241,7 +241,7 @@ public static String getGFFileDirectory() {
 	
 	String filesLocation = "";
 	try {
-			ResourceBundle rb = ResourceBundle.getBundle("gf");
+			ResourceBundle rb = ResourceBundle.getBundle("gf-file-location");
 			 filesLocation = rb.getString(GF_SOURCE_FOLDERS);
 		}catch (MissingResourceException e){
 		      System.out.println("Error reading gf.properties " + e);

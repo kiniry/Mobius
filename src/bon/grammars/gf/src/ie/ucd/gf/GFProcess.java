@@ -191,11 +191,29 @@ public class GFProcess {
    */
   	public String returnGFResponse(String output){
 	  
-	  int firstReturn = output.indexOf(LINE_SEPARATOR);
-	  output = output.substring(firstReturn + 1);
-	  int secondReturn = output.indexOf(LINE_SEPARATOR);
-	  String returnedSentence = output.substring(1,secondReturn);
-	  return returnedSentence;
+  	/**
+  	 * The GF response may have multiple translations. We
+  	 * are returning the last translation. The last translation
+  	 * is followed by two blank lines, a time taken for the query 
+  	 * i.e 9007 msec, a line with "BON>" , 
+  	 *  0 msec and another line with "BON>". The following procedure
+  	 *  removes these lines in order to take the last 
+  	 *  translation from the output. 
+  	 * 	
+  	 */
+  		
+	  int lastMsec = output.lastIndexOf("msec");
+	  output = output.substring(0,lastMsec);
+	  lastMsec = output.lastIndexOf("msec");
+	  output = output.substring(0,lastMsec);
+	  int lastReturn = output.lastIndexOf(LINE_SEPARATOR);
+	  output = output.substring(0,lastReturn);
+	  lastReturn = output.lastIndexOf(LINE_SEPARATOR);
+	  output = output.substring(0,lastReturn);
+	  lastReturn = output.lastIndexOf(LINE_SEPARATOR);
+	  output = output.substring(0,lastReturn);
+	  String returnedSentence = output.substring(output.lastIndexOf(LINE_SEPARATOR) + 2 ,lastReturn);
+	  return removeToBe(returnedSentence);
   }
   	
   	
@@ -212,4 +230,20 @@ public class GFProcess {
   		}
   	  }
   	
+  	
+  
+
+  	/**
+  	 * @param sentence
+  	 * @return modifiedSentence
+  	 * 
+  	 * Verbs returned from GF take the form "to be moving"
+  	 * this procedure removes the "to be" from the sentence.
+  	 */
+  	public String removeToBe(String sentence)  {
+  		
+  		String modifiedSentence = sentence.replaceAll("to be ", "");
+  		modifiedSentence = modifiedSentence.replaceAll("to ", "");
+  		return modifiedSentence;
+  	  }
 }
