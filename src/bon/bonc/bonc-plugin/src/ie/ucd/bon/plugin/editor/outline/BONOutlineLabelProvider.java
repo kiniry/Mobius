@@ -8,6 +8,7 @@ import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.FeatureArgument;
 import ie.ucd.bon.ast.FeatureSpecification;
+import ie.ucd.bon.ast.InheritanceRelation;
 import ie.ucd.bon.ast.StaticDiagram;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.util.AstUtil;
@@ -67,6 +68,9 @@ public class BONOutlineLabelProvider implements ILabelProvider {
         String args = "(" + StringUtil.appendWithSeparator(AstUtil.nodeToStringConverter.convert(argTypes),",") + ")";
         String returnType = fSpec.hasType == null ? "" : " " + StringUtil.prettyPrint(fSpec.hasType);
         return featureNames + args + returnType; 
+      } else if (value instanceof InheritanceRelation) {
+        InheritanceRelation rel = (InheritanceRelation)value;
+        return rel.child + " inherit " + rel.parent;
       } else if (value instanceof ClientRelation) {
         ClientRelation rel = (ClientRelation)value;
         return rel.client.name + " client " + rel.supplier.name;  
