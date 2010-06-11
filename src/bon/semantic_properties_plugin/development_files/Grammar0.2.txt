@@ -1,0 +1,29 @@
+
+SemanticProperty -> (MetaInfo | PendingWork | FormalSpecifications | ConcurrencyControl | UsageInfo |Versioning | Inheritance | Documentation | Dependencies | Miscellaneous)
+
+MetaInfo -> type ( returnType )? Description
+
+PendingWork -> type returnType (Classifier)? - Description
+
+FormalSpecifications -> (label:)? type RPAR ( Expression | returnType ) LPAR (<Exception>)? (Description)?
+
+ConcurrencyControl -> type ( returnType | returnType (<value>)? <Exception> ) (Description)?
+
+UsageInfo -> type ( type | returnType )? ( returnType (Expression) )? Description
+
+Versioning -> type ( Description | type | returnType )
+
+Inheritance -> type returnType (Description)?
+
+Documentation -> type ( Description | Expression | returnType ) (type)?
+
+Dependencies -> type (Expression) (Description)?
+
+Miscellaneous -> ( (type | returnType ) - returnType | type ) (Expression) (Description)?
+
+
+Expression -> (predicate | code segment | natural language description)
+
+type -> ( single lower case word)
+
+returnType - > ( single word that begins with Upper Case letter )
