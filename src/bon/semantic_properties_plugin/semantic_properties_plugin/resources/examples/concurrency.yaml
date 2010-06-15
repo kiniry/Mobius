@@ -1,0 +1,24 @@
+--- 
+property-scope: - Modules
+                  Features 
+property-name: concurrency
+-(
+ or  : - SEQUENTIAL
+         GUARDED
+         CONCURRENT
+         TIMEOUT: <value> <Exception>
+         FAILURE: <Exception>
+         SPECIAL
+ )
+ optional : Description
+
+property-description: |
+
+Describes the concurrency strategy and/or approach taken by (necessary for) the module or feature. The execution context for a feature should be described at this point. The meanings of the possible parameters are as follows: 
+	•	SEQUENTIAL means that callers must coordinate so that only one call/access to the object in question may be outstanding at once. If simultaneous calls occur, the the semantics and integrity of the system are not guaranteed.
+	•	GUARDED means that multiple calls/accesses from concurrent threads may occur simultaneously to one object in question, but only one is allowed to commence; the others are blocked until the performance of the first operation is complete. This is the behavior of synchronizedinstance methods in Java.
+	•	CONCURRENT indicates that multiple calls/accesses from concurrent threads may occur simultaneously to the object in question, and that all will proceed concurrently with correct semantics. This is the default behavior of Java methods and fields and Eiffel features.
+	•	TIMEOUT <value> indicates that if a call to this feature is blocked for a time period greater than or equal to <value>, the exception <Exception> will be raised. The value is specified with units.
+	•	FAILURE means that if a call to the feature is currently underway, all additional calls with fail and the exception <Exception> will be raised.
+	•	SPECIAL indicates that the feature has concurrency semantics that are not covered by the preceding cases. Make sure to explain the particulars of the feature's semantics in sufficient detail that the reader will be quite clear on your feature's unusual semantics.
+ A feature lacking a concurrency property is considered CONCURRENT. The semantics description is optional on features that are labeled as SEQUENTIAL or GUARDED. In general, all features should have concurrency properties.
