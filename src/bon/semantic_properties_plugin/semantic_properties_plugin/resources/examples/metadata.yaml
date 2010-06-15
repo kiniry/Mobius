@@ -1,6 +1,6 @@
-- property-scope: Modules                   
-- property-name : author
-   String :FullName
-- property-description : |
+property-scope: Modules                   
+property-name : author
+ - String :FullName
+property-description : |
    Lists an author of the module. The text has no special internal structure. A doc comment may contain multiple author properties. A standard author property includes only the full name of the author and should not include other information (like an email address, web page, etc.) unless absolutely necessary.
   

@@ -8,17 +8,17 @@ import org.yaml.snakeyaml.Yaml;
 
 public class FileChecker {
 
-	/**
-	 * @param args
-	 */
-
 	final static String prop_Scope = "property_scope(\\s)*:(\\s)*( files | modules | features | variables | all | special )(,( files | modules | features | variables | all | special ))*";
+	final static String prop_Name = "property_name(\\s)*:(\\s)*";
+	// dosnt account for case where everything is surrounded by bracket
+	final static String prop_Form = "(\\w*) ( (\\w)* | (<(\\w)*>) | ( \\( (\\w)* \\) )*)*";
+	final static String prop_Description = "property_description(\\s)*:(\\w)*";
 
+	// for testing purposes
 	final static String regEx = ".*";
-	final static String prop_Form = "(\\w*) ( (\\w)* | (<(\\w)*>)* | ( \\( \\w \\) )* )* ((e? | (| e)?))";
 
 	public static void main(String[] args) throws FileNotFoundException {
-		
+
 		String input = getInputFile();
 		String dump = parseFile(input);
 		input = getInputFile();
@@ -29,15 +29,16 @@ public class FileChecker {
 	}
 
 	private static String getInputFile() {
-		System.out.println("what file");
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("enter file name (from resources/examples/ folder)");
 
+		// get name of file
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String inputfile = null;
 
 		try {
 			inputfile = br.readLine();
 		} catch (IOException ioe) {
-			System.out.println("IO error trying to read your name!");
+			System.out.println("IO error trying to read file name!");
 			System.exit(1);
 		}
 		return inputfile;
@@ -46,9 +47,9 @@ public class FileChecker {
 	private static String parseFile(String inputfile) {
 		InputStream input = null;
 		try {
-			input = new FileInputStream(new File(inputfile));
+			input = new FileInputStream(new File("/resources/examples/"+inputfile));
 		} catch (FileNotFoundException e) {
-			System.out.println("IO error reading from " + inputfile + " file");
+			System.out.println("error reading from " + inputfile + " file");
 			e.printStackTrace();
 			System.exit(1);
 		}
