@@ -1,16 +1,18 @@
 --- 
-property-scope: - Modules
-                - Features 
+property-scope: 
+ - Modules
+ - Features 
 property-name: concurrency
  -(
- or  : - SEQUENTIAL
-         GUARDED
-         CONCURRENT
-         TIMEOUT: <value> <Exception>
-         FAILURE: <Exception>
-         SPECIAL
- )
- optional : Description
+ -or: 
+  -SEQUENTIAL
+  -GUARDED
+  -CONCURRENT
+  -TIMEOUT: <value><Exception>
+  -FAILURE: <Exception>
+   -SPECIAL
+ -)
+ -optional:Description
 
 property-description: |
  Describes the concurrency strategy and/or approach taken by (necessary for) the module or feature. The execution context for a feature should be described at this point. The meanings of the possible parameters are as follows: 

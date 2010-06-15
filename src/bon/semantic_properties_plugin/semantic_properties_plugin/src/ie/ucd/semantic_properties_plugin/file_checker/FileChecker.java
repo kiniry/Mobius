@@ -15,16 +15,15 @@ public class FileChecker {
 	final static String prop_Description = "property_description(\\s)*:(\\w)*";
 
 	// for testing purposes
-	final static String regEx = ".*";
+	final static String regEx = ".*+";
 
 	public static void main(String[] args) throws FileNotFoundException {
 
 		String input = getInputFile();
 		String dump = parseFile(input);
-		input = getInputFile();
-		dump = parseFile(input);
 
-		// checkvalidity(dump);
+
+		 checkvalidity(dump);
 
 	}
 
@@ -47,7 +46,7 @@ public class FileChecker {
 	private static String parseFile(String inputfile) {
 		InputStream input = null;
 		try {
-			input = new FileInputStream(new File("/resources/examples/"+inputfile));
+			input = new FileInputStream(new File("resources/examples/"+inputfile));
 		} catch (FileNotFoundException e) {
 			System.out.println("error reading from " + inputfile + " file");
 			e.printStackTrace();
