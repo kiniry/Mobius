@@ -55,6 +55,8 @@ public class FileChecker {
 		Yaml yaml = new Yaml();
 		Object data = yaml.load(input);
 
+		
+		//(data instanceof java.util.Hashtable)
 		String stringdump = yaml.dump(data);
 
 		System.out.print(stringdump);
