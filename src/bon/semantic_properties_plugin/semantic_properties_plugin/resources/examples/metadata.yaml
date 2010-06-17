@@ -1,6 +1,44 @@
-property-scope: Modules                   
-property-name : author
- - String :FullName
-property-description : |
-   Lists an author of the module. The text has no special internal structure. A doc comment may contain multiple author properties. A standard author property includes only the full name of the author and should not include other information (like an email address, web page, etc.) unless absolutely necessary.
-  
+---
+name: 
+- author
+- FullName
+scope: 
+- Modules                   
+description : |
+ Lists an author of the module. The text has no special internal structure. A doc comment may contain multiple author properties. A standard author property includes only the full name of the author and should not include other information (like an email address, web page, etc.) unless absolutely necessary.
+---  
+name:
+- bon 
+- BON
+- summary of construct.
+scope: 
+- Modules
+- Features   
+description: |
+ Provides a one-sentence summary of the construct. This sentence is meant to corrolate with the BON specification of the construct
+---
+name:
+- dug
+- Description
+scope:
+- Modules
+- Features
+description: |
+ Describes a known bug in the module or feature. One property should be used for each bug. If a construct has a known bug, it should be described. Omission of a bug description is considered as bad an offense as the existence of the bug in the first place.
+---
+name:
+- copyright
+- Copyright
+scope:
+- Files
+description: |
+ A copyright notice 
+---
+name:
+- description
+- Description
+scope:
+- Files
+description: |
+ A brief Description of a file
+ 
