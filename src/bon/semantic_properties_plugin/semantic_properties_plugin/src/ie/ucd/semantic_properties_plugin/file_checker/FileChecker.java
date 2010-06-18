@@ -14,11 +14,7 @@ import org.yaml.snakeyaml.Yaml;
 
 public class FileChecker {
 
-	final static String prop_Scope = "property_scope(\\s)*:(\\s)*( files | modules | features | variables | all | special )(,( files | modules | features | variables | all | special ))*";
-	final static String prop_Name = "property_name(\\s)*:(\\s)*";
-	// dosnt account for case where everything is surrounded by bracket
-	final static String prop_Form = "(\\w*) ( (\\w)* | (<(\\w)*>) | ( \\( (\\w)* \\) )*)*";
-	final static String prop_Description = "property_description(\\s)*:(\\w)*";
+	
 	static List<Property> allprops;
 
 	// for testing purposes
@@ -32,17 +28,23 @@ public class FileChecker {
 		parseFile(getInputFile());
 		
 		// check the validity
-		System.out.println("This validity of the the property is "+checkvalidity());
+		if(checkvalidity()){
+			System.out.println("This Semantic Property is valid");
+			}
+		else{
+			System.out.println("This Semantic Property is invalid");
+		}
+		
 
 	}
 
 	private static String getInputFile() {
-		System.out.println("enter file name (from resources/examples/ folder)");
-
+		
+		
 		// get name of file
+		System.out.println("enter file name (from resources/examples/ folder)");	
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String inputfile = null;
-
 		try {
 			inputfile = br.readLine();
 		} catch (IOException ioe) {
@@ -52,7 +54,7 @@ public class FileChecker {
 		return inputfile;
 	}
 
-	private static String parseFile(String inputfile) {
+	private static void parseFile(String inputfile) {
 		InputStream input = null;
 		try {
 			input = new FileInputStream(new File("resources/examples/"+inputfile));
@@ -65,14 +67,14 @@ public class FileChecker {
 		Object data = yaml.loadAll(input);
 
 		//System.out.println(data.toString());
-		
-		if(data instanceof LinkedHashMap<?, ?>){
-			System.out.println("is linkedhashmap");
-			LinkedHashMap<String,?> h;
-			h = (LinkedHashMap<String,?>)data;
-			System.out.println(h.toString());
-		}
-		else if(data instanceof Iterable){
+//		
+//		if(data instanceof LinkedHashMap<?, ?>){
+//			System.out.println("is linkedhashmap");
+//			LinkedHashMap<String,?> h;
+//			h = (LinkedHashMap<String,?>)data;
+//			System.out.println(h.toString());
+//		}
+		if(data instanceof Iterable){
 			System.out.println("multiple properites");
 			Iterator<LinkedHashMap<String,?>> i;
 			//iterate through the properties and add them
@@ -87,12 +89,8 @@ public class FileChecker {
 			
 		}
 		else{
-			System.out.println("not linkedHashMap or Iterator");
+			System.out.println("yaml file "+input+" did not contain expected Iterator");
 		}
-		//String stringdump = yaml.dump(data);
-
-		//System.out.print(stringdump);
-		return "dummy";
 
 	}
 
