@@ -6,7 +6,12 @@ name:
   - SEQUENTIAL,
   - GUARDED,
   - CONCURRENT,
-  - [TIMEOUT,$0,$java.lang.Throwable] === (TIMEOUT)[:white:]+[:digit:]+[:white:]+([:javaid:]) | 0 <= $1 AND $2 <: java.lang.Throwable
+  - [TIMEOUT,$timeout:0,$exception:java.lang.Throwable] === (TIMEOUT)[:white:]+[:digit:]+[:white:]+([:javaid:]) | 0 <= $1 AND $2 <: java.lang.Throwable
+    static final int timeout = 1;
+    extract_value(Property p, int index)
+    map.get("timeout").equals(new Integer(0))
+    map.get("exception").equals(Class.forName("java.lang.Throwable"))
+
   - [FUTURE,$0.0]
   - [FOO,$java.lang.Object]
   - [BAR,$void f()]
