@@ -1,6 +1,7 @@
 package ie.ucd.semantic_properties_plugin.file_checker;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -10,7 +11,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Iterator;
 
+import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.resolver.Resolver;
+import org.yaml.snakeyaml.Dumper;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Loader;
+
 
 public class FileChecker {
 
@@ -36,6 +44,10 @@ public class FileChecker {
 		}
 		
 
+		
+//		String s ="java.lang.String";
+//		Object p= new Object();
+//		String r=(s.toString())p;
 	}
 
 	private static String getInputFile() {
@@ -55,6 +67,7 @@ public class FileChecker {
 	}
 
 	private static void parseFile(String inputfile) {
+		//get input stream from file
 		InputStream input = null;
 		try {
 			input = new FileInputStream(new File("resources/examples/"+inputfile));
@@ -63,34 +76,35 @@ public class FileChecker {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		Yaml yaml = new Yaml();
-		Object data = yaml.loadAll(input);
+	
+//		Loader l= new Loader(new Constructor(testprop.class));
+//		Yaml yaml = new Yaml(l);
+//		testprop data = (testprop)yaml.loadAll(input);
+		
+		Yaml yaml = new Yaml(new Loader(), new Dumper(new DumperOptions()), new CustomResolver());
+		Object data= (Object)yaml.load(input);
+		
+		//LinkedHashMap<?,?> data = (LinkedHashMap<?,?>)yaml.load(input);
+		
 
-		//System.out.println(data.toString());
-//		
-//		if(data instanceof LinkedHashMap<?, ?>){
-//			System.out.println("is linkedhashmap");
-//			LinkedHashMap<String,?> h;
-//			h = (LinkedHashMap<String,?>)data;
-//			System.out.println(h.toString());
+		
+		
+//		if(data instanceof Iterable){
+//			Iterator<LinkedHashMap<String,?>> i;
+//			//iterate through the properties and add them
+//			
+//			Iterable s=(Iterable<Object>)data;
+//			
+//
+//			 System.out.println(s);
+//			i=s.iterator();
+//			while(i.hasNext()){				
+//				addProperty(i.next());
+//			}			
 //		}
-		if(data instanceof Iterable){
-			System.out.println("multiple properites");
-			Iterator<LinkedHashMap<String,?>> i;
-			//iterate through the properties and add them
-			
-			Iterable s=(Iterable<?>)data;
-			i=s.iterator();
-			System.out.println(i.toString());
-			while(i.hasNext()){
-				
-				addProperty(i.next());
-			}
-			
-		}
-		else{
-			System.out.println("yaml file "+input+" did not contain expected Iterator");
-		}
+//		else{
+//			System.out.println("yaml file "+input+" did not contain expected Iterator");
+//		}
 
 	}
 
@@ -107,7 +121,7 @@ public class FileChecker {
 	}
 	public static void addProperty(LinkedHashMap<String, ?> linkedHashMap){
 		Property current = new Property(); 		
-		current.setName((ArrayList<String>)linkedHashMap.get("name"));
+		current.setName((ArrayList<Object>)linkedHashMap.get("name"));
 		current.setDescription((String)linkedHashMap.get("description"));
 		current.setScope((ArrayList<String>)linkedHashMap.get("scope"));		  
 		  

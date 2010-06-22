@@ -1,0 +1,17 @@
+--- 
+name: 
+- concurrency
+- (
+- choice: 
+  - SEQUENTIAL
+  - GUARDED
+  - CONCURRENT
+  - [TIMEOUT,   0, java.lang.Throwable ] 
+- )
+- optional: 
+  - 1
+scope: 
+- Modules
+- Features 
+description: |
+ very short desc

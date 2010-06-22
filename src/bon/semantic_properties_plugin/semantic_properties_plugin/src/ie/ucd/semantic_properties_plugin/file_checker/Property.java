@@ -13,21 +13,21 @@ public class Property {
 	final static String prop_Name="(.*|[(.*,)*.*]|optional:.*)";
 	
 	// class variables
-	private static ArrayList<String> name;
-	private static ArrayList<String> scope;
-	private static String description;
+	public static ArrayList<Object> name;
+	public static ArrayList<String> scope;
+	public static String description;
 	
 	public Property(){
-		name=new ArrayList<String>();
+		name=new ArrayList<Object>();
 		scope= new ArrayList<String>();
 		description= new String();
 		
 	}
 	
-	public static ArrayList<String> getName() {
+	public static ArrayList<Object> getName() {
 		return name;
 	}
-	public void setName(ArrayList<String> name) {
+	public void setName(ArrayList<Object> name) {
 		Property.name = name;
 	}
 	public static ArrayList<String> getScope() {
@@ -47,6 +47,8 @@ public class Property {
 		Pattern descriptionPattern = Pattern.compile(prop_Description, Pattern.DOTALL);
 		Pattern namePattern = Pattern.compile(prop_Name);
 		
+		
+		
 		//check scopes
 		for( String scopeValue : scope){
 			Matcher scopeMatcher = scopePattern.matcher(scopeValue);
@@ -64,37 +66,49 @@ public class Property {
 		}
 		
 		//check name
-		for( Object nameValue : name){
-			
-			//case for normal property
-			if(nameValue instanceof String){
-				Matcher nameMatcher = namePattern.matcher((String)nameValue);
-				if(!nameMatcher.matches()){
-					System.out.println(" name value is invalid @"+nameValue);
-					return false;
-				}
+		return checkNameValidity(name);
+
+	}
+	private boolean checkNameValidity(Object nameValue){
+		
+		
+		System.out.println(nameValue.toString() +" : " +nameValue.getClass());
+		Pattern namePattern = Pattern.compile(prop_Name);
+		//case for normal property
+		if(nameValue instanceof String){
+			Matcher nameMatcher = namePattern.matcher((String)nameValue);
+			if(!nameMatcher.matches()){
+				System.out.println(" name value is invalid @"+nameValue);
+				return false;
 			}
-			//case for optinal inner list [a,b,c]
-			else if(nameValue instanceof ArrayList<?>){
-				for(String optionalNameValue :(ArrayList<String>)nameValue){
-					Matcher nameMatcher = namePattern.matcher(optionalNameValue);
-					if(!nameMatcher.matches()){
-						System.out.println(" an optional name value is invalid @"+nameValue);
-						return false;
-					}
-					
-				}
+		}
+		//case for inner list [a,b,c]
+		else if(nameValue instanceof ArrayList<?>){
+			for(Object optionalNameValue :(ArrayList<?>)nameValue){
+				checkNameValidity(optionalNameValue);
 				
-			}
-			// any case i didnt predict
-			else{
-				System.out.println("Should not have got here in name check, reason @ "+ nameValue);
 			}
 			
 		}
-				
+		//case for optional: or choice:  -- needs more complete implementation to avoid false positives
+		else if(nameValue instanceof LinkedHashMap<?,?>){
+			LinkedHashMap<String,?> r= (LinkedHashMap<String,?>)nameValue;
 			
+			if(r.containsKey("choice")){
+				checkNameValidity(r.get("choice"));
+			}
+			if(r.containsKey("optional")){
+				checkNameValidity(r.get("optional"));
+			}			
+		}
+		// any case i didn't predict
+		else{
+			System.out.println("Should not have got here in name check, reason @ "+ nameValue);
+		}
 		return true;
+		
+		
+		
 	}
 
 }
