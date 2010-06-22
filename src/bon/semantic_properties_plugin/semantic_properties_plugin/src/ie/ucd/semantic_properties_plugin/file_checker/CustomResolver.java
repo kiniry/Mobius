@@ -11,7 +11,7 @@ public class CustomResolver extends Resolver {
     protected void addImplicitResolvers() {
     	String r="java\\.(.)*\\.(.)*";
     	Pattern namePattern = Pattern.compile(r);
-    	addImplicitResolver(new Tag("java.lang"), namePattern, "java.lang.Throwable;");
+    	//addImplicitResolver(new Tag(java.lang.Throwable<?>), namePattern, "java.lang.Throwable;");
         addImplicitResolver(Tag.BOOL, BOOL, "yYnNtTfFoO");
         // addImplicitResolver(Tags.FLOAT, FLOAT, "-+0123456789.");
         addImplicitResolver(Tag.INT, INT, "-+0123456789");
