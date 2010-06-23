@@ -1,6 +1,11 @@
---- 
-name:
-- concurrency
-- (
-choice: hello 
-optional: 9.2
+---
+name: concurrency
+format:
+  - choice:
+    - SEQUENTIAL
+    - GUARDED
+    - CONCURRENT
+    - [TIMEOUT, "<to:nat>", "<e:Throwable>"]
+    - [FAILURE, "<e:Throwable>"]
+    - SPECIAL
+  - optional: "<description:String>"

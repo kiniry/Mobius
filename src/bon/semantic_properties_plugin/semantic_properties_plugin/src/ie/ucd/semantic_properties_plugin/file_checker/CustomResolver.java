@@ -7,18 +7,16 @@ import org.yaml.snakeyaml.resolver.Resolver;
 
 public class CustomResolver extends Resolver {
 
- 
-    protected void addImplicitResolvers() {
-    	String r="java\\.(.)*\\.(.)*";
-    	Pattern namePattern = Pattern.compile(r);
-    	//addImplicitResolver(new Tag(java.lang.Throwable<?>), namePattern, "java.lang.Throwable;");
-        addImplicitResolver(Tag.BOOL, BOOL, "yYnNtTfFoO");
-        // addImplicitResolver(Tags.FLOAT, FLOAT, "-+0123456789.");
-        addImplicitResolver(Tag.INT, INT, "-+0123456789");
-        addImplicitResolver(Tag.MERGE, MERGE, "<");
-        addImplicitResolver(Tag.NULL, NULL, "~nN\0");
-        addImplicitResolver(Tag.NULL, EMPTY, null);
-        // addImplicitResolver(Tags.TIMESTAMP, TIMESTAMP, "0123456789");
-        addImplicitResolver(Tag.VALUE, VALUE, "=");
-    }
+	protected void addImplicitResolvers() {
+		addImplicitResolver(new Tag("!nat"), Pattern.compile("<\\w+%nat>"), null);
+		
+		addImplicitResolver(Tag.BOOL, BOOL, "yYnNtTfFoO");
+		addImplicitResolver(Tag.FLOAT, FLOAT, "-+0123456789.");
+		addImplicitResolver(Tag.INT, INT, "-+0123456789");
+		addImplicitResolver(Tag.MERGE, MERGE, "<");
+		addImplicitResolver(Tag.NULL, NULL, "~nN\0");
+		addImplicitResolver(Tag.NULL, EMPTY, null);
+		addImplicitResolver(Tag.TIMESTAMP, TIMESTAMP, "0123456789");
+		addImplicitResolver(Tag.VALUE, VALUE, "=");
+	}
 }

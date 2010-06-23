@@ -32,22 +32,27 @@ public class FileChecker {
 		//initialise values
 		allprops= new LinkedList<Property>();
 		
-		//parse in yaml file
-		parseFile(getInputFile());
-		
-		// check the validity
-		if(checkvalidity()){
-			System.out.println("This Semantic Property is valid");
-			}
-		else{
-			System.out.println("This Semantic Property is invalid");
-		}
-		
 
 		
-//		String s ="java.lang.String";
-//		Object p= new Object();
-//		String r=(s.toString())p;
+//		
+//		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(new DumperOptions()), new CustomResolver());
+//		Object data= (Object)yaml.load(getInputFile());
+		
+		
+		//parse in yaml file
+		//parseFile(getInputFile());
+		
+		// check the validity
+//		if(checkvalidity()){
+//			System.out.println("This Semantic Property is valid");
+//			}
+//		else{
+//			System.out.println("This Semantic Property is invalid");
+//		}
+//		
+		
+		
+
 	}
 
 	private static String getInputFile() {
@@ -77,34 +82,29 @@ public class FileChecker {
 			System.exit(1);
 		}
 	
+//		delete in a bit
 //		Loader l= new Loader(new Constructor(testprop.class));
 //		Yaml yaml = new Yaml(l);
 //		testprop data = (testprop)yaml.loadAll(input);
 		
-		Yaml yaml = new Yaml(new Loader(), new Dumper(new DumperOptions()), new CustomResolver());
-		Object data= (Object)yaml.load(input);
 		
-		//LinkedHashMap<?,?> data = (LinkedHashMap<?,?>)yaml.load(input);
+		Yaml yaml = new Yaml();
 		
-
+		Object data = yaml.loadAll(input);
 		
-		
-//		if(data instanceof Iterable){
-//			Iterator<LinkedHashMap<String,?>> i;
-//			//iterate through the properties and add them
-//			
-//			Iterable s=(Iterable<Object>)data;
-//			
-//
-//			 System.out.println(s);
-//			i=s.iterator();
-//			while(i.hasNext()){				
-//				addProperty(i.next());
-//			}			
-//		}
-//		else{
-//			System.out.println("yaml file "+input+" did not contain expected Iterator");
-//		}
+		if(data instanceof Iterable){
+			Iterator<LinkedHashMap<String,?>> i;
+			//iterate through the properties and add them
+			
+			Iterable s=(Iterable<Object>)data;
+			i=s.iterator();
+			while(i.hasNext()){				
+				addProperty(i.next());
+			}			
+		}
+		else{
+			System.out.println("yaml file "+input+" did not contain expected Iterator");
+		}
 
 	}
 
