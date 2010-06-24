@@ -1,11 +1,16 @@
 ---
 name: concurrency
 format:
+  - [TIMEOUT, <to=nat>, <e=nat>]
   - choice:
     - SEQUENTIAL
     - GUARDED
     - CONCURRENT
-    - [TIMEOUT, "<to:nat>", "<e:Throwable>"]
-    - [FAILURE, "<e:Throwable>"]
+    - [TIMEOUT, <to=nat>, <e=nat>]
+    - [FAILURE, <z=nat>]
     - SPECIAL
-  - optional: "<description:String>"
+  - optional: <description=nat>
+scope: 
+ - Modules
+description: |
+ des

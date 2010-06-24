@@ -13,22 +13,22 @@ public class Property {
 	final static String prop_Name="(.*|[(.*,)*.*]|optional:.*)";
 	
 	// class variables
-	public static ArrayList<Object> name;
+	public static ArrayList<Object> format;
 	public static ArrayList<String> scope;
 	public static String description;
+	public static String name;
 	
 	public Property(){
-		name=new ArrayList<Object>();
+		format=new ArrayList<Object>();
 		scope= new ArrayList<String>();
 		description= new String();
+		name=new String();
 		
 	}
 	
-	public static ArrayList<Object> getName() {
-		return name;
-	}
-	public void setName(ArrayList<Object> name) {
-		Property.name = name;
+
+	public void setFormat(ArrayList<Object> format) {
+		Property.format = format;
 	}
 	public static ArrayList<String> getScope() {
 		return scope;
@@ -66,13 +66,12 @@ public class Property {
 		}
 		
 		//check name
-		return checkNameValidity(name);
+		return checkFormatValidity(format);
 
 	}
-	private boolean checkNameValidity(Object nameValue){
+	private boolean checkFormatValidity(Object nameValue){
 		
 		
-		System.out.println(nameValue.toString() +" : " +nameValue.getClass());
 		Pattern namePattern = Pattern.compile(prop_Name);
 		//case for normal property
 		if(nameValue instanceof String){
@@ -85,7 +84,7 @@ public class Property {
 		//case for inner list [a,b,c]
 		else if(nameValue instanceof ArrayList<?>){
 			for(Object optionalNameValue :(ArrayList<?>)nameValue){
-				checkNameValidity(optionalNameValue);
+				checkFormatValidity(optionalNameValue);
 				
 			}
 			
@@ -95,13 +94,16 @@ public class Property {
 			LinkedHashMap<String,?> r= (LinkedHashMap<String,?>)nameValue;
 			
 			if(r.containsKey("choice")){
-				checkNameValidity(r.get("choice"));
+				checkFormatValidity(r.get("choice"));
 			}
 			if(r.containsKey("optional")){
-				checkNameValidity(r.get("optional"));
+				checkFormatValidity(r.get("optional"));
 			}			
 		}
 		// any case i didn't predict
+		else if(nameValue instanceof Nat ){
+			
+		}
 		else{
 			System.out.println("Should not have got here in name check, reason @ "+ nameValue);
 		}
@@ -109,6 +111,14 @@ public class Property {
 		
 		
 		
+	}
+
+	public static String getName() {
+		return name;
+	}
+
+	public static void setName(String name) {
+		Property.name = name;
 	}
 
 }

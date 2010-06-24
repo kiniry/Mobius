@@ -14,7 +14,7 @@ public class CustomRepresenter extends Representer {
     private class RepresentNat implements Represent {
         public Node representData(Object data) {
             Nat nat = (Nat) data;
-            String value = "<"+nat.getId()+"%nat>";
+            String value = "<"+nat.getId()+"=nat>";
             return representScalar(new Tag("!nat"), value);
         }
     }

@@ -8,7 +8,7 @@ import org.yaml.snakeyaml.resolver.Resolver;
 public class CustomResolver extends Resolver {
 
 	protected void addImplicitResolvers() {
-		addImplicitResolver(new Tag("!nat"), Pattern.compile("<\\w+%nat>"), null);
+		addImplicitResolver(new Tag("!nat"), Pattern.compile("<\\w+=nat>"), null);
 		
 		addImplicitResolver(Tag.BOOL, BOOL, "yYnNtTfFoO");
 		addImplicitResolver(Tag.FLOAT, FLOAT, "-+0123456789.");

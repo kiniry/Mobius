@@ -19,7 +19,7 @@ public class CustomConstructor extends Constructor {
         @SuppressWarnings("unchecked")
         public Object construct(Node node) {
         	String val = (String) constructScalar((ScalarNode) node);
-            int position = val.indexOf('%');
+            int position = val.indexOf('=');
             String a = (val.substring(1, position));     
             Nat temp=new Nat();
             temp.setId(a);

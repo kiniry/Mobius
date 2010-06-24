@@ -27,8 +27,8 @@ public class CustomResolverTestCase extends TestCase{
 		standardNat.setId("example");
 		
 		
-		Object implicitData = yaml.load("{sem: <example%nat>}");
-		Object explicitData= yaml.load("{sem: !nat <example%nat>}");
+		Object implicitData = yaml.load("{sem: <example=nat>}");
+		Object explicitData= yaml.load("{sem: !nat <example=nat>}");
 		
 		LinkedHashMap implic=(LinkedHashMap<String,Nat>)implicitData;
 		LinkedHashMap explic=(LinkedHashMap<String,Nat>)explicitData;

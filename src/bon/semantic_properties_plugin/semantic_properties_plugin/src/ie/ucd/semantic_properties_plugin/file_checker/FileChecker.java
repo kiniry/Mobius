@@ -34,22 +34,19 @@ public class FileChecker {
 		
 
 		
-//		
-//		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(new DumperOptions()), new CustomResolver());
-//		Object data= (Object)yaml.load(getInputFile());
 		
 		
 		//parse in yaml file
-		//parseFile(getInputFile());
+		parseFile(getInputFile());
 		
 		// check the validity
-//		if(checkvalidity()){
-//			System.out.println("This Semantic Property is valid");
-//			}
-//		else{
-//			System.out.println("This Semantic Property is invalid");
-//		}
-//		
+		if(checkvalidity()){
+			System.out.println("This Semantic Property is valid");
+			}
+		else{
+			System.out.println("This Semantic Property is invalid");
+		}
+		
 		
 		
 
@@ -88,7 +85,9 @@ public class FileChecker {
 //		testprop data = (testprop)yaml.loadAll(input);
 		
 		
-		Yaml yaml = new Yaml();
+		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
+				new CustomRepresenter(), new DumperOptions()),
+				new CustomResolver());
 		
 		Object data = yaml.loadAll(input);
 		
@@ -121,7 +120,8 @@ public class FileChecker {
 	}
 	public static void addProperty(LinkedHashMap<String, ?> linkedHashMap){
 		Property current = new Property(); 		
-		current.setName((ArrayList<Object>)linkedHashMap.get("name"));
+		current.setName((String)linkedHashMap.get("name"));
+		current.setFormat((ArrayList<Object>)linkedHashMap.get("format"));
 		current.setDescription((String)linkedHashMap.get("description"));
 		current.setScope((ArrayList<String>)linkedHashMap.get("scope"));		  
 		  

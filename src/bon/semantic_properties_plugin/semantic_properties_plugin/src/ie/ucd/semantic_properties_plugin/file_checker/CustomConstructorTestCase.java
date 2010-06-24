@@ -17,7 +17,7 @@ public class CustomConstructorTestCase extends TestCase{
 				new CustomRepresenter(), new DumperOptions()),
 				new CustomResolver());
 		Nat sampleNat= new Nat("example",0);
-		Object data = yaml.load("{samples: !nat <example%nat>}");
+		Object data = yaml.load("{samples: !nat '<example=nat>'}");
 		Map<String, Nat> map = (Map<String, Nat>) data;
 		
 		assertEquals(sampleNat, map.get("samples"));

@@ -1,0 +1,25 @@
+<Nat> :=
+<Int> :=
+<Float> := \\d
+<String> := .+
+<Throwable> :=
+??<Date>
+<Email> :=  (\\w|\\d)+@ (\\w)+\\.(\\w)+
+<Class> := java\\.(\\w+)(\\.\\w+)*
+<Description>? := .+\\.
+<Version> := (\\d)+(\\.\\d+)*
+<Expression> := \\((.+)\\)
+<URL>
+
+<(.+):(.+)>
+<(.+):Nat> -> class MyNat { id: String; value: long }
+<(.+):String> -> class MyString { id: String; value: String }
+<(.+):Throwable> -> class MyThrowable { id: String: value: Class }
+<(.+):Int> -> class MyInt { id: String: value: Class }
+<(.+):Float> -> class MyFloat { id: String: value: Class }
+
+<(.+):Email> -> class MyEmail { id: String: value: Class }
+<(.+):Class> -> class MyClass { id: String: value: Class }
+<(.+):Description> -> class MyDescription { id: String: value: Class }
+<(.+):Version> -> class MyVersion { id: String: value: Class }
+<(.+):Expression> -> class MyExpression { id: String: value: Class }

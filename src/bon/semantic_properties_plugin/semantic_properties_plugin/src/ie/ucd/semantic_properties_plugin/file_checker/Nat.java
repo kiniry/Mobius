@@ -40,7 +40,7 @@ public class Nat implements MyObject {
 	}
 	@Override
     public String toString() {
-        return getId()+"%"+getValue();
+        return getId()+"="+getValue();
     }
 
 }

@@ -25,7 +25,7 @@ public class CustomRepresenterTestCase extends TestCase{
 			
 		String output = yaml.dump(sampleNat);
 		// this test is affected by the resolver
-		String properOutput="<andy%nat>\n";
+		String properOutput="<andy=nat>\n";
 		assertEquals(properOutput, output);
 	}
 }
