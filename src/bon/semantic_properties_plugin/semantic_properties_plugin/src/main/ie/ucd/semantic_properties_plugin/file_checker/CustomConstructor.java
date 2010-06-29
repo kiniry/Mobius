@@ -13,6 +13,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 public class CustomConstructor extends Constructor {
     public CustomConstructor() {
         this.yamlConstructors.put(new Tag("!nat"),new ConstructNat());
+        this.yamlConstructors.put(new Tag("!myint"),new ConstructMyInt());
     }
 
     private class ConstructNat extends AbstractConstruct {
@@ -22,6 +23,18 @@ public class CustomConstructor extends Constructor {
             int position = val.indexOf('=');
             String a = (val.substring(1, position));     
             Nat temp=new Nat();
+            temp.setId(a);
+            return temp;
+        }
+    }
+
+    private class ConstructMyInt extends AbstractConstruct {
+        @SuppressWarnings("unchecked")
+        public Object construct(Node node) {
+        	String val = (String) constructScalar((ScalarNode) node);
+            int position = val.indexOf('=');
+            String a = (val.substring(1, position));     
+            MyInt temp=new MyInt();
             temp.setId(a);
             return temp;
         }

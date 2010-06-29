@@ -1,7 +1,6 @@
 package ie.ucd.semantic_properties_plugin.file_checker;
 
 public class Nat implements MyObject {
-	// making everything public for testing--- change later
 	public Nat() {
 		id = "";
 		value = 0;
@@ -42,5 +41,15 @@ public class Nat implements MyObject {
     public String toString() {
         return getId()+"="+getValue();
     }
+
+	@Override
+	public MyObjectKind getKind() {
+		return MyObjectKind.Nat;
+	}
+
+	@Override
+	public String getReg() {
+		return "<"+getId()+"=(1-9)(0-9)+>";
+	}
 
 }

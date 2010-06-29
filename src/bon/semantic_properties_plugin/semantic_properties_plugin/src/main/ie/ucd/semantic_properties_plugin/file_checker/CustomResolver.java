@@ -9,6 +9,8 @@ public class CustomResolver extends Resolver {
 
 	protected void addImplicitResolvers() {
 		addImplicitResolver(new Tag("!nat"), Pattern.compile("<\\w+=nat>"), null);
+
+		addImplicitResolver(new Tag("!myint"), Pattern.compile("<\\w+=myint>"), null);
 		
 		addImplicitResolver(Tag.BOOL, BOOL, "yYnNtTfFoO");
 		addImplicitResolver(Tag.FLOAT, FLOAT, "-+0123456789.");

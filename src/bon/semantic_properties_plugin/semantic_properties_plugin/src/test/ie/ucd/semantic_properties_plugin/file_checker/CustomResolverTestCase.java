@@ -37,6 +37,26 @@ public class CustomResolverTestCase extends TestCase{
 		assertEquals((Nat)implic.get("sem"),(Nat)explic.get("sem"));
 
 	}
+	
+	public void testMyIntResolver() {
+		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
+				new CustomRepresenter(), new DumperOptions()),
+				new CustomResolver());
+		
+		MyInt  standardMyInt= new MyInt();
+		standardMyInt.setId("example");
+		
+		
+		Object implicitData = yaml.load("{sem: <example=myint>}");
+		Object explicitData= yaml.load("{sem: !myint <example=myint>}");
+		
+		LinkedHashMap implic=(LinkedHashMap<String,MyInt>)implicitData;
+		LinkedHashMap explic=(LinkedHashMap<String,MyInt>)explicitData;
+		
+		assertEquals((MyInt)explic.get("sem"),standardMyInt);
+		assertEquals((MyInt)implic.get("sem"),(MyInt)explic.get("sem"));
+
+	}
 
 
 }

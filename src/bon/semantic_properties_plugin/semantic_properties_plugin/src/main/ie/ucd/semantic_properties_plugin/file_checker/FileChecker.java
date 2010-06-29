@@ -29,25 +29,26 @@ public class FileChecker {
 	final static String regEx = ".*+";
 
 	public static void main(String[] args) throws FileNotFoundException {
+		
 		//initialise values
 		allprops= new LinkedList<Property>();
-		
-
-		
-		
-		
+			
 		//parse in yaml file
 		parseFile(getInputFile());
 		
 		// check the validity
 		if(checkvalidity()){
 			System.out.println("This Semantic Property is valid");
+			for(Property p: allprops){
+				System.out.println("Regular expression is " +p.generateRegExp().getExp());
+				System.out.println(p.generateRegExp().groups.toString());
 			}
+			
+			}
+		
 		else{
 			System.out.println("This Semantic Property is invalid");
 		}
-		
-		
 		
 
 	}
@@ -78,12 +79,6 @@ public class FileChecker {
 			e.printStackTrace();
 			System.exit(1);
 		}
-	
-//		delete in a bit
-//		Loader l= new Loader(new Constructor(testprop.class));
-//		Yaml yaml = new Yaml(l);
-//		testprop data = (testprop)yaml.loadAll(input);
-		
 		
 		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
 				new CustomRepresenter(), new DumperOptions()),
@@ -94,7 +89,6 @@ public class FileChecker {
 		if(data instanceof Iterable){
 			Iterator<LinkedHashMap<String,?>> i;
 			//iterate through the properties and add them
-			
 			Iterable s=(Iterable<Object>)data;
 			i=s.iterator();
 			while(i.hasNext()){				

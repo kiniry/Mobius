@@ -28,4 +28,16 @@ public class CustomRepresenterTestCase extends TestCase{
 		String properOutput="<andy=nat>\n";
 		assertEquals(properOutput, output);
 	}
+	public void testMyIntToDump() {
+		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(new CustomRepresenter(), new DumperOptions()),	new CustomResolver());
+		
+		MyInt sampleMyInt = new MyInt();
+		sampleMyInt.setId("andy");
+		
+			
+		String output = yaml.dump(sampleMyInt);
+		// this test is affected by the resolver
+		String properOutput="<andy=myint>\n";
+		assertEquals(properOutput, output);
+	}
 }

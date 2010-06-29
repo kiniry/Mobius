@@ -6,7 +6,7 @@ format:
     - SEQUENTIAL
     - GUARDED
     - CONCURRENT
-    - [TIMEOUT, <to=nat>, <e=nat>]
+    - [TIMEOUT, <to=myint>, <e=nat>]
     - [FAILURE, <z=nat>]
     - SPECIAL
   - optional: <description=nat>

@@ -24,4 +24,16 @@ public class CustomConstructorTestCase extends TestCase{
 
 	}
 
+	public void testMyIntConstructor() {
+		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
+				new CustomRepresenter(), new DumperOptions()),
+				new CustomResolver());
+		MyInt sampleMyInt= new MyInt("exampleMyInt",0);
+		Object data = yaml.load("{samples: !myint '<exampleMyInt=MyInt>'}");
+		Map<String, MyInt> map = (Map<String, MyInt>) data;
+		
+		assertEquals(sampleMyInt, map.get("samples"));
+
+	}
+
 }
