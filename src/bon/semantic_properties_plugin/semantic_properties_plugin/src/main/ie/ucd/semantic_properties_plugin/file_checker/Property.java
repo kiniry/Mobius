@@ -112,7 +112,8 @@ public class Property {
 	}
 
 	public static minRegEx generateRegExp() {
-		minRegEx returnRegEx = generateRegExp(format, "normal");
+		minRegEx returnRegEx = new minRegEx();
+		returnRegEx.addMiniReg(generateRegExp(format, "normal"),"normal");
 		return returnRegEx;
 	}
 
@@ -150,7 +151,7 @@ public class Property {
 				// put in space
 				for (Object obin : l) {
 					minRegEx temp = generateRegExp(obin, "normal");
-					returner.addMiniReg(temp);
+					returner.addMiniReg(temp,"normal");
 				}
 			}
 			return returner;
@@ -179,7 +180,7 @@ public class Property {
 					temp = generateRegExp(pairs.getValue(), "normal");
 				}
 
-				thisHashMap.addMiniReg(temp);
+				thisHashMap.addMiniReg(temp,"normal");
 			}
 			// return full expression for this hash map
 			return thisHashMap;

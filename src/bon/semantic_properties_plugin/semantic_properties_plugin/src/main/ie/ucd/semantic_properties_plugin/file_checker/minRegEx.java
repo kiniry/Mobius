@@ -26,23 +26,23 @@ public class minRegEx {
 		return exp;
 	}
 
-	public void addMiniReg(minRegEx m) {
-		// gets linkedhashmap of groups from m
-		LinkedHashMap<String, Integer> toLookThrough = m.getGroups();
-
-		// iterate through groups from m and add them to this minRegEx
-		int counter = 0;
-		Iterator it = toLookThrough.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry pairs = (Map.Entry) it.next();
-			int i = (Integer) pairs.getValue();
-			pairs.setValue(numberOfGroups + i);
-			counter++;
-		}
-		numberOfGroups += counter;
-		exp = exp.concat(m.getExp());
-
-	}
+//	public void addMiniReg(minRegEx m) {
+//		// gets linkedhashmap of groups from m
+//		LinkedHashMap<String, Integer> toLookThrough = m.getGroups();
+//
+//		// iterate through groups from m and add them to this minRegEx
+//		int counter = 0;
+//		Iterator it = toLookThrough.entrySet().iterator();
+//		while (it.hasNext()) {
+//			Map.Entry pairs = (Map.Entry) it.next();
+//			int i = (Integer) pairs.getValue();
+//			pairs.setValue(numberOfGroups + i);
+//			counter++;
+//		}
+//		numberOfGroups += counter;
+//		exp = exp.concat(m.getExp());
+//
+//	}
 
 	public void addMiniReg(minRegEx m, String options) {
 		// gets linkedhashmap of groups from m
@@ -59,23 +59,39 @@ public class minRegEx {
 				pairs.setValue(numberOfGroups + i);
 				counter++;
 			}
-			numberOfGroups += counter;
+//			numberOfGroups += counter;
 			String toReturn=m.getExp();
 			exp = exp.concat((toReturn)+"|");
+			
+			
 
 		}
-		if (options.equals("optional")) {
+		else if (options.equals("optional")) {
 			while (it.hasNext()) {
 				Map.Entry pairs = (Map.Entry) it.next();
 				int i = (Integer) pairs.getValue();
 				pairs.setValue(numberOfGroups + i);
 				counter++;
 			}
-			numberOfGroups += counter;
+//			numberOfGroups += counter;
 			exp = exp.concat("(?:"+m.getExp()+")");
 
 		}
+		else{
+			while (it.hasNext()) {
+				Map.Entry pairs = (Map.Entry) it.next();
+				int i = (Integer) pairs.getValue();
+				pairs.setValue(numberOfGroups + i);
+				counter++;
+			}
+//			numberOfGroups += counter;
+//			String extra="(\\s+)";
+			String extra="";
+			exp = exp.concat(m.getExp()+extra);
+		}
 
+		groups.putAll(toLookThrough);
+		numberOfGroups += counter;
 		
 	}
 

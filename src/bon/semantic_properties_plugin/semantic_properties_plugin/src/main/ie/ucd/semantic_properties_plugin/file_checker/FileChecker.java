@@ -40,8 +40,9 @@ public class FileChecker {
 		if(checkvalidity()){
 			System.out.println("This Semantic Property is valid");
 			for(Property p: allprops){
-				System.out.println("Regular expression is " +p.generateRegExp().getExp());
-				System.out.println(p.generateRegExp().groups.toString());
+				minRegEx fin=p.generateRegExp();
+				System.out.println("Regular expression is " +fin.getExp());
+				System.out.println(fin.groups);
 			}
 			
 			}
