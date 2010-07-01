@@ -10,6 +10,10 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
+import semantic_properties_plugin.custom_objects.MyFloat;
+import semantic_properties_plugin.custom_objects.MyInt;
+import semantic_properties_plugin.custom_objects.Nat;
+
 
 public class CustomResolverTestCase extends TestCase{
 	
@@ -55,6 +59,25 @@ public class CustomResolverTestCase extends TestCase{
 		
 		assertEquals((MyInt)explic.get("sem"),standardMyInt);
 		assertEquals((MyInt)implic.get("sem"),(MyInt)explic.get("sem"));
+
+	}
+	public void testMyFloatResolver() {
+		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
+				new CustomRepresenter(), new DumperOptions()),
+				new CustomResolver());
+		
+		MyFloat  standardMyFloat= new MyFloat();
+		standardMyFloat.setId("example");
+		
+		
+		Object implicitData = yaml.load("{sem: <example=myfloat>}");
+		Object explicitData= yaml.load("{sem: !myfloat <example=myfloat>}");
+		
+		LinkedHashMap implic=(LinkedHashMap<String,MyInt>)implicitData;
+		LinkedHashMap explic=(LinkedHashMap<String,MyInt>)explicitData;
+		
+		assertEquals((MyFloat)explic.get("sem"),standardMyFloat);
+		assertEquals((MyFloat)implic.get("sem"),(MyFloat)explic.get("sem"));
 
 	}
 

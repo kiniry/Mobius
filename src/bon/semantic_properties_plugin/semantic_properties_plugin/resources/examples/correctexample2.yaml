@@ -1,0 +1,26 @@
+---
+#corrrect example that tests choice extensively inclusing optional:
+name: correctexample2
+format:
+  - a
+  - b
+  - choice:
+    - <c=myclass>
+    - <d=mydate>
+    - <e=mydescription>
+  - <f=myemail>
+  - <g=myexpression>
+  - choice: 
+    - <h=myfloat>
+    - [<i=myint>, choice (is):[i1,i2,<i3=myint>]]
+  - <j=mystring>
+  - <k=mythrowable>
+  - choice:
+    - <l=myurl>
+    - <m=myversion>
+   
+scope: 
+ - Modules
+ - Files
+description: |
+ des

@@ -1,20 +1,5 @@
 ---
-name: concurrency
-format:
-  - [TIMEOUT, <tol=nat>, <ep=nat>]
-  - choice (hi):
-    - SEQUENTIAL
-    - GUARDED
-    - CONCURRENT
-    - [TIMEOUT, <to=myint>, <e=nat>]
-    - [FAILURE, <z=nat>]
-    - SPECIAL
-  - optional: <description=nat>
-scope: 
- - Modules
-description: |
- des
----
+#incorrect version with no scope, every version must have scope,description,format & name 
 name: concurrency
 format:
   - [TIMEOUT, <tol=nat>, <ep=nat>]
@@ -40,4 +25,3 @@ scope:
 description: |
  des this can be be very long
  and include new lines
- 

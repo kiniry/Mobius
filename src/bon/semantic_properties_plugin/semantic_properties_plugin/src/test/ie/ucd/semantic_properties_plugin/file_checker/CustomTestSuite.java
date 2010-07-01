@@ -42,6 +42,8 @@ public class CustomTestSuite  {
         suite.addTestSuite(CustomRepresenterTestCase.class);
         
         suite.addTestSuite(CustomResolverTestCase.class);
+        
+        suite.addTestSuite(FileCheckerTest.class);
        
         return suite;
     }

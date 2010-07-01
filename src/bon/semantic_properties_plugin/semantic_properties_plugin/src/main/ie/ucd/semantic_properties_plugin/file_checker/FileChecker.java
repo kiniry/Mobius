@@ -1,126 +1,125 @@
+
+/**
+ * @title "Semantic Property Plugin Package"
+ * @description "Class that holds all properties in one structure."
+ * @author  Eoin O'Connor
+ * @copyright ""
+ * @license "Public Domain."
+ * @version "$Id: 01-07-2010 $"
+ */
 package ie.ucd.semantic_properties_plugin.file_checker;
 
-import java.io.*;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.Iterator;
 
-import org.yaml.snakeyaml.Loader;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.resolver.Resolver;
 import org.yaml.snakeyaml.Dumper;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
+import org.yaml.snakeyaml.Yaml;
 
 
+/**
+ * <p> A class that takes yaml files,parses them with snakeyaml and
+ * constructs and stores the appropiate semantic properties </p>
+ *
+ * @see Property
+ * @see    RegExpStruct
+ * @version "$Id: 01-07-2010 $"
+ * @author  Eoin O'Connor
+ **/
 public class FileChecker {
 
+	// Attributes
 	
-	static List<Property> allprops;
+	private static List<Property> allprops;
+	private File input;
 
-	// for testing purposes
-	final static String regEx = ".*+";
-
-	public static void main(String[] args) throws FileNotFoundException {
-		
-		//initialise values
+	/**
+	 * 
+	 * @param yaml file
+	 */
+	FileChecker(File inputFile){
 		allprops= new LinkedList<Property>();
-			
-		//parse in yaml file
-		parseFile(getInputFile());
+		input=inputFile;
+	}
+	public void processProps(){
 		
-		// check the validity
-		if(checkvalidity()){
-			System.out.println("This Semantic Property is valid");
-			for(Property p: allprops){
-				minRegEx fin=p.generateRegExp();
-				System.out.println("Regular expression is " +fin.getExp());
-				System.out.println(fin.groups);
-			}
-			
-			}
-		
-		else{
-			System.out.println("This Semantic Property is invalid");
-		}
-		
+		//parsen yaml file and create properties for each yaml doc
+		parseFile(input);
+	}
+	/**
+	 * 	<p>method that prints the name,regexp and map of each regular
+	 *  expression. Used for testing</p>
+	 */
+	public void printProps(){
+		for(Property p: allprops){
+			System.out.println(p);
+			System.out.println("Regular expression is " +(p.getReg()).getExp());
+			System.out.println("Regular expression map is " +(p.getReg()).getGroups());
 
+		}				
+	}
+	public List<Property> getProps(){
+		return allprops;
+	}
+	/**
+	 * 
+	 * @return list of the regexp of all the properties
+	 */
+	public LinkedList<RegExpStruct> getAllRegExp(){
+		LinkedList<RegExpStruct> r=new LinkedList<RegExpStruct>();
+		for(Property p: allprops){
+			r.add(p.getReg());
+		}
+		return r;
+		
 	}
 
-	private static String getInputFile() {
+	/**
+	 * <p>parser a file using snakeyaml and creates the appropiate properties</p>
+	 * @param inputFile yaml file to parse, may contain multiple properties
+	 */
+	private static void parseFile(File inputFile) {
 		
-		
-		// get name of file
-		System.out.println("enter file name (from resources/examples/ folder)");	
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String inputfile = null;
-		try {
-			inputfile = br.readLine();
-		} catch (IOException ioe) {
-			System.out.println("IO error trying to read file name!");
-			System.exit(1);
-		}
-		return inputfile;
-	}
-
-	private static void parseFile(String inputfile) {
-		//get input stream from file
+		//get input stream from file;
 		InputStream input = null;
 		try {
-			input = new FileInputStream(new File("resources/examples/"+inputfile));
-		} catch (FileNotFoundException e) {
-			System.out.println("error reading from " + inputfile + " file");
+			input = new FileInputStream(inputFile);
+		} 
+		catch (FileNotFoundException e) {
+			System.out.println("error reading from " + inputFile + " file");
 			e.printStackTrace();
 			System.exit(1);
 		}
-		
+		//create snakeyaml pbject
 		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
 				new CustomRepresenter(), new DumperOptions()),
 				new CustomResolver());
-		
+		//create yaml object with snakeyaml
 		Object data = yaml.loadAll(input);
 		
-		if(data instanceof Iterable){
-			Iterator<LinkedHashMap<String,?>> i;
-			//iterate through the properties and add them
+		
+		try{	
 			Iterable s=(Iterable<Object>)data;
+			Iterator<LinkedHashMap<String,?>> i;
 			i=s.iterator();
+			//iterate through the properties and add them
 			while(i.hasNext()){				
-				addProperty(i.next());
+				allprops.add(new Property(i.next()));
 			}			
 		}
-		else{
-			System.out.println("yaml file "+input+" did not contain expected Iterator");
+		catch(Exception e){
+			System.out.println("yaml file "+input+" did not contain expected Iterators, invalid yaml file");
+			e.printStackTrace();
+			System.exit(1);
 		}
 
 	}
 
-	public static boolean checkvalidity() {
-
-		for (int i=0;i<allprops.size(); i++ ){
-			Property tempProp =allprops.get(i);
-			if( tempProp.checkValidity()==false)
-				return false;
-			
-		}
-		return true;
-
-	}
-	public static void addProperty(LinkedHashMap<String, ?> linkedHashMap){
-		Property current = new Property(); 		
-		current.setName((String)linkedHashMap.get("name"));
-		current.setFormat((ArrayList<Object>)linkedHashMap.get("format"));
-		current.setDescription((String)linkedHashMap.get("description"));
-		current.setScope((ArrayList<String>)linkedHashMap.get("scope"));		  
-		  
-		allprops.add(current);
-		
-	}
 }

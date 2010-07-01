@@ -9,6 +9,10 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
+import semantic_properties_plugin.custom_objects.MyFloat;
+import semantic_properties_plugin.custom_objects.MyInt;
+import semantic_properties_plugin.custom_objects.Nat;
+
 public class CustomRepresenterTestCase extends TestCase{
 
 	@BeforeClass
@@ -40,4 +44,19 @@ public class CustomRepresenterTestCase extends TestCase{
 		String properOutput="<andy=myint>\n";
 		assertEquals(properOutput, output);
 	}
+
+	public void testMyFloatToDump() {
+		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(new CustomRepresenter(), new DumperOptions()),	new CustomResolver());
+		
+		MyFloat sampleMyFloat = new MyFloat();
+		sampleMyFloat.setId("andy");
+		
+			
+		String output = yaml.dump(sampleMyFloat);
+		// this test is affected by the resolver
+		String properOutput="<andy=myfloat>\n";
+		assertEquals(properOutput, output);
+	}
+	
+	
 }

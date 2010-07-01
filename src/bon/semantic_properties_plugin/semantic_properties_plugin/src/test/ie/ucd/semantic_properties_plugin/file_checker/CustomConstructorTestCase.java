@@ -9,6 +9,10 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
+import semantic_properties_plugin.custom_objects.MyFloat;
+import semantic_properties_plugin.custom_objects.MyInt;
+import semantic_properties_plugin.custom_objects.Nat;
+
 
 public class CustomConstructorTestCase extends TestCase{
 	
@@ -33,6 +37,17 @@ public class CustomConstructorTestCase extends TestCase{
 		Map<String, MyInt> map = (Map<String, MyInt>) data;
 		
 		assertEquals(sampleMyInt, map.get("samples"));
+
+	}
+	public void testMyFloatConstructor() {
+		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
+				new CustomRepresenter(), new DumperOptions()),
+				new CustomResolver());
+		MyFloat sampleMyFloat= new MyFloat("exampleMyFloat",0);
+		Object data = yaml.load("{samples: !myfloat '<exampleMyFloat=myfloat>'}");
+		Map<String, MyFloat> map = (Map<String, MyFloat>) data;
+		
+		assertEquals(sampleMyFloat, map.get("samples"));
 
 	}
 

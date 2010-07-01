@@ -1,0 +1,27 @@
+---
+#corrrect example that tests  optional:
+name: correctexample1
+format:
+  - a
+  - b
+  - optional:
+    - <c=myclass>
+    - optional:
+      - <d=mydate>
+      - <e=mydescription>
+  - <f=myemail>
+  - <g=myexpression>
+  - optional: <h=myfloat>
+  - <i=myint>
+  - j
+  - optional: 
+    - k
+    - choice:
+      - l
+      - <m=date>
+   
+scope: 
+ - Modules
+ - Files
+description: |
+ des

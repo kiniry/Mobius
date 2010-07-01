@@ -10,9 +10,9 @@ public class RegexChecker {
 	 */
 	public static void main(String[] args) {
 		
-		Pattern p=Pattern.compile("<\\w+%nat>");
+		Pattern p=Pattern.compile("choice:\\s*\\((\\w+)\\)\\s*");
 		
-		Matcher r= p.matcher("<example%nat>");
+		Matcher r= p.matcher("choice: (hi)");
 		if(r.matches())
 			System.out.println("hell yeah");
 		else

@@ -1,0 +1,22 @@
+---
+#corrrect simple example with all MyObject's
+name: correctexample1
+format:
+  - a
+  - b
+  - <c=myclass>
+  - <d=mydate>
+  - <e=mydescription>
+  - <f=myemail>
+  - <g=myexpression>
+  - <h=myfloat>
+  - <i=myint>
+  - <j=mystring>
+  - <k=mythrowable>
+  - <l=myurl>
+  - <m=myversion>
+scope: 
+ - Modules
+ - Files
+description: |
+ des

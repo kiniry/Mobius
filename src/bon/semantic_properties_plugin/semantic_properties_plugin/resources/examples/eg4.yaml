@@ -6,7 +6,12 @@ format:
   - choice (hi):
     - SEQUENTIAL
     - GUARDED
-    - [CONCURRENT,choice:[ yes,<no=string>]]
+    - 
+      - CONCURRENT
+      - choice:
+        -  yes
+        - <no=string>
+        - <guff=URL>
     - [TIMEOUT, <to=myint>, <e=nat>]
     - [FAILURE, <z=nat>]
     - [SPECIAL, optional: <fun=throwable>]
