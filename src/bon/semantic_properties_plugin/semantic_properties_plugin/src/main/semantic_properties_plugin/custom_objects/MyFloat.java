@@ -11,9 +11,9 @@ public class MyFloat extends MyObject {
 	public MyObjectKind getKind() {
 		return MyObjectKind.MyFloat;
 	}
-	@Override
-	public String getReg() {
-		return "<"+getId()+"=([1-9]+\\.[0-9]+)>";
-	}
+//	@Override
+//	public String getReg() {
+//		return "([-+]?\\d*\\.?\\d*)";
+//	}
 
 }

@@ -12,9 +12,9 @@ public class MyThrowable extends MyObject {
 	public MyObjectKind getKind() {
 		return MyObjectKind.Throwable;
 	}
-	@Override
-	public String getReg() {
-		return "<"+getId()+"=((?:\\w+).java)>";
-	}
+//	@Override
+//	public String getReg() {
+//		return "(\\w+\\.java)";
+//	}
 
 }

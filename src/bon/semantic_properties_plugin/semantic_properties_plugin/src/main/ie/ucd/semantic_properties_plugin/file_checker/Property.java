@@ -429,6 +429,17 @@ public class Property {
 		
 	}
 
+	/**
+	 * method to check an input string against this proerty
+	 * @return Matcher of input string against the regexof this property
+	 * @param in string to match against the regex representation of this string
+	 */
+	public boolean isProperty(String in){
+		Pattern p= Pattern.compile(reg.getExp());
+		Matcher m=p.matcher(in);
+		return m.matches();
+		
+	}
 	public static String getName() {
 		return name;
 	}

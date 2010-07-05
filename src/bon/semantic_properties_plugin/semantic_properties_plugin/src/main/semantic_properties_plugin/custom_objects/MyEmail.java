@@ -14,10 +14,10 @@ public class MyEmail extends MyObject {
 	public MyObjectKind getKind() {
 		return MyObjectKind.Email;
 	}
-	@Override
-	public String getReg() {
-		String emailid="(\\w+@\\w+\\.(:?com|ie))";
-		return "<"+getId()+"="+emailid+">";
-	}
+//	@Override
+//	public String getReg() {
+//		String emailid="([\\w-\\.]+@(:?[\\w-]+\\.)+[\\w-]{2,4}$)";
+//		return emailid;
+//	}
 
 }

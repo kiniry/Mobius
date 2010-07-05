@@ -14,10 +14,10 @@ public class MyDate extends MyObject {
 	public MyObjectKind getKind() {
 		return MyObjectKind.Date;
 	}
-	@Override
-	public String getReg() {
-		String digit="(\\d+)";
-		return "<"+getId()+"="+digit+">";
-	}
+//	@Override
+//	public String getReg() {
+//		String digit="(\\d{1,2}(?:\\/|-)\\d{1,2}(?:\\/|-)\\d{4})";
+//		return digit;
+//	}
 
 }

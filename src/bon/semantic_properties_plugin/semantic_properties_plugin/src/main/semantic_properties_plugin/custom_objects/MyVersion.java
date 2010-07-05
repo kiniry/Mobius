@@ -12,9 +12,9 @@ public class MyVersion extends MyObject {
 	public MyObjectKind getKind() {
 		return MyObjectKind.Version;
 	}
-	@Override
-	public String getReg() {
-		return "<"+getId()+"=([0-9](?:.[0-9])*)>";
-	}
+//	@Override
+//	public String getReg() {
+//		return "([0-9](?:.[0-9])*)";
+//	}
 
 }

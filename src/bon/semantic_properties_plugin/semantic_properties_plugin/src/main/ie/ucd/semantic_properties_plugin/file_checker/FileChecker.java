@@ -47,12 +47,9 @@ public class FileChecker {
 	FileChecker(File inputFile){
 		allprops= new LinkedList<Property>();
 		input=inputFile;
-	}
-	public void processProps(){
-		
-		//parsen yaml file and create properties for each yaml doc
 		parseFile(input);
 	}
+
 	/**
 	 * 	<p>method that prints the name,regexp and map of each regular
 	 *  expression. Used for testing</p>
@@ -120,6 +117,27 @@ public class FileChecker {
 			System.exit(1);
 		}
 
+	}
+	/**
+	 * 
+	 * @return true when the input is a valid instance of one of the semantic properties in this filechecker
+	 */
+
+	public boolean check(String input) {
+		//get name of property from input 
+		int i=input.indexOf(" ");
+		String search=input.substring(0,i);
+		
+		//loop through properties
+		for(Property current :allprops){
+			//check  if cuurent property has same name as input and parse if it does
+			if(current.name.equals(search)){
+				return current.isProperty(input);
+			}
+		}
+		// case where no properties name match the input property name
+		return false;
+		
 	}
 
 }

@@ -12,9 +12,9 @@ public class MyDescription extends MyObject {
 	public MyObjectKind getKind() {
 		return MyObjectKind.Description;
 	}
-	@Override
-	public String getReg() {
-		return "<"+getId()+"=(.+)>";
-	}
+//	@Override
+//	public String getReg() {
+//		return "(.+?\\.)";
+//	}
 
 }

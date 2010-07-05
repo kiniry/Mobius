@@ -11,10 +11,10 @@ public class MyInt extends MyObject {
 	public MyObjectKind getKind() {
 		return MyObjectKind.MyInt;
 	}
-	@Override
-	public String getReg() {
-		String reg= "((?:+|-)[1-9][0-9]+)";
-		return "<"+getId()+"="+reg+">";
-	}
+//	@Override
+//	public String getReg() {
+//		String reg= "([-+]?[1-9][0-9]+)";
+//		return reg;
+//	}
 
 }

@@ -12,10 +12,11 @@ public class MyURL extends MyObject {
 	public MyObjectKind getKind() {
 		return MyObjectKind.URL;
 	}
-	@Override
-	public String getReg() {
-		String urlid="((?:(?:http[s]?|ftp):\\/)?\\/?(?:[^:\\/\\s]+)(?:(?:\\/\\w+)*\\/)(?:[\\w\\-\\.]+[^#?\\s]+)(?:.*)?(?:#[\\w\\-]+)?)";
-		return "<"+getId()+"="+urlid+">";
-	}
+//	@Override
+//	public String getReg() {
+//		String urlid="((?:(?:http[s]?|ftp):\\/)?\\/?(?:[^:\\/\\s]+)(?:(?:\\/\\w+)*\\/)(?:[\\w\\-\\.]+[^#?\\s]+)(?:.*)?(?:#[\\w\\-]+)?)";
+//		String urlid2="((?:mailto\\:|(?:news|(?:ht|f)tp(?:s?))\\://){1}\\S+)";
+//		return urlid2;
+//	}
 
 }

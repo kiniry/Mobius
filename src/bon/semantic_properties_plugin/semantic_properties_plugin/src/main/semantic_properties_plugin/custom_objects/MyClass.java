@@ -12,10 +12,11 @@ public class MyClass extends MyObject {
 	public MyObjectKind getKind() {
 		return MyObjectKind.Class;
 	}
-	@Override
-	public String getReg() {
-		String clazz="(\\w+.class)";
-		return "<"+getId()+"="+clazz+">";
-	}
+//	@Override
+//	public String getReg() {
+//		String clazz1="([a-zA-Z](?:[a-zA-Z0-9])*(?:[\\.][a-zA-Z](?:[a-zA-Z0-9])*)*)";
+//		//String clazz="(\\w+.class)";
+//		return clazz1;
+//	}
 
 }

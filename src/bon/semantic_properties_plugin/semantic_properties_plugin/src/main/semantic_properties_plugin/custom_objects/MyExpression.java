@@ -12,9 +12,9 @@ public class MyExpression extends MyObject {
 	public MyObjectKind getKind() {
 		return MyObjectKind.Expression;
 	}
-	@Override
-	public String getReg() {
-		return "<"+getId()+"=(.+)>";
-	}
+//	@Override
+//	public String getReg() {
+//		return "(\\(.+?\\))";
+//	}
 
 }

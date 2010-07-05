@@ -10,11 +10,18 @@ public class RegexChecker {
 	 */
 	public static void main(String[] args) {
 		
-		Pattern p=Pattern.compile("choice:\\s*\\((\\w+)\\)\\s*");
+		Pattern p=Pattern.compile("(\\w+)\\s(\\w+)\\s(\\w+)");
 		
-		Matcher r= p.matcher("choice: (hi)");
-		if(r.matches())
+		Matcher r= p.matcher("foo is cool");
+		
+		if(r.matches()){
+			
+			for(int i=1;i<r.groupCount()+1;i++){
+				System.out.println(r.group(i));
+				
+			}
 			System.out.println("hell yeah");
+		}
 		else
 			System.out.println("uh oh");
 		
