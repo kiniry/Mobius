@@ -1,7 +1,13 @@
 --- 
 name: concurrency
 format: 
-  - choice (type): [SEQUENTIAL,GUARDED,CONCURRENT,[TIMEOUT,<value=myint>,<Exception=mythrowable>],[FAILURE,<Exception2=mythrowable>],SPECIAL]
+  - choice (type): 
+    - SEQUENTIAL
+    - GUARDED
+    - CONCURRENT
+    - [TIMEOUT,<value=myint>,<Exception=mythrowable>]
+    - [FAILURE,<Exception2=mythrowable>]
+    - SPECIAL
   - optional: <Description=mydescription>
 scope: 
   - Modules

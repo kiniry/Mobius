@@ -1,4 +1,3 @@
-
 /**
  * @title "Semantic Property Plugin Package"
  * @description "Class that holds all properties in one structure."
@@ -23,121 +22,133 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
-
 /**
- * <p> A class that takes yaml files,parses them with snakeyaml and
- * constructs and stores the appropiate semantic properties </p>
- *
+ * <p>
+ * A class that takes yaml files,parses them with snakeyaml and constructs and
+ * stores the appropiate semantic properties
+ * </p>
+ * 
  * @see Property
- * @see    RegExpStruct
+ * @see RegExpStruct
  * @version "$Id: 01-07-2010 $"
- * @author  Eoin O'Connor
+ * @author Eoin O'Connor
  **/
 public class FileChecker {
 
 	// Attributes
-	
+
 	private static List<Property> allprops;
 	private File input;
 
 	/**
 	 * 
-	 * @param yaml file
+	 * @param yaml
+	 *            file
 	 */
-	FileChecker(File inputFile){
-		allprops= new LinkedList<Property>();
-		input=inputFile;
+	FileChecker(File inputFile) {
+		allprops = new LinkedList<Property>();
+		input = inputFile;
 		parseFile(input);
 	}
 
 	/**
-	 * 	<p>method that prints the name,regexp and map of each regular
-	 *  expression. Used for testing</p>
+	 * <p>
+	 * method that prints the name,regexp and map of each regular expression.
+	 * Used for testing
+	 * </p>
 	 */
-	public void printProps(){
-		for(Property p: allprops){
+	public void printProps() {
+		for (Property p : allprops) {
 			System.out.println(p);
-			System.out.println("Regular expression is " +(p.getReg()).getExp());
-			System.out.println("Regular expression map is " +(p.getReg()).getGroups());
-
-		}				
+			System.out
+					.println("Regular expression is " + (p.getReg()).getExp());
+			System.out.println("Regular expression map is "
+					+ (p.getReg()).getGroups());
+		}
 	}
-	public List<Property> getProps(){
+
+	public List<Property> getProps() {
 		return allprops;
 	}
+
 	/**
 	 * 
 	 * @return list of the regexp of all the properties
 	 */
-	public LinkedList<RegExpStruct> getAllRegExp(){
-		LinkedList<RegExpStruct> r=new LinkedList<RegExpStruct>();
-		for(Property p: allprops){
+	public LinkedList<RegExpStruct> getAllRegExp() {
+		LinkedList<RegExpStruct> r = new LinkedList<RegExpStruct>();
+		for (Property p : allprops) {
 			r.add(p.getReg());
 		}
 		return r;
-		
+
 	}
 
 	/**
-	 * <p>parser a file using snakeyaml and creates the appropiate properties</p>
-	 * @param inputFile yaml file to parse, may contain multiple properties
+	 * <p>
+	 * parser a file using snakeyaml and creates the appropiate properties
+	 * </p>
+	 * 
+	 * @param inputFile
+	 *            yaml file to parse, may contain multiple properties
 	 */
 	private static void parseFile(File inputFile) {
-		
-		//get input stream from file;
+
+		// get input stream from file;
 		InputStream input = null;
 		try {
 			input = new FileInputStream(inputFile);
-		} 
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			System.out.println("error reading from " + inputFile + " file");
 			e.printStackTrace();
 			System.exit(1);
 		}
-		//create snakeyaml pbject
+		// create snakeyaml pbject
 		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
 				new CustomRepresenter(), new DumperOptions()),
 				new CustomResolver());
-		//create yaml object with snakeyaml
+		// create yaml object with snakeyaml
 		Object data = yaml.loadAll(input);
-		
-		
-		try{	
-			Iterable s=(Iterable<Object>)data;
-			Iterator<LinkedHashMap<String,?>> i;
-			i=s.iterator();
-			//iterate through the properties and add them
-			while(i.hasNext()){				
+
+		try {
+			Iterable s = (Iterable<Object>) data;
+			Iterator<LinkedHashMap<String, ?>> i;
+			i = s.iterator();
+			// iterate through the properties and add them
+			while (i.hasNext()) {
 				allprops.add(new Property(i.next()));
-			}			
-		}
-		catch(Exception e){
-			System.out.println("yaml file "+input+" did not contain expected Iterators, invalid yaml file");
+			}
+		} catch (Exception e) {
+			System.out.println("yaml file " + input
+					+ " did not contain expected Iterators, invalid yaml file");
 			e.printStackTrace();
 			System.exit(1);
 		}
 
 	}
+
 	/**
 	 * 
-	 * @return true when the input is a valid instance of one of the semantic properties in this filechecker
+	 * @return true when the input is a valid instance of one of the semantic
+	 *         properties in this filechecker
 	 */
 
 	public boolean check(String input) {
-		//get name of property from input 
-		int i=input.indexOf(" ");
-		String search=input.substring(0,i);
-		
-		//loop through properties
-		for(Property current :allprops){
-			//check  if cuurent property has same name as input and parse if it does
-			if(current.name.equals(search)){
+		// get name of property from input
+		int i = input.indexOf(" ");
+		String search = input.substring(0, i);
+
+		// loop through properties
+		for (Property current : allprops) {
+			// check if cuurent property has same name as input and parse if it
+			// does
+			if (current.name.equals(search)) {
 				return current.isProperty(input);
 			}
 		}
 		// case where no properties name match the input property name
 		return false;
-		
+
 	}
 
 }

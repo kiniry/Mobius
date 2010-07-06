@@ -146,13 +146,19 @@ public class FileCheckerTest extends TestCase {
 		 * string to check
 		 */
 		String propInstance=
-			"concurrency TIMEOUT 20 jav.lang.Throwable a short  description.";
+			"concurrency TIMEOUT 20 java.lang.Throwable a short  description.";
 
 		
-		File caseThree= new File("resources/examples/concurrency.yaml");
-		FileChecker checkThree= new FileChecker(caseThree);
+		File caseThree = new File("resources/examples/concurrency.yaml");
+		FileChecker checkThree = new FileChecker(caseThree);
 		
 		assertTrue(checkThree.check(propInstance));
+		
+		String propInstance2=
+			"concurrency CONCURRENT ";
+
+		assertTrue(checkThree.check(propInstance2));
+		//maps dont equal
 		//assertEquals(correctMap,checkMap);
 	}
 
