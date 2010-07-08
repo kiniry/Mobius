@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: AutoGrader Plug-in
 Bundle-SymbolicName: AutoGrader;singleton:=true
-Bundle-Version: 0.2.2
+Bundle-Version: 0.2.3
 Bundle-Activator: ie.ucd.autograder.AutoGraderPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -14,5 +14,5 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .,
- lib/net.sourceforge.nattable.core_2.0.0.200908240000.jar,
- lib/commons-lang-2.4.jar
+ lib/commons-lang-2.4.jar,
+ lib/net.sourceforge.nattable.core-2.1.0.jar
