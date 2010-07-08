@@ -88,7 +88,7 @@ public class AutoGraderView extends ViewPart {
     if (AutoGraderDataProvider.getInstance().validData()) {
       bodyLayer.setDefaultColumnWidth(150);
     } else {
-      bodyLayer.setDefaultColumnWidth(600);
+      bodyLayer.setDefaultColumnWidth(700);
     }
     
     AutoGraderGridLayer grid = new AutoGraderGridLayer(bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
