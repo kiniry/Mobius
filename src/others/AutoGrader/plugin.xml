@@ -75,7 +75,7 @@
             id="AutoGrader">
       </category>
       <view
-            name="Auto-Grader"
+            name="AutoGrader"
             category="AutoGrader"
             class="ie.ucd.autograder.views.AutoGraderView"
             id="ie.ucd.autograder.views.AutoGraderView">
