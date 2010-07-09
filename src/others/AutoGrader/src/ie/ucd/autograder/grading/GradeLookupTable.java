@@ -1,5 +1,6 @@
 package ie.ucd.autograder.grading;
 
+import ie.ucd.autograder.util.Log;
 import ie.ucd.autograder.util.Pair.MarkGradePair;
 
 import java.util.Arrays;
@@ -41,8 +42,8 @@ public class GradeLookupTable {
         return boundary.getSecond();
       }
     }
-    System.out.println("No grade found for mark " + mark + "!");
-    System.out.println("Boundaries: " + gradeBoundaries);
+    Log.error("No grade found for mark " + mark + 
+              "!\n Boundaries: " + gradeBoundaries);
     assert false; //Final boundary should always have a mark of zero!
     return null;
   }
@@ -50,8 +51,7 @@ public class GradeLookupTable {
   public double getMarkForGrade(Grade grade) {
     Double d = gradeMarkMap.get(grade);
     if (d == null) {
-//      System.out.println("No mark for grade: " + grade);
-//      System.out.println("In table: " + toString());
+      // Log.info("No mark for grade " + grade + " in table " + toString());
       return 0.0;
     } else {
       return d;

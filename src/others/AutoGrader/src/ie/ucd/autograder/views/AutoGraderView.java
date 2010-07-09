@@ -13,10 +13,12 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.navigator.resources.ProjectExplorer;
 import org.eclipse.ui.part.ViewPart;
@@ -38,7 +40,7 @@ public class AutoGraderView extends ViewPart {
   }
 
   private void updateView(ISelection selection) {
-    //System.out.println("Updating view");
+    //Log.info("Updating view");
     Object actual = selection;
     //Get the first element if more than one are selected.
     if (selection instanceof IStructuredSelection) {
@@ -52,16 +54,23 @@ public class AutoGraderView extends ViewPart {
       IProject project = ((IResource)actual).getProject();
       updateSelectedProject(project);
     } else {
-      //System.out.println("Not IJavaElement or IResource " + actual.getClass());
+      //Log.info("Not IJavaElement or IResource " + actual.getClass());
     }
   }
 
   public void update() {
     AutoGraderDataProvider.getInstance().updateData();
+    updateTable();
     if (!table.isDisposed()) {
       Display.getDefault().asyncExec(new Runnable() {
         public void run() {
           table.updateResize();
+          // attempted workaround for non-appearing scroll bars
+          Point p = table.getSize();
+          table.pack(true);
+          table.redraw();
+          table.setSize(p);
+          table.redraw();
         }
       });
     }
@@ -71,6 +80,12 @@ public class AutoGraderView extends ViewPart {
     AutoGraderDataProvider.getInstance().setSelectedProject(project);
     updateTable();
     table.updateResize();
+    // attempted workaround for non-appearing scroll bars
+    Point p = table.getSize();
+    table.pack(true);
+    table.redraw();
+    table.setSize(p);
+    table.redraw();
   }
 
   private void updateTable() {
@@ -85,18 +100,17 @@ public class AutoGraderView extends ViewPart {
     DataLayer rowHeaderLayer = new DefaultRowHeaderDataLayer(rowHeaderProvider);
     DataLayer cornerLayer = new DataLayer(cornerProvider);
     
-    if (AutoGraderDataProvider.getInstance().validData()) {
+    if (data.validData()) {
       bodyLayer.setDefaultColumnWidth(150);
     } else {
       bodyLayer.setDefaultColumnWidth(700);
     }
     
-    AutoGraderGridLayer grid = new AutoGraderGridLayer(bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
-    table.setLayer(grid);
-
-    //grid.getBodyLayer().setConfigLabelAccumulator(data);
     bodyLayer.setConfigLabelAccumulator(data);
     
+    AutoGraderGridLayer grid = new AutoGraderGridLayer(bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
+    
+    table.setLayer(grid);    
     configureTable(table);
   }
 
@@ -109,7 +123,7 @@ public class AutoGraderView extends ViewPart {
     updateTable();
 
     //Register this view to receive selection changes.
-    ISelectionService service = getSite().getWorkbenchWindow().getSelectionService();
+    ISelectionService service = getSite().getWorkbenchWindow().getSelectionService();                      
     ISelectionListener listener = new ISelectionListener() {
       public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         updateView(selection);

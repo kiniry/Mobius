@@ -11,17 +11,17 @@ public class AutoGraderColumnHeaderDataProvider implements IDataProvider {
   }
 
   public int getColumnCount() {
-//    System.out.println("Column header column count: " + dataProvider.getColumnCount());
+//    Log.info("Column header column count: " + dataProvider.getColumnCount());
     return dataProvider.getColumnCount();
   }
 
   public Object getDataValue(int columnIndex, int rowIndex) {
-//    System.out.println("Getting header value for col=" + columnIndex + ", row=" + rowIndex);
+//    Log.info("Getting header value for col=" + columnIndex + ", row=" + rowIndex);
     return dataProvider.getColumnHeader(columnIndex);
   }
 
   public int getRowCount() {
-//    System.out.println("Getting column header row count (1)");
+//    Log.info("Getting column header row count (1)");
     return dataProvider.validData() ? 1 : 0;
   }
 

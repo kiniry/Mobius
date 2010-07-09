@@ -5,6 +5,7 @@ package ie.ucd.autograder.views;
 
 import ie.ucd.autograder.builder.DataStore;
 import ie.ucd.autograder.builder.GraderBuilder;
+import ie.ucd.autograder.builder.GraderNature;
 import ie.ucd.autograder.grading.AggregateData;
 import ie.ucd.autograder.grading.Grade;
 import ie.ucd.autograder.grading.InputData;
@@ -17,6 +18,7 @@ import net.sourceforge.nattable.layer.LabelStack;
 import net.sourceforge.nattable.layer.cell.IConfigLabelAccumulator;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 
 public class AutoGraderDataProvider implements IConfigLabelAccumulator {
 
@@ -34,7 +36,7 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
   }
 
   public void setSelectedProject(IProject project) {
-    //    System.out.println("Changed selected project to " + project);
+    //    Log.info("Changed selected project to " + project);
     selectedProject = project;
     numberOfRows = 1;
     updateData();
@@ -42,17 +44,20 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
 
   public void updateData() {
     projectData = selectedProject == null ? null : DataStore.getInstance(selectedProject, true).getDataForProject(selectedProject);
-    //    System.out.println("Updated data. Project data: " + projectData);
-    //    System.out.println("selectedProject: " + selectedProject);
+    //    Log.info("Updated data. Project data: " + projectData);
+    //    Log.info("selectedProject: " + selectedProject);
     updateRowCount();
 
-    if (selectedProject != null && projectData != null) {
+    if (validData()) {
       cellData = new Object[numberOfRows][projectData.size()];
       for (int i=0; i < cellData.length; i++) {
         for (int j=0; j < cellData[0].length; j++) {
           cellData[i][j] = internalBodyDataValue(i, j);
         }
       }
+    } else {
+      cellData = new Object[1][1];
+      cellData[0][0] = internalBodyDataValue(0, 0);
     }
   }
 
@@ -103,17 +108,34 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
 
   public Object getBodyDataValue(int row, int col) {
     if (selectedProject != null) {
+      boolean hasGraderNature = false;
+      try {
+        if (selectedProject.getNature(GraderNature.NATURE_ID) != null) {
+          hasGraderNature = true;
+        }
+      } catch (CoreException e) {
+        // we couldn't find out about the AutoGrader nature, oh well
+      }
       if (projectData != null && cellData != null) {
+        // we can display the data
         if (row > cellData.length-1 || col > cellData[0].length) {
           return "An error occurred.";
         } else {
           return cellData[row][col];
         }        
+      } else if (hasGraderNature) {
+        // the project has AutoGrader nature but no cached data
+        return "No data available for " + selectedProject.getName() + ". Please try cleaning the project.";
+      } else if (selectedProject.isOpen()) {
+        // the project is open but does not have AutoGrader nature
+        return "No data available for " + selectedProject.getName() + ". Is the AutoGrader nature enabled for the project?";
       } else {
-        return "No data for " + selectedProject.getName() + ". Is the AutoGrader nature enabled for this project?";
+        // the project is closed
+        return "No data available for " + selectedProject.getName() + ". Please open the project.";
       }
-    } else {
-      return "No data for selection. Please select an AutoGrader-enabled project from the Package Explorer or Project Explorer.";
+    }
+    else {
+      return "No data available for selection. Please select an AutoGrader-enabled project from Package Explorer or Project Explorer.";
     }
   }
 
@@ -198,13 +220,13 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
   }
 
   public void accumulateConfigLabels(LabelStack configLabels, int columnPosition, int rowPosition) {
-    //    System.out.println("Labels for (" + columnPosition + "," + rowPosition + ")");
-    if (cellData != null && rowPosition < cellData.length && columnPosition < cellData[0].length) {
+    //    Log.info("Labels for (" + columnPosition + "," + rowPosition + ")");
+    if (validData() && cellData != null && rowPosition < cellData.length && columnPosition < cellData[0].length) {
       Object cell = cellData[rowPosition][columnPosition];
       if (cell instanceof CellData) {
-        //        System.out.println("(" + columnPosition + "," + rowPosition + ") is a CellData, class: " + cell.getClass());
+        //        Log.info("(" + columnPosition + "," + rowPosition + ") is a CellData, class: " + cell.getClass());
         for (String label : ((CellData)cell).getLabels()) {
-          //          System.out.println("Adding label " + label);
+          //          Log.info("Adding label " + label);
           configLabels.addLabel(label);
         }
       }

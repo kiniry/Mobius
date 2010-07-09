@@ -11,17 +11,17 @@ public class AutoGraderBodyDataProvider implements IDataProvider {
   }
 
   public int getColumnCount() {
-//    System.out.println("Body column count: " + dataProvider.getColumnCount());
+//    Log.info("Body column count: " + dataProvider.getColumnCount());
     return dataProvider.getColumnCount();
   }
 
   public Object getDataValue(int columnIndex, int rowIndex) {
-//    System.out.println("Getting body value for col=" + columnIndex + ", row=" + rowIndex);
+//    Log.info("Getting body value for col=" + columnIndex + ", row=" + rowIndex);
     return dataProvider.getBodyDataValue(rowIndex, columnIndex);
   }
 
   public int getRowCount() {
-//    System.out.println("Body row count: " + dataProvider.getBodyRowCount());
+//    Log.info("Body row count: " + dataProvider.getBodyRowCount());
     return dataProvider.getBodyRowCount();
   }
 
