@@ -8,11 +8,22 @@ public class ConcurrencyTest extends TestCase{
 
 	
 	public void  testConProp(){
+		
+		/**Create Property.
+		 * 
+		 */
 		File conPropFile= new File("");
 		
 		Property concurrencyProperty=new Property(conPropFile);
 		
+		/**Create sample  input String.
+		 * 
+		 */
 		String sampleInput="";
+		
+		/**Create PropertyMatch for the property and string.
+		 * 
+		 */
 		
 		PropertyMatch match = new PropertyMatch(sampleInput,concurrencyProperty);
 		
