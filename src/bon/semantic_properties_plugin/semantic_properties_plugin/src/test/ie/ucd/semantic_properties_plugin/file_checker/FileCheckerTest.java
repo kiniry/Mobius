@@ -91,10 +91,10 @@ public class FileCheckerTest extends TestCase {
 			")"+space+
 			EMAIL_REP+space+
 			EXPRESSION_REP+space+
-			"(?:"+FLOAT_REP+"()()|"+
+			"(?:"+FLOAT_REP+"|"+
 				INT_REP+space+
-				"(i1()|"+
-					"i2()|"+
+				"(i1|"+
+					"i2|"+
 					INT_REP+
 				")"+
 			")"+space+	
@@ -106,18 +106,18 @@ public class FileCheckerTest extends TestCase {
 		
 		LinkedHashMap<String, Integer> correctMap=new LinkedHashMap<String, Integer>();
 		correctMap.put("c",1);
-		correctMap.put("d",1);
-		correctMap.put("e",1);
-		correctMap.put("f",2);
-		correctMap.put("g",3);
-		correctMap.put("h",4);
-		correctMap.put("i",4);
-		correctMap.put("is",5);
-		correctMap.put("i3",6);
-		correctMap.put("j",7);
-		correctMap.put("k",8);
-		correctMap.put("l",9);
-		correctMap.put("m",9);
+		correctMap.put("d",2);
+		correctMap.put("e",3);
+		correctMap.put("f",4);
+		correctMap.put("g",5);
+		correctMap.put("h",6);
+		correctMap.put("i",7);
+		correctMap.put("is",8);
+		correctMap.put("i3",9);
+		correctMap.put("j",10);
+		correctMap.put("k",11);
+		correctMap.put("l",12);
+		correctMap.put("m", 13);
 		
 		
 		
@@ -140,8 +140,7 @@ public class FileCheckerTest extends TestCase {
 		assertEquals(correctMap,checkMap);
 	}
 	
-	public void testConcurrencyExample(){
-	
+	public void testConcurrencyExample() {
 		/**
 		 * string to check
 		 */
@@ -151,7 +150,7 @@ public class FileCheckerTest extends TestCase {
 		
 		File caseThree = new File("resources/examples/concurrency.yaml");
 		FileChecker checkThree = new FileChecker(caseThree);
-		
+		//checkThree.printProps();
 		assertTrue(checkThree.check(propInstance));
 		
 		String propInstance2=

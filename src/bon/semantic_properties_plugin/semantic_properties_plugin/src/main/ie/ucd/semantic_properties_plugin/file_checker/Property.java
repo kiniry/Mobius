@@ -9,6 +9,8 @@
 
 package ie.ucd.semantic_properties_plugin.file_checker;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -17,11 +19,16 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.yaml.snakeyaml.Dumper;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Loader;
+import org.yaml.snakeyaml.Yaml;
+
 
 import semantic_properties_plugin.custom_objects.MyObject;
 
 
-/**
+/**A class representing a semantic property.
  * <p> A class representing a semantic property that consists of
  * format,name,scope,description and a regular expression structure.</p>
  *
@@ -32,54 +39,80 @@ import semantic_properties_plugin.custom_objects.MyObject;
 
 public class Property {
 
-	
-	// Attributes
-
-	  /**
-	   * <p> definition of what makes an acceptable property  using regular expressions for
-	   *  name,scope,description and the different format possibilities </p>
-	   */
+	/**Strings Used for Validity Checks.
+	 * <p> Definition of what makes an acceptable property fors
+     *  name,scope,description and the different format possibilities </p>
+	 */
 	final static String prop_Scope = "(files|modules|features|variables|all|special)";
 	final static String prop_Description = ".*";
 	final static String prop_format_String = "(\\w*)";
 	final static String prop_format_CustomObject = "(\\w+=(\\w|[0-9]|\\.)+)";
 	final static String prop_format_Special = "((choice\\s*\\((\\w+)\\)\\s*)|choice|optional)";	
 	final static String prop_Name = "\\s*\\w+\\s*";
+	final static String prop_Level = "[=-]?\\d+";
 
-	 /**
-	   * <p>  list of property attributes </p>
-	   */
-	public static ArrayList<Object> format;
-	public static ArrayList<String> scope;
-	public static String description;
-	public static String name;
+
+	/**The variables for a property
+	 * <p>  list of property attributes </p>
+	 */
+	private static ArrayList<Object> format;
+	private static ArrayList<String> scope;
+	private static String description;
+	private static String name;
+	private int level;
 	private RegExpStruct reg;
 	
-	// Public Methods
+	
+	/*Constructor for  File
+	 * @param input file with property in it.
+	 */
+	public Property(File input) {
+		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
+				new CustomRepresenter(), new DumperOptions()),
+				new CustomResolver());;
+		FileInputStream io=null;
 
-	  /**
-	   * default constructor that uses default values 
-	   */
-
-
-	public Property() {
-		format = new ArrayList<Object>();
-		scope = new ArrayList<String>();
-		description = new String();
-		name = new String();
-	  	reg= new RegExpStruct();
+		try{
+			io= new FileInputStream(input);
+		}
+		catch(Exception e){
+			System.out.println("invalid string");
+		}
+		Object ob =yaml.load(io);
+		Parse((LinkedHashMap<String,?>)ob);
 
 	}
-	/**
-	   * default constructor that uses linkedHashMap usually from snakeyaml to make property
-	   * @param linkedHashMap the linkedhashMap that snakeyaml has produced
-	   */
 
-	public Property(LinkedHashMap<String, ?> linkedHashMap){
+	/*Constructor for string representing file
+	 * @param input String representing input file
+	 */
+	public Property(String input) {
+		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
+				new CustomRepresenter(), new DumperOptions()),
+				new CustomResolver());;
+		FileInputStream io=null;
+
+		try{
+			io= new FileInputStream(input);
+		}
+		catch(Exception e){
+			System.out.println("invalid string");
+		}
+		Object ob =yaml.load(io);
+		Parse((LinkedHashMap<String,?>)ob);
+
+	}
+	
+	/**parse method for LinkedHashMap
+	  * <p>method takes in snakyaml parsed linkedHashMap
+	  * and fills this property's values</p>
+	  * @param linkedHashMap to parse
+	  */
+
+	private void Parse(LinkedHashMap<String, ?> linkedHashMap){
 		
 			if(!checkValidity(linkedHashMap)){
 				System.out.println("linkedHashMap entery "+linkedHashMap+" does not represent a valid property not valid");
-				System.exit(2);
 			}
 			else{
 				name=(String)linkedHashMap.get("name");
@@ -87,32 +120,34 @@ public class Property {
 				description=(String)linkedHashMap.get("description");
 				scope=(ArrayList<String>)linkedHashMap.get("scope");		  
 				reg= generateRegExp();
+				level=(Integer)linkedHashMap.get("level");
 			}
 					
 			  
 	}
-	/**
-	 * Gets the regular expression for this property
-	 * @return a RegExpStruct representation of this property
-	 */
-
-	public RegExpStruct getReg() {
-		return reg;
-	}
-
-	public void setReg(RegExpStruct reg) {
-		this.reg = reg;
-	}
-	/**
-	 * checks prop for validity as defined by the strings at the beginning of this file
+	/**Checks validity of property.
+	 * <p>Checks prop for validity as defined by the strings at 
+	 * the beginning of this file</p>
 	 * @param newProp linkedHashMap that contains potential property as parsed by snakeyaml
-	 * @return true when the property is a valid representation
+	 * @return true when the property is  valid.
 	 */
-	public boolean checkValidity(LinkedHashMap<String, ?> newProp) {
+	private boolean checkValidity(LinkedHashMap<String, ?> newProp) {
 
 
 
-		// check name
+		/**Checks the level ;
+		 * 
+		 */
+		Pattern levelPattern = Pattern.compile(prop_Level);
+
+		Matcher levelMatcher = levelPattern.matcher((String)newProp.get("level"));
+		if (!levelMatcher.matches()) {
+			System.out.println(" level value is invalid @" + name);
+			return false;
+		}
+		/**Checks the name ;
+		 * 
+		 */
 		Pattern namePattern = Pattern.compile(prop_Name);
 
 		Matcher nameMatcher = namePattern.matcher((String)newProp.get("name"));
@@ -121,7 +156,9 @@ public class Property {
 			return false;
 		}
 
-		// check scopes
+		/**Checks the scope;
+		 * 
+		 */
 		Pattern scopePattern = Pattern.compile(prop_Scope,
 				Pattern.CASE_INSENSITIVE);
 		ArrayList<String> scopes=(ArrayList<String>)newProp.get("scope");
@@ -133,7 +170,9 @@ public class Property {
 			}
 		}
 
-		// check Description
+		/**Checks the description
+		 * 
+		 */
 		Pattern descriptionPattern = Pattern.compile(prop_Description,
 				Pattern.DOTALL);
 		Matcher descriptionMatcher = descriptionPattern.matcher((String)newProp.get("description"));
@@ -143,14 +182,16 @@ public class Property {
 			return false;
 		}
 
-		// check format with recursive method
+		/*Checks the format with recursive method
+		 * 
+		 */
 		return checkFormatValidity((ArrayList<Object>)newProp.get("format"));
 
 	}
 	/**
-	 * recursive method to be called by on any object to check if it is valid format object
-	 * @param formatValue Object that may be 
-	 * @return true when valid format object
+	 * recursive method to check if object is a valid format property.
+	 * @param formatValue Object to be checked
+	 * @return true when object is a valid format object
 	 */
 
 	private boolean checkFormatValidity(Object formatValue) {
@@ -226,78 +267,65 @@ public class Property {
 	 * @return regexp representation of property 
 	 */
 
-	public static RegExpStruct generateRegExp() {
+	private static RegExpStruct generateRegExp() {
 		RegExpStruct returnRegEx = generateRegExp(format);
 		String start=name+"[\\s+]";
 		String end=returnRegEx.getExp();
-		start+=end;
-		returnRegEx.setExp(start);
+		returnRegEx.setExp(start+end);
 		return returnRegEx;
 	}
 	/**
-	 * recursive method to build regexp for an object
-	 * @param object to turn into regexp
-	 * @return regexp representation of object 
+	 * Recursive method to build RegeExpStruct for an object
+	 * @param ob object to generate RegExpStruct from
+	 * @return RegExpStruct representation of object 
 	 */
 
-	public static RegExpStruct generateRegExp(Object ob) {
+	private static RegExpStruct generateRegExp(Object ob) {
 		String space="[\\s+]";
 
-		//when arraylist
+		/*ArrayList Case
+		 * 
+		 */
 		if (ob instanceof ArrayList<?>) {
-
-			
-			ArrayList<?> list = (ArrayList<?>) ob;
-			
-			ArrayList<RegExpStruct> rlist= new ArrayList<RegExpStruct>();
-				
-			//loop through all objects in list and generate regexp for each and add them to list
+		
+			ArrayList<?> list = (ArrayList<?>) ob;	
+			/*loop through RegExpStruct and add eachRegExpStruct to end.
+			 * <p>loop through all objects in list, generate RegExpStruct
+			 * and add them to rlist</p>
+			 */
+			RegExpStruct listReg= new RegExpStruct();
 			for (Object obin : list) {
 				RegExpStruct temp = generateRegExp(obin);
-				rlist.add(temp);
+				listReg=listReg.concat(temp, "", space,0);
 			}
+			/**Get rid of extra space on end
+			 * 
+			 */
+			String l=listReg.getExp();
+			listReg.setExp(l.substring(0,l.length()-space.length()));
+			return listReg;
 			
-			//concat regular expressions
-			String exp="";
-			LinkedHashMap<String, Integer> gorup=new LinkedHashMap<String, Integer>(); 
-			int numOfGroups=0;
-			
-			for (RegExpStruct o : rlist) {	
-				exp+=o.getExp()+space;
-				//concat map
-				int mapEntriesAdded=0;
-				//iterate through the groups in each object and correct mapping
-				Iterator<?> it = o.getGroups().entrySet().iterator();
-				while (it.hasNext()) {
-					Map.Entry pairs = (Map.Entry) it.next();
-					int i = (Integer) pairs.getValue();
-					pairs.setValue(numOfGroups+ i);
-					mapEntriesAdded++;
-				}
-				numOfGroups+=o.getNumberOfGroups();
-				//add corrected groups to new list
-				gorup.putAll(o.getGroups());
-				//numOfGroups+=mapEntriesAdded;
-				
-				
-			}
-			//get rid of extra space
-			exp=exp.substring(0,exp.length()-space.length());
-			RegExpStruct concat= new RegExpStruct(exp,gorup,numOfGroups);
-			return concat;
-			
-			
+
 		}
-		// if map
-		if (ob instanceof LinkedHashMap<?, ?>) {
-			RegExpStruct concatRegExp = new RegExpStruct();
-			
+		/**Map Case
+		 * 
+		 */
+		if (ob instanceof LinkedHashMap<?, ?>) {		
+			/**Cast to LinkeHashMap and make new RegExpStuct.;
+			 * 
+			 */
+			RegExpStruct choiceCapReg = new RegExpStruct();
 			LinkedHashMap<String, ?> all = (LinkedHashMap<String, ?>) ob;
+			/** choice:(name) sub-case
+			 * <p>This is the capturing case</p>
+			 */
 			
+			/*Check if its a capturing choice case
+			 * <p>break is not</>
+			 */
 			
-			// choice:(name) capturing case
 			Set<String> keys=all.keySet();
-			for(String s:keys){
+			for(String s :keys){
 				String check="choice\\s*\\((\\w+)\\)\\s*";
 				Pattern checkPattern = Pattern.compile(check);
 				Matcher checkMatcher = checkPattern.matcher(s);
@@ -305,85 +333,59 @@ public class Property {
 				   //if not special case exit
 					break;
 				}
+				/**Get regExpStruct Map,add choice and set as regExpStruct map again.
+				 * <p>Because its the capturing case</p>
+				 */
+				LinkedHashMap<String ,Integer> capRegGroup =
+				choiceCapReg.getGroups();
 				
-				//get list of choices 
-				ArrayList<?> choices=(ArrayList<?>)all.get(s);
+				capRegGroup.put(checkMatcher.group(1),capRegGroup.size()+1);
 				
-				//find largest group and get list of reg exp
-				ArrayList<RegExpStruct> rlist= new ArrayList<RegExpStruct>();
-				int largestGroup=0;
+				choiceCapReg.setGroups(capRegGroup);
+				choiceCapReg.setNumberOfGroups(choiceCapReg.getNumberOfGroups()+1);
+				/**Get list of choices
+				 * 
+				 */
+				ArrayList<?> choices=(ArrayList<?>)all.get(s);	
+				/**Loop through list choices and build RegExpStruct.
+				 * 
+				 */
 				for (Object obin : choices) {
 					RegExpStruct temp = generateRegExp(obin);
-					rlist.add(temp);
-					int numberOfGroups=temp.getNumberOfGroups();
-					if(numberOfGroups>=largestGroup){
-						largestGroup=numberOfGroups;
-					}
+					choiceCapReg=choiceCapReg.concat(temp, "", "|",0);
 				}
-				
-				//concat regular expressions, map & 
-				String exp="(";
-				LinkedHashMap<String, Integer> newMap=new LinkedHashMap<String, Integer>();
-				newMap.put(checkMatcher.group(1), 1);
-				int numOfGroups=0;
-				for (RegExpStruct itemInList : rlist) {	
-					exp+=itemInList.getExp();
-					for(int i=itemInList.getNumberOfGroups();i<largestGroup;i++){
-						exp+="()";
-					}
-					exp+="|";
-					//concat map
-					Iterator<?> it = itemInList.getGroups().entrySet().iterator();
-					while (it.hasNext()) {
-						Map.Entry pairs = (Map.Entry) it.next();
-						int i = (Integer) pairs.getValue();
-						pairs.setValue(1+ i);
-					}
-					//add corrected groups to new list
-					newMap.putAll(itemInList.getGroups());
-							
-				}
-				exp=exp.substring(0,exp.length()-1);
-				exp+=")";
-				RegExpStruct concat= new RegExpStruct(exp,newMap,largestGroup+1);
-				return concat;
+				/**Get rid of extra '|'.
+				 * 
+				 */
+				String l=choiceCapReg.getExp();
+				choiceCapReg.setExp(l.substring(0,l.length()-1));
+				choiceCapReg=choiceCapReg.concat(new RegExpStruct(), "(", ")", 0);
+				return choiceCapReg;
 				
 			}
-			//choice: case
+			/** choice: sub-case
+			 * <p>This is the non capturing case</p>
+			 */
+			
 			if(all.containsKey("choice")){
-				//get list of choices 
-				ArrayList<?> choices=(ArrayList<?>)all.get("choice");
-				
-				//find largest group and get list of reg exp
-				ArrayList<RegExpStruct> rlist= new ArrayList<RegExpStruct>();
-				int largestGroup=0;
+				/**Get list of choices
+				 * 
+				 */
+				ArrayList<?> choices=(ArrayList<?>)all.get("choice");	
+				/**Loop through list choices and build RegExpStruct.
+				 * 
+				 */
 				for (Object obin : choices) {
 					RegExpStruct temp = generateRegExp(obin);
-					rlist.add(temp);
-					int numberOfGroups=temp.getNumberOfGroups();
-					if(numberOfGroups>=largestGroup){
-						largestGroup=numberOfGroups;
-					}
+					choiceCapReg=choiceCapReg.concat(temp, "", "|",0);
 				}
-				
-				//concat regular expressions, map & 
-				String exp="(?:";
-				LinkedHashMap<String, Integer> newMap=new LinkedHashMap<String, Integer>(); 
-				int numOfGroups=0;
-				for (RegExpStruct itemInList : rlist) {	
-					exp+=itemInList.getExp();
-					for(int i=itemInList.getNumberOfGroups();i<largestGroup;i++){
-						exp+="()";
-					}
-					exp+="|";
-					//concat map
-					newMap.putAll(itemInList.getGroups());
-							
-				}
-				exp=exp.substring(0,exp.length()-1);
-				exp+=")";
-				RegExpStruct concat= new RegExpStruct(exp,newMap,largestGroup);
-				return concat;
+				/**Get rid of extra '|'.
+				 * 
+				 */
+				String l=choiceCapReg.getExp();
+				choiceCapReg.setExp(l.substring(0,l.length()-1));
+				choiceCapReg=choiceCapReg.concat(new RegExpStruct(), "(?:", ")", 0);
+				return choiceCapReg;
 
 				
 				
@@ -401,7 +403,7 @@ public class Property {
 				return new RegExpStruct(ex, optionMap, 0);
 							
 			}			
-			return concatRegExp;
+			return choiceCapReg;
 
 		}
 		//   if string
@@ -429,6 +431,17 @@ public class Property {
 		
 	}
 
+	/**
+	 * Gets the regular expression for this property
+	 * @return a RegExpStruct representation of this property
+	 */
+	
+	public RegExpStruct getReg() {
+		return reg;
+	}
+	public void setReg(RegExpStruct reg) {
+		this.reg = reg;
+	}
 	/**
 	 * method to check an input string against this proerty
 	 * @return Matcher of input string against the regexof this property
@@ -464,12 +477,11 @@ public class Property {
 		Property.description = string;
 	}
 
-	public void setFormat(ArrayList<Object> format) {
-		Property.format = format;
-	}
-
 	public static ArrayList<Object> getFormat() {
 		return format;
+	}
+	public void setFormat(ArrayList<Object> format) {
+		Property.format = format;
 	}
 
 }

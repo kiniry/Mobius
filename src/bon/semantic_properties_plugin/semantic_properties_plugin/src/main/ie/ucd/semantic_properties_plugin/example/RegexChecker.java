@@ -5,14 +5,17 @@ import java.util.regex.Pattern;
 
 public class RegexChecker {
 
-	/**
+	/**Class to check Regexs.
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		
-		Pattern p=Pattern.compile("(\\w+)\\s(\\w+)\\s(\\w+)");
+		Pattern p=Pattern.compile( 
+				
+				"(?:equivalent|equals)"
+				);
 		
-		Matcher r= p.matcher("foo is cool");
+		Matcher r= p.matcher("equivalent");
 		
 		if(r.matches()){
 			

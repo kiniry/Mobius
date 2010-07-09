@@ -1,0 +1,15 @@
+---
+property: concurrency
+relation(5,2):
+  - keyword:
+    - SEQUENTIAL: SEQ
+    - CONCURRENCY: PARALLEL
+    - GUARDED: GUARD
+    - TIMEOUT: TO
+    - FAILURE: FAIL
+    - SPECIAL: SPECIAL
+  - description: prefix
+  - n: ">="
+  - e: equals
+  - f: equivalent
+  - owner: -> 

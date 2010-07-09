@@ -1,14 +1,15 @@
 --- 
 name: concurrency
+level: 1
 format: 
   - choice (type): 
     - SEQUENTIAL
     - GUARDED
     - CONCURRENT
-    - [TIMEOUT,<value=myint>,<Exception=mythrowable>]
-    - [FAILURE,<Exception2=mythrowable>]
+    - [TIMEOUT, <value=int=0>, <Exception=throwable=java.lang.throwable>]
+    - [FAILURE, <Exception2=throwable=java.lan.throwable>]
     - SPECIAL
-  - optional: <Description=mydescription>
+  - optional: <Description=description=ades.>
 scope: 
   - Modules
   - Features 

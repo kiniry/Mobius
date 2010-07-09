@@ -1,20 +1,21 @@
 ---
 #corrrect simple example with all MyObject's
 name: correctexample1
+level: 1
 format:
   - a
   - b
-  - <c=myclass>
-  - <d=mydate>
-  - <e=mydescription>
-  - <f=myemail>
-  - <g=myexpression>
-  - <h=myfloat>
-  - <i=myint>
-  - <j=mystring>
-  - <k=mythrowable>
-  - <l=myurl>
-  - <m=myversion>
+  - <c=class=jav.lang.class>
+  - <d=date=01/08/1988>
+  - <e=description=a decription.>
+  - <f=email=mail@gmail.com>
+  - <g=expression=(an xpession)>
+  - <h=float=1.0009>
+  - <i=int=00>
+  - <j=string='a string'>
+  - <k=throwable=java.lang.throwable>
+  - <l=url=https://aurl.com>
+  - <m=version=1.0>
 scope: 
  - Modules
  - Files

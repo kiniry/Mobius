@@ -1,23 +1,24 @@
 ---
 #corrrect example that tests choice extensively inclusing optional:
 name: correctexample2
+level: 1
 format:
   - a
   - b
   - choice:
-    - <c=myclass>
-    - <d=mydate>
-    - <e=mydescription>
-  - <f=myemail>
-  - <g=myexpression>
+    - <c=class=java.land.Class>
+    - <d=date=27/08/1988>
+    - <e=description=here is the description.>
+  - <f=email=eoin@gmail.com>
+  - <g=expression=(expesssion)>
   - choice: 
-    - <h=myfloat>
-    - [<i=myint>, choice (is):[i1,i2,<i3=myint>]]
-  - <j=mystring>
-  - <k=mythrowable>
+    - <h=float=1.0>
+    - [<i=int=4>, choice (is):[i1,i2,<i3=int=6>]]
+  - <j=string='a string'>
+  - <k=throwable=java.lang.Throwable>
   - choice:
-    - <l=myurl>
-    - <m=myversion>
+    - <l=url=https://it.com>
+    - <m=version=1.0>
    
 scope: 
  - Modules

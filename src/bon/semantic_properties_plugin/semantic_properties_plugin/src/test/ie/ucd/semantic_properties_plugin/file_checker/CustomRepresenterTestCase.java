@@ -3,7 +3,7 @@ package ie.ucd.semantic_properties_plugin.file_checker;
 
 import junit.framework.TestCase;
 
-import org.junit.BeforeClass;
+
 import org.yaml.snakeyaml.Dumper;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
@@ -15,9 +15,6 @@ import semantic_properties_plugin.custom_objects.Nat;
 
 public class CustomRepresenterTestCase extends TestCase{
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
 
 	
 	public void testNatToDump() {

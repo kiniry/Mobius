@@ -20,7 +20,15 @@ package ie.ucd.semantic_properties_plugin.file_checker;
 import java.util.LinkedHashMap;
 
 
+
 public class RegExpStruct {
+	/**Variables in RegExpStruct.
+	 * 
+	 */
+	String exp;
+	LinkedHashMap<String, Integer> groups;
+	int numberOfGroups;
+
 	RegExpStruct() {
 		exp = "";
 		groups = new LinkedHashMap<String, Integer>();
@@ -32,11 +40,34 @@ public class RegExpStruct {
 		groups = m;
 		numberOfGroups = num;
 	}
+	/**Method that adds a RegExpStruct on to this one.
+	 * <p>Adds both String rep and map</p>
+	 * @return concatenated RegExpStruct.
+	 * @param toAdd RegExpStruct to add on end.
+	 * @param pre String to add to start of  whole regEx
+	 * @param post String to add to end of regEx
+	 * @param additonal group produced by adding pre and post.
+	 */
+	public RegExpStruct concat(RegExpStruct toAdd,String pre,String post,int additionalGroups){
+		
+		String newExp=pre+exp+toAdd.getExp()+post;
+		int newNum=numberOfGroups+toAdd.getNumberOfGroups()+additionalGroups;
+		
+		/**Concat the linkedHashMaps
+		 * 
+		 */
+		LinkedHashMap<String, Integer> newGroup=groups;
+		LinkedHashMap<String, Integer> addGroup=toAdd.getGroups();
+		for(String key :addGroup.keySet()){
+			newGroup.put(key, addGroup.get(key)+numberOfGroups);
+		}
+		
+		return (new RegExpStruct(newExp,newGroup,newNum));
+		
+	}
+	
 
-	String exp;
-	LinkedHashMap<String, Integer> groups;
-	int numberOfGroups;
-
+	
 	public String getExp() {
 		return exp;
 	}

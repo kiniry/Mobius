@@ -34,22 +34,22 @@ public class MyObjectTest extends TestCase {
 		Matcher mOne = p.matcher(posOne);
 		assertTrue(mOne.matches());
 
-		String posTwo = "java.blah.Bla0h";
+		String posTwo = "java.bls3ah.Bla0h";
 		Matcher mTwo = p.matcher(posTwo);
 		assertTrue(mTwo.matches());
 
-		String posFive = "four.lowerca$e1.lowerca$e2.Upperca$e3";
+		String posFive = "java.ih.inn$er.Another";
 		Matcher mFive = p.matcher(posFive);
 		assertTrue(mFive.matches());
 
 		/**
 		 * FALSE CASES
 		 */
-		String posThree = "jav.lower.lower";
+		String posThree = "jav";
 		Matcher mThree = p.matcher(posThree);
 		assertFalse(mThree.matches());
 
-		String posFour = "jav.Uper.Uper§";
+		String posFour = "jav.hi.1per§";
 		Matcher mFour = p.matcher(posFour);
 		assertFalse(mFour.matches());
 
@@ -285,11 +285,11 @@ public class MyObjectTest extends TestCase {
 		/**
 		 * TRUE CASES
 		 */
-		String correctValueOne = "thisisastring";
+		String correctValueOne = "''";
 		Matcher m = p.matcher(correctValueOne);
 		assertTrue(m.matches());
 
-		String correctValueTwo = "thi$_1$_&_A_$tri„g";
+		String correctValueTwo = "'thi$_1$_&_ A _$tri„g'";
 		Matcher mTwo = p.matcher(correctValueTwo);
 		assertTrue(mTwo.matches());
 
@@ -325,7 +325,7 @@ public class MyObjectTest extends TestCase {
 		Matcher mOne = p.matcher(posOne);
 		assertTrue(mOne.matches());
 
-		String posTwo = "java.blah.Bla0h";
+		String posTwo = "java.bls3ah.Bla0h";
 		Matcher mTwo = p.matcher(posTwo);
 		assertTrue(mTwo.matches());
 
@@ -336,11 +336,11 @@ public class MyObjectTest extends TestCase {
 		/**
 		 * FALSE CASES
 		 */
-		String posThree = "jav.lower.lower";
+		String posThree = "jav";
 		Matcher mThree = p.matcher(posThree);
 		assertFalse(mThree.matches());
 
-		String posFour = "jav.Uper.Uper§";
+		String posFour = "jav.hi.1per§";
 		Matcher mFour = p.matcher(posFour);
 		assertFalse(mFour.matches());
 

@@ -116,13 +116,12 @@ public class FileChecker {
 			i = s.iterator();
 			// iterate through the properties and add them
 			while (i.hasNext()) {
-				allprops.add(new Property(i.next()));
+				//allprops.add(new Property(i.next()));
 			}
 		} catch (Exception e) {
 			System.out.println("yaml file " + input
 					+ " did not contain expected Iterators, invalid yaml file");
 			e.printStackTrace();
-			System.exit(1);
 		}
 
 	}
@@ -142,7 +141,7 @@ public class FileChecker {
 		for (Property current : allprops) {
 			// check if cuurent property has same name as input and parse if it
 			// does
-			if (current.name.equals(search)) {
+			if (current.getName().equals(search)) {
 				return current.isProperty(input);
 			}
 		}
