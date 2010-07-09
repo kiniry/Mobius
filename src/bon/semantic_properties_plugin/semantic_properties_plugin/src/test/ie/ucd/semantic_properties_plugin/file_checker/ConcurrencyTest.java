@@ -12,14 +12,14 @@ public class ConcurrencyTest extends TestCase{
 		/**Create Property.
 		 * 
 		 */
-		File conPropFile= new File("");
+		File conPropFile= new File("resources/examples/concurrency.yaml");
 		
 		Property concurrencyProperty=new Property(conPropFile);
 		
 		/**Create sample  input String.
 		 * 
 		 */
-		String sampleInput="";
+		String sampleInput="concurrency CONCURRENT This class is fully thread-safe.";
 		
 		/**Create PropertyMatch for the property and string.
 		 * 
@@ -30,14 +30,15 @@ public class ConcurrencyTest extends TestCase{
 		assertTrue(match.isValid());
 		
 		
-		File refPropFile=new File("");
+		File refPropFile=new File("resources/examples/concurrency_refinement.yaml");
 		
 		RefinementProperty refProp= new RefinementProperty(refPropFile);
 		
-		
-		PropertyMatch refinedMatch=refProp.refine(match);
-		
-		assertTrue(refProp.isValidRefinement(refinedMatch,match));
+//
+//		
+//		PropertyMatch refinedMatch=refProp.refine(match);
+//		
+//		assertTrue(refProp.isValidRefinement(refinedMatch,match));
 		
 		
 		

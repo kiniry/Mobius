@@ -106,7 +106,7 @@ public class MyObjectTest extends TestCase {
 		Matcher m = p.matcher(correctValueOne);
 		assertTrue(m.matches());
 
-		String correctValueTwo = "Another V!@£$@! good  expression  .";
+		String correctValueTwo = "Another V!@£$@! good  expression.";
 		Matcher mTwo = p.matcher(correctValueTwo);
 		assertTrue(mTwo.matches());
 

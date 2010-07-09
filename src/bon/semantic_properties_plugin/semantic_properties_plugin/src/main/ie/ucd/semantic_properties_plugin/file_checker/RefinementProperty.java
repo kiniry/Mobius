@@ -17,6 +17,10 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
+import custom_yaml.RefinementConstructor;
+import custom_yaml.RefinementRepresenter;
+import custom_yaml.RefinementResolver;
+
 /**Stores a refinement property from one level to another 
  * 
  * @author eo
@@ -162,7 +166,7 @@ public class RefinementProperty {
 	/**Check Validity Of RefinementProp.
 	 * <p> Basic test to check that all variables are not null</p>
 	 */
-	static boolean isValid(){
+	public static boolean isValidProperty(){
 		if(propertyName==null ||oConversions==null || sConversions==null){
 			return false;
 		}
@@ -175,6 +179,13 @@ public class RefinementProperty {
  	 * @return
 	 */
 	public boolean isValidRefinement(PropertyMatch p1, PropertyMatch p2){
+		/**Check that p1 and p2 are right levels for this refinement.
+		 * 
+		 */
+		if(sourceLevel==p1.getProp().getLevel() || 
+				destinationLevel==p2.getProp().getLevel()){
+			return false;
+		}
 		
 		return true;	
 		

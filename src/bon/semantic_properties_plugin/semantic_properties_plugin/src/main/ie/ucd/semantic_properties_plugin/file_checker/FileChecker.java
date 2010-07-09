@@ -22,6 +22,10 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
+import custom_yaml.CustomConstructor;
+import custom_yaml.CustomRepresenter;
+import custom_yaml.CustomResolver;
+
 /**
  * <p>
  * A class that takes yaml files,parses them with snakeyaml and constructs and
@@ -45,7 +49,7 @@ public class FileChecker {
 	 * @param yaml
 	 *            file
 	 */
-	FileChecker(File inputFile) {
+	public FileChecker(File inputFile) {
 		allprops = new LinkedList<Property>();
 		input = inputFile;
 		parseFile(input);

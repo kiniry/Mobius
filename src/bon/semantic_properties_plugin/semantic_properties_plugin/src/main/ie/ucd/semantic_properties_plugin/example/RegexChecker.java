@@ -12,10 +12,10 @@ public class RegexChecker {
 		
 		Pattern p=Pattern.compile( 
 				
-				"(?:equivalent|equals)"
+				"concurrency[\\s+](SEQUENTIAL|GUARDED|CONCURRENT|SPECIAL)[\\s+](?:(.+?\\.))?"
 				);
 		
-		Matcher r= p.matcher("equivalent");
+		Matcher r= p.matcher("concurrency CONCURRENT This class is fully thread-safe.");
 		
 		if(r.matches()){
 			

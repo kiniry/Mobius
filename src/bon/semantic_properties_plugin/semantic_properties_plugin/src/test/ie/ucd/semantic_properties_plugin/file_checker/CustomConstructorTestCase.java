@@ -9,6 +9,10 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
+import custom_yaml.CustomConstructor;
+import custom_yaml.CustomRepresenter;
+import custom_yaml.CustomResolver;
+
 import semantic_properties_plugin.custom_objects.MyFloat;
 import semantic_properties_plugin.custom_objects.MyInt;
 import semantic_properties_plugin.custom_objects.Nat;

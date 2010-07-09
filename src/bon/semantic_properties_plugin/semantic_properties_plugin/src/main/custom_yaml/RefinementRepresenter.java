@@ -1,5 +1,7 @@
-package ie.ucd.semantic_properties_plugin.file_checker;
+package custom_yaml;
 
+
+import ie.ucd.semantic_properties_plugin.file_checker.Transitions;
 
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.Tag;

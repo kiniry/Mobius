@@ -1,4 +1,6 @@
-package ie.ucd.semantic_properties_plugin.file_checker;
+package ie.ucd.semantic_properties_plugin.example;
+
+import ie.ucd.semantic_properties_plugin.file_checker.FileChecker;
 
 import java.io.File;
 import java.net.URI;

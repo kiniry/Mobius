@@ -1,3 +1,4 @@
+
 package ie.ucd.semantic_properties_plugin.file_checker;
 
 import java.util.regex.Matcher;
@@ -28,12 +29,15 @@ public class PropertyMatch {
 	 * @param true if this is a valid match
 	 */
 	public boolean isValid(){
-		return true;
+		return isMatch;
 	}
 	public String getVar(String in){
 		int i=prop.getReg().getGroups().get(in);
 		return thisMatch.group(i);
 		
+	}
+	public Property getProp() {
+		return prop;
 	}
 
 }

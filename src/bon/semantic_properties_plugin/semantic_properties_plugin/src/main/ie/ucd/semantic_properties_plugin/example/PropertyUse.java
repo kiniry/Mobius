@@ -1,8 +1,5 @@
 package ie.ucd.semantic_properties_plugin.example;
 
-import ie.ucd.semantic_properties_plugin.file_checker.CustomConstructor;
-import ie.ucd.semantic_properties_plugin.file_checker.CustomRepresenter;
-import ie.ucd.semantic_properties_plugin.file_checker.CustomResolver;
 import ie.ucd.semantic_properties_plugin.file_checker.RefinementProperty;
 
 import java.io.File;
@@ -11,6 +8,10 @@ import org.yaml.snakeyaml.Dumper;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
+
+import custom_yaml.CustomConstructor;
+import custom_yaml.CustomRepresenter;
+import custom_yaml.CustomResolver;
 
 public class PropertyUse {
 	public static void main (String[] args){

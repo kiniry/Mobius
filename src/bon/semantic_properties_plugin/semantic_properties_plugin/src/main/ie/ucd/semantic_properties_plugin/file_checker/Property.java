@@ -24,6 +24,10 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
+import custom_yaml.CustomConstructor;
+import custom_yaml.CustomRepresenter;
+import custom_yaml.CustomResolver;
+
 
 import semantic_properties_plugin.custom_objects.MyObject;
 
@@ -120,7 +124,7 @@ public class Property {
 				description=(String)linkedHashMap.get("description");
 				scope=(ArrayList<String>)linkedHashMap.get("scope");		  
 				reg= generateRegExp();
-				level=(Integer)linkedHashMap.get("level");
+				level=Integer.parseInt((String)linkedHashMap.get("level"));
 			}
 					
 			  
@@ -442,7 +446,7 @@ public class Property {
 	public void setReg(RegExpStruct reg) {
 		this.reg = reg;
 	}
-	/**
+	/**Could be deleted in future.
 	 * method to check an input string against this proerty
 	 * @return Matcher of input string against the regexof this property
 	 * @param in string to match against the regex representation of this string
@@ -482,6 +486,10 @@ public class Property {
 	}
 	public void setFormat(ArrayList<Object> format) {
 		Property.format = format;
+	}
+
+	public int getLevel() {
+		return level;
 	}
 
 }
