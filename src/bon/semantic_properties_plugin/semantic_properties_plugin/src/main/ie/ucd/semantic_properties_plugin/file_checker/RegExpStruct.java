@@ -66,6 +66,8 @@ public class RegExpStruct {
 		
 	}
 	
+	
+	
 
 	
 	public String getExp() {

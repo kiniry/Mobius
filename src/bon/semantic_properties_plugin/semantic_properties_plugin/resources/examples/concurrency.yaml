@@ -1,6 +1,6 @@
 --- 
 name: concurrency
-level: 1
+level: 
 format: 
   - choice (type): 
     - SEQUENTIAL

@@ -435,6 +435,11 @@ public class MyObjectTest extends TestCase {
 		String posFive = "00056";
 		Matcher mFive = p.matcher(posFive);
 		assertTrue(mFive.matches());
+		
+
+		assertTrue((p.matcher("0")).matches());
+		
+
 
 		/**
 		 * FALSE CASES
@@ -447,10 +452,6 @@ public class MyObjectTest extends TestCase {
 		Matcher mFour = p.matcher(posFour);
 		assertFalse(mFour.matches());
 
-		// 0 is not valid natural number can change
-		String posSix = "0";
-		Matcher mSix = p.matcher(posSix);
-		assertFalse(mSix.matches());
 	}
 
 }

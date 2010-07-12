@@ -107,13 +107,13 @@ public class Property {
 
 	}
 	
-	/**parse method for LinkedHashMap
+	/**parse method for LinkedHashMap.
 	  * <p>method takes in snakyaml parsed linkedHashMap
 	  * and fills this property's values</p>
 	  * @param linkedHashMap to parse
 	  */
 
-	private void Parse(LinkedHashMap<String, ?> linkedHashMap){
+	private void Parse(LinkedHashMap<String , ?> linkedHashMap) {
 		
 			if(!checkValidity(linkedHashMap)){
 				System.out.println("linkedHashMap entery "+linkedHashMap+" does not represent a valid property not valid");
@@ -290,23 +290,34 @@ public class Property {
 		/*ArrayList Case
 		 * 
 		 */
-		if (ob instanceof ArrayList<?>) {
+		if (ob instanceof ArrayList< ? >) {
 		
-			ArrayList<?> list = (ArrayList<?>) ob;	
+			ArrayList< ? > list = (ArrayList< ? >) ob;	
 			/*loop through RegExpStruct and add eachRegExpStruct to end.
 			 * <p>loop through all objects in list, generate RegExpStruct
 			 * and add them to rlist</p>
 			 */
-			RegExpStruct listReg= new RegExpStruct();
+			RegExpStruct listReg = new RegExpStruct();
 			for (Object obin : list) {
 				RegExpStruct temp = generateRegExp(obin);
-				listReg=listReg.concat(temp, "", space,0);
+				String end = space;
+//				if obon is an optional case we add  space  beginning inside brackets.
+				if (temp.getExp().endsWith(")?")) {
+					String l = temp.getExp(); 
+					temp.setExp("(?:"+space+l.substring(3,l.length()));
+					listReg = listReg.concat(temp,"", "", 0);
+				} else {
+					temp = temp.concat(new RegExpStruct(), space, "", 0);
+					listReg = listReg.concat(temp, "", "", 0);
+				}
 			}
-			/**Get rid of extra space on end
+			/**Get rid of extra space on beginning.
 			 * 
 			 */
-			String l=listReg.getExp();
-			listReg.setExp(l.substring(0,l.length()-space.length()));
+			if (listReg.getExp().startsWith(space)) {
+				String l = listReg.getExp();
+				listReg.setExp(l.substring(space.length(), l.length() ));
+			}
 			return listReg;
 			
 
@@ -400,7 +411,7 @@ public class Property {
 				Object optionOb=all.get("optional");
 				RegExpStruct optionReg =generateRegExp(optionOb);
 				
-				String ex="(?:"+ optionReg.getExp()+")?";					
+				String ex="(?:"+optionReg.getExp()+")?";					
 				LinkedHashMap<String, Integer> optionMap = new LinkedHashMap<String, Integer>();
 	//			optionMap.put(optionReg.getExp(), 1);
 
@@ -420,10 +431,11 @@ public class Property {
 		// custom objects
 		if (ob instanceof MyObject) {
 			MyObject thisOb = (MyObject) ob;
-			LinkedHashMap<String, Integer> objectMap = new LinkedHashMap<String, Integer>();
+			LinkedHashMap<String, Integer> objectMap = 
+				new LinkedHashMap<String, Integer>();
 			objectMap.put(thisOb.getId(), 1);
 
-			return new RegExpStruct(  thisOb.getReg(), objectMap, 1);
+			return new RegExpStruct( thisOb.getReg(), objectMap, 1);
 
 		}
 		else{

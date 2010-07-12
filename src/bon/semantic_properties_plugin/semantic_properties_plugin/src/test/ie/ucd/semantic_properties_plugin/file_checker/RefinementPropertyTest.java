@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 
 /**
- * @author Administrator
+ * @author eo
  *
  */
 public class RefinementPropertyTest extends TestCase {
@@ -23,4 +23,19 @@ public class RefinementPropertyTest extends TestCase {
 		System.out.println("Objects "+propOne.getOConversions());
 		assertEquals(0,0);
 	}
+
+
+	/**Test the isValidRefinement method in Refinement Property.
+	 * 
+	 */
+	public void testIsValidRefinement(){
+		File inputOne = new File("resources/examples/concurrency_refinement.yaml");
+		
+		RefinementProperty propOne= new RefinementProperty(inputOne);
+		
+		System.out.println("Strings "+propOne.getSConversions());
+		System.out.println("Objects "+propOne.getOConversions());
+		assertEquals(0,0);
+	}
+
 }

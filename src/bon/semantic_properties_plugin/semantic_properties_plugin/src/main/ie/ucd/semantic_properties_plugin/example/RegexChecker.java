@@ -9,13 +9,13 @@ public class RegexChecker {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
 		Pattern p=Pattern.compile( 
 				
-				"concurrency[\\s+](SEQUENTIAL|GUARDED|CONCURRENT|SPECIAL)[\\s+](?:(.+?\\.))?"
+				"concurrency[\\s+](SEQUENTIAL|GUARDED|CONCURRENT|TIMEOUT[\\s+](\\d+\\.?[0]*)[\\s+]([a-zA-Z$](?:[a-zA-Z_$0-9]+)(?:\\.[a-zA-Z_$](?:[a-zA-Z_$0-9]+))+)|FAILURE[\\s+]([a-zA-Z$](?:[a-zA-Z_$0-9]+)(?:\\.[a-zA-Z_$](?:[a-zA-Z_$0-9]+))+)|SPECIAL)(?:[\\s+]:'(.*)')?"
 				);
 		
-		Matcher r= p.matcher("concurrency CONCURRENT This class is fully thread-safe.");
+		Matcher r= p.matcher("concurrency CONCURRENT 'This class is fully thread-safe.'");
 		
 		if(r.matches()){
 			
@@ -32,3 +32,5 @@ public class RegexChecker {
 	}
 
 }
+                                                                                                                                                                                                                          
+	

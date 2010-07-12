@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
  */
 public class PropertyMatch {
 	
-	private static String inputToMatch;
-	Matcher thisMatch;
+	private String inputToMatch;
+	private Matcher thisMatch;
 	Property prop;
 	Boolean isMatch;
 	
@@ -20,10 +20,13 @@ public class PropertyMatch {
 	 * @param input 
 	 * @param prop
 	 */
-	PropertyMatch(String input,Property prop){
-		Pattern p = Pattern.compile(prop.getReg().getExp());
+	PropertyMatch(String input,Property propIn){
+		prop = propIn;
+		inputToMatch = input;
+		Pattern p = Pattern.compile(propIn.getReg().getExp());
 		thisMatch = p.matcher(input);
 		isMatch = thisMatch.matches();
+		
 	}
 	/**Determines if this match is valid.
 	 * @param true if this is a valid match
@@ -39,5 +42,12 @@ public class PropertyMatch {
 	public Property getProp() {
 		return prop;
 	}
+	public Matcher getThisMatch() {
+		return thisMatch;
+	}
+	public String getInputToMatch() {
+		return inputToMatch;
+	}
 
+	
 }

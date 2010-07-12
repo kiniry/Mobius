@@ -2,12 +2,10 @@ package ie.ucd.semantic_properties_plugin.file_checker;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,38 +19,38 @@ import custom_yaml.RefinementConstructor;
 import custom_yaml.RefinementRepresenter;
 import custom_yaml.RefinementResolver;
 
-/**Stores a refinement property from one level to another 
+/**Stores a refinement property from one level to another. 
  * 
  * @author eo
  *
  */
 public class RefinementProperty {
 	
-	private static LinkedHashMap<String,String> sConversions;
-	private static LinkedHashMap<String, Transitions> oConversions;
-	private static int sourceLevel;
-	private static int destinationLevel;
-	private static String propertyName;
+	private LinkedHashMap<String,String> sConversions;
+	private LinkedHashMap<String, Transitions> oConversions;
+	private int sourceLevel;
+	private int destinationLevel;
+	private String propertyName;
 	
 	/**Constructs Refinement Property from input String. 
 	 * 
-	 * @param name of input file to parse
+	 * @param input name of input file to parse
 	 * @throws FileNotFoundException 
 	 */
-	public RefinementProperty(String input) {
+	public RefinementProperty(final String input) {
 		
-		Yaml yaml = new Yaml(new Loader(new RefinementConstructor()), new Dumper(
-				new RefinementRepresenter(), new DumperOptions()),
+		Yaml yaml = new Yaml(
+				new Loader(new RefinementConstructor()), 
+				new Dumper(new RefinementRepresenter(), new DumperOptions()),
 				new RefinementResolver());
-		FileInputStream io=null;
+		FileInputStream io = null;
 
-		try{
-			io= new FileInputStream(input);
-		}
-		catch(Exception e){
+		try {
+			io = new FileInputStream(input);
+		} catch (Exception e) {
 			System.out.println("invalid string for refinment prop");
 		}
-		Object ob =yaml.load(io);
+		Object ob = yaml.load(io);
 		parse(ob);
 	}
 	/**Constructs Refinement Property from input file. 
@@ -60,82 +58,85 @@ public class RefinementProperty {
 	 * @param input file to parse
 	 * @throws FileNotFoundException 
 	 */
-	public RefinementProperty(File input) {
+	public RefinementProperty(final File input) {
 		
-		Yaml yaml = new Yaml(new Loader(new RefinementConstructor()), new Dumper(
-				new RefinementRepresenter(), new DumperOptions()),
+		Yaml yaml = new Yaml(new Loader(new RefinementConstructor()),
+				new Dumper(new RefinementRepresenter(), new DumperOptions()),
 				new RefinementResolver());
-		FileInputStream io=null;
+		FileInputStream io = null;
 
-		try{
-			io= new FileInputStream(input);
-		}
-		catch(Exception e){
+		try {
+			io = new FileInputStream(input);
+		} catch (Exception e) {
 			System.out.println("no file for refinement prop");
 		}
-		Object ob =yaml.load(io);
+		Object ob = yaml.load(io);
 		parse(ob);
 	}
 	/**parse object for values of Refinement Property.
 	 * 
 	 * @param currentOb Object to parse.
 	 */
-	private void parse(Object currentOb){
+	private void parse(final Object currentOb){
 		/**Entry case
 		 * <p>We assume key is string.Possibly fix this later. </p>
 		 */
-		if(currentOb instanceof Entry<?,?>){
-			Entry<Object,Object> ent=(Entry<Object,Object>) currentOb;
-			
-			
-			
+		if (currentOb instanceof Entry< ? , ? >) {
+			Entry<Object, Object> ent = (Entry<Object, Object>) currentOb;
 			/*check  for key relation(int,int).
 			 * 
 			 */
 			
-			Pattern p=Pattern.compile("relation\\((\\d+),(\\d+)\\)");
-			Matcher m=p.matcher((String)ent.getKey());
+			Pattern p = Pattern.compile("relation\\((\\d+),(\\d+)\\)");
+			Matcher m = p.matcher((String) ent.getKey());
 			/**If it matches set source and destination levels. 
 			 */
-			if(m.matches()){
-				sourceLevel=Integer.parseInt(m.group(1));
-				destinationLevel=Integer.parseInt(m.group(2));
+			if (m.matches()) {
+				sourceLevel = Integer.parseInt(m.group(1));
+				destinationLevel = Integer.parseInt(m.group(2));
 				
 			}
 			/**Check for property name.
 			 * 
 			 */
-			if(ent.getKey().equals("property")){
-				propertyName =(String) ent.getValue();
+			if (ent.getKey().equals("property")) {
+				propertyName = (String) ent.getValue();
+				if (sConversions == null) {
+					sConversions = new LinkedHashMap<String, String>();
+				}
+				sConversions.put(propertyName, propertyName);
 			}
 			
 			/**If value is string  add entry to sConversion .
 			 * 
 			 */
-			else if(ent.getValue() instanceof String){
-				if(sConversions==null)
-					sConversions= new LinkedHashMap<String,String>();
-				sConversions.put((String)ent.getKey(), (String)ent.getValue());
+	
+			else if (ent.getValue() instanceof String) {
+				if (sConversions == null) {
+					sConversions = new LinkedHashMap<String, String>();
+				}
+				sConversions.put((String) ent.getKey(), (String) ent.getValue());
 			}
 			/**If value is Transitions add entry to oConversions
 			 * 
 			 */
 			else if(ent.getValue() instanceof Transitions){
-				if(oConversions==null)
+				if(oConversions==null) {
 					oConversions = new LinkedHashMap<String,Transitions>();
+				}
 				oConversions.put((String)ent.getKey(), (Transitions)ent.getValue());
 			}
 			/**Any other object as key should be parsed.
 			 * 
 			 */
-			else{
+			else {
 				parse(ent.getValue());
 			}
 		}
 		/**Map case.
 		 * 
 		 */
-		else if(currentOb instanceof LinkedHashMap<?,?>){
+		else if (currentOb instanceof LinkedHashMap< ? , ? >) {
 			/**Cast to map and loop through the values.
 			 * 
 			 */
@@ -166,7 +167,7 @@ public class RefinementProperty {
 	/**Check Validity Of RefinementProp.
 	 * <p> Basic test to check that all variables are not null</p>
 	 */
-	public static boolean isValidProperty(){
+	public  boolean isValidProperty(){
 		if(propertyName==null ||oConversions==null || sConversions==null){
 			return false;
 		}
@@ -176,26 +177,47 @@ public class RefinementProperty {
 	/**Check if Property match p1 refines to p2.
 	 * @param p1 source property match to check.
 	 * @param p2 destination property to check.
- 	 * @return
+ 	 * @return true if p1 refines to p2.
 	 */
-	public boolean isValidRefinement(PropertyMatch p1, PropertyMatch p2){
+	public final boolean isValidRefinement(final PropertyMatch p1, final PropertyMatch p2){
 		/**Check that p1 and p2 are right levels for this refinement.
 		 * 
 		 */
-		if(sourceLevel==p1.getProp().getLevel() || 
-				destinationLevel==p2.getProp().getLevel()){
+		if (!(sourceLevel == p1.getProp().getLevel() 
+				|| destinationLevel == p2.getProp().getLevel())) {
 			return false;
 		}
+		String p1in = p1.getInputToMatch();
+		StringTokenizer parser1 = new StringTokenizer(p1in);
+		String p2in = p2.getInputToMatch();
+		StringTokenizer parser2 = new StringTokenizer(p2in);
+		while (parser1.hasMoreTokens()) {
+		    String i = parser1.nextToken();
+		    String j = parser2.nextToken();
+		    if (sConversions.containsKey(i)) {
+		    	if (!j.equals(sConversions.get(i))) {
+		    		return false;
+		    		}
+		    } else if (oConversions.containsKey(i)) {
+		    	if (!j.equals(oConversions.get(i))) {
+		    		return false;
+		    	}
+		    } else {
+		    	System.out.println("problem with " + i + " and " + j);
+		    	return false;
+		    
+		    }
 		
+		}
 		return true;	
 		
 	}
-	/**Refine p1 based on rules in this Refinement Property
+	/**Refine p1 based on rules in this Refinement Property.
 	 * 
 	 * @param p1 Source Property Match.
-	 * @return
+	 * @return The refinement of p1 using this refinement property.
 	 */
-	public PropertyMatch refine(PropertyMatch p1){
+	public final PropertyMatch refine(final PropertyMatch p1){
 		return p1;
 		
 	}
@@ -204,27 +226,27 @@ public class RefinementProperty {
 	 */
 	
 	/**
-	 * @return the sConversions
+	 * @return the sConversions.
 	 */
-	public LinkedHashMap<String, String> getSConversions() {
+	public final LinkedHashMap<String, String> getSConversions() {
 		return sConversions;
 	}
 	/**
 	 * @return the oConversions
 	 */
-	public LinkedHashMap<String, Transitions> getOConversions() {
+	public final LinkedHashMap<String, Transitions> getOConversions() {
 		return oConversions;
 	}
 	/**
 	 * @return the sourceLevel
 	 */
-	public int getSourceLevel() {
+	public final int getSourceLevel() {
 		return sourceLevel;
 	}
 	/**
 	 * @return the destinationLevel
 	 */
-	public int getDestinationLevel() {
+	public final int getDestinationLevel() {
 		return destinationLevel;
 	}
 
