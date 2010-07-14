@@ -91,19 +91,19 @@ public class Property {
 	 * @param input String representing input file
 	 */
 	public Property(String input) {
-		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
-				new CustomRepresenter(), new DumperOptions()),
-				new CustomResolver());;
-		FileInputStream io=null;
-
-		try{
-			io= new FileInputStream(input);
-		}
-		catch(Exception e){
-			System.out.println("invalid string");
-		}
-		Object ob =yaml.load(io);
-		Parse((LinkedHashMap<String,?>)ob);
+			Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
+					new CustomRepresenter(), new DumperOptions()),
+					new CustomResolver());;
+			FileInputStream io=null;
+	
+			try{
+				io= new FileInputStream(input);
+			}
+			catch(Exception e){
+				System.out.println("invalid string");
+			}
+			Object ob =yaml.load(io);
+			Parse((LinkedHashMap<String,?>)ob);
 
 	}
 	
@@ -399,7 +399,7 @@ public class Property {
 				 */
 				String l=choiceCapReg.getExp();
 				choiceCapReg.setExp(l.substring(0,l.length()-1));
-				choiceCapReg=choiceCapReg.concat(new RegExpStruct(), "(?:", ")", 0);
+				choiceCapReg = choiceCapReg.concat(new RegExpStruct(), "(?:", ")", 0);
 				return choiceCapReg;
 
 				
@@ -407,15 +407,16 @@ public class Property {
 				
 			}
 			// optional case
-			if(all.containsKey("optional")){
-				Object optionOb=all.get("optional");
-				RegExpStruct optionReg =generateRegExp(optionOb);
+			if (all.containsKey("optional")) {
+				RegExpStruct opt = new RegExpStruct();
+				Object optionOb = all.get("optional");
+				RegExpStruct optionReg = generateRegExp(optionOb);
 				
-				String ex="(?:"+optionReg.getExp()+")?";					
+				String ex = "(?:" + optionReg.getExp() + ")?";					
 				LinkedHashMap<String, Integer> optionMap = new LinkedHashMap<String, Integer>();
 	//			optionMap.put(optionReg.getExp(), 1);
-
-				return new RegExpStruct(ex, optionMap, 0);
+				opt=opt.concat(optionReg, "(?:", ")?", 0);
+				return opt;
 							
 			}			
 			return choiceCapReg;

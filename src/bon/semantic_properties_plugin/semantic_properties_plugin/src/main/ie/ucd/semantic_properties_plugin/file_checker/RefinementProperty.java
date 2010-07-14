@@ -3,6 +3,7 @@ package ie.ucd.semantic_properties_plugin.file_checker;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -77,7 +78,7 @@ public class RefinementProperty {
 	 * 
 	 * @param currentOb Object to parse.
 	 */
-	private void parse(final Object currentOb){
+	private void parse(final Object currentOb) {
 		/**Entry case
 		 * <p>We assume key is string.Possibly fix this later. </p>
 		 */
@@ -115,16 +116,18 @@ public class RefinementProperty {
 				if (sConversions == null) {
 					sConversions = new LinkedHashMap<String, String>();
 				}
-				sConversions.put((String) ent.getKey(), (String) ent.getValue());
+				sConversions.put((String) ent.getKey(),
+						(String) ent.getValue());
 			}
 			/**If value is Transitions add entry to oConversions
 			 * 
 			 */
-			else if(ent.getValue() instanceof Transitions){
-				if(oConversions==null) {
-					oConversions = new LinkedHashMap<String,Transitions>();
+			else if (ent.getValue() instanceof Transitions) {
+				if (oConversions == null) {
+					oConversions = new LinkedHashMap<String, Transitions>();
 				}
-				oConversions.put((String)ent.getKey(), (Transitions)ent.getValue());
+				oConversions.put((String) ent.getKey(), 
+						(Transitions) ent.getValue());
 			}
 			/**Any other object as key should be parsed.
 			 * 
@@ -140,27 +143,28 @@ public class RefinementProperty {
 			/**Cast to map and loop through the values.
 			 * 
 			 */
-			LinkedHashMap<Object,Object> map = (LinkedHashMap<Object,Object>)currentOb;
+			LinkedHashMap<Object, Object> map = 
+				(LinkedHashMap<Object, Object>) currentOb;
 			Set<Entry<Object, Object>> entries = map.entrySet();
-			for(Entry<Object, Object> entry:entries ){
+			for (Entry<Object, Object> entry : entries ) {
 				parse(entry);
 			}
 		}
 		/**List case.
 		 * 
 		 */
-		else if(currentOb instanceof ArrayList<?>){
+		else if (currentOb instanceof ArrayList< ? >) {
 			/**loop through list and parse each object. 
 			 * 
 			 */
-			for(Object val: (ArrayList<Object>)currentOb){
+			for (Object val : (ArrayList<Object>) currentOb){
 				parse(val);
 			}
 		}
 		else{
-			System.out.println("unexpected object "+
-					currentOb.toString()+
-					" in RefinementProperty Parse() method");
+			System.out.println("unexpected object "
+					+ currentOb.toString()
+					+ " in RefinementProperty Parse() method");
 		}
 		
 	}
@@ -187,10 +191,42 @@ public class RefinementProperty {
 				|| destinationLevel == p2.getProp().getLevel())) {
 			return false;
 		}
-		String p1in = p1.getInputToMatch();
-		StringTokenizer parser1 = new StringTokenizer(p1in);
-		String p2in = p2.getInputToMatch();
-		StringTokenizer parser2 = new StringTokenizer(p2in);
+		/**Check all the capturing groups are refined.
+		 * 
+		 */
+		String p1Match = p1.getInputToMatch();
+		String p2Match = p2.getInputToMatch();
+		Set conversions = oConversions.keySet();
+		Iterator it = conversions.iterator();
+		while(it.hasNext()){
+			String presKey = (String) it.next();
+			//check if p1 has an conversion for this key
+			if (p1.getVar(presKey) != null) {
+				//check the type of conversion
+				Transitions tran = oConversions.get(presKey);
+				//deal with each conversion appropriately
+				if (tran.equals(Transitions.prefix)) {
+					String a = p1.getVar(presKey);
+					String b = p2.getVar(presKey);
+					if (!b.startsWith(a)) {
+						return false;
+					}
+					//adjust p1Match & p2Match
+					p1Match = p1Match.replace("'"+a+"'", "");
+					p2Match = p2Match.replace("'"+b+"'", "");
+					}
+				else {
+					System.out.println("unimplemented transition " + tran);
+				}
+				
+			}
+	
+		}
+		/**Check all strings are refined.
+		 * 
+		 */
+		StringTokenizer parser1 = new StringTokenizer(p1Match);
+		StringTokenizer parser2 = new StringTokenizer(p2Match);
 		while (parser1.hasMoreTokens()) {
 		    String i = parser1.nextToken();
 		    String j = parser2.nextToken();
@@ -198,10 +234,6 @@ public class RefinementProperty {
 		    	if (!j.equals(sConversions.get(i))) {
 		    		return false;
 		    		}
-		    } else if (oConversions.containsKey(i)) {
-		    	if (!j.equals(oConversions.get(i))) {
-		    		return false;
-		    	}
 		    } else {
 		    	System.out.println("problem with " + i + " and " + j);
 		    	return false;

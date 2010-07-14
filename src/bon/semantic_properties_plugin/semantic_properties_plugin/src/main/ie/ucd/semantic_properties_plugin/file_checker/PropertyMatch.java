@@ -35,14 +35,18 @@ public class PropertyMatch {
 		return isMatch;
 	}
 	public String getVar(String in){
-		int i=prop.getReg().getGroups().get(in);
-		return thisMatch.group(i);
+		if (prop.getReg().getGroups().get(in) != null) {
+			int i = prop.getReg().getGroups().get(in);
+			return thisMatch.group(i);
+		} else {
+			return null;
+		}
 		
 	}
 	public Property getProp() {
 		return prop;
 	}
-	public Matcher getThisMatch() {
+	public Matcher getMatch() {
 		return thisMatch;
 	}
 	public String getInputToMatch() {

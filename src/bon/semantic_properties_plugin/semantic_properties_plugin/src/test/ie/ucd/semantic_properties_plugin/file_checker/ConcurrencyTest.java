@@ -25,7 +25,7 @@ public class ConcurrencyTest extends TestCase{
 		assertTrue(bonMatch.isValid());
 		
 
-		/**Create bon property and match.
+		/**Create java property and match.
 		 * 
 		 */
 		File javaYaml = new File("resources/examples/concurrency_java.yaml");
@@ -48,7 +48,7 @@ public class ConcurrencyTest extends TestCase{
 		RefinementProperty refProp =
 			new RefinementProperty(refinementYaml);
 		
-//		assertTrue(refProp.isValidRefinement(bonMatch, javaMatch));
+		assertTrue(refProp.isValidRefinement(bonMatch, javaMatch));
 //
 //		
 //		PropertyMatch refinedMatch=refProp.refine(match);

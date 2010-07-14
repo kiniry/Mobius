@@ -1,26 +1,14 @@
 ---
-name: concurrency
+name: eg1
 format:
-  - [TIMEOUT, <tol=nat>, <ep=nat>]
-  - choice: 
-    - SEQUENTIAL
-    - GUARDED
-    - CONCURRENT
-    - [TIMEOUT, <to=myint>, <e=nat>]
-    - [FAILURE, <z=nat>]
-    - choice (hi):
-      - [a, <g=myfloat>]
-      - op
-    - UNGUARDED    
   - optional: 
-    - <description=nat>]
+    - <description=nat>
     - another
   - choice: 
     - a
     - b
-    - [FAILURE, <z=string>]
+    - <c=string=hi>
 scope: 
  - Modules
 description: |
- des this can be be very long
- and include new lines
+ small description
