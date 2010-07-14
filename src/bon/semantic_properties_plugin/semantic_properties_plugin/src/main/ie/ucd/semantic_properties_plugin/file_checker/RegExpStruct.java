@@ -15,26 +15,49 @@ package ie.ucd.semantic_properties_plugin.file_checker;
  *
  * @see   Property
  * @version "$Id: 01-07-2010 $"
- * @author  Eoin O'Connor
+ * @author  eo
  **/
 import java.util.LinkedHashMap;
 
-
-
+/**Class that represents a Regular Expression.
+ * <p>Adds information to a regular expression about what is 
+ * stored in its capturing groups and provides methods to 
+ * access these values.</p>
+ * @author eo
+ *
+ */
 public class RegExpStruct {
-	/**Variables in RegExpStruct.
+	/**String representation of the  RegExp.
 	 * 
 	 */
-	String exp;
-	LinkedHashMap<String, Integer> groups;
-	int numberOfGroups;
+	private String exp;
+	/**Map representing the values in the capturing group of this RegExp.
+	 * 
+	 */
+	private LinkedHashMap <String, Integer> groups;
+	/**Map representing the Objects in the capturing group of this RegExp.
+	 * 
+	 */
+	private LinkedHashMap <Object, Integer> customGroup;
+	/**Number of capturing groups in this regExp.
+	 * 
+	 */
+	private int numberOfGroups;
 
+	/**Default constructor.
+	 * <p> initialise all variables to unimportant value.</p>
+	 */
 	RegExpStruct() {
 		exp = "";
 		groups = new LinkedHashMap<String, Integer>();
 		numberOfGroups = 0;
 	}
-
+	/**Constructor .
+	 * 
+	 * @param s String representation of the regular expression.
+	 * @param m LinkedHashMap  representing capturing groups.
+	 * @param num Number of capturing groups.
+	 */
 	RegExpStruct(String s, LinkedHashMap<String, Integer> m, int num) {
 		exp = s;
 		groups = m;
@@ -46,7 +69,7 @@ public class RegExpStruct {
 	 * @param toAdd RegExpStruct to add on end.
 	 * @param pre String to add to start of  whole regEx
 	 * @param post String to add to end of regEx
-	 * @param additonal group produced by adding pre and post.
+	 * @param additionalGroups group produced by adding pre and post.
 	 */
 	public RegExpStruct concat(RegExpStruct toAdd,String pre,String post,int additionalGroups){
 		

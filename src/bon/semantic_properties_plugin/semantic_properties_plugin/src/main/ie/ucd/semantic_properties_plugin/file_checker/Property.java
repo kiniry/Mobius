@@ -301,7 +301,7 @@ public class Property {
 			for (Object obin : list) {
 				RegExpStruct temp = generateRegExp(obin);
 				String end = space;
-//				if obon is an optional case we add  space  beginning inside brackets.
+				//if obon is optional case we add space beginning inside brackets.
 				if (temp.getExp().endsWith(")?")) {
 					String l = temp.getExp(); 
 					temp.setExp("(?:"+space+l.substring(3,l.length()));
@@ -348,7 +348,7 @@ public class Property {
 				   //if not special case exit
 					break;
 				}
-				/**Get regExpStruct Map,add choice and set as regExpStruct map again.
+				/**Get regExpStruct,Map add choice and set as regExpStruct map again.
 				 * <p>Because its the capturing case</p>
 				 */
 				LinkedHashMap<String ,Integer> capRegGroup =
@@ -367,7 +367,7 @@ public class Property {
 				 */
 				for (Object obin : choices) {
 					RegExpStruct temp = generateRegExp(obin);
-					choiceCapReg=choiceCapReg.concat(temp, "", "|",0);
+					choiceCapReg = choiceCapReg.concat(temp, "", "|",0);
 				}
 				/**Get rid of extra '|'.
 				 * 
@@ -382,17 +382,17 @@ public class Property {
 			 * <p>This is the non capturing case</p>
 			 */
 			
-			if(all.containsKey("choice")){
+			if (all.containsKey("choice")) {
 				/**Get list of choices
 				 * 
 				 */
-				ArrayList<?> choices=(ArrayList<?>)all.get("choice");	
+				ArrayList< ? > choices = (ArrayList< ? >) all.get("choice");	
 				/**Loop through list choices and build RegExpStruct.
 				 * 
 				 */
 				for (Object obin : choices) {
 					RegExpStruct temp = generateRegExp(obin);
-					choiceCapReg=choiceCapReg.concat(temp, "", "|",0);
+					choiceCapReg = choiceCapReg.concat(temp, "", "|", 0);
 				}
 				/**Get rid of extra '|'.
 				 * 
