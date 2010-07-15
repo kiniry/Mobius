@@ -28,6 +28,10 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
+import custom_objects.CustomConstructorTestCase;
+import custom_objects.CustomRepresenterTestCase;
+import custom_objects.CustomResolverTestCase;
+
 public class CustomTestSuite  {
 
 	public static Test suite() {

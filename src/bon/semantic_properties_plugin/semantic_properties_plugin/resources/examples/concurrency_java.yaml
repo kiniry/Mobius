@@ -1,0 +1,20 @@
+--- 
+name: concurrency
+level: 2
+format: 
+  - choice (PARALLEL): 
+    - SEQ
+    - GUARD
+    - PARALLEL
+    - [TO, <to=nat=0>, <e=throwable=java.lang.Exception>]
+    - [FAILURE, <f=throwable=java.lang.Error>]
+    - SPECIAL
+  - optional: <description=string='No information.'>
+  - optional: <owner=string='unknown'>
+scope: 
+  - Modules
+  - Features 
+description: |
+ Describes 
+
+  

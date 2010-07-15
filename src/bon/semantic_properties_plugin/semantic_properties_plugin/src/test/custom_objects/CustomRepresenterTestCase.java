@@ -1,4 +1,4 @@
-package ie.ucd.semantic_properties_plugin.file_checker;
+package custom_objects;
 
 
 import junit.framework.TestCase;

@@ -1,0 +1,18 @@
+--- 
+name: concurrency
+level: 5
+format: 
+  - choice (CONCURRENT): 
+    - SEQUENTIAL
+    - GUARDED
+    - CONCURRENT
+    - [TIMEOUT, <to=nat=0>, <e=throwable=java.lang.EXCEPTION>]
+    - [FAILURE, <f=throwable=java.lang.ERROR>]
+    - SPECIAL
+  - optional: <description=string=''>
+scope: 
+  - Modules
+  - Features 
+description: |
+ Describes 
+ 

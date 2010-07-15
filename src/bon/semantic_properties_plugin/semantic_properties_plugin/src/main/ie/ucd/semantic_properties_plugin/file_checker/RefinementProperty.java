@@ -198,7 +198,7 @@ public class RefinementProperty {
 		String p2Match = p2.getInputToMatch();
 		Set conversions = oConversions.keySet();
 		Iterator it = conversions.iterator();
-		while(it.hasNext()){
+		while (it.hasNext()) {
 			String presKey = (String) it.next();
 			//check if p1 has an conversion for this key
 			if (p1.getVar(presKey) != null) {
