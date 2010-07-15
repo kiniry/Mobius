@@ -19,6 +19,13 @@ import org.eclipse.core.runtime.CoreException;
 
 public class MarkerCollector {
 
+  /**
+   * A sentinel value to use for the number of lines of code
+   * (or thousands of lines of code) when there is, in fact,
+   * no detected code.
+   */
+  public static final int NO_CODE = -1;
+  
   private final Map<String,List<IMarker>> markersMap;
   
   private final String name;

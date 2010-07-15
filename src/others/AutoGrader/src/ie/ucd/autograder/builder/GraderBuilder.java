@@ -110,9 +110,11 @@ public class GraderBuilder extends IncrementalProjectBuilder {
       Log.info("Metrics are not enabled");
     }
         
-    double tloc = metrics.getTLOC();
-    tloc = tloc == 0 ? 0.00000001 : tloc; //Avoid div0 errors, but small enough to show up as zero
+    final double tloc = metrics.getTLOC();
     double kloc = tloc / 1000d;
+    if (tloc == 0) {
+      kloc = MarkerCollector.NO_CODE; // the sentinel for "no code"
+    }
     for (MarkerCollector collector : collectors) {
       projectData.add(collector.getAggregateData(kloc, mainTable));
     }
