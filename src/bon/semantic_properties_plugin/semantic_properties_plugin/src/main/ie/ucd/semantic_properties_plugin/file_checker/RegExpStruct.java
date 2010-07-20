@@ -1,5 +1,5 @@
 /**
- * @title "Semantic Property Plugin Package"
+ * @title "Semantic LevelRepresenation Plugin Package"
  * @description "Class that represents a Regular Expression"
  * @author  Eoin O'Connor
  * @copyright ""
@@ -13,11 +13,13 @@ package ie.ucd.semantic_properties_plugin.file_checker;
  * <p> A string representation of a Regular Expression 
  * and a map of what to store in the capturing  groups  .</p>
  *
- * @see   Property
+ * @see   LevelRepresenation
  * @version "$Id: 01-07-2010 $"
  * @author  eo
  **/
 import java.util.LinkedHashMap;
+
+import semantic_properties_plugin.custom_objects.MyObject;
 
 /**Class that represents a Regular Expression.
  * <p>Adds information to a regular expression about what is 
@@ -34,11 +36,11 @@ public class RegExpStruct {
 	/**Map representing the values in the capturing group of this RegExp.
 	 * 
 	 */
-	private LinkedHashMap <String, Integer> groups;
+	private LinkedHashMap <String, Integer> groupInt;
 	/**Map representing the Objects in the capturing group of this RegExp.
 	 * 
 	 */
-	private LinkedHashMap <Object, Integer> customGroup;
+	private LinkedHashMap <String, MyObject> groupObj;
 	/**Number of capturing groups in this regExp.
 	 * 
 	 */
@@ -49,7 +51,8 @@ public class RegExpStruct {
 	 */
 	RegExpStruct() {
 		exp = "";
-		groups = new LinkedHashMap<String, Integer>();
+		groupInt = new LinkedHashMap<String, Integer>();
+		groupObj = new LinkedHashMap<String, MyObject>();
 		numberOfGroups = 0;
 	}
 	/**Constructor .
@@ -58,10 +61,11 @@ public class RegExpStruct {
 	 * @param m LinkedHashMap  representing capturing groups.
 	 * @param num Number of capturing groups.
 	 */
-	RegExpStruct(String s, LinkedHashMap<String, Integer> m, int num) {
+	RegExpStruct(String s, LinkedHashMap<String, Integer> m, LinkedHashMap<String, MyObject> objectMap, int num) {
 		exp = s;
-		groups = m;
+		groupInt = m;
 		numberOfGroups = num;
+		groupObj=objectMap;
 	}
 	/**Method that adds a RegExpStruct on to this one.
 	 * <p>Adds both String rep and map</p>
@@ -73,19 +77,23 @@ public class RegExpStruct {
 	 */
 	public RegExpStruct concat(RegExpStruct toAdd,String pre,String post,int additionalGroups){
 		
-		String newExp=pre+exp+toAdd.getExp()+post;
-		int newNum=numberOfGroups+toAdd.getNumberOfGroups()+additionalGroups;
+		String newExp = pre + exp + toAdd.getExp() + post;
+		int newNum = numberOfGroups 
+		+ toAdd.getNumberOfGroups() + additionalGroups;
 		
 		/**Concat the linkedHashMaps
 		 * 
 		 */
-		LinkedHashMap<String, Integer> newGroup=groups;
-		LinkedHashMap<String, Integer> addGroup=toAdd.getGroups();
+		LinkedHashMap<String, Integer> newIntGroup=groupInt;
+		LinkedHashMap<String, Integer> addGroup=toAdd.getGroupInt();
 		for(String key :addGroup.keySet()){
-			newGroup.put(key, addGroup.get(key)+numberOfGroups);
+			newIntGroup.put(key, addGroup.get(key)+numberOfGroups);
 		}
 		
-		return (new RegExpStruct(newExp,newGroup,newNum));
+		LinkedHashMap<String, MyObject> newObjGroup= new LinkedHashMap<String, MyObject>();
+		newObjGroup.putAll(toAdd.getGroupObj());
+
+		return (new RegExpStruct(newExp,newIntGroup,newObjGroup,newNum));
 		
 	}
 	
@@ -106,16 +114,19 @@ public class RegExpStruct {
 		this.numberOfGroups = numberOfGroups;
 	}
 
-	public LinkedHashMap<String, Integer> getGroups() {
-		return groups;
+	public LinkedHashMap<String, Integer> getGroupInt() {
+		return groupInt;
 	}
 
 	public void setGroups(LinkedHashMap<String, Integer> groups) {
-		this.groups = groups;
+		this.groupInt = groups;
 	}
 
 	public void setExp(String exp) {
 		this.exp = exp;
+	}
+	public LinkedHashMap<String, MyObject> getGroupObj() {
+		return groupObj;
 	}
 
 }

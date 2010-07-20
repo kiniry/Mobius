@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package ie.ucd.semantic_properties_plugin.file_checker;
 
 import java.io.File;
@@ -14,28 +12,25 @@ import junit.framework.TestCase;
  */
 public class RefinementPropertyTest extends TestCase {
 
-	public void testRefProp(){
-		File inputOne = new File("resources/examples/concurrency_refinement.yaml");
-		
-		RefinementProperty propOne= new RefinementProperty(inputOne);
-		
-		System.out.println("Strings "+propOne.getSConversions());
-		System.out.println("Objects "+propOne.getOConversions());
-		assertEquals(0,0);
-	}
-
-
-	/**Test the isValidRefinement method in Refinement Property.
+	/** Check refinement prefix, suffix, substring.
 	 * 
 	 */
-	public void testIsValidRefinement(){
-		File inputOne = new File("resources/examples/concurrency_refinement.yaml");
+	public final void testPrefixRefinement() {
 		
-		RefinementProperty propOne= new RefinementProperty(inputOne);
+		String refinementPropertyString = "";
+		Refinement refinement = 
+			new Refinement(refinementPropertyString);
 		
-		System.out.println("Strings "+propOne.getSConversions());
-		System.out.println("Objects "+propOne.getOConversions());
-		assertEquals(0,0);
+		
+		String sourcePropertyString = "";
+		LevelRepresenation sourceProperty = new LevelRepresenation(sourcePropertyString);
+		
+		String refinedPropertyString = "";
+		LevelRepresenation refinedProperty = new LevelRepresenation(refinedPropertyString);
+		
+		
+		
+		assertTrue(true);
 	}
 
 }

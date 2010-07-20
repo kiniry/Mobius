@@ -16,6 +16,12 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
+import semantic_properties_plugin.custom_objects.MyObject;
+import semantic_properties_plugin.custom_objects.MyObjectKind;
+
+import custom_yaml.CustomConstructor;
+import custom_yaml.CustomRepresenter;
+import custom_yaml.CustomResolver;
 import custom_yaml.RefinementConstructor;
 import custom_yaml.RefinementRepresenter;
 import custom_yaml.RefinementResolver;
@@ -25,7 +31,7 @@ import custom_yaml.RefinementResolver;
  * @author eo
  *
  */
-public class RefinementProperty {
+public class Refinement {
 	
 	private LinkedHashMap<String,String> sConversions;
 	private LinkedHashMap<String, Transitions> oConversions;
@@ -33,33 +39,34 @@ public class RefinementProperty {
 	private int destinationLevel;
 	private String propertyName;
 	
-	/**Constructs Refinement Property from input String. 
+	
+	/**Constructor for  Object.
+	 * @param input object with property in it.
+	 */
+	public Refinement(Object input) {
+		parse(input);
+
+	}
+	/**Constructs Refinement LevelRepresenation from input String. 
 	 * 
-	 * @param input name of input file to parse
+	 * @param input string in yaml form to parse.
 	 * @throws FileNotFoundException 
 	 */
-	public RefinementProperty(final String input) {
+	public Refinement(final String input) {
 		
 		Yaml yaml = new Yaml(
 				new Loader(new RefinementConstructor()), 
 				new Dumper(new RefinementRepresenter(), new DumperOptions()),
 				new RefinementResolver());
-		FileInputStream io = null;
-
-		try {
-			io = new FileInputStream(input);
-		} catch (Exception e) {
-			System.out.println("invalid string for refinment prop");
-		}
-		Object ob = yaml.load(io);
+		Object ob = yaml.load(input);
 		parse(ob);
 	}
-	/**Constructs Refinement Property from input file. 
+	/**Constructs Refinement LevelRepresenation from input file. 
 	 * 
 	 * @param input file to parse
 	 * @throws FileNotFoundException 
 	 */
-	public RefinementProperty(final File input) {
+	public Refinement(final File input) {
 		
 		Yaml yaml = new Yaml(new Loader(new RefinementConstructor()),
 				new Dumper(new RefinementRepresenter(), new DumperOptions()),
@@ -74,7 +81,7 @@ public class RefinementProperty {
 		Object ob = yaml.load(io);
 		parse(ob);
 	}
-	/**parse object for values of Refinement Property.
+	/**parse object for values of Refinement LevelRepresenation.
 	 * 
 	 * @param currentOb Object to parse.
 	 */
@@ -164,7 +171,7 @@ public class RefinementProperty {
 		else{
 			System.out.println("unexpected object "
 					+ currentOb.toString()
-					+ " in RefinementProperty Parse() method");
+					+ " in Refinement Parse() method");
 		}
 		
 	}
@@ -178,12 +185,12 @@ public class RefinementProperty {
 		return true;		
 	}
 	
-	/**Check if Property match p1 refines to p2.
+	/**Check if LevelRepresenation match p1 refines to p2.
 	 * @param p1 source property match to check.
 	 * @param p2 destination property to check.
  	 * @return true if p1 refines to p2.
 	 */
-	public final boolean isValidRefinement(final PropertyMatch p1, final PropertyMatch p2){
+	public final boolean isValidRefinement(final LevelRepMatch p1, final LevelRepMatch p2){
 		/**Check that p1 and p2 are right levels for this refinement.
 		 * 
 		 */
@@ -200,22 +207,64 @@ public class RefinementProperty {
 		Iterator it = conversions.iterator();
 		while (it.hasNext()) {
 			String presKey = (String) it.next();
+			MyObject ob1 = p1.getVar(presKey);
+			MyObject ob2 = p2.getVar(presKey);
 			//check if p1 has an conversion for this key
-			if (p1.getVar(presKey) != null) {
+			if (ob1 != null) {
 				//check the type of conversion
 				Transitions tran = oConversions.get(presKey);
 				//deal with each conversion appropriately
 				if (tran.equals(Transitions.prefix)) {
-					String a = p1.getVar(presKey);
-					String b = p2.getVar(presKey);
+					//check that MyObject is right kind
+					if (!((ob1.getKind()) == MyObjectKind.String)) {
+						System.out.println(
+								"Cannot generate prefix for objectkind" 
+								+ ob1.getKind());
+						return false;
+					}
+					String a = (String) ob1.getValue();
+					String b = (String) ob2.getValue();
 					if (!b.startsWith(a)) {
 						return false;
 					}
 					//adjust p1Match & p2Match
-					p1Match = p1Match.replace("'"+a+"'", "");
-					p2Match = p2Match.replace("'"+b+"'", "");
+					p1Match = p1Match.replace("'" + a + "'", "");
+					p2Match = p2Match.replace("'" + b + "'", "");
+				} else if (tran.equals(Transitions.suffix)) {
+					//check that MyObject is right kind
+					if (!((ob1.getKind()) == MyObjectKind.String)) {
+						System.out.println(
+								"Cannot generate suffix for objectkind" 
+								+ ob1.getKind());
+						return false;
 					}
-				else {
+					String a = (String) ob1.getValue();
+					String b = (String) ob2.getValue();
+					if (!b.endsWith(a)) {
+						return false;
+					}
+					//adjust p1Match & p2Match
+					p1Match = p1Match.replace("'" + a + "'", "");
+					p2Match = p2Match.replace("'" + b + "'", "");
+					
+				} else if (tran.equals(Transitions.substring)) {
+					//check that MyObject is right kind
+					if (!((ob1.getKind()) == MyObjectKind.String)) {
+						System.out.println(
+								"Cannot generate substring for objectkind" 
+								+ ob1.getKind());
+						return false;
+					}
+					String a = (String) ob1.getValue();
+					String b = (String) ob2.getValue();
+					if (!b.contains(a)) {
+						return false;
+					}
+					//adjust p1Match & p2Match
+					p1Match = p1Match.replace("'" + a + "'", "");
+					p2Match = p2Match.replace("'" + b + "'", "");
+					
+				} else {
 					System.out.println("unimplemented transition " + tran);
 				}
 				
@@ -244,12 +293,12 @@ public class RefinementProperty {
 		return true;	
 		
 	}
-	/**Refine p1 based on rules in this Refinement Property.
+	/**Refine p1 based on rules in this Refinement LevelRepresenation.
 	 * 
-	 * @param p1 Source Property Match.
+	 * @param p1 Source LevelRepresenation Match.
 	 * @return The refinement of p1 using this refinement property.
 	 */
-	public final PropertyMatch refine(final PropertyMatch p1){
+	public final LevelRepMatch refine(final LevelRepMatch p1){
 		return p1;
 		
 	}

@@ -1,7 +1,14 @@
 package ie.ucd.semantic_properties_plugin.file_checker;
 
 public enum Transitions {
-	equivalent("eguivalent"),equals("equals"),greaterOrEgual(">="),unknown(""),prefix("prefix");
+	equivalent("eguivalent"),
+	equals("equals"),
+	greaterOrEgual(">="),
+	unknown(""),
+	prefix("prefix"),
+	substring("substring"),
+	suffix("sufix");
+	
 	Transitions(String s){
 		reg=s;	
 	}

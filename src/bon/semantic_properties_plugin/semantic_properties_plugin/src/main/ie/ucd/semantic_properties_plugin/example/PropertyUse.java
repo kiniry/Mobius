@@ -1,6 +1,6 @@
 package ie.ucd.semantic_properties_plugin.example;
 
-import ie.ucd.semantic_properties_plugin.file_checker.RefinementProperty;
+import ie.ucd.semantic_properties_plugin.file_checker.Refinement;
 
 import java.io.File;
 
@@ -18,7 +18,7 @@ public class PropertyUse {
 		
 		File conYaml = new File("resources/examples/concurrency_refinement.yaml");
 		
-		RefinementProperty r= new RefinementProperty(conYaml);
+		Refinement r= new Refinement(conYaml);
 		
 //		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
 //				new CustomRepresenter(), new DumperOptions()),

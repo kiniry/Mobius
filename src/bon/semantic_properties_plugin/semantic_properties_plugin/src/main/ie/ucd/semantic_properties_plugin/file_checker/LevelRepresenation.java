@@ -1,5 +1,5 @@
 /**
- * @title "Semantic Property Plugin Package"
+ * @title "Semantic LevelRepresenation Plugin Package"
  * @description "Class that represents,checks and generates a regexp for a semantic property."
  * @author  Eoin O'Connor
  * @copyright ""
@@ -41,7 +41,7 @@ import semantic_properties_plugin.custom_objects.MyObject;
  * @author  Eoin O'Connor
  **/
 
-public class Property {
+public class LevelRepresenation {
 
 	/**Strings Used for Validity Checks.
 	 * <p> Definition of what makes an acceptable property fors
@@ -66,44 +66,43 @@ public class Property {
 	private int level;
 	private RegExpStruct reg;
 	
-	
-	/*Constructor for  File
-	 * @param input file with property in it.
+	/**Constructor for  linkedHashMap.
+	 * @param input linkedHashMap with property in it.
 	 */
-	public Property(File input) {
+	public LevelRepresenation(LinkedHashMap< String , ? > input) {
+		parse(input);
+	}
+	
+	
+	/**Constructor for  yaml File.
+	 * @param input yaml file with property in it.
+	 */
+	public LevelRepresenation(File input) {
 		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
 				new CustomRepresenter(), new DumperOptions()),
 				new CustomResolver());;
 		FileInputStream io=null;
 
-		try{
-			io= new FileInputStream(input);
-		}
-		catch(Exception e){
+		try {
+			io = new FileInputStream(input);
+		} catch (Exception e) {
 			System.out.println("invalid string");
 		}
-		Object ob =yaml.load(io);
-		Parse((LinkedHashMap<String,?>)ob);
+		Object ob = yaml.load(io);
+		parse((LinkedHashMap<String, ?>) ob);
 
 	}
 
-	/*Constructor for string representing file
+	/**Constructor for string with yaml content.
 	 * @param input String representing input file
 	 */
-	public Property(String input) {
+	public LevelRepresenation (String input) {
 			Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
 					new CustomRepresenter(), new DumperOptions()),
 					new CustomResolver());;
-			FileInputStream io=null;
-	
-			try{
-				io= new FileInputStream(input);
-			}
-			catch(Exception e){
-				System.out.println("invalid string");
-			}
-			Object ob =yaml.load(io);
-			Parse((LinkedHashMap<String,?>)ob);
+
+			Object ob =yaml.load(input);
+			parse((LinkedHashMap<String,?>)ob);
 
 	}
 	
@@ -113,7 +112,7 @@ public class Property {
 	  * @param linkedHashMap to parse
 	  */
 
-	private void Parse(LinkedHashMap<String , ?> linkedHashMap) {
+	private void parse(LinkedHashMap<String , ?> linkedHashMap) {
 		
 			if(!checkValidity(linkedHashMap)){
 				System.out.println("linkedHashMap entery "+linkedHashMap+" does not represent a valid property not valid");
@@ -352,7 +351,7 @@ public class Property {
 				 * <p>Because its the capturing case</p>
 				 */
 				LinkedHashMap<String ,Integer> capRegGroup =
-				choiceCapReg.getGroups();
+				choiceCapReg.getGroupInt();
 				
 				capRegGroup.put(checkMatcher.group(1),capRegGroup.size()+1);
 				
@@ -425,24 +424,35 @@ public class Property {
 		//   if string
 		if (ob instanceof String) {
 
-			return new RegExpStruct((String) ob,
-					new LinkedHashMap<String, Integer>(), 0);
+			return new RegExpStruct(
+					(String) ob,
+					new LinkedHashMap<String, Integer>(),
+					new LinkedHashMap<String, MyObject>(),
+					0);
 
 		}
 		// custom objects
 		if (ob instanceof MyObject) {
+			//cast to MyObject.
 			MyObject thisOb = (MyObject) ob;
-			LinkedHashMap<String, Integer> objectMap = 
+			
+			LinkedHashMap<String, Integer> intMap = 
 				new LinkedHashMap<String, Integer>();
-			objectMap.put(thisOb.getId(), 1);
+			intMap.put(thisOb.getId(), 1);
 
-			return new RegExpStruct( thisOb.getReg(), objectMap, 1);
+			LinkedHashMap<String, MyObject> objMap = 
+				new LinkedHashMap<String, MyObject>();
+			objMap.put(thisOb.getId(), thisOb);
+			
+			return new RegExpStruct(thisOb.getReg(), 
+					intMap, objMap, 1);
 
-		}
-		else{
+		} else{
 			return new RegExpStruct(
-					"unexpected type encountered when generating RegExp in Propery.class"
-							+ ob, new LinkedHashMap<String, Integer>(), 0);
+					"unexpected type encountered when generating RegExp" 
+					+ " in Propery.class"
+					+ ob, new LinkedHashMap<String, Integer>(),
+					new LinkedHashMap<String, MyObject>(), 0);
 
 		}
 		
@@ -475,7 +485,7 @@ public class Property {
 	}
 
 	public static void setName(String name) {
-		Property.name = name;
+		LevelRepresenation.name = name;
 	}
 
 	public static ArrayList<String> getScope() {
@@ -483,7 +493,7 @@ public class Property {
 	}
 
 	public void setScope(ArrayList<String> scope) {
-		Property.scope = scope;
+		LevelRepresenation.scope = scope;
 	}
 
 	public static String getDescription() {
@@ -491,14 +501,14 @@ public class Property {
 	}
 
 	public void setDescription(String string) {
-		Property.description = string;
+		LevelRepresenation.description = string;
 	}
 
 	public static ArrayList<Object> getFormat() {
 		return format;
 	}
 	public void setFormat(ArrayList<Object> format) {
-		Property.format = format;
+		LevelRepresenation.format = format;
 	}
 
 	public int getLevel() {

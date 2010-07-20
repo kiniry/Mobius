@@ -1,0 +1,52 @@
+--- 
+name: concurrency
+level: 5
+format: 
+  - choice (CONCURRENT): 
+    - SEQUENTIAL
+    - GUARDED
+    - CONCURRENT
+    - [TIMEOUT, <to=nat=0>, <e=throwable=java.lang.EXCEPTION>]
+    - [FAILURE, <f=throwable=java.lang.ERROR>]
+    - SPECIAL
+  - optional: <description=string=''>
+scope: 
+  - Modules
+  - Features 
+description: |
+ Describes 
+...
+--- 
+name: concurrency
+level: 2
+format: 
+  - choice (PARALLEL): 
+    - SEQ
+    - GUARD
+    - PARALLEL
+    - [TO, <to=nat=0>, <e=throwable=java.lang.Exception>]
+    - [FAILURE, <f=throwable=java.lang.Error>]
+    - SPECIAL
+  - optional: <description=string='No information.'>
+  - optional: <owner=string='unknown'>
+scope: 
+  - Modules
+  - Features 
+description: |
+ Describes 
+...
+---
+property: concurrency
+relation(5,2):
+  - keyword:
+    - SEQUENTIAL: SEQ
+    - CONCURRENT: PARALLEL
+    - GUARDED: GUARD
+    - TIMEOUT: TO
+    - FAILURE: FAIL
+    - SPECIAL: SPECIAL
+  - description: prefix
+  - n: ">="
+  - e: equals
+  - f: equivalent
+  - owner: -> 
