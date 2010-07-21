@@ -10,6 +10,7 @@
 package ie.ucd.semanticproperties.plugin.structs;
 
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
+import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
 import ie.ucd.semanticproperties.plugin.yaml.CustomRepresenter;
 import ie.ucd.semanticproperties.plugin.yaml.CustomResolver;
@@ -17,9 +18,7 @@ import ie.ucd.semanticproperties.plugin.yaml.CustomResolver;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,8 +27,6 @@ import org.yaml.snakeyaml.Dumper;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
-
-
 
 
 
@@ -70,7 +67,7 @@ public class LevelRepresenation {
 	/**Constructor for  linkedHashMap.
 	 * @param input linkedHashMap with property in it.
 	 */
-	public LevelRepresenation(LinkedHashMap< String , ? > input) {
+	public LevelRepresenation(LinkedHashMap< String , ? > input) throws InvalidSemanticPropertySpecificationException{
 		parse(input);
 	}
 	
@@ -78,7 +75,7 @@ public class LevelRepresenation {
 	/**Constructor for  yaml File.
 	 * @param input yaml file with property in it.
 	 */
-	public LevelRepresenation(File input) {
+	public LevelRepresenation(File input) throws InvalidSemanticPropertySpecificationException {
 		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
 				new CustomRepresenter(), new DumperOptions()),
 				new CustomResolver());;
@@ -97,7 +94,8 @@ public class LevelRepresenation {
 	/**Constructor for string with yaml content.
 	 * @param input String representing input file
 	 */
-	public LevelRepresenation (String input) {
+	public LevelRepresenation (String input) throws InvalidSemanticPropertySpecificationException
+ {
 			Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
 					new CustomRepresenter(), new DumperOptions()),
 					new CustomResolver());;
@@ -113,9 +111,13 @@ public class LevelRepresenation {
 	  * @param linkedHashMap to parse
 	  */
 
-	private void parse(LinkedHashMap<String , ?> linkedHashMap) {
+	private void parse(LinkedHashMap<String , ?> linkedHashMap) throws InvalidSemanticPropertySpecificationException {
 		
-			if(!checkValidity(linkedHashMap)){
+			
+			boolean fun = checkValidity(linkedHashMap);
+			
+			
+			if(!fun){
 				System.out.println("linkedHashMap entery "+linkedHashMap+" does not represent a valid property not valid");
 			}
 			else{
@@ -135,7 +137,7 @@ public class LevelRepresenation {
 	 * @param newProp linkedHashMap that contains potential property as parsed by snakeyaml
 	 * @return true when the property is  valid.
 	 */
-	private boolean checkValidity(LinkedHashMap<String, ?> newProp) {
+	private boolean checkValidity(final LinkedHashMap<String, ?> newProp) throws InvalidSemanticPropertySpecificationException{
 
 
 
@@ -146,8 +148,10 @@ public class LevelRepresenation {
 
 		Matcher levelMatcher = levelPattern.matcher((String)newProp.get("level"));
 		if (!levelMatcher.matches()) {
+			
 			System.out.println(" level value is invalid @" + name);
-			return false;
+			throw new InvalidSemanticPropertySpecificationException();
+			//return false;
 		}
 		/**Checks the name ;
 		 * 
@@ -157,7 +161,9 @@ public class LevelRepresenation {
 		Matcher nameMatcher = namePattern.matcher((String)newProp.get("name"));
 		if (!nameMatcher.matches()) {
 			System.out.println(" name value is invalid @" + name);
-			return false;
+			throw new InvalidSemanticPropertySpecificationException();
+
+//			return false;
 		}
 
 		/**Checks the scope;
@@ -170,7 +176,9 @@ public class LevelRepresenation {
 			Matcher scopeMatcher = scopePattern.matcher(scopeValue);
 			if (!scopeMatcher.matches()) {
 				System.out.println(name + " scope value is invalid @"+ scopeValue);
-				return false;
+				throw new InvalidSemanticPropertySpecificationException();
+
+//				return false;
 			}
 		}
 
@@ -183,13 +191,21 @@ public class LevelRepresenation {
 		if (!descriptionMatcher.matches()) {
 			System.out.println("The  properties description is invalid @"
 					+ description);
-			return false;
+			throw new InvalidSemanticPropertySpecificationException();
+//			return false;
 		}
 
 		/*Checks the format with recursive method
 		 * 
 		 */
-		return checkFormatValidity((ArrayList<Object>)newProp.get("format"));
+		try{
+			checkFormatValidity((ArrayList<Object>)newProp.get("format"));
+		} catch (InvalidSemanticPropertySpecificationException e){
+			throw e;
+		}
+		
+		
+		return true;
 
 	}
 	/**
@@ -197,8 +213,9 @@ public class LevelRepresenation {
 	 * @param formatValue Object to be checked
 	 * @return true when object is a valid format object
 	 */
+            
+	private boolean checkFormatValidity(Object formatValue) throws InvalidSemanticPropertySpecificationException {
 
-	private boolean checkFormatValidity(Object formatValue) {
 
 		// case for String
 		if (formatValue instanceof String) {
@@ -207,7 +224,8 @@ public class LevelRepresenation {
 			Matcher nameMatcher = formatPattern.matcher((String) formatValue);
 			if (!nameMatcher.matches()) {
 				System.out.println("instance of string name value is invalid @" + formatValue);
-				return false;
+				throw new InvalidSemanticPropertySpecificationException();
+//				return false;
 			}
 		}
 		// case for list
@@ -216,7 +234,8 @@ public class LevelRepresenation {
 			for (Object optionalNameValue : (ArrayList<?>) formatValue) {
 				if(!checkFormatValidity(optionalNameValue)){
 					System.out.println(optionalNameValue+"in arraylist"+"formatValue"+" is not valid");
-					return false;
+					throw new InvalidSemanticPropertySpecificationException();
+//					return false;
 				}
 
 			}
@@ -235,12 +254,14 @@ public class LevelRepresenation {
 				if (nameMatcher.matches()){
 					if(!checkFormatValidity(r.get(s))){
 						System.out.println("option "+s+"has invalid paramters at @"+r.get(s));
-						return false;
+						throw new InvalidSemanticPropertySpecificationException();
+//						return false;
 					}
 				}
 				else{
 					System.out.println(" special value(eg:choice,optional) is invalid @" + s);
-					return false;
+					throw new InvalidSemanticPropertySpecificationException();
+//					return false;
 				}
 			}		
 		}
@@ -251,7 +272,8 @@ public class LevelRepresenation {
 			Matcher nameMatcher = formatPattern.matcher(((MyObject)formatValue).toString());
 			if (!nameMatcher.matches()) {
 				System.out.println(" customObject value is invalid @ " + formatValue);
-				return false;
+				throw new InvalidSemanticPropertySpecificationException();
+//				return false;
 			}
 		}
 		// case for Unrecognized object
@@ -259,7 +281,8 @@ public class LevelRepresenation {
 			System.out
 					.println("Should not have got here in name check, reason @ "
 							+ formatValue);
-			return false;
+			throw new InvalidSemanticPropertySpecificationException();
+			//return false;
 		}
 		//returns true if object was recognized and didn't already fail
 		return true;

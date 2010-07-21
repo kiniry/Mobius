@@ -1,5 +1,5 @@
 
-package ie.ucd.semantic_properties_plugin.file_checker;
+package ie.ucd.semanticproperties.plugin.structs;
 
 import ie.ucd.semanticproperties.plugin.structs.LevelRepresenation;
 import ie.ucd.semanticproperties.plugin.structs.Refinement;
@@ -24,13 +24,15 @@ public class RefinementPropertyTest extends TestCase {
 		Refinement refinement = 
 			new Refinement(refinementPropertyString);
 		
-		
+		try{
 		String sourcePropertyString = "";
 		LevelRepresenation sourceProperty = new LevelRepresenation(sourcePropertyString);
 		
 		String refinedPropertyString = "";
 		LevelRepresenation refinedProperty = new LevelRepresenation(refinedPropertyString);
-		
+		} catch(Exception e) {
+			
+		}
 		
 		
 		assertTrue(true);

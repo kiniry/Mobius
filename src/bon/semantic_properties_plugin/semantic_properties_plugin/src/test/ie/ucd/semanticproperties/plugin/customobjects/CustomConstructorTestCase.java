@@ -1,4 +1,4 @@
-package custom_objects;
+package ie.ucd.semanticproperties.plugin.customobjects;
 
 import ie.ucd.semanticproperties.plugin.customobjects.MyFloat;
 import ie.ucd.semanticproperties.plugin.customobjects.MyInt;

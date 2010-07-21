@@ -299,7 +299,7 @@ public class Refinement {
 	 * @param p1 Source LevelRepresenation Match.
 	 * @return The refinement of p1 using this refinement property.
 	 */
-	public final LevelRepMatch refine(final LevelRepMatch p1){
+	public final LevelRepMatchTest refine(final LevelRepMatchTest p1){
 		return p1;
 		
 	}

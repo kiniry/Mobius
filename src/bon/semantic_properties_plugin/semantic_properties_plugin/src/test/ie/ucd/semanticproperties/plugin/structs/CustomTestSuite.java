@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-package ie.ucd.semantic_properties_plugin.file_checker;
+package ie.ucd.semanticproperties.plugin.structs;
+
+import ie.ucd.semanticproperties.plugin.customobjects.CustomConstructorTestCase;
+import ie.ucd.semanticproperties.plugin.customobjects.CustomRepresenterTestCase;
+import ie.ucd.semanticproperties.plugin.customobjects.CustomResolverTestCase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +32,6 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
-import custom_objects.CustomConstructorTestCase;
-import custom_objects.CustomRepresenterTestCase;
-import custom_objects.CustomResolverTestCase;
 
 public class CustomTestSuite  {
 

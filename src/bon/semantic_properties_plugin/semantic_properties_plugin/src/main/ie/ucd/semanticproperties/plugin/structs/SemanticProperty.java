@@ -8,13 +8,18 @@
  */
 package ie.ucd.semanticproperties.plugin.structs;
 
+import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
 import ie.ucd.semanticproperties.plugin.yaml.CustomRepresenter;
 import ie.ucd.semanticproperties.plugin.yaml.CustomResolver;
+import ie.ucd.semanticproperties.plugin.yaml.RefinementConstructor;
+import ie.ucd.semanticproperties.plugin.yaml.RefinementRepresenter;
+import ie.ucd.semanticproperties.plugin.yaml.RefinementResolver;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -50,8 +55,10 @@ public class SemanticProperty {
 	 * 
 	 * @param inputFile yaml file  to parse.
 	 */
-	public SemanticProperty(File inputFile) {
+	public SemanticProperty(File inputFile) throws FileNotFoundException, InvalidSemanticPropertySpecificationException, IOException {
 		input = inputFile;
+		levels = new LinkedHashMap<Integer, LevelRepresenation>();
+		refinements = new LinkedList<Refinement>();
 		parseFile(input);
 	}
 
@@ -96,81 +103,98 @@ public class SemanticProperty {
 				 * 
 				 */
 				return pres.isValidRefinement(p1, p2);
-			}
+			}			
 		}
-		return true;
+		return false;
 	}
-	/**Unimplemented, not nessicary .Check validity of semantic property.
-	 * <p>Check all levelRepresentations and refinements</p>
-	 */
-	private boolean isValidSemProp() {
-		
-		return true;
-	}
-	/** parse the inputFile for semantic property values.
-	 * <p>
-	 * parser a file using snakeyaml and creates the appropiate properties
-	 * </p>
+
+	/** 
+	 * parses a file using snakeyaml and creates the appropriate Semantic Property.
 	 * 
-	 * @param inputFile
-	 *            yaml file to parse, may contain multiple properties
+	 * 
+	 * @param inputFile yaml file to parse, may contain multiple levels and refinements
 	 */
-	private static void parseFile(File inputFile) {
+	private static void parseFile(File inputFile) throws FileNotFoundException, InvalidSemanticPropertySpecificationException, IOException{
 
-		// get input stream from file;
-		InputStream input = null;
-		try {
-			input = new FileInputStream(inputFile);
-		} catch (FileNotFoundException e) {
-			System.out.println("error reading from " + inputFile + " file");
-			e.printStackTrace();
-		}
-		// create snakeyaml pbject
-		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
-				new CustomRepresenter(), new DumperOptions()),
-				new CustomResolver());
-		// create yaml object with snakeyaml
-		Object data = yaml.loadAll(input);
-		// iterate through the objects.
+		/**
+		 * get input stream from file
+		 */ 
+		InputStream input  = new FileInputStream(inputFile);
+		
+		/**
+		 * create Yaml parsed object for level
+		 */
+		Yaml levelYaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
+				new CustomRepresenter(), new DumperOptions()),new CustomResolver());
+		Object levelData = levelYaml.loadAll(input);
+
+		
 
 		try {
-			Iterable s = (Iterable<Object>) data;
+			Iterable s = (Iterable<Object>) levelData;
 			Iterator<LinkedHashMap<String, ?>> i;
 			i = s.iterator();
 			// iterate through the properties and add them
 			while (i.hasNext()) {
 				Object pres = (Object) i.next();
-				if (pres instanceof LinkedHashMap< ? , ? >) {
-					LinkedHashMap< String , ?> presMap = ((LinkedHashMap< String, ? >)pres);
-					/**Check if map represents a level or a refinement.
-					 * 
-					 */
-					// check if level.
-					if (presMap.get("name") != null) {
-						LevelRepresenation temp = new LevelRepresenation(presMap);
-						levels.put(temp.getLevel(), temp);
-					}
-					// check refinememnt
-					else if (presMap.get("property") != null) {
-						refinements.add(new Refinement(presMap));
-					} else {
-						System.out.println("yaml file has linked hashmap that" +
-								"isin't refinement or level");
-					}
+				if (!(pres instanceof LinkedHashMap< ? , ? >)){
+					System.out.println("this yaml file is" +
+					"incorrectly formated to be a semantic property ");
+					throw new InvalidSemanticPropertySpecificationException();
+
+				}
+				
+				LinkedHashMap< String , ?> presMap = ((LinkedHashMap< String, ? >)pres);
+				/**Check if map represents a level or a refinement.
+				 * 
+				 */
+				//  level.
+				if (presMap.get("name") != null) {
+					LevelRepresenation temp = new LevelRepresenation(presMap);
+					levels.put(temp.getLevel(), temp);
+				
+				// refinememnt
+				} else if (presMap.get("property") != null) {
 					
 				} else {
-					System.out.println("this yaml file is" +
-							"incorrectly formated to be a semantic property ");
+					System.out.println("yaml file has linked hashmap that" +
+							"isin't refinement or level");
+					throw new InvalidSemanticPropertySpecificationException();
 				}
+					
+				 
 			}
+		} catch (Exception e) {
+			throw new InvalidSemanticPropertySpecificationException();
+		} finally{
+			input.close();
 		}
-		 catch (Exception e) {
-			System.out.println("yaml file " + input
-					+ " did not contain expected Iterators, invalid yaml file");
-			e.printStackTrace();
+
+		/**
+		 * Create Yaml parsed object for refinements.
+		 */
+		InputStream input2  = new FileInputStream(inputFile);
+		Yaml refinementYaml = new Yaml(new Loader(new RefinementConstructor()), new Dumper(
+				new RefinementRepresenter(), new DumperOptions()),new RefinementResolver());
+		Object refinementData = refinementYaml.loadAll(input2);
+
+		Iterable s2 = (Iterable<Object>) refinementData;
+		Iterator<LinkedHashMap<String, ?>> i2;
+		i2 = s2.iterator();
+		// iterate through the properties and add them
+		while (i2.hasNext()) {
+			Object pres = (Object) i2.next();
+			if (pres instanceof LinkedHashMap< ? , ? >) {
+				LinkedHashMap< String , ?> presMap = ((LinkedHashMap< String, ? >)pres);
+				/**Check if map represents a refinement and if so add it to .
+				 * 
+				 */
+				if (presMap.get("property") != null) {
+					refinements.add(new Refinement(presMap));
+				} 
+			} 
 		}
-		
-	
+		input2.close();
 
 	}
 

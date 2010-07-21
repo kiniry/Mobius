@@ -1,4 +1,4 @@
-package ie.ucd.semantic_properties_plugin.file_checker;
+package ie.ucd.semanticproperties.plugin.structs;
 
 import ie.ucd.semanticproperties.plugin.customobjects.MyObjectKind;
 

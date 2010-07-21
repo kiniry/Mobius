@@ -1,7 +1,7 @@
 /**
  * test the regexs for all the custom objects
  */
-package ie.ucd.semantic_properties_plugin.custom_objects;
+package ie.ucd.semanticproperties.plugin.customobjects;
 
 import ie.ucd.semanticproperties.plugin.customobjects.MyClass;
 import ie.ucd.semanticproperties.plugin.customobjects.MyDate;

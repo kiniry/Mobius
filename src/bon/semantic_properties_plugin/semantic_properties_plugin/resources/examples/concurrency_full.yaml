@@ -28,7 +28,7 @@ format:
     - [FAILURE, <f=throwable=java.lang.Error>]
     - SPECIAL
   - optional: <description=string='No information.'>
-  - optional: <owner=string='unknown'>
+  #- optional: <owner=string='unknown'>
 scope: 
   - Modules
   - Features 
