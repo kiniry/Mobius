@@ -3,21 +3,22 @@
  */
 package ie.ucd.semantic_properties_plugin.custom_objects;
 
+import ie.ucd.semanticproperties.plugin.customobjects.MyClass;
+import ie.ucd.semanticproperties.plugin.customobjects.MyDate;
+import ie.ucd.semanticproperties.plugin.customobjects.MyDescription;
+import ie.ucd.semanticproperties.plugin.customobjects.MyEmail;
+import ie.ucd.semanticproperties.plugin.customobjects.MyExpression;
+import ie.ucd.semanticproperties.plugin.customobjects.MyFloat;
+import ie.ucd.semanticproperties.plugin.customobjects.MyInt;
+import ie.ucd.semanticproperties.plugin.customobjects.MyString;
+import ie.ucd.semanticproperties.plugin.customobjects.MyThrowable;
+import ie.ucd.semanticproperties.plugin.customobjects.MyURL;
+import ie.ucd.semanticproperties.plugin.customobjects.MyVersion;
+import ie.ucd.semanticproperties.plugin.customobjects.Nat;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import semantic_properties_plugin.custom_objects.MyClass;
-import semantic_properties_plugin.custom_objects.MyDate;
-import semantic_properties_plugin.custom_objects.MyDescription;
-import semantic_properties_plugin.custom_objects.MyEmail;
-import semantic_properties_plugin.custom_objects.MyExpression;
-import semantic_properties_plugin.custom_objects.MyFloat;
-import semantic_properties_plugin.custom_objects.MyInt;
-import semantic_properties_plugin.custom_objects.MyString;
-import semantic_properties_plugin.custom_objects.MyThrowable;
-import semantic_properties_plugin.custom_objects.MyURL;
-import semantic_properties_plugin.custom_objects.MyVersion;
-import semantic_properties_plugin.custom_objects.Nat;
 import junit.framework.TestCase;
 
 public class MyObjectTest extends TestCase {

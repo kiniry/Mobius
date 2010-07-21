@@ -1,6 +1,9 @@
 
 package ie.ucd.semantic_properties_plugin.file_checker;
 
+import ie.ucd.semanticproperties.plugin.structs.LevelRepresenation;
+import ie.ucd.semanticproperties.plugin.structs.Refinement;
+
 import java.io.File;
 
 import junit.framework.TestCase;

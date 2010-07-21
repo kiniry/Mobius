@@ -1,6 +1,12 @@
 package custom_objects;
 
 
+import ie.ucd.semanticproperties.plugin.customobjects.MyFloat;
+import ie.ucd.semanticproperties.plugin.customobjects.MyInt;
+import ie.ucd.semanticproperties.plugin.customobjects.Nat;
+import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
+import ie.ucd.semanticproperties.plugin.yaml.CustomRepresenter;
+import ie.ucd.semanticproperties.plugin.yaml.CustomResolver;
 import junit.framework.TestCase;
 
 
@@ -9,13 +15,7 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
-import custom_yaml.CustomConstructor;
-import custom_yaml.CustomRepresenter;
-import custom_yaml.CustomResolver;
 
-import semantic_properties_plugin.custom_objects.MyFloat;
-import semantic_properties_plugin.custom_objects.MyInt;
-import semantic_properties_plugin.custom_objects.Nat;
 
 public class CustomRepresenterTestCase extends TestCase{
 

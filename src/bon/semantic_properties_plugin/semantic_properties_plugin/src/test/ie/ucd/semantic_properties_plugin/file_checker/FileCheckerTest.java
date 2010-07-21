@@ -1,12 +1,13 @@
 package ie.ucd.semantic_properties_plugin.file_checker;
 
+import ie.ucd.semanticproperties.plugin.customobjects.MyObjectKind;
+
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import semantic_properties_plugin.custom_objects.MyObjectKind;
 
 import junit.framework.TestCase;
 
