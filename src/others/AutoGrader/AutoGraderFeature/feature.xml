@@ -2,7 +2,7 @@
 <feature
       id="AGFeature"
       label="AutoGrader Feature"
-      version="0.2.2"
+      version="0.3.0"
       provider-name="Fintan Fairmichael, UCD">
 
    <description url="http://kind.ucd.ie/products/opensource/AutoGrader/">
