@@ -466,7 +466,7 @@ public final class BONParser {
       //System.err.println("keyword constant:" + e);
       switch (constant.getConstant()) {
       case RESULT: result = new Keyword(Keywords.RESULT); break;
-      case VOID: result = new Keyword(Keywords.VOID); break;
+      case VOID: result = new Keyword(Keywords.NULL); break;
       case CURRENT: result = new Keyword(Keywords.CURRENT); break;
       default: System.err.println("unknown BON keywordConstant " + c);break;
     //TODO: remove, after check in bonc that we've exhausted all possibilities

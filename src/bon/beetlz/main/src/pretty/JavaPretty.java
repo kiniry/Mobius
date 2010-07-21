@@ -495,7 +495,7 @@ public class JavaPretty {
     if (frame.size() > 0) {
       for (int i = 0; i < frame.size() - 1; i++) {
         //args += PrettyFormatter.getJavaFrameName(frame.get(i)) + ", "; //$NON-NLS-1$
-        args += frame.get(i).toJavaString();
+        args += frame.get(i).toJavaString() + ", ";
       }
       //args += PrettyFormatter.getJavaFrameName(frame.get(frame.size() - 1));
       args += frame.get(frame.size() - 1).toJavaString();
