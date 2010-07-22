@@ -3,6 +3,8 @@ package ie.ucd.semanticproperties.plugin.structs;
 import ie.ucd.semanticproperties.plugin.api.LevelId;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObjectKind;
+import ie.ucd.semanticproperties.plugin.exceptions.InvalidRefinementSpecificationException;
+import ie.ucd.semanticproperties.plugin.exceptions.UnknownLevelException;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
 import ie.ucd.semanticproperties.plugin.yaml.CustomRepresenter;
 import ie.ucd.semanticproperties.plugin.yaml.CustomResolver;
@@ -12,6 +14,7 @@ import ie.ucd.semanticproperties.plugin.yaml.RefinementResolver;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -44,50 +47,44 @@ public class Refinement {
 
   /**Constructor for  Object.
    * @param input object with property in it.
+   * @throws UnknownLevelException 
    */
-  public Refinement(Object input) {
+  public Refinement(Object input) throws UnknownLevelException, InvalidRefinementSpecificationException {
     parse(input);
 
   }
   /**Constructs Refinement LevelRepresenation from input String. 
    *
    * @param input string in yaml form to parse.
+   * @throws UnknownLevelException 
    * @throws FileNotFoundException 
    */
-  public Refinement(final String input) {
+  public Refinement(final String input) throws UnknownLevelException , InvalidRefinementSpecificationException{
 
-    Yaml yaml = new Yaml(
-        new Loader(new RefinementConstructor()), 
-        new Dumper(new RefinementRepresenter(), new DumperOptions()),
-        new RefinementResolver());
+    Yaml yaml = new Yaml(new Loader(new RefinementConstructor()), new Dumper(new RefinementRepresenter(), new DumperOptions()), new RefinementResolver());
     Object ob = yaml.load(input);
     parse(ob);
   }
   /**Constructs Refinement LevelRepresenation from input file. 
    * 
    * @param input file to parse
+   * @throws UnknownLevelException 
+   * @throws FileNotFoundException 
    * @throws FileNotFoundException 
    */
-  public Refinement(final File input) {
+  public Refinement(final File input) throws UnknownLevelException, FileNotFoundException, InvalidRefinementSpecificationException {
 
-    Yaml yaml = new Yaml(new Loader(new RefinementConstructor()),
-        new Dumper(new RefinementRepresenter(), new DumperOptions()),
-        new RefinementResolver());
-    FileInputStream io = null;
-
-    try {
-      io = new FileInputStream(input);
-    } catch (Exception e) {
-      System.out.println("no file for refinement prop");
-    }
+    Yaml yaml = new Yaml(new Loader(new RefinementConstructor()), new Dumper(new RefinementRepresenter(), new DumperOptions()), new RefinementResolver());
+    FileInputStream io = new FileInputStream(input);
     Object ob = yaml.load(io);
     parse(ob);
   }
   /**parse object for values of Refinement LevelRepresenation.
    * 
    * @param currentOb Object to parse.
+   * @throws UnknownLevelException 
    */
-  private void parse(final Object currentOb) {
+  private void parse(final Object currentOb) throws UnknownLevelException, InvalidRefinementSpecificationException {
     /**Entry case
      * <p>We assume key is string.Possibly fix this later. </p>
      */
@@ -102,8 +99,8 @@ public class Refinement {
       /**If it matches set source and destination levels. 
        */
       if (m.matches()) {
-        sourceLevel = LevelId.valueOf((m.group(1)));
-        destinationLevel = LevelId.valueOf(m.group(2));
+        sourceLevel = LevelId.levelIdFor(m.group(1));
+        destinationLevel = LevelId.levelIdFor(m.group(2));
 
       }
       /**Check for property name.
@@ -174,19 +171,20 @@ public class Refinement {
       System.out.println("unexpected object "
           + currentOb.toString()
           + " in Refinement Parse() method");
+      throw new InvalidRefinementSpecificationException();
     }
 
   }
-  /**Check Validity Of RefinementProp.
-   * <p> Basic test to check that all variables are not null</p>
-   */
-  public boolean isValidRefinementProperty() {
-    if (propertyName == null || oConversions == null || sConversions == null) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+//  /**Check Validity Of RefinementProp.
+//   * <p> Basic test to check that all variables are not null</p>
+//   */
+//  private boolean isValidRefinementProperty() {
+//    if (propertyName == null || oConversions == null || sConversions == null) {
+//      return false;
+//    } else {
+//      return true;
+//    }
+//  }
 
   /**Check if LevelRepresenation match p1 refines to p2.
    * @param p1 source property match to check.

@@ -16,14 +16,15 @@ import junit.framework.TestCase;
 public class RefinementTest extends TestCase {
 
   /**
-   * Check refinement prefix, suffix, substring.
+   * Check refinement prefix
    */
   public final void testPrefixRefinement() {
 
-    String refinementPropertyString = "";
-    Refinement refinement =  new Refinement(refinementPropertyString);
-
     try {
+
+      String refinementPropertyString = "";
+      Refinement refinement =  new Refinement(refinementPropertyString);
+
       String sourcePropertyString = "";
       LevelRepresenation sourceProperty = new LevelRepresenation(sourcePropertyString);
 
@@ -32,9 +33,26 @@ public class RefinementTest extends TestCase {
     } catch(Exception e) {
 
     }
-
-
     assertTrue(true);
   }
+  /**
+   * Check suffix refinement.
+   */
+  public final void textSuffixRefinement(){
+    
+  }
+  /**
+   * Check constructor
+   */
+  public final void testConstructor(){
+    
+  }
+  /**
+   * Check isValidRefinement method.
+   */
+  public final void tetIsValidRefinement(){
+    
+  }
+  
 
 }

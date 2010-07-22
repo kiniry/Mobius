@@ -29,4 +29,46 @@ public class RegExpStructTest extends TestCase {
     assertEquals(concat.getExp(), "((an exp)(add on))");
   }
 
+  
+  /**
+   * Test the overriden testEquals method.
+   */
+  public final void testEqualsSimple() {
+
+    LinkedHashMap < String, Integer > intMap = new LinkedHashMap < String, Integer > ();
+    LinkedHashMap < String, MyObject > obMap = new LinkedHashMap < String, MyObject > ();
+    String exp = "anexp";
+    Integer num = 1;
+    
+    RegExpStruct eg1 = new RegExpStruct(exp, intMap, obMap, num);
+    RegExpStruct eg2 = new RegExpStruct(exp, intMap, obMap, num);
+
+
+    assertEquals(eg1,eg2);
+  }
+  
+  
+  /**
+   * Test the overriden testEquals method.
+   */
+  public final void testEqualsWithFullMap() {
+
+    LinkedHashMap < String, Integer > intMap = new LinkedHashMap < String, Integer > ();
+    intMap.put("hi", 2);
+    LinkedHashMap < String, Integer > intMap2 = new LinkedHashMap < String, Integer > ();
+    intMap2.put("hi", 2);
+    
+    LinkedHashMap < String, MyObject > obMap = new LinkedHashMap < String, MyObject > ();
+    LinkedHashMap < String, MyObject > obMap2 = new LinkedHashMap < String, MyObject > ();
+    String exp = "anexp";
+    Integer num = 1;
+    
+    RegExpStruct eg1 = new RegExpStruct(exp, intMap, obMap, num);
+    RegExpStruct eg2 = new RegExpStruct(exp, intMap2, obMap2, num);
+
+
+    assertEquals(eg1,eg2);
+  }
+  
+
 }

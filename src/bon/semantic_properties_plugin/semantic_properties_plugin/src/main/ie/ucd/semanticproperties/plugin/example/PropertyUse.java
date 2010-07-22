@@ -15,10 +15,10 @@ import org.yaml.snakeyaml.Yaml;
 
 public class PropertyUse {
 	public static void main (String[] args){
-		
-		File conYaml = new File("resources/examples/concurrency_refinement.yaml");
-		
-		Refinement r= new Refinement(conYaml);
+//		
+//		File conYaml = new File("resources/examples/concurrency_refinement.yaml");
+//		
+//		Refinement r= new Refinement(conYaml);
 		
 //		Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
 //				new CustomRepresenter(), new DumperOptions()),

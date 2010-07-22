@@ -4,9 +4,9 @@ import ie.ucd.semanticproperties.plugin.exceptions.UnknownScopeException;
 
 public enum ScopeId {
 
-  FILE("file"),
-  MODULE("module", "class", "type"),
-  FEATURE("feature", "method", "field"),
+  FILE("File", "file"),
+  MODULE("Module", "module", "class", "type"),
+  FEATURE("Feature", "feature", "method", "field"),
   VARIABLE("var", "variable"),
   ALL("all");
 

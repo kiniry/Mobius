@@ -128,8 +128,9 @@ public class LevelRepresenation {
        * get scopes
        */
       ArrayList<String> stringScopes = (ArrayList < String >) linkedHashMap.get("scope");
+      scope= new ArrayList < ScopeId >() ;
       for (String s : stringScopes){
-        scope.add(ScopeId.valueOf(s));
+        scope.add(ScopeId.scopeIdFor(s));
       }
       /**
        * Generate regExpStruct
@@ -138,7 +139,7 @@ public class LevelRepresenation {
       /**
        * Get level.
        */
-      level = LevelId.valueOf((String) linkedHashMap.get("level"));
+      level = LevelId.levelIdFor((String) linkedHashMap.get("level"));
     }
 
 
@@ -152,19 +153,19 @@ public class LevelRepresenation {
   private boolean checkValidity(final LinkedHashMap<String, ?> newProp) throws InvalidSemanticPropertySpecificationException{
 
 
-
-    /**
-     * Checks the level.
-     */
-    Pattern levelPattern = Pattern.compile(prop_Level);
-
-    Matcher levelMatcher = levelPattern.matcher((String)newProp.get("level"));
-    if (!levelMatcher.matches()) {
-
-      System.out.println(" level value is invalid @" + name);
-      throw new InvalidSemanticPropertySpecificationException();
-      //return false;
-    }
+//
+//    /**
+//     * Checks the level.
+//     */
+//    Pattern levelPattern = Pattern.compile(prop_Level);
+//
+//    Matcher levelMatcher = levelPattern.matcher((String)newProp.get("level"));
+//    if (!levelMatcher.matches()) {
+//
+//      System.out.println(" level value is invalid @" + name);
+//      throw new InvalidSemanticPropertySpecificationException();
+//      //return false;
+//    }
     /**
      * Checks the name.
      */
@@ -178,21 +179,21 @@ public class LevelRepresenation {
 //    return false;
     }
 
-    /**
-     * Checks the scope..
-     */
-    Pattern scopePattern = Pattern.compile(prop_Scope,
-        Pattern.CASE_INSENSITIVE);
-    ArrayList<String> scopes=(ArrayList<String>)newProp.get("scope");
-    for (String scopeValue : scopes) {
-      Matcher scopeMatcher = scopePattern.matcher(scopeValue);
-      if (!scopeMatcher.matches()) {
-        System.out.println(name + " scope value is invalid @"+ scopeValue);
-        throw new InvalidSemanticPropertySpecificationException();
-
-//      return false;
-      }
-    }
+//    /**
+//     * Checks the scope..
+//     */
+//    Pattern scopePattern = Pattern.compile(prop_Scope,
+//        Pattern.CASE_INSENSITIVE);
+//    ArrayList<String> scopes=(ArrayList<String>)newProp.get("scope");
+//    for (String scopeValue : scopes) {
+//      Matcher scopeMatcher = scopePattern.matcher(scopeValue);
+//      if (!scopeMatcher.matches()) {
+//        System.out.println(name + " scope value is invalid @"+ scopeValue);
+//        throw new InvalidSemanticPropertySpecificationException();
+//
+////      return false;
+//      }
+//    }
 
     /**
      * Checks the description.
@@ -516,7 +517,7 @@ public class LevelRepresenation {
     return m.matches();
 
   }
-  public static String getName() {
+  public String getName() {
     return name;
   }
 
@@ -524,7 +525,7 @@ public class LevelRepresenation {
     LevelRepresenation.name = name;
   }
 
-  public static ArrayList<ScopeId> getScope() {
+  public ArrayList<ScopeId> getScope() {
     return scope;
   }
 
