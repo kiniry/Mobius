@@ -13,7 +13,7 @@ import junit.framework.TestCase;
  * @author eo
  *
  */
-public class RefinementPropertyTest extends TestCase {
+public class RefinementTest extends TestCase {
 
 	/** Check refinement prefix, suffix, substring.
 	 * 

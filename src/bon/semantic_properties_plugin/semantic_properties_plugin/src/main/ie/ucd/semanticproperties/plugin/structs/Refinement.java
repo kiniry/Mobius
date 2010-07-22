@@ -179,7 +179,7 @@ public class Refinement {
 	/**Check Validity Of RefinementProp.
 	 * <p> Basic test to check that all variables are not null</p>
 	 */
-	public  boolean isValidProperty(){
+	public  boolean isValidRefinementProperty(){
 		if(propertyName==null ||oConversions==null || sConversions==null){
 			return false;
 		}
@@ -298,8 +298,9 @@ public class Refinement {
 	 * 
 	 * @param p1 Source LevelRepresenation Match.
 	 * @return The refinement of p1 using this refinement property.
+	 * @param level the level to refine to.
 	 */
-	public final LevelRepMatchTest refine(final LevelRepMatchTest p1){
+	public final LevelRepMatch refine(final LevelRepMatch p1, int level) {
 		return p1;
 		
 	}

@@ -54,7 +54,7 @@ public class LevelRepresenation {
 	final static String prop_Level = "[=-]?\\d+";
 
 
-	/**The variables for a property
+	/**The variables for a property.
 	 * <p>  list of property attributes </p>
 	 */
 	private static ArrayList<Object> format;

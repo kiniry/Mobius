@@ -48,7 +48,7 @@ public class CustomTestSuite  {
         
         suite.addTestSuite(CustomResolverTestCase.class);
         
-        suite.addTestSuite(FileCheckerTest.class);
+        suite.addTestSuite(SemanticProperyTest.class);
        
         return suite;
     }
