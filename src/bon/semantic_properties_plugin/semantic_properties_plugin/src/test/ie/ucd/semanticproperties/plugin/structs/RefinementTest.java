@@ -15,27 +15,26 @@ import junit.framework.TestCase;
  */
 public class RefinementTest extends TestCase {
 
-	/** Check refinement prefix, suffix, substring.
-	 * 
-	 */
-	public final void testPrefixRefinement() {
-		
-		String refinementPropertyString = "";
-		Refinement refinement = 
-			new Refinement(refinementPropertyString);
-		
-		try{
-		String sourcePropertyString = "";
-		LevelRepresenation sourceProperty = new LevelRepresenation(sourcePropertyString);
-		
-		String refinedPropertyString = "";
-		LevelRepresenation refinedProperty = new LevelRepresenation(refinedPropertyString);
-		} catch(Exception e) {
-			
-		}
-		
-		
-		assertTrue(true);
-	}
+  /**
+   * Check refinement prefix, suffix, substring.
+   */
+  public final void testPrefixRefinement() {
+
+    String refinementPropertyString = "";
+    Refinement refinement =  new Refinement(refinementPropertyString);
+
+    try {
+      String sourcePropertyString = "";
+      LevelRepresenation sourceProperty = new LevelRepresenation(sourcePropertyString);
+
+      String refinedPropertyString = "";
+      LevelRepresenation refinedProperty = new LevelRepresenation(refinedPropertyString);
+    } catch(Exception e) {
+
+    }
+
+
+    assertTrue(true);
+  }
 
 }

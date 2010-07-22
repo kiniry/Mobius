@@ -1,0 +1,14 @@
+--- 
+name: LReg1
+level: 5
+format: 
+  - choice (choice1): 
+    - a
+    - b
+  - optional: c
+scope: 
+  - Modules
+  - Features 
+description: |
+ Describes LR eg 1. 
+ 
