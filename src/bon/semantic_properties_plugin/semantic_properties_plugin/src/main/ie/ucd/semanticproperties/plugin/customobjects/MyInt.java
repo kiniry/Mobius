@@ -1,6 +1,6 @@
 package ie.ucd.semanticproperties.plugin.customobjects;
 
-public class MyInt extends MyObject {
+public class MyInt extends MyNumberObject {
 	public MyInt(String newId, long newValue) {
 		super(newId,newValue);
 	}

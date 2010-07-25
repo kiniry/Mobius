@@ -94,9 +94,10 @@ public class SemanticPropertiesHandler {
    * @param input
    * @param level
    * @return
+   * @throws InvalidRefinementException 
    */
   public SemanticPropertyInstance generate(SemanticPropertyInstance  input, LevelId level)
-    throws UnknownLevelException, IncompatibleSemanticPropertyInstancesException {
+    throws UnknownLevelException, IncompatibleSemanticPropertyInstancesException, InvalidRefinementException {
     SemanticProperty temp = specsMap.get(input.getPropertyType());
     SemanticPropertyRefinementSpecification ref =temp.getRefinement(input.getLevel(), level);
 

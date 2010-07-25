@@ -1,0 +1,33 @@
+#greaterthan example used in SemanticPropertyRefinementSpecificationTest
+---
+name: greaterthanEg
+level: bon
+format:
+  - <e=float=2.0>
+  - <g=nat=9>
+  - <j=int=8>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+
+name: greaterthanEg
+level: java
+format:
+  - <e=float=2.0>
+  - <g=nat=9>
+  - <j=int=8>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+property: greaterthanEg
+relation(bon,java):
+  - e: gr
+  - g: gr
+  - j: gr
+...

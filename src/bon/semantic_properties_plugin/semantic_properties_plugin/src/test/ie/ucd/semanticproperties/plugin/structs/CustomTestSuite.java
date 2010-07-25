@@ -16,21 +16,8 @@
 
 package ie.ucd.semanticproperties.plugin.structs;
 
-import ie.ucd.semanticproperties.plugin.customobjects.CustomConstructorTestCase;
-import ie.ucd.semanticproperties.plugin.customobjects.CustomRepresenterTestCase;
-import ie.ucd.semanticproperties.plugin.customobjects.CustomResolverTestCase;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import org.yaml.snakeyaml.Dumper;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Loader;
-import org.yaml.snakeyaml.Yaml;
 
 
 public class CustomTestSuite  {
@@ -40,15 +27,18 @@ public class CustomTestSuite  {
         TestSuite suite = new TestSuite();
   
         //
-        // Add suites for all custom snakeyaml classes
+        // Add suites for all custom test classes
         //
-        suite.addTestSuite(CustomConstructorTestCase.class);
 
-        suite.addTestSuite(CustomRepresenterTestCase.class);
+        suite.addTestSuite(ConcurrencyTest.class);
         
-        suite.addTestSuite(CustomResolverTestCase.class);
+        suite.addTestSuite(RegExpStructTest.class);
         
-        suite.addTestSuite(SemanticProperyTest.class);
+        suite.addTestSuite(SemanticPropertyTest.class);
+
+        suite.addTestSuite(SemanticPropertyLevelSpecificationTest.class);
+        
+        suite.addTestSuite(SemanticPropertyRefinementSpecificationTest.class);
        
         return suite;
     }

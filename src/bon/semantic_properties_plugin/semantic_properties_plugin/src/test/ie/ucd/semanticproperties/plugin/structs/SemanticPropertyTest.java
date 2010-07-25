@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 
-public class SemanticProperyTest extends TestCase {
+public class SemanticPropertyTest extends TestCase {
 	
 	public final static String space="[\\s+]";
 	public final static String CLASS_REP=MyObjectKind.Class.getReg();

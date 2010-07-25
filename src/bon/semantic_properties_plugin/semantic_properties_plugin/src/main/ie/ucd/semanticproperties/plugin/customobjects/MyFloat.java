@@ -1,6 +1,6 @@
 package ie.ucd.semanticproperties.plugin.customobjects;
 
-public class MyFloat extends MyObject {
+public class MyFloat extends MyNumberObject {
 	public MyFloat(String newId,float newValue) {
 		super(newId,newValue);
 	}

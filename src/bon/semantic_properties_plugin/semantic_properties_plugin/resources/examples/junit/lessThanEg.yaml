@@ -1,0 +1,33 @@
+#lessthan example used in SemanticPropertyRefinementSpecificationTest
+---
+name: lessthanEg
+level: bon
+format:
+  - <e=float=2.0>
+  - <g=nat=9>
+  - <j=int=8>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+
+name: lessthanEg
+level: java
+format:
+  - <e=float=2.0>
+  - <g=nat=9>
+  - <j=int=8>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+property: lessthanEg
+relation(bon,java):
+  - e: <
+  - g: <
+  - j: <
+...

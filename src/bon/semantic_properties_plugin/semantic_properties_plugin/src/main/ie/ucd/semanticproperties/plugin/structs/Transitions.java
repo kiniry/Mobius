@@ -5,11 +5,15 @@ import ie.ucd.semanticproperties.plugin.exceptions.UnknownTransitionException;
 public enum Transitions {
 	equivalent("eguivalent"),
 	equals("equals"),
-	greaterOrEquals(">="),
 	unknown(""),
 	prefix("prefix"),
 	substring("substring"),
-	suffix("suffix");
+	suffix("suffix"),
+	greaterThanOrEquals(">="),
+	LessThanOrEquals("<="),
+	greaterThan(">"),
+	LessThan("<");
+	
 	
 	Transitions(String s){
 		reg=s;	

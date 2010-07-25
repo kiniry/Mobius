@@ -96,6 +96,35 @@ public class SemanticPropertyRefinementSpecificationTest extends TestCase {
     
   }
   /**
+   * Check lessthan refinement.
+   * @throws SemanticPropertyException
+   * @throws IOException 
+
+   */
+  public final void testLestThanRefinement() throws SemanticPropertyException, IOException{
+    SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
+    testProp.add(new File("resources/examples/junit/lessThanEg.yaml"));
+    SemanticPropertyInstance instance1 = testProp.parse("lessthanEg 3.0 5 5","lessthanEg", LevelId.BON_FORMAL);
+    SemanticPropertyInstance instance2 = testProp.parse("lessthanEg 2.5 4 -1","lessthanEg", LevelId.JAVA_JML);
+    assertTrue(testProp.isValidRefinement(instance1, instance2));
+    
+  }
+
+/**
+ * Check lessthan refinement.
+ * @throws SemanticPropertyException
+ * @throws IOException 
+
+ */
+public final void testGreaterThanRefinement() throws SemanticPropertyException, IOException{
+  SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
+  testProp.add(new File("resources/examples/junit/greaterthanEg.yaml"));
+  SemanticPropertyInstance instance1 = testProp.parse("greaterthanEg 3.0 5 5","greaterthanEg", LevelId.BON_FORMAL);
+  SemanticPropertyInstance instance2 = testProp.parse("greaterthanEg 4.5 6 15","greaterthanEg", LevelId.JAVA_JML);
+  assertTrue(testProp.isValidRefinement(instance1, instance2));
+  
+}
+  /**
    * Check constructor
    */
   public final void testConstructor(){

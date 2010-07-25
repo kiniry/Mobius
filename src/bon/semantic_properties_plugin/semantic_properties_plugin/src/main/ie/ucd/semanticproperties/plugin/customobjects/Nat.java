@@ -1,6 +1,6 @@
 package ie.ucd.semanticproperties.plugin.customobjects;
 
-public class Nat extends MyObject {
+public class Nat extends MyNumberObject {
 	public Nat() {
 		super();
 	}

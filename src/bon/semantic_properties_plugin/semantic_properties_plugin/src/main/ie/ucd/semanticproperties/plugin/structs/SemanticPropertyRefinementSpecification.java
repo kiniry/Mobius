@@ -5,10 +5,14 @@ import ie.ucd.semanticproperties.plugin.api.ScopeId;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
 import ie.ucd.semanticproperties.plugin.customobjects.MyDescription;
 import ie.ucd.semanticproperties.plugin.customobjects.MyExpression;
+import ie.ucd.semanticproperties.plugin.customobjects.MyFloat;
+import ie.ucd.semanticproperties.plugin.customobjects.MyInt;
+import ie.ucd.semanticproperties.plugin.customobjects.MyNumberObject;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObjectKind;
 import ie.ucd.semanticproperties.plugin.customobjects.MyString;
 import ie.ucd.semanticproperties.plugin.customobjects.MyStringObject;
+import ie.ucd.semanticproperties.plugin.customobjects.Nat;
 import ie.ucd.semanticproperties.plugin.exceptions.IncompatibleSemanticPropertyInstancesException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidRefinementException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidRefinementSpecificationException;
@@ -269,6 +273,37 @@ public class SemanticPropertyRefinementSpecification {
           }
           
         }
+        else if ((ob1 instanceof MyNumberObject) && (ob2 instanceof MyNumberObject)){
+          Float a = Float.valueOf((String)ob1.getValue());
+          Float b = Float.valueOf((String)ob2.getValue());
+          //deal with each conversion appropriately
+          if (tran.equals(Transitions.LessThan)) { 
+            if (!(b<a)) {
+              throw new InvalidRefinementException();
+            }
+          }
+          else if (tran.equals(Transitions.LessThanOrEquals)) { 
+            if (!(b<=a)) {
+              throw new InvalidRefinementException();
+            }
+          }
+          else if (tran.equals(Transitions.greaterThan)) { 
+            if (!(b>a)) {
+              throw new InvalidRefinementException();
+            }
+          }
+          else if (tran.equals(Transitions.greaterThanOrEquals)) { 
+            if (!(b>=a)) {
+              throw new InvalidRefinementException();
+            }
+          }
+          //adjust p1Match & p2Match based on MyObject kind
+          p1Match = p1Match.replace(  ob1.getValue().toString() , "");
+          p2Match = p2Match.replace(  ob2.getValue().toString() , "");
+         
+        
+  
+        }
       } catch(UnknownVariableIdentifierException e){
         //TODO
       }
@@ -303,8 +338,9 @@ public class SemanticPropertyRefinementSpecification {
    * @return The refinement of p1 using this refinement property.
    * @param level the level to refine to.
    * @throws IncompatibleSemanticPropertyInstancesException 
+   * @throws InvalidRefinementException 
    */
-  public final SemanticPropertyInstance refine(final SemanticPropertyInstance  p1, LevelId level) throws IncompatibleSemanticPropertyInstancesException {
+  public final SemanticPropertyInstance refine(final SemanticPropertyInstance  p1, LevelId level) throws IncompatibleSemanticPropertyInstancesException, InvalidRefinementException {
     /**
      * Check that p1 and p2 are right levels for this refinement.
      */
@@ -362,6 +398,7 @@ public class SemanticPropertyRefinementSpecification {
         newInput = newInput.replace(i, sConversions.get(i));
       } else {
         System.out.println("problem with " + i );
+        throw new InvalidRefinementException ();
 
       }
 
