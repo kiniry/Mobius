@@ -34,7 +34,6 @@ public class SemanticPropertyInstance {
   public String getPropertyType() {
     return propId;
   }
-
   public Object getVariable(String identifier) throws UnknownVariableIdentifierException {
     if(captured.containsKey(identifier)){
       return captured.get(identifier);

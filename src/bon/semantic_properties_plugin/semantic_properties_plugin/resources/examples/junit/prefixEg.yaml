@@ -1,0 +1,37 @@
+#prefix example used in SemanticPropertyRefinementSpecificationTest
+---
+name: prefixEg
+level: bon
+format:
+  - a
+  - <e=description=a description.>
+  - <g=expression=(an expression)>
+  - <j=string='a string'>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+
+name: prefixEg
+level: java
+format:
+  - abba
+  - <e=description=a description.>
+  - <g=expression=(an expression)>
+  - <j=string='a string'>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+property: prefixEg
+relation(bon,java):
+  - keyword:
+    - a: abba
+  - e: prefix
+  - g: prefix
+  - j: prefix
+...

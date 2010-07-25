@@ -1,11 +1,13 @@
 package ie.ucd.semanticproperties.plugin.customobjects;
 
+import java.net.URL;
+
 public class MyURL extends MyObject {
 	public MyURL() {
 		super();
 	}
 
-	public MyURL(String newId, float newValue) {
+	public MyURL(String newId, URL newValue) {
 		super(newId,newValue);
 	}
 	@Override

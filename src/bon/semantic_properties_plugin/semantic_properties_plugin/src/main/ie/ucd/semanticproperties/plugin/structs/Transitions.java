@@ -1,13 +1,15 @@
 package ie.ucd.semanticproperties.plugin.structs;
 
+import ie.ucd.semanticproperties.plugin.exceptions.UnknownTransitionException;
+
 public enum Transitions {
 	equivalent("eguivalent"),
 	equals("equals"),
-	greaterOrEgual(">="),
+	greaterOrEquals(">="),
 	unknown(""),
 	prefix("prefix"),
 	substring("substring"),
-	suffix("sufix");
+	suffix("suffix");
 	
 	Transitions(String s){
 		reg=s;	
@@ -16,15 +18,13 @@ public enum Transitions {
 		return reg;
 	}
 	String reg;
-	public static Transitions getTransitionType(String in){
-		if(in.equals("equivalent"))
-			return Transitions.equivalent;
-		else if(in.equals("prefix"))
-			return Transitions.prefix;
-		else if(in.equals("equals"))
-			return Transitions.equals;
-		else
-			return Transitions.unknown;
-		
+	public static Transitions getTransitionType(String in) {
+		for(Transitions id : Transitions.values()){
+		  if( id.reg.equals(in)){
+		    return id;
+		  }
+		}
+		return unknown;
 	}
+	
 }

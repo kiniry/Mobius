@@ -1,0 +1,37 @@
+#prefix example used in SemanticPropertyRefinementSpecificationTest
+---
+name: equalsEg
+level: bon
+format:
+  
+  - <e=description=a description.>
+  - <g=expression=(an expression)>
+  - <j=string='a string'>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+
+name: equalsEg
+level: java
+format:
+  
+  - <e=description=a description.>
+  - <g=expression=(an expression)>
+  - <j=string='a string'>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+property: equalsEg
+relation(bon,java):
+  - keyword:
+    
+  - e: equals
+  - g: equals
+  - j: equals
+...

@@ -10,9 +10,9 @@ public enum MyObjectKind {
 	Date("(\\d{1,2}(?:\\/|-)\\d{1,2}(?:\\/|-)\\d{4})"),
 	Email("([\\w-\\.]+@(:?[\\w-]+\\.)+[\\w-]{2,4})"),
 	Class("([a-zA-Z$](?:[a-zA-Z_$0-9]+)(?:\\.[a-zA-Z_$](?:[a-zA-Z_$0-9]+))+)"),
-	Description("(.+?\\.)"),
+	Description("(.+?)\\."),
 	Version("([0-9](?:.[0-9])*)"),
-	Expression("(\\(.+?\\))"),
+	Expression("\\((.+?)\\)"),
 	URL("((?:mailto\\:|(?:news|(?:ht|f)tp(?:s?))\\://){1}\\S+)");
 	MyObjectKind(String s){
 		reg=s;

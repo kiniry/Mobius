@@ -1,10 +1,22 @@
 
 package ie.ucd.semanticproperties.plugin.structs;
 
-import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyLevelSpecification;
-import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyRefinementSpecification;
+import ie.ucd.semanticproperties.plugin.api.LevelId;
+import ie.ucd.semanticproperties.plugin.api.SemanticPropertiesHandler;
+import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
+import ie.ucd.semanticproperties.plugin.exceptions.IncompatibleSemanticPropertyInstancesException;
+import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
+import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertyUseException;
+import ie.ucd.semanticproperties.plugin.exceptions.SemanticPropertyException;
+import ie.ucd.semanticproperties.plugin.exceptions.SemanticPropertyNotValidAtScopeException;
+import ie.ucd.semanticproperties.plugin.exceptions.UnknownLevelException;
+import ie.ucd.semanticproperties.plugin.exceptions.UnknownPropertyException;
+import ie.ucd.semanticproperties.plugin.exceptions.UnknownScopeException;
+import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import junit.framework.TestCase;
 
@@ -17,28 +29,70 @@ public class SemanticPropertyRefinementSpecificationTest extends TestCase {
 
   /**
    * Check refinement prefix
+   * @throws IOException 
+   * @throws IOException 
+   * @throws InvalidSemanticPropertySpecificationException 
+   * @throws FileNotFoundException 
+   * @throws SemanticPropertyNotValidAtScopeException 
+   * @throws InvalidSemanticPropertyUseException 
+   * @throws UnknownPropertyException 
+   * @throws UnknownVariableIdentifierException 
+   * @throws IncompatibleSemanticPropertyInstancesException 
    */
-  public final void testPrefixRefinement() {
-
-    try {
-
-      String refinementPropertyString = "";
-      SemanticPropertyRefinementSpecification semanticPropertyRefinementSpecification =  new SemanticPropertyRefinementSpecification(refinementPropertyString);
-
-      String sourcePropertyString = "";
-      SemanticPropertyLevelSpecification sourceProperty = new SemanticPropertyLevelSpecification(sourcePropertyString);
-
-      String refinedPropertyString = "";
-      SemanticPropertyLevelSpecification refinedProperty = new SemanticPropertyLevelSpecification(refinedPropertyString);
-    } catch(Exception e) {
-
-    }
-    assertTrue(true);
+  public final void testPrefixRefinement() throws SemanticPropertyException, IOException {
+    
+    SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
+    testProp.add(new File("resources/examples/junit/prefixEg.yaml"));
+    SemanticPropertyInstance instance1 = testProp.parse("prefixEg a short des. (an expr) 'a string'","prefixEg", LevelId.BON_FORMAL);
+    SemanticPropertyInstance instance2 = testProp.parse("prefixEg abba short description. (an expression) 'a string plus some'","prefixEg", LevelId.JAVA_JML);
+    assertTrue(testProp.isValidRefinement(instance1, instance2));
   }
   /**
    * Check suffix refinement.
+   * @throws SemanticPropertyNotValidAtScopeException 
+   * @throws InvalidSemanticPropertyUseException 
+   * @throws UnknownPropertyException 
+   * @throws IOException 
+   * @throws InvalidSemanticPropertySpecificationException 
    */
-  public final void textSuffixRefinement(){
+  public final void testSuffixRefinement() throws SemanticPropertyException, IOException{
+    SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
+    testProp.add(new File("resources/examples/junit/suffixEg.yaml"));
+    SemanticPropertyInstance instance1 = testProp.parse("suffixEg short des. (an expr) ' string'","suffixEg", LevelId.BON_FORMAL);
+    SemanticPropertyInstance instance2 = testProp.parse("suffixEg  a short des. (yet another an expr) 'not another string'","suffixEg", LevelId.JAVA_JML);
+    assertTrue(testProp.isValidRefinement(instance1, instance2));
+    
+  }
+  /**
+   * Check equals refinement.
+   * @throws SemanticPropertyNotValidAtScopeException 
+   * @throws InvalidSemanticPropertyUseException 
+   * @throws UnknownPropertyException 
+   * @throws IOException 
+   * @throws InvalidSemanticPropertySpecificationException 
+   */
+  public final void testEqualsRefinement() throws SemanticPropertyException, IOException{
+    SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
+    testProp.add(new File("resources/examples/junit/equalsEg.yaml"));
+    SemanticPropertyInstance instance1 = testProp.parse("equalsEg short des. (an expr) ' string'","equalsEg", LevelId.BON_FORMAL);
+    SemanticPropertyInstance instance2 = testProp.parse("equalsEg short des. (an expr) ' string'","equalsEg", LevelId.JAVA_JML);
+    assertTrue(testProp.isValidRefinement(instance1, instance2));
+    
+  }
+  /**
+   * Check substring refinement.
+   * @throws SemanticPropertyNotValidAtScopeException 
+   * @throws InvalidSemanticPropertyUseException 
+   * @throws UnknownPropertyException 
+   * @throws IOException 
+   * @throws InvalidSemanticPropertySpecificationException 
+   */
+  public final void testSubstringRefinement() throws SemanticPropertyException, IOException{
+    SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
+    testProp.add(new File("resources/examples/junit/substringEg.yaml"));
+    SemanticPropertyInstance instance1 = testProp.parse("substringEg substring. (an expr) 's'","substringEg", LevelId.BON_FORMAL);
+    SemanticPropertyInstance instance2 = testProp.parse("substringEg a substring of. (also an expr dont ya know) ' string'","substringEg", LevelId.JAVA_JML);
+    assertTrue(testProp.isValidRefinement(instance1, instance2));
     
   }
   /**
@@ -50,7 +104,7 @@ public class SemanticPropertyRefinementSpecificationTest extends TestCase {
   /**
    * Check isValidRefinement method.
    */
-  public final void tetIsValidRefinement(){
+  public final void testIsValidRefinement(){
     
   }
   

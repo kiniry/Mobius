@@ -43,23 +43,22 @@ public class CustomConstructor extends Constructor {
     private class ConstructMyInt extends AbstractConstruct {
         @SuppressWarnings("unchecked")
         public Object construct(Node node) {
-        	String val = (String) constructScalar((ScalarNode) node);
-            int position = val.indexOf('=');
-            String a = (val.substring(1, position));     
-            MyInt temp=new MyInt();
-            temp.setId(a);
-            return temp;
+          String val = (String) constructScalar((ScalarNode) node);
+          MyObject temp =  convertNode(node);
+          String a = temp.getId();
+          Integer b = Integer.valueOf((String)temp.getValue());
+          return new MyInt(a,b);
+
         }
     }
     private class ConstructMyFloat extends AbstractConstruct {
         @SuppressWarnings("unchecked")
         public Object construct(Node node) {
         	String val = (String) constructScalar((ScalarNode) node);
-            int position = val.indexOf('=');
-            String a = (val.substring(1, position));     
-            MyFloat temp=new MyFloat();
-            temp.setId(a);
-            return temp;
+        	MyObject temp =  convertNode(node);
+          String a = temp.getId();
+          Float b = Float.valueOf((String)temp.getValue());
+          return new MyFloat(a,b);
         }
     }
     private class ConstructMyClass extends AbstractConstruct {
@@ -84,15 +83,14 @@ public class CustomConstructor extends Constructor {
             return temp;
         }
     }
+    
     private class ConstructMyDescription extends AbstractConstruct {
         @SuppressWarnings("unchecked")
         public Object construct(Node node) {
-        	String val = (String) constructScalar((ScalarNode) node);
-            int position = val.indexOf('=');
-            String a = (val.substring(1, position));     
-            MyDescription temp=new MyDescription();
-            temp.setId(a);
-            return temp;
+            MyObject temp = convertNode(node);
+            String a = temp.getId();
+            String b= (String) temp.getValue();
+            return new MyDescription(a,b.substring(0,b.length()-1));
         }
     }
     private class ConstructMyEmail extends AbstractConstruct {
@@ -110,22 +108,20 @@ public class CustomConstructor extends Constructor {
         @SuppressWarnings("unchecked")
         public Object construct(Node node) {
         	String val = (String) constructScalar((ScalarNode) node);
-            int position = val.indexOf('=');
-            String a = (val.substring(1, position));     
-            MyExpression temp=new MyExpression();
-            temp.setId(a);
-            return temp;
+          MyObject temp =  convertNode(node);
+          String a = temp.getId();
+          String b = (String) temp.getValue();
+          return new MyExpression(a,b.substring(1,b.length()-1));
         }
     }
     private class ConstructMyString extends AbstractConstruct {
         @SuppressWarnings("unchecked")
         public Object construct(Node node) {
         	String val = (String) constructScalar((ScalarNode) node);
-            int position = val.indexOf('=');
-            String a = (val.substring(1, position));     
-            MyString temp=new MyString();
-            temp.setId(a);
-            return temp;
+            MyObject temp =  convertNode(node);
+            String a = temp.getId();
+            String b = (String) temp.getValue();
+            return new MyString(a,b.substring(1,b.length()-1));
         }
     }
     private class ConstructMyThrowable extends AbstractConstruct {
@@ -153,12 +149,25 @@ public class CustomConstructor extends Constructor {
     private class ConstructMyVersion extends AbstractConstruct {
         @SuppressWarnings("unchecked")
         public Object construct(Node node) {
-        	String val = (String) constructScalar((ScalarNode) node);
-            int position = val.indexOf('=');
-            String a = (val.substring(1, position));     
-            MyVersion temp=new MyVersion();
-            temp.setId(a);
-            return temp;
+          String val = (String) constructScalar((ScalarNode) node);
+          MyObject temp =  convertNode(node);
+          String a = temp.getId();
+          Float b = Float.valueOf((String)temp.getValue());
+          return new MyVersion(a,b);
+
         }
+    }
+    /**
+     * Method to concert a Node into generalMyObject.
+     * @param node
+     * @return
+     */
+    public MyObject convertNode(Node node){
+      String val = (String) constructScalar((ScalarNode) node);
+      int position = val.indexOf('=');
+      String a = (val.substring(1, position));
+      int position2 = val.indexOf('=', position+1);
+      String b = (val.substring(position2+1,val.length()-1));
+      return new MyObject(a,b);
     }
 }

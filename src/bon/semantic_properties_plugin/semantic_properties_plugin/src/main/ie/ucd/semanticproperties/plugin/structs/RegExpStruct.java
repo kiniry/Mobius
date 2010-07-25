@@ -107,15 +107,18 @@ public class RegExpStruct {
     int newNum = numberOfGroups + toAdd.getNumberOfGroups() + additionalGroups;
 
     /**
-     * Concat the linkedHashMaps
+     * Concat the int linkedHashMap
      */
     LinkedHashMap<String, Integer> newIntGroup = groupInt;
     LinkedHashMap<String, Integer> addGroup = toAdd.getGroupInt();
     for (String key : addGroup.keySet()) {
       newIntGroup.put(key, addGroup.get(key) + numberOfGroups);
     }
+    /**
+     * Concat the obj linkedHashMap
+     */
 
-    LinkedHashMap<String, MyObject> newObjGroup = new LinkedHashMap<String, MyObject>();
+    LinkedHashMap<String, MyObject> newObjGroup = groupObj;
     newObjGroup.putAll(toAdd.getGroupObj());
 
     return (new RegExpStruct(newExp, newIntGroup, newObjGroup, newNum));

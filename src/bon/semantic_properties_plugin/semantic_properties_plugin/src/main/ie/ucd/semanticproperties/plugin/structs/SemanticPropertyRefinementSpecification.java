@@ -3,9 +3,14 @@ package ie.ucd.semanticproperties.plugin.structs;
 import ie.ucd.semanticproperties.plugin.api.LevelId;
 import ie.ucd.semanticproperties.plugin.api.ScopeId;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
+import ie.ucd.semanticproperties.plugin.customobjects.MyDescription;
+import ie.ucd.semanticproperties.plugin.customobjects.MyExpression;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObjectKind;
+import ie.ucd.semanticproperties.plugin.customobjects.MyString;
+import ie.ucd.semanticproperties.plugin.customobjects.MyStringObject;
 import ie.ucd.semanticproperties.plugin.exceptions.IncompatibleSemanticPropertyInstancesException;
+import ie.ucd.semanticproperties.plugin.exceptions.InvalidRefinementException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidRefinementSpecificationException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownLevelException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
@@ -197,14 +202,14 @@ public class SemanticPropertyRefinementSpecification {
    * @return true if p1 refines to p2.
    * @throws UnknownVariableIdentifierException 
    * @throws IncompatibleSemanticPropertyInstancesException 
+   * @throws InvalidRefinementException 
    */
-  public final boolean isValidRefinement(final SemanticPropertyInstance p1, final SemanticPropertyInstance p2) throws  IncompatibleSemanticPropertyInstancesException{
+  public final boolean isValidRefinement(final SemanticPropertyInstance p1, final SemanticPropertyInstance p2) throws  IncompatibleSemanticPropertyInstancesException, InvalidRefinementException{
     /**
      * Check that p1 and p2 are right levels for this refinement.
      */
     if(!(sourceLevel == p1.getLevel() || destinationLevel == p2.getLevel())) {
       throw new IncompatibleSemanticPropertyInstancesException();
-     
     }
     /**
      * Check all the capturing groups are refined.
@@ -215,8 +220,8 @@ public class SemanticPropertyRefinementSpecification {
     while (it.hasNext()) {
       try {
         String presKey = (String) it.next();
-        Object ob1 = (Object)p1.getVariable(presKey);
-        Object ob2 = (Object)p2.getVariable(presKey);
+        MyObject ob1 = (MyObject)p1.getVariable(presKey);
+        MyObject ob2 = (MyObject)p2.getVariable(presKey);
         //check if p1 is a valid conversion for ob1. remove later
         if (ob1 == null) {
           return false;
@@ -224,31 +229,48 @@ public class SemanticPropertyRefinementSpecification {
         //check the type of conversion
         Transitions tran = oConversions.get(presKey);
         //for string conversions
-        if ((ob1 instanceof String) && (ob2 instanceof String)){
-          String a = (String) ob1;
-          String b = (String) ob2;
+        if ((ob1 instanceof MyStringObject) && (ob2 instanceof MyStringObject)){
+          String a = (String) ob1.getValue();
+          String b = (String) ob2.getValue();
           //deal with each conversion appropriately
           if (tran.equals(Transitions.prefix)) { 
             if (!b.startsWith(a)) {
-              return false;
+              throw new InvalidRefinementException();
             }
           }
           else if (tran.equals(Transitions.substring)) { 
             if (!b.contains(a)) {
-              return false;
+              throw new InvalidRefinementException();
             }
           }
           else if (tran.equals(Transitions.suffix)) { 
             if (!b.endsWith(a)) {
-              return false;
+              throw new InvalidRefinementException();
             }
           }
-          //adjust p1Match & p2Match
-          p1Match = p1Match.replace("'" + a + "'", "");
-          p2Match = p2Match.replace("'" + b + "'", "");
+          else if (tran.equals(Transitions.equals)) { 
+            if (!b.equals(a)) {
+              throw new InvalidRefinementException();
+            }
+          }
+          //adjust p1Match & p2Match based on MyObject kind
+          if(ob1 instanceof MyString) {
+            p1Match = p1Match.replace( "'" + a + "'", "");
+            p2Match = p2Match.replace( "'" + b + "'", "");
+          }
+          
+          if(ob1 instanceof MyDescription) {
+            p1Match = p1Match.replace(  a + ".", "");
+            p2Match = p2Match.replace(  b + ".", "");
+          }
+          if(ob1 instanceof MyExpression) {
+            p1Match = p1Match.replace( "(" + a + ")", "");
+            p2Match = p2Match.replace( "(" + b + ")", "");
+          }
+          
         }
       } catch(UnknownVariableIdentifierException e){
-        
+        //TODO
       }
     }
     /**Check all strings are refined.

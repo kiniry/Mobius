@@ -1,0 +1,37 @@
+#substring example used in SemanticPropertyRefinementSpecificationTest
+---
+name: substringEg
+level: bon
+format:
+  
+  - <e=description=a description.>
+  - <g=expression=(an expression)>
+  - <j=string='a string'>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+
+name: substringEg
+level: java
+format:
+  
+  - <e=description=a description.>
+  - <g=expression=(an expression)>
+  - <j=string='a string'>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+property: substringEg
+relation(bon,java):
+  - keyword:
+    
+  - e: substring
+  - g: substring
+  - j: substring
+...

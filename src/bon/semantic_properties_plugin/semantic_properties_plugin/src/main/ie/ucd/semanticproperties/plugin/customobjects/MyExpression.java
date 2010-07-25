@@ -1,6 +1,6 @@
 package ie.ucd.semanticproperties.plugin.customobjects;
 
-public class MyExpression extends MyObject {
+public class MyExpression extends MyStringObject {
 	public MyExpression() {
 		super();
 	}

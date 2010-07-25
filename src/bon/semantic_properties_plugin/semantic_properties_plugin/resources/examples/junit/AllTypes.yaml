@@ -1,0 +1,22 @@
+---
+#corrrect simple example with all MyObject's
+name: correctexample1
+level: bon
+format:
+  - a
+  - b
+  - <c=class=jav.lang.class>
+  - <d=date=01/08/1988>
+  - <e=description=a description.>
+  - <f=email=mail@gmail.com>
+  - <g=expression=(an expression)>
+  - <h=float=1.0009>
+  - <i=int=24>
+  - <j=string='a string'>
+  - <k=throwable=java.lang.throwable>
+  - <l=url=https://aurl.com>
+  - <m=version=1.0>
+scope: 
+ - Module
+description: |
+ des

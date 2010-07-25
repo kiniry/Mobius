@@ -1,6 +1,7 @@
 package ie.ucd.semanticproperties.plugin.api;
 
 import ie.ucd.semanticproperties.plugin.exceptions.IncompatibleSemanticPropertyInstancesException;
+import ie.ucd.semanticproperties.plugin.exceptions.InvalidRefinementException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertyUseException;
 import ie.ucd.semanticproperties.plugin.exceptions.SemanticPropertyNotValidAtScopeException;
@@ -73,10 +74,11 @@ public class SemanticPropertiesHandler {
    * @return
    * review this throws
    * @throws UnknownVariableIdentifierException 
+   * @throws InvalidRefinementException 
    */
   public boolean isValidRefinement(SemanticPropertyInstance prop1, SemanticPropertyInstance prop2) 
-    throws IncompatibleSemanticPropertyInstancesException, UnknownVariableIdentifierException {
-    //doubledone
+    throws IncompatibleSemanticPropertyInstancesException, UnknownVariableIdentifierException, InvalidRefinementException {
+    //double done possibly.
     if(prop1.getPropertyType() != prop2.getPropertyType()){
       throw new IncompatibleSemanticPropertyInstancesException();
     }

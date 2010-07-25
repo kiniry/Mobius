@@ -14,6 +14,7 @@ import ie.ucd.semanticproperties.plugin.api.ScopeId;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
+import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertyUseException;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
 import ie.ucd.semanticproperties.plugin.yaml.CustomRepresenter;
 import ie.ucd.semanticproperties.plugin.yaml.CustomResolver;
@@ -53,7 +54,7 @@ public class SemanticPropertyLevelSpecification {
   final static String prop_Scope = "(files|modules|features|variables|all|special)";
   final static String prop_Description = ".*";
   final static String prop_format_String = "(\\w*)";
-  final static String prop_format_CustomObject = "(\\w+=(\\w|[0-9]|\\.)+)";
+  final static String prop_format_CustomObject = "(\\w+=(.)*)";
   final static String prop_format_Special = "((choice\\s*\\((\\w+)\\)\\s*)|choice|optional)";	
   final static String prop_Name = "\\s*\\w+\\s*";
   final static String prop_Level = "[=-]?\\d+";
@@ -213,11 +214,7 @@ public class SemanticPropertyLevelSpecification {
     /**
      * Checks the format with recursive method.
      */
-    try {
-      checkFormatValidity((ArrayList<Object>)newProp.get("format"));
-    } catch (InvalidSemanticPropertySpecificationException e){
-      throw e;
-    }
+    checkFormatValidity((ArrayList<Object>)newProp.get("format"));
 
 
     return true;
@@ -522,25 +519,33 @@ public class SemanticPropertyLevelSpecification {
   /**
    * generate SPI from input for this specification.
    * @return
+   * @throws InvalidSemanticPropertyUseException 
    */
-  public SemanticPropertyInstance makeInstance(String input){
+  public SemanticPropertyInstance makeInstance(String input) throws InvalidSemanticPropertyUseException{
      HashMap<String,Object> captured = new HashMap <String, Object>(); 
     /**
      * Match Instance
      */
     Pattern p = Pattern.compile(reg.getExp());
     Matcher m = p.matcher(input);
-    m.matches();
+    if(!m.matches()){
+      throw new InvalidSemanticPropertyUseException();
+    }
     /**
      * Fill HashMap with the captured variables for this Instance.
      */
     HashMap<String, Integer> intMap  = reg.getGroupInt();
     HashMap<String, MyObject> obMap = reg.getGroupObj();
-    for(String s:obMap.keySet()) { 
+    for(String s: obMap.keySet()) { 
       MyObject ob = obMap.get(s);
-      int i= intMap.get(s);
-      ob.setValue(m.group(i));
-      captured.put(s, ob.getValue());
+      
+      int i= intMap.get(s);     
+      //fill only with non null values
+      if((m.group(i)!=null)){
+        ob.setValue(m.group(i));
+        captured.put(s, ob);
+      }
+      
     }
     return new SemanticPropertyInstance(input,name,level,scope,captured);
     
