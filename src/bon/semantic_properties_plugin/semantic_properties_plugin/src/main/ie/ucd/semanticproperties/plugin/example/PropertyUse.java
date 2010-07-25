@@ -1,6 +1,6 @@
 package ie.ucd.semanticproperties.plugin.example;
 
-import ie.ucd.semanticproperties.plugin.structs.Refinement;
+import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyRefinementSpecification;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
 import ie.ucd.semanticproperties.plugin.yaml.CustomRepresenter;
 import ie.ucd.semanticproperties.plugin.yaml.CustomResolver;

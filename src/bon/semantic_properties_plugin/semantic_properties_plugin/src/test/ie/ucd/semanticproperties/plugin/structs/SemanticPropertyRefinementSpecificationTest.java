@@ -1,8 +1,8 @@
 
 package ie.ucd.semanticproperties.plugin.structs;
 
-import ie.ucd.semanticproperties.plugin.structs.LevelRepresenation;
-import ie.ucd.semanticproperties.plugin.structs.Refinement;
+import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyLevelSpecification;
+import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyRefinementSpecification;
 
 import java.io.File;
 
@@ -13,7 +13,7 @@ import junit.framework.TestCase;
  * @author eo
  *
  */
-public class RefinementTest extends TestCase {
+public class SemanticPropertyRefinementSpecificationTest extends TestCase {
 
   /**
    * Check refinement prefix
@@ -23,13 +23,13 @@ public class RefinementTest extends TestCase {
     try {
 
       String refinementPropertyString = "";
-      Refinement refinement =  new Refinement(refinementPropertyString);
+      SemanticPropertyRefinementSpecification semanticPropertyRefinementSpecification =  new SemanticPropertyRefinementSpecification(refinementPropertyString);
 
       String sourcePropertyString = "";
-      LevelRepresenation sourceProperty = new LevelRepresenation(sourcePropertyString);
+      SemanticPropertyLevelSpecification sourceProperty = new SemanticPropertyLevelSpecification(sourcePropertyString);
 
       String refinedPropertyString = "";
-      LevelRepresenation refinedProperty = new LevelRepresenation(refinedPropertyString);
+      SemanticPropertyLevelSpecification refinedProperty = new SemanticPropertyLevelSpecification(refinedPropertyString);
     } catch(Exception e) {
 
     }

@@ -1,10 +1,14 @@
 package ie.ucd.semanticproperties.plugin.structs;
 
 import ie.ucd.semanticproperties.plugin.api.LevelId;
+import ie.ucd.semanticproperties.plugin.api.ScopeId;
+import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObjectKind;
+import ie.ucd.semanticproperties.plugin.exceptions.IncompatibleSemanticPropertyInstancesException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidRefinementSpecificationException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownLevelException;
+import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
 import ie.ucd.semanticproperties.plugin.yaml.CustomRepresenter;
 import ie.ucd.semanticproperties.plugin.yaml.CustomResolver;
@@ -16,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -36,7 +41,7 @@ import org.yaml.snakeyaml.Yaml;
  * @author eo
  *
  */
-public class Refinement {
+public class SemanticPropertyRefinementSpecification {
 
   private LinkedHashMap<String,String> sConversions;
   private LinkedHashMap<String, Transitions> oConversions;
@@ -49,7 +54,7 @@ public class Refinement {
    * @param input object with property in it.
    * @throws UnknownLevelException 
    */
-  public Refinement(Object input) throws UnknownLevelException, InvalidRefinementSpecificationException {
+  public SemanticPropertyRefinementSpecification(Object input) throws UnknownLevelException, InvalidRefinementSpecificationException {
     parse(input);
 
   }
@@ -59,7 +64,7 @@ public class Refinement {
    * @throws UnknownLevelException 
    * @throws FileNotFoundException 
    */
-  public Refinement(final String input) throws UnknownLevelException , InvalidRefinementSpecificationException{
+  public SemanticPropertyRefinementSpecification(final String input) throws UnknownLevelException , InvalidRefinementSpecificationException{
 
     Yaml yaml = new Yaml(new Loader(new RefinementConstructor()), new Dumper(new RefinementRepresenter(), new DumperOptions()), new RefinementResolver());
     Object ob = yaml.load(input);
@@ -72,7 +77,7 @@ public class Refinement {
    * @throws FileNotFoundException 
    * @throws FileNotFoundException 
    */
-  public Refinement(final File input) throws UnknownLevelException, FileNotFoundException, InvalidRefinementSpecificationException {
+  public SemanticPropertyRefinementSpecification(final File input) throws UnknownLevelException, FileNotFoundException, InvalidRefinementSpecificationException {
 
     Yaml yaml = new Yaml(new Loader(new RefinementConstructor()), new Dumper(new RefinementRepresenter(), new DumperOptions()), new RefinementResolver());
     FileInputStream io = new FileInputStream(input);
@@ -94,7 +99,7 @@ public class Refinement {
        * 
        */
 
-      Pattern p = Pattern.compile("relation\\((\\d+),(\\d+)\\)");
+      Pattern p = Pattern.compile("relation\\((\\w+),(\\w+)\\)");
       Matcher m = p.matcher((String) ent.getKey());
       /**If it matches set source and destination levels. 
        */
@@ -185,92 +190,66 @@ public class Refinement {
 //      return true;
 //    }
 //  }
-
+  
   /**Check if LevelRepresenation match p1 refines to p2.
    * @param p1 source property match to check.
    * @param p2 destination property to check.
    * @return true if p1 refines to p2.
+   * @throws UnknownVariableIdentifierException 
+   * @throws IncompatibleSemanticPropertyInstancesException 
    */
-  public final boolean isValidRefinement(final LevelRepMatch p1, final LevelRepMatch p2){
-    /**Check that p1 and p2 are right levels for this refinement.
-     * 
+  public final boolean isValidRefinement(final SemanticPropertyInstance p1, final SemanticPropertyInstance p2) throws  IncompatibleSemanticPropertyInstancesException{
+    /**
+     * Check that p1 and p2 are right levels for this refinement.
      */
-    if (!(sourceLevel == p1.getProp().getLevel() 
-        || destinationLevel == p2.getProp().getLevel())) {
-      return false;
+    if(!(sourceLevel == p1.getLevel() || destinationLevel == p2.getLevel())) {
+      throw new IncompatibleSemanticPropertyInstancesException();
+     
     }
-    /**Check all the capturing groups are refined.
-     * 
+    /**
+     * Check all the capturing groups are refined.
      */
-    String p1Match = p1.getInputToMatch();
-    String p2Match = p2.getInputToMatch();
-    Set conversions = oConversions.keySet();
-    Iterator it = conversions.iterator();
+    String p1Match = p1.getInput();
+    String p2Match = p2.getInput();
+    Iterator<String> it = oConversions.keySet().iterator();
     while (it.hasNext()) {
-      String presKey = (String) it.next();
-      MyObject ob1 = p1.getVar(presKey);
-      MyObject ob2 = p2.getVar(presKey);
-      //check if p1 has an conversion for this key
-      if (ob1 != null) {
+      try {
+        String presKey = (String) it.next();
+        Object ob1 = (Object)p1.getVariable(presKey);
+        Object ob2 = (Object)p2.getVariable(presKey);
+        //check if p1 is a valid conversion for ob1. remove later
+        if (ob1 == null) {
+          return false;
+        }
         //check the type of conversion
         Transitions tran = oConversions.get(presKey);
-        //deal with each conversion appropriately
-        if (tran.equals(Transitions.prefix)) {
-          //check that MyObject is right kind
-          if (!((ob1.getKind()) == MyObjectKind.String)) {
-            System.out.println(
-                "Cannot generate prefix for objectkind" 
-                + ob1.getKind());
-            return false;
+        //for string conversions
+        if ((ob1 instanceof String) && (ob2 instanceof String)){
+          String a = (String) ob1;
+          String b = (String) ob2;
+          //deal with each conversion appropriately
+          if (tran.equals(Transitions.prefix)) { 
+            if (!b.startsWith(a)) {
+              return false;
+            }
           }
-          String a = (String) ob1.getValue();
-          String b = (String) ob2.getValue();
-          if (!b.startsWith(a)) {
-            return false;
+          else if (tran.equals(Transitions.substring)) { 
+            if (!b.contains(a)) {
+              return false;
+            }
           }
-          //adjust p1Match & p2Match
-          p1Match = p1Match.replace("'" + a + "'", "");
-          p2Match = p2Match.replace("'" + b + "'", "");
-        } else if (tran.equals(Transitions.suffix)) {
-          //check that MyObject is right kind
-          if (!((ob1.getKind()) == MyObjectKind.String)) {
-            System.out.println(
-                "Cannot generate suffix for objectkind" 
-                + ob1.getKind());
-            return false;
-          }
-          String a = (String) ob1.getValue();
-          String b = (String) ob2.getValue();
-          if (!b.endsWith(a)) {
-            return false;
+          else if (tran.equals(Transitions.suffix)) { 
+            if (!b.endsWith(a)) {
+              return false;
+            }
           }
           //adjust p1Match & p2Match
           p1Match = p1Match.replace("'" + a + "'", "");
           p2Match = p2Match.replace("'" + b + "'", "");
-
-        } else if (tran.equals(Transitions.substring)) {
-          //check that MyObject is right kind
-          if (!((ob1.getKind()) == MyObjectKind.String)) {
-            System.out.println(
-                "Cannot generate substring for objectkind" 
-                + ob1.getKind());
-            return false;
-          }
-          String a = (String) ob1.getValue();
-          String b = (String) ob2.getValue();
-          if (!b.contains(a)) {
-            return false;
-          }
-          //adjust p1Match & p2Match
-          p1Match = p1Match.replace("'" + a + "'", "");
-          p2Match = p2Match.replace("'" + b + "'", "");
-
-        } else {
-          System.out.println("unimplemented transition " + tran);
         }
-
+      } catch(UnknownVariableIdentifierException e){
+        
       }
-
     }
     /**Check all strings are refined.
      * 
@@ -291,17 +270,84 @@ public class Refinement {
       }
 
     }
-    return true;	
+    return true;  
 
   }
+
+
   /**Refine p1 based on rules in this Refinement LevelRepresenation.
    * 
    * @param p1 Source LevelRepresenation Match.
    * @return The refinement of p1 using this refinement property.
    * @param level the level to refine to.
+   * @throws IncompatibleSemanticPropertyInstancesException 
    */
-  public final LevelRepMatch refine(final LevelRepMatch p1, int level) {
-    return p1;
+  public final SemanticPropertyInstance refine(final SemanticPropertyInstance  p1, LevelId level) throws IncompatibleSemanticPropertyInstancesException {
+    /**
+     * Check that p1 and p2 are right levels for this refinement.
+     */
+    if(!(sourceLevel == p1.getLevel()) || !(destinationLevel == level)) {
+      throw new IncompatibleSemanticPropertyInstancesException();
+     
+    }
+    HashMap<String,Object> newCaptured = new HashMap <String, Object> (); 
+    
+    /**
+     * refine all the capturing groups are refined.
+     */
+    String p1Match = p1.getInput();
+    String newInput = p1.getInput();
+    Iterator<String> it = oConversions.keySet().iterator();
+    while (it.hasNext()) {
+      try {
+        String presKey = (String) it.next();
+        Object ob1 = (Object)p1.getVariable(presKey);
+
+        //check the type of conversion
+        Transitions tran = oConversions.get(presKey);
+        //for string conversions
+        if ((ob1 instanceof String)){
+          String a = (String) ob1;
+          String newa="";
+          //deal with each conversion appropriately
+          if (tran.equals(Transitions.prefix)) { 
+            newa=a+" extra";
+          }
+          else if (tran.equals(Transitions.substring)) { 
+            
+          }
+          else if (tran.equals(Transitions.suffix)) { 
+            newa="extra "+ a;
+          }
+          //adjust p1Match & p2Match
+          newCaptured.put(presKey,newa);
+          p1Match = p1Match.replace("'"+a+"'", "");
+          
+          newInput = newInput.replace( a , newa);
+        }
+      } catch(UnknownVariableIdentifierException e){
+        
+      }
+    }
+    /**refine all strings.
+     * 
+     */
+    StringTokenizer parser1 = new StringTokenizer(p1Match);
+    while (parser1.hasMoreTokens()) {
+      String i = parser1.nextToken();
+      if (sConversions.containsKey(i)) {
+        p1Match = p1Match.replace(i, "");
+        newInput = newInput.replace(i, sConversions.get(i));
+      } else {
+        System.out.println("problem with " + i );
+
+      }
+
+    }
+    if(p1Match.equals("")){
+      
+    }
+    return new SemanticPropertyInstance(newInput,p1.getPropertyType(),level,p1.getScope(),newCaptured);
 
   }
   /**Getters.

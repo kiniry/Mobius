@@ -15,7 +15,7 @@ public class LevelRepMatch {
 
   private String inputToMatch;
   private Matcher thisMatch;
-  LevelRepresenation prop;
+  SemanticPropertyLevelSpecification prop;
   Boolean isMatch;
 
   /**
@@ -23,7 +23,7 @@ public class LevelRepMatch {
    * @param input 
    * @param prop
    */
-  public LevelRepMatch(String input,LevelRepresenation propIn){
+  public LevelRepMatch(String input,SemanticPropertyLevelSpecification propIn){
     prop = propIn;
     inputToMatch = input;
     Pattern p = Pattern.compile(propIn.getReg().getExp());
@@ -59,7 +59,7 @@ public class LevelRepMatch {
     }
 
   }
-  public LevelRepresenation getProp() {
+  public SemanticPropertyLevelSpecification getProp() {
     return prop;
   }
   public Matcher getMatch() {

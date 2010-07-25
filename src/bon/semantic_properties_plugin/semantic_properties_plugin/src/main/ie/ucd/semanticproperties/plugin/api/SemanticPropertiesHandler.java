@@ -7,26 +7,37 @@ import ie.ucd.semanticproperties.plugin.exceptions.SemanticPropertyNotValidAtSco
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownLevelException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownPropertyException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownScopeException;
+import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
+import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyLevelSpecification;
+import ie.ucd.semanticproperties.plugin.structs.SemanticProperty;
+import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyRefinementSpecification;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SemanticPropertiesHandler {
 
-  //private final specs List<SemanticPropertySpecification>;
-  //private final specsMap Map<String,SemanticPropertySpecification>
+  private final  ArrayList<SemanticProperty> specs;
+  private final HashMap<String,SemanticProperty> specsMap ;
   
   public SemanticPropertiesHandler() {
-    //TODO
+    specs =  new ArrayList<SemanticProperty>();
+    specsMap = new HashMap<String , SemanticProperty>();
   }
 
   /**
    * Parse the provided input file and add the property specification contained
    * within the the set of known properties.
    * @param propertySpecFile
+   * @throws IOException 
    */
-  public void add(File propertySpecFile) throws FileNotFoundException, InvalidSemanticPropertySpecificationException {
-    //TODO
+  public void add(File propertySpecFile) throws InvalidSemanticPropertySpecificationException, IOException {
+    SemanticProperty temp = new SemanticProperty(propertySpecFile);
+    specs.add(temp);
+    specsMap.put(temp.getName(),temp);
   }
 
   /**
@@ -37,11 +48,20 @@ public class SemanticPropertiesHandler {
    * @param level
    * @return
    */
-  public SemanticPropertyInstance parse(String input, ScopeId scope, LevelId level) 
+  public SemanticPropertyInstance parse(String input, String name, LevelId level) 
     throws UnknownPropertyException, InvalidSemanticPropertyUseException,
            UnknownLevelException, UnknownScopeException, SemanticPropertyNotValidAtScopeException {
-    //TODO
-    return null;
+    
+    SemanticProperty temp = specsMap.get(name);
+    if(temp==null) {
+      throw new UnknownPropertyException();
+    }
+    SemanticPropertyLevelSpecification lev = temp.getLevels().get(level);
+    if(lev==null){
+      throw new UnknownLevelException();
+    }
+    SemanticPropertyInstance i = lev.makeInstance(input);
+    return i;
   }
 
   /**
@@ -51,11 +71,19 @@ public class SemanticPropertiesHandler {
    * @param prop1
    * @param prop2
    * @return
+   * review this throws
+   * @throws UnknownVariableIdentifierException 
    */
   public boolean isValidRefinement(SemanticPropertyInstance prop1, SemanticPropertyInstance prop2) 
-    throws IncompatibleSemanticPropertyInstancesException {
-    //TODO
-    return false;
+    throws IncompatibleSemanticPropertyInstancesException, UnknownVariableIdentifierException {
+    //doubledone
+    if(prop1.getPropertyType() != prop2.getPropertyType()){
+      throw new IncompatibleSemanticPropertyInstancesException();
+    }
+    SemanticProperty temp = specsMap.get(prop1.getPropertyType());
+    SemanticPropertyRefinementSpecification ref =temp.getRefinement(prop1, prop2);
+    return ref.isValidRefinement(prop1, prop2);
+    
   }
 
   /**
@@ -67,8 +95,10 @@ public class SemanticPropertiesHandler {
    */
   public SemanticPropertyInstance generate(SemanticPropertyInstance  input, LevelId level)
     throws UnknownLevelException, IncompatibleSemanticPropertyInstancesException {
-    //TODO
-    return null;
+    SemanticProperty temp = specsMap.get(input.getPropertyType());
+    SemanticPropertyRefinementSpecification ref =temp.getRefinement(input.getLevel(), level);
+
+    return ref.refine(input,level);
   }
 
 }

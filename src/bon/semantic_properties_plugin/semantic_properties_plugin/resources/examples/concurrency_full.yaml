@@ -1,6 +1,6 @@
 --- 
 name: concurrency
-level: 5
+level: bon
 format: 
   - choice (CONCURRENT): 
     - SEQUENTIAL
@@ -11,14 +11,14 @@ format:
     - SPECIAL
   - optional: <description=string=''>
 scope: 
-  - Modules
-  - Features 
+  - Module
+  - Feature 
 description: |
  Describes 
 ...
 --- 
 name: concurrency
-level: 2
+level: java
 format: 
   - choice (PARALLEL): 
     - SEQ
@@ -30,14 +30,14 @@ format:
   - optional: <description=string='No information.'>
   #- optional: <owner=string='unknown'>
 scope: 
-  - Modules
-  - Features 
+  - Module
+  - Feature 
 description: |
  Describes 
 ...
 ---
 property: concurrency
-relation(5,2):
+relation(bon,java):
   - keyword:
     - SEQUENTIAL: SEQ
     - CONCURRENT: PARALLEL

@@ -17,7 +17,7 @@ import junit.framework.TestCase;
  * @author eo
  *
  */
-public class LevelRepresentationTest extends TestCase {
+public class SemanticPropertyLevelSpecificationTest extends TestCase {
   /**
    * Test the Constructor.
    * @throws InvalidSemanticPropertySpecificationException 
@@ -25,7 +25,7 @@ public class LevelRepresentationTest extends TestCase {
    */
   public void testConstructor() throws IOException, InvalidSemanticPropertySpecificationException{
    
-    LevelRepresenation lr1 = new LevelRepresenation(new File("resources/examples/junit/LReg1.yaml"));
+    SemanticPropertyLevelSpecification lr1 = new SemanticPropertyLevelSpecification(new File("resources/examples/junit/LReg1.yaml"));
     
     assertEquals(lr1.getLevel(), LevelId.JAVA_JML);
     assertEquals(lr1.getName(), "LReg1");

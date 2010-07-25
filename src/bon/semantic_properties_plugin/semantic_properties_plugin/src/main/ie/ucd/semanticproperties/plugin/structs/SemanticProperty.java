@@ -9,6 +9,8 @@
 package ie.ucd.semanticproperties.plugin.structs;
 
 import ie.ucd.semanticproperties.plugin.api.LevelId;
+import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
+import ie.ucd.semanticproperties.plugin.exceptions.IncompatibleSemanticPropertyInstancesException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
 import ie.ucd.semanticproperties.plugin.yaml.CustomRepresenter;
@@ -39,7 +41,7 @@ import org.yaml.snakeyaml.Yaml;
  * stores the appropiate semantic properties
  * </p>
  * 
- * @see LevelRepresenation
+ * @see SemanticPropertyLevelSpecification
  * @see RegExpStruct
  * @version "$Id: 01-07-2010 $"
  * @author Eoin O'Connor
@@ -48,9 +50,10 @@ public class SemanticProperty {
 
   // Attributes
 
-  private static LinkedHashMap<LevelId, LevelRepresenation> levels;
-  private static List<Refinement> refinements;
+  private LinkedHashMap<LevelId, SemanticPropertyLevelSpecification> levels;
+  private List<SemanticPropertyRefinementSpecification> refinements;
   private File input;
+  private String name;
 
   /**Constructor for Semantic Property.
    * 
@@ -58,8 +61,9 @@ public class SemanticProperty {
    */
   public SemanticProperty(File inputFile) throws FileNotFoundException, InvalidSemanticPropertySpecificationException, IOException {
     input = inputFile;
-    levels = new LinkedHashMap<LevelId, LevelRepresenation>();
-    refinements = new LinkedList<Refinement>();
+    levels = new LinkedHashMap<LevelId, SemanticPropertyLevelSpecification>();
+    refinements = new LinkedList<SemanticPropertyRefinementSpecification>();
+    name = "unassigned";
     parseFile(input);
   }
 
@@ -87,27 +91,27 @@ public class SemanticProperty {
    * @param level2 destination level.
    * @return true if valid refinement.
    */
-  public boolean checkRefinement(String input1, String input2, LevelId level1, LevelId level2) {
-    /**Create levelMatches for the inputs
-     * 
-     */
-    LevelRepMatch p1 = new LevelRepMatch(input1, levels.get(level1));
-    LevelRepMatch p2 = new LevelRepMatch(input2, levels.get(level2));
-
-    /**search through refinements for appropriate one.
-     * 
-     */
-    for (Refinement pres : refinements) {
-      if (pres.getSourceLevel() == level1 
-          && pres.getDestinationLevel() == level2) {
-        /**Check refinement.
-         * 
-         */
-        return pres.isValidRefinement(p1, p2);
-      }			
-    }
-    return false;
-  }
+//  public boolean checkRefinement(String input1, String input2, LevelId level1, LevelId level2) {
+//    /**Create levelMatches for the inputs
+//     * 
+//     */
+//    LevelRepMatch p1 = new LevelRepMatch(input1, levels.get(level1));
+//    LevelRepMatch p2 = new LevelRepMatch(input2, levels.get(level2));
+//
+//    /**search through refinements for appropriate one.
+//     * 
+//     */
+//    for (Refinement pres : refinements) {
+//      if (pres.getSourceLevel() == level1 
+//          && pres.getDestinationLevel() == level2) {
+//        /**Check refinement.
+//         * 
+//         */
+//        return pres.isValidRefinement(p1, p2);
+//      }			
+//    }
+//    return false;
+//  }
 
   /** 
    * parses a file using snakeyaml and creates the appropriate Semantic Property.
@@ -115,7 +119,7 @@ public class SemanticProperty {
    * 
    * @param inputFile yaml file to parse, may contain multiple levels and refinements
    */
-  private static void parseFile(File inputFile) throws FileNotFoundException, InvalidSemanticPropertySpecificationException, IOException{
+  private  void parseFile(File inputFile) throws FileNotFoundException, InvalidSemanticPropertySpecificationException, IOException{
 
     /**
      * get input stream from file
@@ -131,7 +135,7 @@ public class SemanticProperty {
 
 
 
-    try {
+    
       Iterable s = (Iterable<Object>) levelData;
       Iterator<LinkedHashMap<String, ?>> i;
       i = s.iterator();
@@ -151,9 +155,12 @@ public class SemanticProperty {
          */
         //  level.
         if (presMap.get("name") != null) {
-          LevelRepresenation temp = new LevelRepresenation(presMap);
+          SemanticPropertyLevelSpecification temp = new SemanticPropertyLevelSpecification(presMap);
           levels.put(temp.getLevel(), temp);
-
+          //set this.name to property name
+          if(name.equals("unassigned")){
+            name=temp.getName();
+          }
           // refinememnt
         } else if (presMap.get("property") != null) {
 
@@ -165,11 +172,9 @@ public class SemanticProperty {
 
 
       }
-    } catch (Exception e) {
-      throw new InvalidSemanticPropertySpecificationException();
-    } finally{
-      input.close();
-    }
+  
+     input.close();
+    
 
     /**
      * Create Yaml parsed object for refinements.
@@ -191,12 +196,36 @@ public class SemanticProperty {
          * 
          */
         if (presMap.get("property") != null) {
-          refinements.add(new Refinement(presMap));
+          refinements.add(new SemanticPropertyRefinementSpecification(presMap));
         } 
       } 
     }
     input2.close();
 
+  }
+
+  public LinkedHashMap<LevelId, SemanticPropertyLevelSpecification> getLevels() {
+    return levels;
+  }
+
+  public String getName() {
+    return name;
+  }
+  public SemanticPropertyRefinementSpecification getRefinement(SemanticPropertyInstance from, SemanticPropertyInstance to) throws IncompatibleSemanticPropertyInstancesException{
+    for(SemanticPropertyRefinementSpecification i : refinements) {
+      if(i.getSourceLevel() == from.getLevel() && i.getDestinationLevel() == to.getLevel()){
+        return i;
+      }
+    }
+    throw new IncompatibleSemanticPropertyInstancesException();
+  }
+  public SemanticPropertyRefinementSpecification getRefinement(LevelId from, LevelId to) throws IncompatibleSemanticPropertyInstancesException{
+    for(SemanticPropertyRefinementSpecification i : refinements) {
+      if(i.getSourceLevel() == from && i.getDestinationLevel() == to){
+        return i;
+      }
+    }
+    throw new IncompatibleSemanticPropertyInstancesException();
   }
 
 }

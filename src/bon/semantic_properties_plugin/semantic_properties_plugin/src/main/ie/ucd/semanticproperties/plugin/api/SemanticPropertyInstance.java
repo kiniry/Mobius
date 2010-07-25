@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
-import ie.ucd.semanticproperties.plugin.structs.LevelRepresenation;
+import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyLevelSpecification;
 import ie.ucd.semanticproperties.plugin.structs.RegExpStruct;
 
 public class SemanticPropertyInstance {
@@ -16,30 +16,18 @@ public class SemanticPropertyInstance {
   private ArrayList<ScopeId> scope;
   private String propId;
   private HashMap<String,Object> captured; 
+  private String input;
   //TODO args to constructor (Map<String,?>,propId,scope,level)
-  public SemanticPropertyInstance(String input,LevelRepresenation propIn) {
+  //scope might not be needed
+  public SemanticPropertyInstance(String input, String name, LevelId level, ArrayList<ScopeId> scope,HashMap<String, Object> map) {
     /**
      * Assign scope, level and Id.
      */
-    scope = propIn.getScope();
-    level = propIn.getLevel();
-    propId = propIn.getName();
-    /**
-     * Match Instance
-     */
-    Pattern p = Pattern.compile(propIn.getReg().getExp());
-    Matcher m = p.matcher(input);
-    /**
-     * Fill HashMap with the captured variables for this Instance.
-     */
-    HashMap<String, Integer> intMap  = propIn.getReg().getGroupInt();
-    HashMap<String, MyObject> obMap = propIn.getReg().getGroupObj();
-    for(String s:intMap.keySet()) {
-      
-      MyObject ob = obMap.get(s);
-      ob.setValue(m.group(intMap.get(s)));
-      captured.put(s, ob.getValue());
-    }
+    this.input=input;
+    this.scope = scope;
+    this.level = level;
+    this.propId = name;
+    this.captured = map;
     
   }
 
@@ -74,6 +62,14 @@ public class SemanticPropertyInstance {
    */
   public String toString() {
     return null;
+  }
+
+  public HashMap<String, Object> getCaptured() {
+    return captured;
+  }
+
+  public String getInput() {
+    return input;
   }
 
 }

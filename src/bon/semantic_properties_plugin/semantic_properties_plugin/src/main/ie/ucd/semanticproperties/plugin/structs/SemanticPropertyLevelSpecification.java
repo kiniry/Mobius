@@ -11,6 +11,7 @@ package ie.ucd.semanticproperties.plugin.structs;
 
 import ie.ucd.semanticproperties.plugin.api.LevelId;
 import ie.ucd.semanticproperties.plugin.api.ScopeId;
+import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -42,7 +44,7 @@ import org.yaml.snakeyaml.Yaml;
  * @author  Eoin O'Connor
  **/
 
-public class LevelRepresenation {
+public class SemanticPropertyLevelSpecification {
 
   /**Strings Used for Validity Checks.
    * <p> Definition of what makes an acceptable property fors
@@ -71,7 +73,7 @@ public class LevelRepresenation {
    * @param input linkedHashMap with property in it.
    * @throws InvalidSemanticPropertySpecificationException
    */
-  public LevelRepresenation(final LinkedHashMap < String , ? > input) throws InvalidSemanticPropertySpecificationException {
+  public SemanticPropertyLevelSpecification(final LinkedHashMap < String , ? > input) throws InvalidSemanticPropertySpecificationException {
     parse(input);
   }
 
@@ -83,7 +85,7 @@ public class LevelRepresenation {
  * @throws IOException
  */
   @SuppressWarnings("unchecked")
-  public LevelRepresenation(File input) throws InvalidSemanticPropertySpecificationException, IOException {
+  public SemanticPropertyLevelSpecification(File input) throws InvalidSemanticPropertySpecificationException, IOException {
     Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(new CustomRepresenter(), new DumperOptions()), new CustomResolver());
     FileInputStream io = new FileInputStream(input);
     Object ob = yaml.load(io);
@@ -96,7 +98,7 @@ public class LevelRepresenation {
    * @throws InvalidSemanticPropertySpecificationException
    */
   @SuppressWarnings("unchecked")
-  public LevelRepresenation (String input) throws InvalidSemanticPropertySpecificationException
+  public SemanticPropertyLevelSpecification (String input) throws InvalidSemanticPropertySpecificationException
   {
     Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(new CustomRepresenter(), new DumperOptions()), new CustomResolver());
     Object ob = yaml.load(input);
@@ -517,12 +519,38 @@ public class LevelRepresenation {
     return m.matches();
 
   }
+  /**
+   * generate SPI from input for this specification.
+   * @return
+   */
+  public SemanticPropertyInstance makeInstance(String input){
+     HashMap<String,Object> captured = new HashMap <String, Object>(); 
+    /**
+     * Match Instance
+     */
+    Pattern p = Pattern.compile(reg.getExp());
+    Matcher m = p.matcher(input);
+    m.matches();
+    /**
+     * Fill HashMap with the captured variables for this Instance.
+     */
+    HashMap<String, Integer> intMap  = reg.getGroupInt();
+    HashMap<String, MyObject> obMap = reg.getGroupObj();
+    for(String s:obMap.keySet()) { 
+      MyObject ob = obMap.get(s);
+      int i= intMap.get(s);
+      ob.setValue(m.group(i));
+      captured.put(s, ob.getValue());
+    }
+    return new SemanticPropertyInstance(input,name,level,scope,captured);
+    
+  }
   public String getName() {
     return name;
   }
 
   public static void setName(String name) {
-    LevelRepresenation.name = name;
+    SemanticPropertyLevelSpecification.name = name;
   }
 
   public ArrayList<ScopeId> getScope() {
@@ -530,7 +558,7 @@ public class LevelRepresenation {
   }
 
   public void setScope(ArrayList<ScopeId> scope) {
-    LevelRepresenation.scope = scope;
+    SemanticPropertyLevelSpecification.scope = scope;
   }
 
   public static String getDescription() {
@@ -538,14 +566,14 @@ public class LevelRepresenation {
   }
 
   public void setDescription(String string) {
-    LevelRepresenation.description = string;
+    SemanticPropertyLevelSpecification.description = string;
   }
 
   public static ArrayList<Object> getFormat() {
     return format;
   }
   public void setFormat(ArrayList<Object> format) {
-    LevelRepresenation.format = format;
+    SemanticPropertyLevelSpecification.format = format;
   }
 
   public LevelId getLevel() {

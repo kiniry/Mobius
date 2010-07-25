@@ -1,9 +1,11 @@
 package ie.ucd.semanticproperties.plugin.structs;
 
 import ie.ucd.semanticproperties.plugin.api.LevelId;
+import ie.ucd.semanticproperties.plugin.api.SemanticPropertiesHandler;
+import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
 import ie.ucd.semanticproperties.plugin.structs.LevelRepMatchTest;
-import ie.ucd.semanticproperties.plugin.structs.LevelRepresenation;
-import ie.ucd.semanticproperties.plugin.structs.Refinement;
+import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyLevelSpecification;
+import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyRefinementSpecification;
 import ie.ucd.semanticproperties.plugin.structs.SemanticProperty;
 
 import java.io.File;
@@ -65,7 +67,7 @@ public class ConcurrencyTest extends TestCase{
 
 
 //}
-  public final void  testNewConProp() {
+  public final void  testNewConProp() throws Exception {
 
     String bonInput = 
       "concurrency CONCURRENT 'This class is fully thread-safe.'";
@@ -76,11 +78,19 @@ public class ConcurrencyTest extends TestCase{
     File conYaml = new File("resources/examples/concurrency_full.yaml");
 
     try {
-      SemanticProperty concurrency = new SemanticProperty(conYaml);
-      assertTrue(concurrency.checkRefinement(bonInput, javaInput, LevelId.BON_INFORMAL,LevelId.JAVA_JML));
+      SemanticPropertiesHandler testHandler = new SemanticPropertiesHandler();
+      testHandler.add(conYaml);
+      SemanticPropertyInstance java = testHandler.parse(javaInput, "concurrency", LevelId.JAVA_JML);
+      SemanticPropertyInstance bon = testHandler.parse(bonInput,  "concurrency", LevelId.BON_FORMAL);
+      assertTrue(testHandler.isValidRefinement(bon, java));
+      
+      SemanticPropertyInstance refinedInstance = testHandler.generate(bon, LevelId.JAVA_JML);
+      
+      assertTrue(testHandler.isValidRefinement(bon,refinedInstance));
     } catch (Exception e) {
-      System.out.println("exceptional circumstances" +e );
-      System.out.println(e.getMessage() );
+      System.out.println("exceptional circumstances: " +e );
+      throw e;
+      //System.out.println(e.getMessage() );
     }
 
 
