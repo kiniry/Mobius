@@ -1,0 +1,33 @@
+#equalsnum example used in SemanticPropertyRefinementSpecificationTest
+---
+name: equalsnumEg
+level: bon
+format:
+  - <e=float=2.0>
+  - <g=nat=9>
+  - <j=int=8>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+
+name: equalsnumEg
+level: java
+format:
+  - <e=float=2.0>
+  - <g=nat=9>
+  - <j=int=8>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+property: equalsnumEg
+relation(bon,java):
+  - e: =
+  - g: =
+  - j: =
+...

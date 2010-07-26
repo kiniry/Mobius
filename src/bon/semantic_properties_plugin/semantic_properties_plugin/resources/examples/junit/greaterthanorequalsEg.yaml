@@ -1,0 +1,33 @@
+#greaterthanorequals example used in SemanticPropertyRefinementSpecificationTest
+---
+name: greaterthanorequalsEg
+level: bon
+format:
+  - <e=float=2.0>
+  - <g=nat=9>
+  - <j=int=8>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+
+name: greaterthanorequalsEg
+level: java
+format:
+  - <e=float=2.0>
+  - <g=nat=9>
+  - <j=int=8>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+property: greaterthanorequalsEg
+relation(bon,java):
+  - e: gr=
+  - g: gr=
+  - j: gr=
+...

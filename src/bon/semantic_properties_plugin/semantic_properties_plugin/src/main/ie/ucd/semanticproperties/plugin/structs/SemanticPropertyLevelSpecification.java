@@ -12,7 +12,10 @@ package ie.ucd.semanticproperties.plugin.structs;
 import ie.ucd.semanticproperties.plugin.api.LevelId;
 import ie.ucd.semanticproperties.plugin.api.ScopeId;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
+import ie.ucd.semanticproperties.plugin.customobjects.MyDescription;
+import ie.ucd.semanticproperties.plugin.customobjects.MyExpression;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
+import ie.ucd.semanticproperties.plugin.customobjects.MyString;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertyUseException;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
@@ -25,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -536,18 +540,50 @@ public class SemanticPropertyLevelSpecification {
      */
     HashMap<String, Integer> intMap  = reg.getGroupInt();
     HashMap<String, MyObject> obMap = reg.getGroupObj();
+    LinkedList<String> stringMap = new LinkedList <String>();
+    int start = 0;
     for(String s: obMap.keySet()) { 
       MyObject ob = obMap.get(s);
       
       int i= intMap.get(s);     
       //fill only with non null values
       if((m.group(i)!=null)){
-        ob.setValue(m.group(i));
+        if(ob instanceof MyString){
+          String toSet =  m.group(i);
+          ob.setValue(toSet.substring(1,toSet.length()-1));
+        }
+        else if(ob instanceof MyExpression){
+          String toSet =  m.group(i);
+          ob.setValue(toSet.substring(1,toSet.length()-1));
+        }
+        else if(ob instanceof MyDescription){
+          String toSet =  m.group(i);
+          ob.setValue(toSet.substring(0,toSet.length()-1));
+        }
+        else {
+          ob.setValue(m.group(i));
+        }
+        
         captured.put(s, ob);
+        // add Strings up to this match 
+        String toAdd = input.substring( start, m.start(i));
+        start = m.end(i);
+        String[] split = toAdd.split(" ");
+        for(String cur : split){
+          stringMap.push(cur);
+        }
+        //last case
+        if(m.groupCount()==i && start!=input.length()){
+          String toAdd2 = input.substring( start, m.start(i));
+          start = m.end(i);
+          String[] split2 = toAdd.split("\\s");
+          for(String cur : split2){
+            stringMap.push(cur);
+          }
+        }
       }
-      
     }
-    return new SemanticPropertyInstance(input,name,level,scope,captured);
+    return new SemanticPropertyInstance(name,level,scope,captured,stringMap);
     
   }
   public String getName() {

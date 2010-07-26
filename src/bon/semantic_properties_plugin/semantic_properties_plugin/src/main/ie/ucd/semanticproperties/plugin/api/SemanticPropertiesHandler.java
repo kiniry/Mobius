@@ -9,50 +9,60 @@ import ie.ucd.semanticproperties.plugin.exceptions.UnknownLevelException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownPropertyException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownScopeException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
-import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyLevelSpecification;
 import ie.ucd.semanticproperties.plugin.structs.SemanticProperty;
+import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyLevelSpecification;
 import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyRefinementSpecification;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Class that allows a user to  add semantic property representations and instances.
+ * @author Eoin O'Connor
+ *
+ */
 public class SemanticPropertiesHandler {
-
-  private final  ArrayList<SemanticProperty> specs;
-  private final HashMap<String,SemanticProperty> specsMap ;
-  
+  /**
+   * The list of all the semantic properties for this handler.
+   */
+  private final ArrayList<SemanticProperty> specs;
+  /**
+   * HashMap of semantic properties names as key and the semantic properties themselves as values.
+   */
+  private final HashMap<String,SemanticProperty> specsMap;
+  /**
+   * Default Constructor.
+   * <p> Makes new Handler with no semantic properties.
+   */
   public SemanticPropertiesHandler() {
     specs =  new ArrayList<SemanticProperty>();
     specsMap = new HashMap<String , SemanticProperty>();
   }
 
   /**
-   * Parse the provided input file and add the property specification contained
-   * within the the set of known properties.
-   * @param propertySpecFile
-   * @throws IOException 
+   * Adds the semantic property specification contained in yaml file.
+   * The File should be of the correct form or an exception will be thrown.
+   * @param propertySpecFile The yaml file representing semantic property to add.
+   * @throws InvalidSemanticPropertySpecificationException If file dosn't contain valid semantic property.
+   * @throws IOException If file dosn't exist.
    */
-  public void add(File propertySpecFile) throws InvalidSemanticPropertySpecificationException, IOException {
+  public final void add(final File propertySpecFile) throws InvalidSemanticPropertySpecificationException, IOException {
     SemanticProperty temp = new SemanticProperty(propertySpecFile);
     specs.add(temp);
     specsMap.put(temp.getName(),temp);
   }
 
   /**
-   * Parse the given input string using the set of known semantic properties.
-   * 
-   * @param input
-   * @param scope
-   * @param level
-   * @return
+   * Create SemanticPropertyInstance for this input.
+   * @param input String to create instance for.
+   * @param name Name of semantic property to create instance for.
+   * @param level The level to create instance for.
+   * @return new SemanticPropertyInstance for this input string.
    */
-  public SemanticPropertyInstance parse(String input, String name, LevelId level) 
+  public final SemanticPropertyInstance parse(String input, String name, LevelId level) 
     throws UnknownPropertyException, InvalidSemanticPropertyUseException,
            UnknownLevelException, UnknownScopeException, SemanticPropertyNotValidAtScopeException {
-    
     SemanticProperty temp = specsMap.get(name);
     if(temp==null) {
       throw new UnknownPropertyException();
@@ -66,9 +76,8 @@ public class SemanticPropertiesHandler {
   }
 
   /**
-   * Checks if two semantic property instances are a valid refinement, according to
-   * the refinement specification for the corresponding semantic property.
-   * 
+   * Checks if a semantic property instances refines to another for this handler.
+   * Uses the refinement specification for the correct semantic property.
    * @param prop1
    * @param prop2
    * @return
@@ -85,7 +94,6 @@ public class SemanticPropertiesHandler {
     SemanticProperty temp = specsMap.get(prop1.getPropertyType());
     SemanticPropertyRefinementSpecification ref =temp.getRefinement(prop1, prop2);
     return ref.isValidRefinement(prop1, prop2);
-    
   }
 
   /**

@@ -22,32 +22,32 @@ import junit.framework.TestSuite;
 
 public class CustomTestSuite  {
 
-	public static Test suite() {
+  public static Test suite() {
 
-        TestSuite suite = new TestSuite();
-  
-        //
-        // Add suites for all custom test classes
-        //
+    TestSuite suite = new TestSuite();
 
-        suite.addTestSuite(ConcurrencyTest.class);
-        
-        suite.addTestSuite(RegExpStructTest.class);
-        
-        suite.addTestSuite(SemanticPropertyTest.class);
+    //
+    // Add suites for all custom test classes
+    //
 
-        suite.addTestSuite(SemanticPropertyLevelSpecificationTest.class);
-        
-        suite.addTestSuite(SemanticPropertyRefinementSpecificationTest.class);
-       
-        return suite;
-    }
+    suite.addTestSuite(ConcurrencyTest.class);
 
-    /**
-     * Runs the test suite using the textual runner.
-     */
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
+    suite.addTestSuite(RegExpStructTest.class);
+
+    suite.addTestSuite(SemanticPropertyTest.class);
+
+    suite.addTestSuite(SemanticPropertyLevelSpecificationTest.class);
+
+    suite.addTestSuite(SemanticPropertyRefinementSpecificationTest.class);
+
+    return suite;
+  }
+
+  /**
+   * Runs the test suite using the textual runner.
+   */
+  public static void main(String[] args) {
+    junit.textui.TestRunner.run(suite());
+  }
 
 }

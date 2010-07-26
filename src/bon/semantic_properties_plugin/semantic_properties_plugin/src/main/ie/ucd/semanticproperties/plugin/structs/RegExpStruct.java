@@ -100,9 +100,7 @@ public class RegExpStruct {
    * @param additionalGroups
    *          group produced by adding pre and post.
    */
-  public RegExpStruct concat(RegExpStruct toAdd, String pre, String post,
-      int additionalGroups) {
-
+  public RegExpStruct concat(RegExpStruct toAdd, String pre, String post,int additionalGroups) {
     String newExp = pre + exp + toAdd.getExp() + post;
     int newNum = numberOfGroups + toAdd.getNumberOfGroups() + additionalGroups;
 

@@ -1,0 +1,33 @@
+#lessthanorequals example used in SemanticPropertyRefinementSpecificationTest
+---
+name: lessthanorequalsEg
+level: bon
+format:
+  - <e=float=2.0>
+  - <g=nat=9>
+  - <j=int=8>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+
+name: lessthanorequalsEg
+level: java
+format:
+  - <e=float=2.0>
+  - <g=nat=9>
+  - <j=int=8>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+property: lessthanorequalsEg
+relation(bon,java):
+  - e: <=
+  - g: <=
+  - j: <=
+...

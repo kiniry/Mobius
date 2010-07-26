@@ -121,7 +121,8 @@ public class CustomConstructor extends Constructor {
             MyObject temp =  convertNode(node);
             String a = temp.getId();
             String b = (String) temp.getValue();
-            return new MyString(a,b.substring(1,b.length()-1));
+            String newb=b.substring(1,b.length()-1);
+            return new MyString(a,newb);
         }
     }
     private class ConstructMyThrowable extends AbstractConstruct {

@@ -227,5 +227,4 @@ public class SemanticProperty {
     }
     throw new IncompatibleSemanticPropertyInstancesException();
   }
-
 }

@@ -9,9 +9,9 @@ public enum Transitions {
 	prefix("prefix"),
 	substring("substring"),
 	suffix("suffix"),
-	greaterThanOrEquals(">="),
+	greaterThanOrEquals("'>='"),
 	LessThanOrEquals("<="),
-	greaterThan(">"),
+	greaterThan("gr"),
 	LessThan("<");
 	
 	

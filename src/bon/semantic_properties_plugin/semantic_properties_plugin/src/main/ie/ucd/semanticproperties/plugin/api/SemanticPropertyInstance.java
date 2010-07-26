@@ -2,6 +2,7 @@ package ie.ucd.semanticproperties.plugin.api;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,18 +17,20 @@ public class SemanticPropertyInstance {
   private ArrayList<ScopeId> scope;
   private String propId;
   private HashMap<String,Object> captured; 
-  private String input;
+
+  private LinkedList<String> stringMap;
   //TODO args to constructor (Map<String,?>,propId,scope,level)
   //scope might not be needed
-  public SemanticPropertyInstance(String input, String name, LevelId level, ArrayList<ScopeId> scope,HashMap<String, Object> map) {
+  public SemanticPropertyInstance(String name, LevelId level, ArrayList<ScopeId> scope,HashMap<String, Object> map, LinkedList<String> StringMap) {
     /**
      * Assign scope, level and Id.
      */
-    this.input=input;
+    
     this.scope = scope;
     this.level = level;
     this.propId = name;
     this.captured = map;
+    this.stringMap = StringMap;
     
   }
 
@@ -66,9 +69,8 @@ public class SemanticPropertyInstance {
   public HashMap<String, Object> getCaptured() {
     return captured;
   }
-
-  public String getInput() {
-    return input;
+  public LinkedList<String> getStringMap() {
+    return stringMap;
   }
 
 }

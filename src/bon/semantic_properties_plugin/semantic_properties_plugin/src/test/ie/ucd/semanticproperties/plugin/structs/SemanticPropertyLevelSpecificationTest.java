@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 
 import junit.framework.TestCase;
-
 /**
  * Test the important LevelRepresentation methods.
  * @author eo

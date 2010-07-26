@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Map.Entry;
@@ -189,17 +190,17 @@ public class SemanticPropertyRefinementSpecification {
     }
 
   }
-//  /**Check Validity Of RefinementProp.
-//   * <p> Basic test to check that all variables are not null</p>
-//   */
-//  private boolean isValidRefinementProperty() {
-//    if (propertyName == null || oConversions == null || sConversions == null) {
-//      return false;
-//    } else {
-//      return true;
-//    }
-//  }
-  
+///**Check Validity Of RefinementProp.
+//* <p> Basic test to check that all variables are not null</p>
+//*/
+//private boolean isValidRefinementProperty() {
+//if (propertyName == null || oConversions == null || sConversions == null) {
+//return false;
+//} else {
+//return true;
+//}
+//}
+
   /**Check if LevelRepresenation match p1 refines to p2.
    * @param p1 source property match to check.
    * @param p2 destination property to check.
@@ -216,10 +217,21 @@ public class SemanticPropertyRefinementSpecification {
       throw new IncompatibleSemanticPropertyInstancesException();
     }
     /**
+     * Check that all strings are refined
+     */
+    for(String cur : p1.getStringMap()) {
+      if(sConversions.containsKey(cur)){
+        String keyToCompare = sConversions.get(cur);
+        if(!(p2.getStringMap().contains(keyToCompare))){
+          throw new InvalidRefinementException();
+        }
+      } else {
+        throw new InvalidRefinementException();
+      }
+    }
+    /**
      * Check all the capturing groups are refined.
      */
-    String p1Match = p1.getInput();
-    String p2Match = p2.getInput();
     Iterator<String> it = oConversions.keySet().iterator();
     while (it.hasNext()) {
       try {
@@ -237,98 +249,50 @@ public class SemanticPropertyRefinementSpecification {
           String a = (String) ob1.getValue();
           String b = (String) ob2.getValue();
           //deal with each conversion appropriately
-          if (tran.equals(Transitions.prefix)) { 
+          if (tran.equals(Transitions.prefix)) {
             if (!b.startsWith(a)) {
               throw new InvalidRefinementException();
             }
-          }
-          else if (tran.equals(Transitions.substring)) { 
+          } else if (tran.equals(Transitions.substring)) {
             if (!b.contains(a)) {
               throw new InvalidRefinementException();
             }
-          }
-          else if (tran.equals(Transitions.suffix)) { 
+          } else if (tran.equals(Transitions.suffix)) {
             if (!b.endsWith(a)) {
               throw new InvalidRefinementException();
             }
-          }
-          else if (tran.equals(Transitions.equals)) { 
+          } else if (tran.equals(Transitions.equals)) {
             if (!b.equals(a)) {
               throw new InvalidRefinementException();
             }
           }
-          //adjust p1Match & p2Match based on MyObject kind
-          if(ob1 instanceof MyString) {
-            p1Match = p1Match.replace( "'" + a + "'", "");
-            p2Match = p2Match.replace( "'" + b + "'", "");
-          }
-          
-          if(ob1 instanceof MyDescription) {
-            p1Match = p1Match.replace(  a + ".", "");
-            p2Match = p2Match.replace(  b + ".", "");
-          }
-          if(ob1 instanceof MyExpression) {
-            p1Match = p1Match.replace( "(" + a + ")", "");
-            p2Match = p2Match.replace( "(" + b + ")", "");
-          }
-          
-        }
-        else if ((ob1 instanceof MyNumberObject) && (ob2 instanceof MyNumberObject)){
+        } else if ((ob1 instanceof MyNumberObject) && (ob2 instanceof MyNumberObject)){
           Float a = Float.valueOf((String)ob1.getValue());
           Float b = Float.valueOf((String)ob2.getValue());
           //deal with each conversion appropriately
-          if (tran.equals(Transitions.LessThan)) { 
-            if (!(b<a)) {
+          if (tran.equals(Transitions.LessThan)) {
+            if (!(a<b)) {
+              throw new InvalidRefinementException();
+            }
+          } else if (tran.equals(Transitions.LessThanOrEquals)) {
+            if (!(a<=b)) {
+              throw new InvalidRefinementException();
+            }
+          } else if (tran.equals(Transitions.greaterThan)) {
+            if (!(a>b)) {
+              throw new InvalidRefinementException();
+            }
+          } else if (tran.equals(Transitions.greaterThanOrEquals)) {
+            if (!(a>=b)) {
               throw new InvalidRefinementException();
             }
           }
-          else if (tran.equals(Transitions.LessThanOrEquals)) { 
-            if (!(b<=a)) {
-              throw new InvalidRefinementException();
-            }
-          }
-          else if (tran.equals(Transitions.greaterThan)) { 
-            if (!(b>a)) {
-              throw new InvalidRefinementException();
-            }
-          }
-          else if (tran.equals(Transitions.greaterThanOrEquals)) { 
-            if (!(b>=a)) {
-              throw new InvalidRefinementException();
-            }
-          }
-          //adjust p1Match & p2Match based on MyObject kind
-          p1Match = p1Match.replace(  ob1.getValue().toString() , "");
-          p2Match = p2Match.replace(  ob2.getValue().toString() , "");
-         
-        
-  
         }
       } catch(UnknownVariableIdentifierException e){
         //TODO
       }
     }
-    /**Check all strings are refined.
-     * 
-     */
-    StringTokenizer parser1 = new StringTokenizer(p1Match);
-    StringTokenizer parser2 = new StringTokenizer(p2Match);
-    while (parser1.hasMoreTokens()) {
-      String i = parser1.nextToken();
-      String j = parser2.nextToken();
-      if (sConversions.containsKey(i)) {
-        if (!j.equals(sConversions.get(i))) {
-          return false;
-        }
-      } else {
-        System.out.println("problem with " + i + " and " + j);
-        return false;
-
-      }
-
-    }
-    return true;  
-
+    return true;
   }
 
 
@@ -346,71 +310,89 @@ public class SemanticPropertyRefinementSpecification {
      */
     if(!(sourceLevel == p1.getLevel()) || !(destinationLevel == level)) {
       throw new IncompatibleSemanticPropertyInstancesException();
-     
     }
-    HashMap<String,Object> newCaptured = new HashMap <String, Object> (); 
-    
+    /**
+     * Variables that will make up refined SemanticPropertyInstance.
+     */
+    HashMap<String,Object> newCaptured = new HashMap <String, Object>();
+    LinkedList<String> newString = new LinkedList <String>();
+  
     /**
      * refine all the capturing groups are refined.
      */
-    String p1Match = p1.getInput();
-    String newInput = p1.getInput();
+    
     Iterator<String> it = oConversions.keySet().iterator();
     while (it.hasNext()) {
       try {
         String presKey = (String) it.next();
-        Object ob1 = (Object)p1.getVariable(presKey);
-
+        MyObject ob1 = (MyObject)p1.getVariable(presKey);
+        //check if there is a valid refinement for ob1.
+        if (ob1 == null) {
+          throw new IncompatibleSemanticPropertyInstancesException();
+        }
         //check the type of conversion
         Transitions tran = oConversions.get(presKey);
         //for string conversions
-        if ((ob1 instanceof String)){
-          String a = (String) ob1;
-          String newa="";
+        if ((ob1 instanceof MyStringObject)){
+          String a = (String) ob1.getValue();
+          String pre ="";
+          String post="";
           //deal with each conversion appropriately
-          if (tran.equals(Transitions.prefix)) { 
-            newa=a+" extra";
+          if (tran.equals(Transitions.prefix)) {
+            post = "extra";
+          } else if (tran.equals(Transitions.substring)) {
+            pre = "bef";
+            post = "aft";
+          } else if (tran.equals(Transitions.suffix)) {
+            pre = "extra";
+          } else if (tran.equals(Transitions.equals)) {
+
           }
-          else if (tran.equals(Transitions.substring)) { 
-            
+          MyObject temp = new MyObject();
+          temp.setId(ob1.getId());
+          temp.setValue((pre + ob1.getValue() + post));
+          newCaptured.put(presKey, temp);
+        } else if ((ob1 instanceof MyNumberObject)){
+          float a = Float.valueOf((String)ob1.getValue());
+          float newFloat = a;
+          //deal with each conversion appropriately
+          if (tran.equals(Transitions.LessThan)) {
+            newFloat = a - new Float(1.0);
+          } else if (tran.equals(Transitions.LessThanOrEquals)) {
+            newFloat = a + new Float(1.0);
+          } else if (tran.equals(Transitions.greaterThan)) {
+            newFloat = a - new Float(1.0);
+          } else if (tran.equals(Transitions.greaterThanOrEquals)) {
+            newFloat = a + new Float(1.0);
           }
-          else if (tran.equals(Transitions.suffix)) { 
-            newa="extra "+ a;
-          }
-          //adjust p1Match & p2Match
-          newCaptured.put(presKey,newa);
-          p1Match = p1Match.replace("'"+a+"'", "");
-          
-          newInput = newInput.replace( a , newa);
+
+          MyObject temp =new MyObject();
+          temp.setId(ob1.getId());
+          temp.setValue(newFloat);
+          newCaptured.put(presKey, temp);
+          //adjust p1Match & newInput based on MyObject kind
         }
-      } catch(UnknownVariableIdentifierException e){
-        
+      } catch(UnknownVariableIdentifierException e) {
+        //TODO
       }
+
     }
-    /**refine all strings.
-     * 
+
+    /**
+     * Refine all strings.
      */
-    StringTokenizer parser1 = new StringTokenizer(p1Match);
-    while (parser1.hasMoreTokens()) {
-      String i = parser1.nextToken();
-      if (sConversions.containsKey(i)) {
-        p1Match = p1Match.replace(i, "");
-        newInput = newInput.replace(i, sConversions.get(i));
+    for(String cur : p1.getStringMap()) {
+      if(sConversions.containsKey(cur)){
+        String keyToCompare = sConversions.get(cur);
+        newString.push(keyToCompare);
       } else {
-        System.out.println("problem with " + i );
-        throw new InvalidRefinementException ();
-
+        throw new InvalidRefinementException();
       }
-
     }
-    if(p1Match.equals("")){
-      
-    }
-    return new SemanticPropertyInstance(newInput,p1.getPropertyType(),level,p1.getScope(),newCaptured);
-
+    return new SemanticPropertyInstance(p1.getPropertyType(),level,p1.getScope(),newCaptured, newString);
   }
-  /**Getters.
-   * 
+  /**
+   * Getters.
    */
 
   /**
