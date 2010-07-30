@@ -1,0 +1,1083 @@
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass ieee
+\begin_preamble
+% With LyX, the document-class modifiers are entered in
+% the Layout>Document dialog, in the "Extra options" box.
+% The main modes are: draft, submission, compressed, final
+% This document defaults to "final"
+% The possible sub-modes are: technote, internal, submitted
+% inpress, reprint
+% The default is (none)
+% The possible misc-options are: titlepage, notitlepage,
+% anonymous, narroweqnarray, inline, twoside, invited
+
+% Plug-in files are invoked here, such as:
+%\usepackage{ieeetsp} % if you want the "trans sigpro" style
+%\usepackage{ieeetc}  % for the "trans comp" style
+%\usepackage{ieeeimtc} % for the IMTC conference style
+\usepackage{listings}
+\usepackage{xcolor}
+% Use the `endfloat' package to move figures and tables to the end
+% of the paper. Useful for `submission' mode.
+%\usepackage {endfloat}
+
+% Use the `times' package to use Helvetica and Times-Roman fonts
+% instead of the standard Computer Modern fonts. Useful for the 
+% IEEE Computer Society transactions.
+% (Note: If you have the commercial package `mathtime,' it is much
+% better, but the `times' package works too).
+%\usepackage {times}
+
+% In order to use the figure-defining commands in ieeefig.sty...
+%\usepackage{ieeefig}
+
+% To override the main LyX title, (such as to add a 
+% short title in [ ] for page headers,
+\title[Preamble Title]{Paper with Preamble Title}
+
+% To override the main LyX authors, (such as to add 
+% short names in [ ] and IEEE membership information and
+% author information... (for a journal paper)
+\author[Doe \emph{et. al.}]{John Doe\member{Student
+  Member},\authorinfo{John Doe is with the Department
+  of Electrical Engineering, ...}%
+\and Jane Doe\member{Member},\authorinfo{Jane Doe 
+  is with the Department of Mathematics, ...}%
+\and{}and Bob Doe\member{Fellow}\authorinfo{B.\,Doe
+  is with ...}
+}
+
+% for a conference proceedings, add \\ after each line of
+% authorinfo
+%\author[Doe \emph{et. al.}]{John Doe\member{Student
+  %Member},\authorinfo{Department of Electrical Engineering, \\  
+  %...}%
+%\and Jane Doe\member{Member},\authorinfo{Department of Mathematics, \\
+  %...}%
+%\and{}and Bob Doe\member{Fellow}\authorinfo{Department of ... }
+%}
+
+% Place \journal, \confplacedate etc stuff here.
+\journal{IEEE Transactions on Something}
+%\titletext{, VOL. xx, NO. YY, Month Year}
+%\ieeecopyright{xxxx-xxxx/xx\$xx.xx \copyright\ 2000 IEEE}
+%\lognumber{xxxxxx}
+%\pubitemident{S xxxx-xxxx(xx)xxxxx--x}
+%\loginfo{Manuscript received date}
+%\firstpage{1}
+%\confplacedate{Ottawa, Canada, May 19--21, 1997}
+\end_preamble
+\options final
+\use_default_options false
+\language english
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+This is not the title.
+ See notes below.
+\end_layout
+
+\begin_layout Author
+Eoin O'Connor
+\end_layout
+
+\begin_layout Abstract
+.
+ \SpecialChar \ldots{}
+
+\end_layout
+
+\begin_layout Keywords
+Semantic Property, keyword 2\SpecialChar \ldots{}
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout PARstart
+Any software engineering project can be broken into two parts.
+ There is the implementation and the designers notes on the implementation.
+ In modern software development projects consist of many levels.
+ Having levels of varying complexity allows people to understande the dessign
+ of a system without having an in depth understanding of the implementation.
+ A good example is modeling languages.
+ They allow a team to abstract the design of a system from the implementation.
+ This is very usefull for managing large projects and for allowing people
+ without a computer science background to contribute to the design of a
+ software system.
+ This works well for the first iteration of the project as the programmer
+ just can design the system to the specification agreed upon at the modeling
+ level.
+ However, a problem arrises when the programmer has to change the implementation
+ in such a way that it changes the way that abstracted model operates.
+ Now in order to keep the whole team apprised of these changes the developer
+ has to update the model.
+ This is fine for a one off changebut in any project that involves significant
+ refinements this would quickly become a serious time sink for the developer.
+ In an ideal world when the developer updates the implementation and asosiated
+ comments the rest of the project, including higher level languages and
+ modeling languages would automatically get updated.
+ In order for this to work the commnents or annotations or each level of
+ a project would have to be related in some way.
+ This is where semantic properties come in.
+ Semnatic properties allow us to give special meaning to comments, that
+ is to say that if we take a semantic property instance at one level of
+ a project and compare it to a semantic property at another level we can
+ tell if this is a valid refinement for the semantic poperty.
+ The aim of this propi plugin is to add semantic property tool support so
+ existing consistency checkers can add semantic property support.
+ There already exists tools that will check consistency between different
+ languages for example beetlz.
+ Bettlz can check to make sure that scommentsin java are consistent with
+ comments in formal bon( a modeling language..
+ insert more detail).
+ The key point to note is that with the help of propi betlz could be expanded
+ to allow the user, with minimal training, to add new semantic poperties
+ that will be checked between these two languages.
+ This is very user when designers want to specify a semantic property at
+ a high level and have it maintained at all the lower level implementation
+ levels.
+ Propi allows developers to add this support to there tools with minimal
+ learning and effort
+\end_layout
+
+\begin_layout Standard
+Our goal for the propi plug in was to provide semantic property tool support.
+ We wanted to present the tool in such a way that it is easy to understand
+ and use whilst also being powerfull.
+ We achieved this in two parts.
+ For the first part we developed a simple way for a user to define a new
+ semantic property.Then for the second part we made a clean api that allows
+ a user to check if an input is a valid instance of the previously defined
+ semanic property and then if this is consistent with instancs at other
+ levels.
+ One of the crucial points for us was that a programmer new to the propi
+ plugin could quickly understand andimplement their own semantic poperty
+ after looking at a few examples.
+ This is essential when adding checking plug ins to existing languages,
+ if the plug in has learning curve that out weighs the good they provide
+ they will never get adapted into use by the majoity of developers.
+ 
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Standard
+To allow us to provide a simple way for a user to define a semantic property
+ we needed a way to parse a simple text format.
+ We considered wrting our own parser but as a result of the time constraints
+ we choose to use an existing data standard that already exist for which
+ a parser already exists.
+ There were a number of possibilities fotr this including XML(refernece),
+ Json(reference) and Yaml(reference).
+ XML covers more uses but is significantly more complex.
+ Despite being the more commonly used of the three and the extra functionality
+ provided by XML we decided against its use.
+ We felt the extra functionality was unnessicary and would only serve to
+ over complicate our design.Then it was down to Json and Yaml.
+ YAML is more human readable compared to JSON.
+ For this reason I choose YAML as it provided all the nessicary functionality
+ nessicary combined with the cleanist interface.
+ 
+\end_layout
+
+\begin_layout Standard
+After deciding that YAML was the language we wanted to use we then hada
+ choice petween Jvyaml jyaml yamlbeans and snakeyaml.
+ we choose snakeyaml as (insert reasons here).
+\end_layout
+
+\begin_layout Standard
+We also spent a number of days studying and experimenting with Beetlz(referenc)
+ and Bonc.
+ There was a two pronged reason for this.
+ Firstly there was signifagent overlap between what they do and what I hoped
+ to achieve with propi.
+ Secondly, by seeing how the stucuture of these programs worked it allowed
+ ius to best design the plug in so that it support the best possible functionali
+ty to the tools that would want to use it
+\end_layout
+
+\begin_layout Section
+Project work
+\end_layout
+
+\begin_layout Subsection
+Propi Use
+\end_layout
+
+\begin_layout Standard
+The best way to understand the tool use is with an example.
+ We will use a running concurrency example as specified on the kind website
+ (reference.)
+\end_layout
+
+\begin_layout Subsubsection
+DSL
+\end_layout
+
+\begin_layout Standard
+The first part of our project was to design a simple domain specific language
+ to define new semantic poperties.
+ As a running example of how the dsl works we will use the concurrency property
+ example: concurrency.yaml
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+--- 
+\end_layout
+
+\begin_layout Plain Layout
+
+name: concurrency
+\end_layout
+
+\begin_layout Plain Layout
+
+level: bon
+\end_layout
+
+\begin_layout Plain Layout
+
+format: 
+\end_layout
+
+\begin_layout Plain Layout
+
+- choice (CONCURRENT): 
+\end_layout
+
+\begin_layout Plain Layout
+
+- SEQUENTIAL
+\end_layout
+
+\begin_layout Plain Layout
+
+- GUARDED
+\end_layout
+
+\begin_layout Plain Layout
+
+- CONCURRENT
+\end_layout
+
+\begin_layout Plain Layout
+
+- [TIMEOUT,<to=nat=0>,<e=throwable=java.lang.Exception>]
+\end_layout
+
+\begin_layout Plain Layout
+
+- [FAILURE,<f=throwable=java.lang.ERROR>]
+\end_layout
+
+\begin_layout Plain Layout
+
+- SPECIAL
+\end_layout
+
+\begin_layout Plain Layout
+
+- optional: <description=string=''>
+\end_layout
+
+\begin_layout Plain Layout
+
+scope: 
+\end_layout
+
+\begin_layout Plain Layout
+
+- Module
+\end_layout
+
+\begin_layout Plain Layout
+
+- Feature 
+\end_layout
+
+\begin_layout Plain Layout
+
+description: |
+\end_layout
+
+\begin_layout Plain Layout
+
+Describes 
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\begin_layout Plain Layout
+
+--- 
+\end_layout
+
+\begin_layout Plain Layout
+
+name: concurrency
+\end_layout
+
+\begin_layout Plain Layout
+
+level: java
+\end_layout
+
+\begin_layout Plain Layout
+
+format: 
+\end_layout
+
+\begin_layout Plain Layout
+
+- choice (PARALLEL): 
+\end_layout
+
+\begin_layout Plain Layout
+
+- SEQ
+\end_layout
+
+\begin_layout Plain Layout
+
+- GUARD
+\end_layout
+
+\begin_layout Plain Layout
+
+- PARALLEL
+\end_layout
+
+\begin_layout Plain Layout
+
+- [TO, <to=nat=0>, <e=throwable=java.lang.Exception>]
+\end_layout
+
+\begin_layout Plain Layout
+
+- [FAILURE, <f=throwable=java.lang.Error>]
+\end_layout
+
+\begin_layout Plain Layout
+
+- SPECIAL
+\end_layout
+
+\begin_layout Plain Layout
+
+- optional: <description=string='No information.'>
+\end_layout
+
+\begin_layout Plain Layout
+
+#- optional: <owner=string='unknown'>
+\end_layout
+
+\begin_layout Plain Layout
+
+scope: 
+\end_layout
+
+\begin_layout Plain Layout
+
+- Module
+\end_layout
+
+\begin_layout Plain Layout
+
+- Feature 
+\end_layout
+
+\begin_layout Plain Layout
+
+description: |
+\end_layout
+
+\begin_layout Plain Layout
+
+Describes 
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\begin_layout Plain Layout
+
+---
+\end_layout
+
+\begin_layout Plain Layout
+
+property: concurrency
+\end_layout
+
+\begin_layout Plain Layout
+
+relation(bon,java):
+\end_layout
+
+\begin_layout Plain Layout
+
+- keyword:
+\end_layout
+
+\begin_layout Plain Layout
+
+- SEQUENTIAL: SEQ
+\end_layout
+
+\begin_layout Plain Layout
+
+- CONCURRENT: PARALLEL
+\end_layout
+
+\begin_layout Plain Layout
+
+- GUARDED: GUARD
+\end_layout
+
+\begin_layout Plain Layout
+
+- TIMEOUT: TO
+\end_layout
+
+\begin_layout Plain Layout
+
+- FAILURE: FAIL
+\end_layout
+
+\begin_layout Plain Layout
+
+- SPECIAL: SPECIAL
+\end_layout
+
+\begin_layout Plain Layout
+
+- description: prefix
+\end_layout
+
+\begin_layout Plain Layout
+
+- n: ">="
+\end_layout
+
+\begin_layout Plain Layout
+
+- e: equals
+\end_layout
+
+\begin_layout Plain Layout
+
+- f: equivalent
+\end_layout
+
+\begin_layout Plain Layout
+
+- owner: -> 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+First we will go over the basic structure of a sp file.
+ For a semantic property we can define levels and refinments.
+ A level is a represenation of a semantic propery for a certain language
+ level eg: java and bon in the concurrency example.
+ A refinement allows us to define how one sp level refines to another sp
+ level.
+ In the .yaml file each new level or refinement must start with --- and end
+ with ...
+ eg:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+--- 
+\end_layout
+
+\begin_layout Plain Layout
+
+level1
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\begin_layout Plain Layout
+
+---
+\end_layout
+
+\begin_layout Plain Layout
+
+level2
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\begin_layout Plain Layout
+
+---
+\end_layout
+
+\begin_layout Plain Layout
+
+refinement from level1 to level2
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Levels must include the following options: 
+\end_layout
+
+\begin_layout Description
+name # the name of the sp that this level belongs to
+\end_layout
+
+\begin_layout Description
+level # the LevelId of this level
+\end_layout
+
+\begin_layout Description
+scope # the scope that this level covers
+\end_layout
+
+\begin_layout Description
+format # a definiton of the format that semantic property instances can
+ take at this level 
+\end_layout
+
+\begin_layout Description
+description # a brief informal description of the level that wont be used
+ for refinements
+\end_layout
+
+\begin_layout Standard
+Most of these are straight forward.
+ The most important option is format.
+ This is where we define the format that all semantic property instances
+ will be matched against.
+ A format is made up of a number of words and objects.
+ The objectsallow us to capture meaning from the semantic property instance.The
+ objects are supported are 
+\end_layout
+
+\begin_layout Description
+nat Natural numbers including 0 
+\end_layout
+
+\begin_layout Description
+int
+\end_layout
+
+\begin_layout Description
+float
+\end_layout
+
+\begin_layout Description
+string
+\end_layout
+
+\begin_layout Description
+expression
+\end_layout
+
+\begin_layout Description
+description
+\end_layout
+
+\begin_layout Description
+email
+\end_layout
+
+\begin_layout Description
+date
+\end_layout
+
+\begin_layout Description
+version
+\end_layout
+
+\begin_layout Description
+URL
+\end_layout
+
+\begin_layout Description
+throwable
+\end_layout
+
+\begin_layout Description
+class
+\end_layout
+
+\begin_layout Standard
+In format we can also allow the use of the keywords choice: , choice(some_name):
+ and optional: .These allow us to define the permiatations that are allowed.
+ For example in eg3 :
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+--- 
+\end_layout
+
+\begin_layout Plain Layout
+
+name: example3
+\end_layout
+
+\begin_layout Plain Layout
+
+level: bon
+\end_layout
+
+\begin_layout Plain Layout
+
+format: 
+\end_layout
+
+\begin_layout Plain Layout
+
+  - choice: 
+\end_layout
+
+\begin_layout Plain Layout
+
+    - a
+\end_layout
+
+\begin_layout Plain Layout
+
+    - b
+\end_layout
+
+\begin_layout Plain Layout
+
+    - c
+\end_layout
+
+\begin_layout Plain Layout
+
+  - optional: d
+\end_layout
+
+\begin_layout Plain Layout
+
+scope: 
+\end_layout
+
+\begin_layout Plain Layout
+
+  - Module 
+\end_layout
+
+\begin_layout Plain Layout
+
+description: |
+\end_layout
+
+\begin_layout Plain Layout
+
+ Describes 
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Acceptable inputs could be any of the following 
+\begin_inset Quotes eld
+\end_inset
+
+example3 a
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+example3 b
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+example3 c
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+example3 a d
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+example3 b d
+\begin_inset Quotes erd
+\end_inset
+
+, or 
+\begin_inset Quotes eld
+\end_inset
+
+example3 c d
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is an overly simple example, but shows the available options.
+\end_layout
+
+\begin_layout Standard
+Refinements have the following options:
+\end_layout
+
+\begin_layout Description
+property #the sp name
+\end_layout
+
+\begin_layout Description
+relation(level1,level2) # defines the reinement rom sp level level1 to level2
+ Relation can have keyword refinements eg keyWordInLevel1 : keyWordInLevel2
+\end_layout
+
+\begin_layout Standard
+Refinements for the objects that can be any of the following
+\end_layout
+
+\begin_layout Description
+equals 
+\end_layout
+
+\begin_layout Description
+substring ,etc..
+ full listing below.
+\end_layout
+
+\begin_layout Subsubsection
+API
+\end_layout
+
+\begin_layout Standard
+The api package has 4 public classes levelId, scopeId, SemanticPropertyInstance,
+ SemanticPropertyHandler.
+ The first two are just enumerators that represent the levels and scopes
+ that are allowed any SemanticProperty you wish to define.
+ The Handler is the class the user will use to when using the propi plug
+ in.
+ The user can add new properties using the add(File file) method and then
+ create instances using parse(String input, LevelId level, ScopeId scope).
+ The methos isValidRefinement () and genete() are used to( explination).Below
+ is a simple use.
+ 
+\end_layout
+
+\begin_layout Standard
+(example)
+\end_layout
+
+\begin_layout Subsection
+The Process
+\end_layout
+
+\begin_layout Standard
+In order to demonstrate the process we took effectively have broken the
+ class up into a number of sub tasks.
+ Although this dosn't strictly represent the cronoligical order that the
+ project was carried out it is the order that we originally aproached the
+ project.
+\end_layout
+
+\begin_layout Subsubsection
+Parsing 
+\end_layout
+
+\begin_layout Standard
+As discussed above we decided that for our purposes the best tool to use
+ was snakeYaml to cover the parsing overhead for our project.
+ Snakeyaml is a highly customizable tool that allows you to fully tweek
+ its use to suit our needs.
+ We created two yaml parses, one for the levels and another for the refinements.
+ The later was much more simple with the only type we had to was a specially
+ made transiiton enumeator that allowed us to define our transiitons and
+ possilbly add new ones in the future .
+ For the level yaml paser we had to define a number of different custom
+ types( listed above).
+\end_layout
+
+\begin_layout Subsubsection
+Checking
+\end_layout
+
+\begin_layout Standard
+After we parse either levels are refinements we check that they have the
+ required fields.
+ This involved iterting through the Maps generated by yaml checking the
+ values against regex that we defined and generating a regexp for the levels
+ that will be used to match against input strings
+\end_layout
+
+\begin_layout Subsubsection
+Create
+\end_layout
+
+\begin_layout Standard
+This was the easiest of the three but we gave carefull consideration to
+ ensue that the complex irrelavent methods are in packages that the end
+ user dosnt interact with while making sure that we offer enough flexibiltiy
+ that we cover all possilbe semantic proprerties that someone reasnably
+ would like to make.
+\end_layout
+
+\begin_layout Subsubsection
+Comparison Methods
+\end_layout
+
+\begin_layout Standard
+Refinement and generate methods writen.
+ despite extensive planning and guidance we had to at times change lae parts
+ of the code to facilate the wrting f eficent versions o these classes.
+\end_layout
+
+\begin_layout Subsubsection
+Unit Testing & Documentation
+\end_layout
+
+\begin_layout Standard
+In this project we have produced tests alongside the code to .
+ (insert pogram here) gave the project a coverage of .
+ We also tryed to keep the project to the highest standard of documenting
+ usng checkstyle and the sun standads for javadoc.
+ 
+\end_layout
+
+\begin_layout Subsection
+tools support
+\end_layout
+
+\begin_layout Standard
+What this tool can do will be realized when some applications use it.
+ For this concurrency example a usefull tool would be one that checks the
+ valididty of the concurrency property against the code.
+ This is no small undertaking but if possible, I believe it is, this kind
+ of tool could be the way forward to build correct, well documented code
+ that in the process of wtrting is also proven to be a correct implementation.
+\end_layout
+
+\begin_layout Standard
+--to delete--
+\end_layout
+
+\begin_layout Standard
+Outline
+\end_layout
+
+\begin_layout Standard
+issues
+\end_layout
+
+\begin_layout Section
+Future Work
+\end_layout
+
+\begin_layout Subsection
+Time Constarints
+\end_layout
+
+\begin_layout Subsubsection*
+4.1.1
+\end_layout
+
+\begin_layout Standard
+small tool example that uses plugin for a purpose.
+\end_layout
+
+\begin_layout Subsubsection*
+4.1.2
+\end_layout
+
+\begin_layout Standard
+as talked about above concurrency equivalence.
+\end_layout
+
+\begin_layout Standard
+although I am confident that it is a fully working implementation I would
+ like to add support for more objects and make a more efficent implementation.
+ If time allowed I would also like to write my own parser from scratch.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+We set out to develope a clean api to allow tool support for adding semantic
+ properties to a projects at all level of implementation.
+ We achieved this and are currently checking it to ensure that the project
+ works in all cases.
+\end_layout
+
+\begin_layout Standard
+we used test based development so we could tell at every step of the way
+ that our implementaion is correct.
+ if its We used the (insert tool here ) to check the coverage of our tests
+ and at the moment we have (insert percentage )coverage.
+\end_layout
+
+\begin_layout Standard
+I am excited to see how this tool can be used in the future as mentioned
+ in section 4.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "my-bibliography-file,IEEEexample"
+options "IEEEbib"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Biography
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Eoin O'Connor 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+was born\SpecialChar \ldots{}
+ This is a biography without a picture in it.
+ Note (very important) that the two braces are entered in (red) LaTeX mode
+ [M-c t].
+ If this is not done, the braces are not invisible (as they should be),
+ the first brace shows up boldface, and the author's name is not boldface.
+ (
+\emph on
+i.e.,
+\emph default
+ if you are not careful, you will break the biography command)
+\end_layout
+
+\end_body
+\end_document
