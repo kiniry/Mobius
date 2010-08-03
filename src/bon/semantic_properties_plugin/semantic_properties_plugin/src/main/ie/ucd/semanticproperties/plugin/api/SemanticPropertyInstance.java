@@ -1,15 +1,10 @@
 package ie.ucd.semanticproperties.plugin.api;
 
+import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
-import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
-import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyLevelSpecification;
-import ie.ucd.semanticproperties.plugin.structs.RegExpStruct;
 
 public class SemanticPropertyInstance {
   
