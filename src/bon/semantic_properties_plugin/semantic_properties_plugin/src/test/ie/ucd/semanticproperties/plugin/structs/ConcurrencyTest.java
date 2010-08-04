@@ -1,12 +1,14 @@
 package ie.ucd.semanticproperties.plugin.structs;
 
 import ie.ucd.semanticproperties.plugin.api.LevelId;
+import ie.ucd.semanticproperties.plugin.api.ScopeId;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertiesHandler;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
 import ie.ucd.semanticproperties.plugin.exceptions.SemanticPropertyException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
@@ -27,16 +29,15 @@ public class ConcurrencyTest extends TestCase {
 
     SemanticPropertiesHandler testHandler = new SemanticPropertiesHandler();
     testHandler.add(conYaml);
-    SemanticPropertyInstance java = testHandler.parse(javaInput, "concurrency",
-        LevelId.JAVA_JML);
-    SemanticPropertyInstance bon = testHandler.parse(bonInput, "concurrency",
-        LevelId.BON_FORMAL);
+    SemanticPropertyInstance java = testHandler.parse(javaInput,
+        LevelId.JAVA_JML, ScopeId.MODULE);
+    SemanticPropertyInstance bon = testHandler.parse(bonInput,
+        LevelId.BON_FORMAL, ScopeId.MODULE);
     assertTrue(testHandler.isValidRefinement(bon, java));
 
-//    SemanticPropertyInstance refinedInstance = testHandler.generate(bon,
-//        LevelId.JAVA_JML);
-
-//    assertTrue(testHandler.isValidRefinement(bon,refinedInstance));
+    SemanticPropertyInstance refinedInstance = testHandler.generate(bon,LevelId.JAVA_JML);
+    assertTrue(testHandler.isValidRefinement(bon,refinedInstance));
+    
 
   }
 }

@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class that allows a user to  add semantic property representations and instances.
@@ -26,7 +28,7 @@ public class SemanticPropertiesHandler {
   /**
    * The list of all the semantic properties for this handler.
    */
-  private final ArrayList<SemanticProperty> specs;
+  //private final ArrayList<SemanticProperty> specs;
   /**
    * HashMap of semantic properties names as key and the semantic properties themselves as values.
    */
@@ -36,7 +38,7 @@ public class SemanticPropertiesHandler {
    * <p> Makes new Handler with no semantic properties.
    */
   public SemanticPropertiesHandler() {
-    specs =  new ArrayList<SemanticProperty>();
+  //  specs =  new ArrayList<SemanticProperty>();
     specsMap = new HashMap<String , SemanticProperty>();
   }
 
@@ -49,18 +51,25 @@ public class SemanticPropertiesHandler {
    */
   public final void add(final File propertySpecFile) throws InvalidSemanticPropertySpecificationException, IOException {
     SemanticProperty temp = new SemanticProperty(propertySpecFile);
-    specs.add(temp);
+   // specs.add(temp);
     specsMap.put(temp.getName(),temp);
   }
 
+
+
   /**
-   * Create SemanticPropertyInstance for this input.
+   * Create SemanticPropertyInstance for this input at tjis level for single scope.
    * @param input String to create instance for.
    * @param name Name of semantic property to create instance for.
    * @param level The level to create instance for.
    * @return new SemanticPropertyInstance for this input string.
+   * @throws UnknownPropertyException
+   * @throws InvalidSemanticPropertyUseException
+   * @throws UnknownLevelException
+   * @throws UnknownScopeException
+   * @throws SemanticPropertyNotValidAtScopeException
    */
-  public final SemanticPropertyInstance parse(String input, String name, LevelId level) 
+  public final SemanticPropertyInstance parse(String input, String name, LevelId level,ScopeId scope) 
     throws UnknownPropertyException, InvalidSemanticPropertyUseException,
            UnknownLevelException, UnknownScopeException, SemanticPropertyNotValidAtScopeException {
     SemanticProperty temp = specsMap.get(name);
@@ -71,6 +80,61 @@ public class SemanticPropertiesHandler {
     if(lev==null){
       throw new UnknownLevelException();
     }
+    /**
+     * Check the scope.
+     */
+    ArrayList<ScopeId> levScope= lev.getScope();
+   
+      if(!levScope.contains(scope)){
+        throw new UnknownScopeException();
+      }
+
+    SemanticPropertyInstance i = lev.makeInstance(input);
+    return i;
+  }
+  /**
+   * Create SemanticPropertyInstance for this input at tjis level for single scope.
+   * @param input String to create instance for.
+   * @param name Name of semantic property to create instance for.
+   * @param level The level to create instance for.
+   * @return new SemanticPropertyInstance for this input string.
+   * @throws UnknownPropertyException
+   * @throws InvalidSemanticPropertyUseException
+   * @throws UnknownLevelException
+   * @throws UnknownScopeException
+   * @throws SemanticPropertyNotValidAtScopeException
+   */
+  public final SemanticPropertyInstance parse(String input,LevelId level,ScopeId scope) 
+    throws UnknownPropertyException, InvalidSemanticPropertyUseException,
+           UnknownLevelException, UnknownScopeException, SemanticPropertyNotValidAtScopeException {
+    /**
+     * Extract property name from 
+     */
+    Pattern p = Pattern.compile("(\\w*).+");
+    Matcher m = p.matcher(input);
+    m.matches();
+    SemanticProperty temp = specsMap.get(m.group(1));
+    if(temp==null) {
+      throw new UnknownPropertyException();
+    }
+    SemanticPropertyLevelSpecification lev = temp.getLevels().get(level);
+    if(lev==null){
+      throw new UnknownLevelException();
+    }
+    /**
+     * Check the scope.
+     */
+    ArrayList<ScopeId> levScope= lev.getScope();
+   
+      if(!levScope.contains(scope)){
+        throw new UnknownScopeException();
+      }
+      
+    /**
+     * remove property name from input
+     */
+    String toRemove = m.group(1);
+    input=input.substring(toRemove.length()+1 ,input.length());
     SemanticPropertyInstance i = lev.makeInstance(input);
     return i;
   }
@@ -85,19 +149,33 @@ public class SemanticPropertiesHandler {
    * @throws UnknownVariableIdentifierException 
    * @throws InvalidRefinementException 
    */
-  public boolean isValidRefinement(SemanticPropertyInstance prop1, SemanticPropertyInstance prop2) 
+  public boolean isValidRefinement(SemanticPropertyInstance prop1, SemanticPropertyInstance prop2)
     throws IncompatibleSemanticPropertyInstancesException, UnknownVariableIdentifierException, InvalidRefinementException {
-    //double done possibly.
+    /**
+     * Check that both Instances belong to same Semantic Property
+     */
     if(prop1.getPropertyType() != prop2.getPropertyType()){
       throw new IncompatibleSemanticPropertyInstancesException();
     }
-    SemanticProperty temp = specsMap.get(prop1.getPropertyType());
-    SemanticPropertyRefinementSpecification ref =temp.getRefinement(prop1, prop2);
-    return ref.isValidRefinement(prop1, prop2);
+    /**
+     * get semantic property that has the levels and refinements .
+     */
+    SemanticProperty mainSP = specsMap.get(prop1.getPropertyType());
+    /**
+     * Get refinement for these two instances
+     */
+    SemanticPropertyRefinementSpecification ref = mainSP.getRefinement(prop1, prop2);
+    /**
+     * Get level for the two instances
+     */
+    SemanticPropertyLevelSpecification propLev1 = mainSP.getLevels().get(prop1.getLevel());
+    SemanticPropertyLevelSpecification propLev2 = mainSP.getLevels().get(prop2.getLevel());
+
+    return ref.isValidRefinement(prop1, prop2, propLev1, propLev2);
   }
 
   /**
-   * Perform refinement on the given semantic property instance, production a new semantic property 
+   * Perform refinement on the given semantic property instance, production a new semantic property.
    * instance at the given level.
    * @param input
    * @param level
@@ -106,10 +184,22 @@ public class SemanticPropertiesHandler {
    */
   public SemanticPropertyInstance generate(SemanticPropertyInstance  input, LevelId level)
     throws UnknownLevelException, IncompatibleSemanticPropertyInstancesException, InvalidRefinementException {
-    SemanticProperty temp = specsMap.get(input.getPropertyType());
-    SemanticPropertyRefinementSpecification ref =temp.getRefinement(input.getLevel(), level);
-
-    return ref.refine(input,level);
+    /**
+     * Get semantic property that has levels and refinements.
+     */
+    SemanticProperty mainSP = specsMap.get(input.getPropertyType());
+    /**
+     * Get Refinement for this generation.
+     */
+    SemanticPropertyRefinementSpecification ref =mainSP.getRefinement(input.getLevel(), level);
+    /**
+     * Get level for the instance to generate from.
+     */
+    SemanticPropertyLevelSpecification propLev = mainSP.getLevels().get(input.getLevel());
+    /**
+     * Generate refinement.
+     */
+    return ref.refine(input,level,propLev);
   }
 
 }

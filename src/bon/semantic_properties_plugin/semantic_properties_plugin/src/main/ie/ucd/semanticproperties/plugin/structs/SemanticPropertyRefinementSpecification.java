@@ -205,11 +205,17 @@ public class SemanticPropertyRefinementSpecification {
    * @param p1 source property match to check.
    * @param p2 destination property to check.
    * @return true if p1 refines to p2.
-   * @throws UnknownVariableIdentifierException 
-   * @throws IncompatibleSemanticPropertyInstancesException 
-   * @throws InvalidRefinementException 
+   * @throws UnknownVariableIdentifierException
+   * @throws IncompatibleSemanticPropertyInstancesException
+   * @throws InvalidRefinementException
    */
-  public final boolean isValidRefinement(final SemanticPropertyInstance p1, final SemanticPropertyInstance p2) throws  IncompatibleSemanticPropertyInstancesException, InvalidRefinementException{
+  public final boolean isValidRefinement(final SemanticPropertyInstance p1, final SemanticPropertyInstance p2,SemanticPropertyLevelSpecification spl1, SemanticPropertyLevelSpecification spl2) throws  IncompatibleSemanticPropertyInstancesException, InvalidRefinementException{
+    /**
+     * Check if p1,p2,spl1,spl2 don't equal null
+     */
+    if(p1==null|p2==null|spl1==null|spl2==null){
+      throw new InvalidRefinementException();
+    }
     /**
      * Check that p1 and p2 are right levels for this refinement.
      */
@@ -219,16 +225,16 @@ public class SemanticPropertyRefinementSpecification {
     /**
      * Check that all strings are refined
      */
-    for(String cur : p1.getStringMap()) {
-      if(sConversions.containsKey(cur)){
-        String keyToCompare = sConversions.get(cur);
-        if(!(p2.getStringMap().contains(keyToCompare))){
-          throw new InvalidRefinementException();
-        }
-      } else {
-        throw new InvalidRefinementException();
-      }
-    }
+//    for(String cur : p1.getStringMap()) {
+//      if(sConversions.containsKey(cur)){
+//        String keyToCompare = sConversions.get(cur);
+//        if(!(p2.getStringMap().contains(keyToCompare))){
+//          throw new InvalidRefinementException();
+//        }
+//      } else {
+//        throw new InvalidRefinementException();
+//      }
+//    }
     /**
      * Check all the capturing groups are refined.
      */
@@ -236,8 +242,17 @@ public class SemanticPropertyRefinementSpecification {
     while (it.hasNext()) {
       try {
         String presKey = (String) it.next();
-        MyObject ob1 = (MyObject)p1.getVariable(presKey);
-        MyObject ob2 = (MyObject)p2.getVariable(presKey);
+        /**
+         * Set type of objects from propertyLevelSpec
+         */
+        MyObject ob1 = (MyObject)spl1.getReg().getGroupObj().get(presKey);
+        MyObject ob2 = (MyObject)spl2.getReg().getGroupObj().get(presKey);
+        /**
+         * Set value from instances.
+         */
+        ob1.setValue(p1.getVariable(presKey));
+        ob2.setValue(p2.getVariable(presKey));
+
         //check if p1 is a valid conversion for ob1. remove later
         if (ob1 == null) {
           return false;
@@ -267,8 +282,17 @@ public class SemanticPropertyRefinementSpecification {
             }
           }
         } else if ((ob1 instanceof MyNumberObject) && (ob2 instanceof MyNumberObject)){
-          Float a = Float.valueOf((String)ob1.getValue());
-          Float b = Float.valueOf((String)ob2.getValue());
+          Float a;
+          Float b;
+          if(ob1 instanceof MyInt || ob1 instanceof Nat){
+            a = ((Number)ob1.getValue()).floatValue();
+            b = ((Number)ob2.getValue()).floatValue();
+          }
+          else{
+             a = (Float)ob1.getValue();
+             b = (Float)ob2.getValue();
+          }
+        
           //deal with each conversion appropriately
           if (tran.equals(Transitions.LessThan)) {
             if (!(a<b)) {
@@ -301,10 +325,11 @@ public class SemanticPropertyRefinementSpecification {
    * @param p1 Source LevelRepresenation Match.
    * @return The refinement of p1 using this refinement property.
    * @param level the level to refine to.
+   * @param propLev 
    * @throws IncompatibleSemanticPropertyInstancesException 
    * @throws InvalidRefinementException 
    */
-  public final SemanticPropertyInstance refine(final SemanticPropertyInstance  p1, LevelId level) throws IncompatibleSemanticPropertyInstancesException, InvalidRefinementException {
+  public final SemanticPropertyInstance refine(final SemanticPropertyInstance  p1, LevelId level, SemanticPropertyLevelSpecification spl1) throws IncompatibleSemanticPropertyInstancesException, InvalidRefinementException {
     /**
      * Check that p1 and p2 are right levels for this refinement.
      */
@@ -315,18 +340,25 @@ public class SemanticPropertyRefinementSpecification {
      * Variables that will make up refined SemanticPropertyInstance.
      */
     HashMap<String,Object> newCaptured = new HashMap <String, Object>();
-    LinkedList<String> newString = new LinkedList <String>();
-  
+//   LinkedList<String> newString = new LinkedList <String>();
     /**
-     * refine all the capturing groups are refined.
+     * refine all the capturing groups.
      */
     
     Iterator<String> it = oConversions.keySet().iterator();
     while (it.hasNext()) {
       try {
         String presKey = (String) it.next();
-        MyObject ob1 = (MyObject)p1.getVariable(presKey);
-        //check if there is a valid refinement for ob1.
+        /**
+         * Set type of objects from propertyLevelSpec
+         */
+        MyObject ob1 = (MyObject)spl1.getReg().getGroupObj().get(presKey);
+
+        /**
+         * Set value from instance.
+         */
+        ob1.setValue(p1.getVariable(presKey));
+
         if (ob1 == null) {
           throw new IncompatibleSemanticPropertyInstancesException();
         }
@@ -353,17 +385,27 @@ public class SemanticPropertyRefinementSpecification {
           temp.setValue((pre + ob1.getValue() + post));
           newCaptured.put(presKey, temp);
         } else if ((ob1 instanceof MyNumberObject)){
-          float a = Float.valueOf((String)ob1.getValue());
+          /**
+           * Convert all to float 
+           */
+          float a;
+
+          if(ob1 instanceof MyInt || ob1 instanceof Nat){
+            a = ((Number)ob1.getValue()).floatValue();
+          }
+          else{
+             a = (Float)ob1.getValue();
+          }
           float newFloat = a;
           //deal with each conversion appropriately
           if (tran.equals(Transitions.LessThan)) {
-            newFloat = a - new Float(1.0);
+            newFloat = a + new Float(1.0);
           } else if (tran.equals(Transitions.LessThanOrEquals)) {
             newFloat = a + new Float(1.0);
           } else if (tran.equals(Transitions.greaterThan)) {
             newFloat = a - new Float(1.0);
           } else if (tran.equals(Transitions.greaterThanOrEquals)) {
-            newFloat = a + new Float(1.0);
+            newFloat = a - new Float(1.0);
           }
 
           MyObject temp =new MyObject();
@@ -381,15 +423,15 @@ public class SemanticPropertyRefinementSpecification {
     /**
      * Refine all strings.
      */
-    for(String cur : p1.getStringMap()) {
-      if(sConversions.containsKey(cur)){
-        String keyToCompare = sConversions.get(cur);
-        newString.push(keyToCompare);
-      } else {
-        throw new InvalidRefinementException();
-      }
-    }
-    return new SemanticPropertyInstance(p1.getPropertyType(),level,p1.getScope(),newCaptured, newString);
+//    for(String cur : p1.getStringMap()) {
+//      if(sConversions.containsKey(cur)){
+//        String keyToCompare = sConversions.get(cur);
+//        newString.push(keyToCompare);
+//      } else {
+//        throw new InvalidRefinementException();
+//      }
+//    }
+    return new SemanticPropertyInstance(p1.getPropertyType(),level,p1.getScope(),newCaptured);
   }
   /**
    * Getters.

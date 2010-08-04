@@ -2,6 +2,7 @@
 package ie.ucd.semanticproperties.plugin.structs;
 
 import ie.ucd.semanticproperties.plugin.api.LevelId;
+import ie.ucd.semanticproperties.plugin.api.ScopeId;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertiesHandler;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
 import ie.ucd.semanticproperties.plugin.exceptions.IncompatibleSemanticPropertyInstancesException;
@@ -17,6 +18,7 @@ import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierExce
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
@@ -31,12 +33,13 @@ public class SemanticPropertyRefinementSpecificationTest extends TestCase {
    *Check refinement prefix.
    * @throws SemanticPropertyException
    * @throws IOException
+   *
    */
   public final void testPrefixRefinement() throws SemanticPropertyException , IOException {
     SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
     testProp.add(new File("resources/examples/junit/prefixEg.yaml"));
-    SemanticPropertyInstance instance1 = testProp.parse("prefixEg a short des. (an expr) 'a string'","prefixEg", LevelId.BON_FORMAL);
-    SemanticPropertyInstance instance2 = testProp.parse("prefixEg abba short description. (an expression) 'a string plus some'","prefixEg", LevelId.JAVA_JML);
+    SemanticPropertyInstance instance1 = testProp.parse("prefixEg a short des. (an expr) 'a string'", LevelId.BON_FORMAL,ScopeId.MODULE);
+    SemanticPropertyInstance instance2 = testProp.parse("prefixEg abba short description. (an expression) 'a string plus some'", LevelId.JAVA_JML,ScopeId.MODULE);
     assertTrue(testProp.isValidRefinement(instance1, instance2));
     /**
      * Check that generate method works.
@@ -51,8 +54,8 @@ public class SemanticPropertyRefinementSpecificationTest extends TestCase {
   public final void testSuffixRefinement() throws SemanticPropertyException, IOException{
     SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
     testProp.add(new File("resources/examples/junit/suffixEg.yaml"));
-    SemanticPropertyInstance instance1 = testProp.parse("suffixEg short des. (an expr) ' string'","suffixEg", LevelId.BON_FORMAL);
-    SemanticPropertyInstance instance2 = testProp.parse("suffixEg  a short des. (yet another an expr) 'not another string'","suffixEg", LevelId.JAVA_JML);
+    SemanticPropertyInstance instance1 = testProp.parse("suffixEg short des. (an expr) ' string'", LevelId.BON_FORMAL,ScopeId.MODULE);
+    SemanticPropertyInstance instance2 = testProp.parse("suffixEg  a short des. (yet another an expr) 'not another string'",LevelId.JAVA_JML,ScopeId.MODULE);
     assertTrue(testProp.isValidRefinement(instance1, instance2));
     /**
      * Check that generate method works.
@@ -67,8 +70,8 @@ public class SemanticPropertyRefinementSpecificationTest extends TestCase {
   public final void testEqualsRefinement() throws SemanticPropertyException, IOException{
     SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
     testProp.add(new File("resources/examples/junit/equalsEg.yaml"));
-    SemanticPropertyInstance instance1 = testProp.parse("equalsEg short des. (an expr) ' string'","equalsEg", LevelId.BON_FORMAL);
-    SemanticPropertyInstance instance2 = testProp.parse("equalsEg short des. (an expr) ' string'","equalsEg", LevelId.JAVA_JML);
+    SemanticPropertyInstance instance1 = testProp.parse("equalsEg short des. (an expr) ' string'", LevelId.BON_FORMAL,ScopeId.MODULE);
+    SemanticPropertyInstance instance2 = testProp.parse("equalsEg short des. (an expr) ' string'", LevelId.JAVA_JML,ScopeId.MODULE);
     assertTrue(testProp.isValidRefinement(instance1, instance2));
     /**
      * Check that generate method works.
@@ -83,8 +86,8 @@ public class SemanticPropertyRefinementSpecificationTest extends TestCase {
   public final void testSubstringRefinement() throws SemanticPropertyException, IOException{
     SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
     testProp.add(new File("resources/examples/junit/substringEg.yaml"));
-    SemanticPropertyInstance instance1 = testProp.parse("substringEg smallstring. (an expr) 's'","substringEg", LevelId.BON_FORMAL);
-    SemanticPropertyInstance instance2 = testProp.parse("substringEg a smallstring of. (also an expr dont ya know) ' string'","substringEg", LevelId.JAVA_JML);
+    SemanticPropertyInstance instance1 = testProp.parse("substringEg smallstring. (an expr) 's'",LevelId.BON_FORMAL,ScopeId.MODULE);
+    SemanticPropertyInstance instance2 = testProp.parse("substringEg a smallstring of. (also an expr dont ya know) ' string'", LevelId.JAVA_JML,ScopeId.MODULE);
     assertTrue(testProp.isValidRefinement(instance1, instance2));
     /**
      * Check that generate method works.
@@ -100,8 +103,8 @@ public class SemanticPropertyRefinementSpecificationTest extends TestCase {
   public final void testLestThanRefinement() throws SemanticPropertyException, IOException{
     SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
     testProp.add(new File("resources/examples/junit/lessThanEg.yaml"));
-    SemanticPropertyInstance instance1 = testProp.parse("lessthanEg 3.0 5 5","lessthanEg", LevelId.BON_FORMAL);
-    SemanticPropertyInstance instance2 = testProp.parse("lessthanEg 22.5 6 6","lessthanEg", LevelId.JAVA_JML);
+    SemanticPropertyInstance instance1 = testProp.parse("lessthanEg 3.0 5 5", LevelId.BON_FORMAL,ScopeId.MODULE);
+    SemanticPropertyInstance instance2 = testProp.parse("lessthanEg 22.5 6 6", LevelId.JAVA_JML,ScopeId.MODULE);
     assertTrue(testProp.isValidRefinement(instance1, instance2));
     /**
      * Check that generate method works.
@@ -116,8 +119,8 @@ public class SemanticPropertyRefinementSpecificationTest extends TestCase {
   public final void testLestThanOrEqualsRefinement() throws SemanticPropertyException, IOException {
     SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
     testProp.add(new File("resources/examples/junit/lessthanorequalsEg.yaml"));
-    SemanticPropertyInstance instance1 = testProp.parse("lessthanorequalsEg 3.0 3 -5","lessthanorequalsEg", LevelId.BON_FORMAL);
-    SemanticPropertyInstance instance2 = testProp.parse("lessthanorequalsEg 3.0 4 -1","lessthanorequalsEg", LevelId.JAVA_JML);
+    SemanticPropertyInstance instance1 = testProp.parse("lessthanorequalsEg 3.0 3 -5", LevelId.BON_FORMAL,ScopeId.MODULE);
+    SemanticPropertyInstance instance2 = testProp.parse("lessthanorequalsEg 3.0 4 -1", LevelId.JAVA_JML,ScopeId.MODULE);
     assertTrue(testProp.isValidRefinement(instance1, instance2));
     /**
      * Check that generate method works.
@@ -135,8 +138,8 @@ public class SemanticPropertyRefinementSpecificationTest extends TestCase {
 public final void testGreaterThanRefinement() throws SemanticPropertyException, IOException{
   SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
   testProp.add(new File("resources/examples/junit/greaterthanEg.yaml"));
-  SemanticPropertyInstance instance1 = testProp.parse("greaterthanEg 30.0 15 25","greaterthanEg", LevelId.BON_FORMAL);
-  SemanticPropertyInstance instance2 = testProp.parse("greaterthanEg 4.5 6 15","greaterthanEg", LevelId.JAVA_JML);
+  SemanticPropertyInstance instance1 = testProp.parse("greaterthanEg 30.0 15 25",LevelId.BON_FORMAL,ScopeId.MODULE);
+  SemanticPropertyInstance instance2 = testProp.parse("greaterthanEg 4.5 6 15", LevelId.JAVA_JML,ScopeId.MODULE);
   assertTrue(testProp.isValidRefinement(instance1, instance2));
   /**
    * Check that generate method works.
@@ -154,8 +157,8 @@ public final void testGreaterThanRefinement() throws SemanticPropertyException, 
 public final void testGreaterThanOrEqualsRefinement() throws SemanticPropertyException, IOException{
   SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
   testProp.add(new File("resources/examples/junit/greaterthanorequalsEg.yaml"));
-  SemanticPropertyInstance instance1 = testProp.parse("greaterthanorequalsEg 5.0 16 16","greaterthanorequalsEg", LevelId.BON_FORMAL);
-  SemanticPropertyInstance instance2 = testProp.parse("greaterthanorequalsEg 4.5 6 15","greaterthanorequalsEg", LevelId.JAVA_JML);
+  SemanticPropertyInstance instance1 = testProp.parse("greaterthanorequalsEg 5.0 16 16", LevelId.BON_FORMAL,ScopeId.MODULE);
+  SemanticPropertyInstance instance2 = testProp.parse("greaterthanorequalsEg 4.5 6 15", LevelId.JAVA_JML,ScopeId.MODULE);
   assertTrue(testProp.isValidRefinement(instance1, instance2));
   /**
    * Check that generate method works.
@@ -173,8 +176,8 @@ public final void testGreaterThanOrEqualsRefinement() throws SemanticPropertyExc
 public final void testEqualsForNumRefinement() throws SemanticPropertyException, IOException{
   SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
   testProp.add(new File("resources/examples/junit/equalsnumEg.yaml"));
-  SemanticPropertyInstance instance1 = testProp.parse("equalsnumEg 3.0 5 5","equalsnumEg", LevelId.BON_FORMAL);
-  SemanticPropertyInstance instance2 = testProp.parse("equalsnumEg 3.0 5 5","equalsnumEg", LevelId.JAVA_JML);
+  SemanticPropertyInstance instance1 = testProp.parse("equalsnumEg 3.0 5 5", LevelId.BON_FORMAL,ScopeId.MODULE);
+  SemanticPropertyInstance instance2 = testProp.parse("equalsnumEg 3.0 5 5",LevelId.JAVA_JML,ScopeId.MODULE);
   assertTrue(testProp.isValidRefinement(instance1, instance2));
   /**
    * Check that generate method works.

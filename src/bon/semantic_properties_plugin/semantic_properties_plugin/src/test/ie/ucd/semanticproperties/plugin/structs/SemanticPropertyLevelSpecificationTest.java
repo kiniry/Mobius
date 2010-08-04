@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 public class SemanticPropertyLevelSpecificationTest extends TestCase {
   /**
    * Test the Constructor.
-   * @throws InvalidSemanticPropertySpecificationException 
+   * @throws InvalidSemanticPropertySpecificationException
    * @throws IOException
    */
   public void testConstructor() throws IOException, InvalidSemanticPropertySpecificationException {
@@ -41,9 +41,8 @@ public class SemanticPropertyLevelSpecificationTest extends TestCase {
      * Create SemanticPropertyLevelSpecification
      */
     SemanticPropertyLevelSpecification lr1 = new SemanticPropertyLevelSpecification(new File("resources/examples/junit/LReg1.yaml"));
-    
     /**
-     * Compare Level & Name. 
+     * Compare Level & Name.
      */
     assertEquals(lr1.getLevel(), LevelId.JAVA_JML);
     assertEquals(lr1.getName(), "LReg1");
@@ -63,7 +62,11 @@ public class SemanticPropertyLevelSpecificationTest extends TestCase {
      */
     LinkedHashMap < String , Integer> capGroup= new LinkedHashMap< String , Integer>();
     capGroup.put("choice1", 1);
-    RegExpStruct li = new RegExpStruct("LReg1[\\s+](a|b)(?:[\\s+]c)?",capGroup, new LinkedHashMap<String, MyObject >(),1);
+    LinkedHashMap < String , MyObject> capObGroup = new LinkedHashMap<String, MyObject >();
+    MyObject r = new MyObject();
+    r.setValue(0);
+   capObGroup.put("choice1", r);
+    RegExpStruct li = new RegExpStruct("LReg1[\\s+](a|b)(?:[\\s+]c)?",capGroup, capObGroup ,1);
     assertEquals(lr1.getReg(),li);
   }
 

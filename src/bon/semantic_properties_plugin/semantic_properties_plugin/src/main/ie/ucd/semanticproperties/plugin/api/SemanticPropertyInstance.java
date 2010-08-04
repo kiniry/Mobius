@@ -1,5 +1,6 @@
 package ie.ucd.semanticproperties.plugin.api;
 
+import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
 
 import java.util.ArrayList;
@@ -13,20 +14,18 @@ public class SemanticPropertyInstance {
   private String propId;
   private HashMap<String,Object> captured; 
 
-  private LinkedList<String> stringMap;
+  //private LinkedList<String> stringMap;
   //TODO args to constructor (Map<String,?>,propId,scope,level)
   //scope might not be needed
-  public SemanticPropertyInstance(String name, LevelId level, ArrayList<ScopeId> scope,HashMap<String, Object> map, LinkedList<String> StringMap) {
+  public SemanticPropertyInstance(String name, LevelId level, ArrayList<ScopeId> scope,HashMap<String, Object> map) {
     /**
      * Assign scope, level and Id.
      */
-    
     this.scope = scope;
     this.level = level;
     this.propId = name;
     this.captured = map;
-    this.stringMap = StringMap;
-    
+    //this.stringMap = StringMap;
   }
 
   public String getPropertyType() {
@@ -34,7 +33,16 @@ public class SemanticPropertyInstance {
   }
   public Object getVariable(String identifier) throws UnknownVariableIdentifierException {
     if(captured.containsKey(identifier)){
-      return captured.get(identifier);
+      Object capt= captured.get(identifier);
+      /**
+       * If MyObject return value else return the object itself.
+       */
+      if(capt instanceof MyObject){
+        MyObject myCapt = (MyObject)capt;
+        return myCapt.getValue();
+      } else{
+        return captured.get(identifier);
+      }
     } else{
       throw new UnknownVariableIdentifierException();
     }
@@ -64,8 +72,8 @@ public class SemanticPropertyInstance {
   public HashMap<String, Object> getCaptured() {
     return captured;
   }
-  public LinkedList<String> getStringMap() {
-    return stringMap;
-  }
+//  public LinkedList<String> getStringMap() {
+//    return stringMap;
+//  }
 
 }

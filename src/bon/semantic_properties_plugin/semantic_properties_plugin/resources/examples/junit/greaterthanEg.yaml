@@ -28,6 +28,6 @@ description: |
 property: greaterthanEg
 relation(bon,java):
   - e: gr
-  - g: gr
+  - g: "gr"
   - j: gr
 ...

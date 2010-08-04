@@ -14,8 +14,11 @@ import ie.ucd.semanticproperties.plugin.api.ScopeId;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
 import ie.ucd.semanticproperties.plugin.customobjects.MyDescription;
 import ie.ucd.semanticproperties.plugin.customobjects.MyExpression;
+import ie.ucd.semanticproperties.plugin.customobjects.MyFloat;
+import ie.ucd.semanticproperties.plugin.customobjects.MyInt;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
 import ie.ucd.semanticproperties.plugin.customobjects.MyString;
+import ie.ucd.semanticproperties.plugin.customobjects.Nat;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertyUseException;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
@@ -59,7 +62,7 @@ public class SemanticPropertyLevelSpecification {
   final static String prop_Description = ".*";
   final static String prop_format_String = "(\\w*)";
   final static String prop_format_CustomObject = "(\\w+=(.)*)";
-  final static String prop_format_Special = "((choice\\s*\\((\\w+)\\)\\s*)|choice|optional)";	
+  final static String prop_format_Special = "((choice\\s*\\((\\w+)\\)\\s*)|choice|optional)";
   final static String prop_Name = "\\s*\\w+\\s*";
   final static String prop_Level = "[=-]?\\d+";
 
@@ -127,6 +130,7 @@ public class SemanticPropertyLevelSpecification {
 
     if(!fun){
       System.out.println("linkedHashMap entery "+linkedHashMap+" does not represent a valid property not valid");
+      throw new InvalidSemanticPropertySpecificationException();
     } else{
       name = (String) linkedHashMap.get("name");
       format = (ArrayList < Object >) linkedHashMap.get("format");
@@ -135,7 +139,7 @@ public class SemanticPropertyLevelSpecification {
        * get scopes
        */
       ArrayList<String> stringScopes = (ArrayList < String >) linkedHashMap.get("scope");
-      scope= new ArrayList < ScopeId >() ;
+      scope= new ArrayList < ScopeId >();
       for (String s : stringScopes){
         scope.add(ScopeId.scopeIdFor(s));
       }
@@ -261,7 +265,7 @@ public class SemanticPropertyLevelSpecification {
     else if (formatValue instanceof LinkedHashMap<?, ?>) {
       // checks if it is an instance of optional:,choice:, or choice (op): and returns false otherwise
 
-      Pattern formatPattern = Pattern.compile(prop_format_Special);			
+      Pattern formatPattern = Pattern.compile(prop_format_Special);
       LinkedHashMap<String, ?> r = (LinkedHashMap<String, ?>) formatValue;
       //loop through all keys
       Set<String> keys=r.keySet();
@@ -279,7 +283,7 @@ public class SemanticPropertyLevelSpecification {
           throw new InvalidSemanticPropertySpecificationException();
 //        return false;
         }
-      }		
+      }
     }
     //case for custom objects
     else if (formatValue instanceof MyObject) {
@@ -311,11 +315,13 @@ public class SemanticPropertyLevelSpecification {
    */
 
   private static RegExpStruct generateRegExp() {
-    RegExpStruct returnRegEx = generateRegExp(format);
-    String start=name+"[\\s+]";
-    String end=returnRegEx.getExp();
-    returnRegEx.setExp(start+end);
-    return returnRegEx;
+//    RegExpStruct returnRegEx = generateRegExp(format);
+//    String start=name+"[\\s+]";
+//    String end=returnRegEx.getExp();
+//    returnRegEx.setExp(start+end);
+//    return returnRegEx;
+//    
+    return generateRegExp(format);
   }
   /**
    * Recursive method to build RegeExpStruct for an object
@@ -326,8 +332,8 @@ public class SemanticPropertyLevelSpecification {
   private static RegExpStruct generateRegExp(Object ob) {
     String space="[\\s+]";
 
-    /*ArrayList Case
-     * 
+    /**
+     * ArrayList Case.
      */
     if (ob instanceof ArrayList< ? >) {
 
@@ -364,18 +370,18 @@ public class SemanticPropertyLevelSpecification {
     /**Map Case
      * 
      */
-    if (ob instanceof LinkedHashMap<?, ?>) {		
+    if (ob instanceof LinkedHashMap<?, ?>) {
       /**Cast to LinkeHashMap and make new RegExpStuct.;
        * 
        */
-      RegExpStruct choiceCapReg = new RegExpStruct();
       LinkedHashMap<String, ?> all = (LinkedHashMap<String, ?>) ob;
-      /** choice:(name) sub-case
-       * <p>This is the capturing case</p>
+      RegExpStruct choiceCapReg = new RegExpStruct();
+      /**
+       * capturing case eg: choice:(name)
        */
 
-      /*Check if its a capturing choice case
-       * <p>break is not</>
+      /**
+       * Check if its a capturing choice case and break if it  is not.
        */
 
       Set<String> keys=all.keySet();
@@ -387,63 +393,58 @@ public class SemanticPropertyLevelSpecification {
           //if not special case exit
           break;
         }
-        /**Get regExpStruct,Map add choice and set as regExpStruct map again.
-         * <p>Because its the capturing case</p>
+        /**
+         * Get list of choices
          */
-        LinkedHashMap<String ,Integer> capRegGroup =
-          choiceCapReg.getGroupInt();
-
-        capRegGroup.put(checkMatcher.group(1),capRegGroup.size()+1);
-
-        choiceCapReg.setGroups(capRegGroup);
-        choiceCapReg.setNumberOfGroups(choiceCapReg.getNumberOfGroups()+1);
-        /**Get list of choices
-         * 
+        ArrayList< ? > choices = (ArrayList< ? >) all.get(checkMatcher.group(0));
+        /**
+         * Add capturing choice case to choiceCapReg
          */
-        ArrayList<?> choices=(ArrayList<?>)all.get(s);	
-        /**Loop through list choices and build RegExpStruct.
-         * 
-         */
-        for (Object obin : choices) {
-          RegExpStruct temp = generateRegExp(obin);
-          choiceCapReg = choiceCapReg.concat(temp, "", "|",0);
-        }
-        /**Get rid of extra '|'.
-         * 
-         */
-        String l=choiceCapReg.getExp();
-        choiceCapReg.setExp(l.substring(0,l.length()-1));
-        choiceCapReg=choiceCapReg.concat(new RegExpStruct(), "(", ")", 0);
-        return choiceCapReg;
-
-      }
-      /** choice: sub-case
-       * <p>This is the non capturing case</p>
-       */
-
-      if (all.containsKey("choice")) {
-        /**Get list of choices
-         * 
-         */
-        ArrayList< ? > choices = (ArrayList< ? >) all.get("choice");	
-        /**Loop through list choices and build RegExpStruct.
-         * 
+        LinkedHashMap<String,Integer> capIntMap = new LinkedHashMap<String, Integer>();
+        capIntMap.put(checkMatcher.group(1), 1);
+        LinkedHashMap<String, MyObject> capObjMap = new LinkedHashMap<String, MyObject>();
+        capObjMap.put(checkMatcher.group(1), new MyObject());
+        choiceCapReg = new RegExpStruct("",capIntMap, capObjMap,1);
+        /**
+         * Loop through list choices and build RegExpStruct.
          */
         for (Object obin : choices) {
           RegExpStruct temp = generateRegExp(obin);
           choiceCapReg = choiceCapReg.concat(temp, "", "|", 0);
         }
-        /**Get rid of extra '|'.
-         * 
+        /**
+         *Get rid of extra '|'.
+         */
+        String l=choiceCapReg.getExp();
+        choiceCapReg.setExp(l.substring(0,l.length()-1));
+        /**
+         * Add bracket to regExpStruct.
+         */
+        choiceCapReg=choiceCapReg.concat(new RegExpStruct(), "(", ")", 0);
+        return choiceCapReg;
+      }
+      /** choice: sub-case
+       * <p>This is the non capturing case</p>
+       */
+      if (all.containsKey("choice")) {
+        /**
+         * Get list of choices
+         */
+        ArrayList< ? > choices = (ArrayList< ? >) all.get("choice");
+        /**
+         * Loop through list choices and build RegExpStruct.
+         */
+        for (Object obin : choices) {
+          RegExpStruct temp = generateRegExp(obin);
+          choiceCapReg = choiceCapReg.concat(temp, "", "|", 0);
+        }
+        /**
+         * Get rid of extra '|'.
          */
         String l=choiceCapReg.getExp();
         choiceCapReg.setExp(l.substring(0,l.length()-1));
         choiceCapReg = choiceCapReg.concat(new RegExpStruct(), "(?:", ")", 0);
         return choiceCapReg;
-
-
-
-
       }
       // optional case
       if (all.containsKey("optional")) {
@@ -510,7 +511,7 @@ public class SemanticPropertyLevelSpecification {
     this.reg = reg;
   }
   /**Could be deleted in future.
-   * method to check an input string against this proerty
+   * method to check an input string against this property
    * @return Matcher of input string against the regexof this property
    * @param in string to match against the regex representation of this string
    */
@@ -523,10 +524,10 @@ public class SemanticPropertyLevelSpecification {
   /**
    * generate SPI from input for this specification.
    * @return
-   * @throws InvalidSemanticPropertyUseException 
+   * @throws InvalidSemanticPropertyUseException
    */
   public SemanticPropertyInstance makeInstance(String input) throws InvalidSemanticPropertyUseException{
-     HashMap<String,Object> captured = new HashMap <String, Object>(); 
+     HashMap<String,Object> captured = new HashMap <String, Object>();
     /**
      * Match Instance
      */
@@ -540,50 +541,56 @@ public class SemanticPropertyLevelSpecification {
      */
     HashMap<String, Integer> intMap  = reg.getGroupInt();
     HashMap<String, MyObject> obMap = reg.getGroupObj();
-    LinkedList<String> stringMap = new LinkedList <String>();
-    int start = 0;
-    for(String s: obMap.keySet()) { 
+//    LinkedList<String> stringMap = new LinkedList <String>();
+//    int start = 0;
+    for(String s: obMap.keySet()) {
       MyObject ob = obMap.get(s);
-      
-      int i= intMap.get(s);     
+      int i = intMap.get(s);
       //fill only with non null values
       if((m.group(i)!=null)){
+        Object temp = m.group(i);
         if(ob instanceof MyString){
           String toSet =  m.group(i);
           ob.setValue(toSet.substring(1,toSet.length()-1));
-        }
-        else if(ob instanceof MyExpression){
+        } else if(ob instanceof MyExpression){
           String toSet =  m.group(i);
           ob.setValue(toSet.substring(1,toSet.length()-1));
-        }
-        else if(ob instanceof MyDescription){
+        } else if(ob instanceof MyDescription){
           String toSet =  m.group(i);
           ob.setValue(toSet.substring(0,toSet.length()-1));
-        }
-        else {
+        } else if(ob instanceof Nat){
+          Integer toSet =  Integer.parseInt(m.group(i));
+          ob.setValue(toSet);
+        } else if(ob instanceof MyInt){
+          Integer toSet =  Integer.parseInt(m.group(i));
+          ob.setValue(toSet);
+        } else if(ob instanceof MyFloat){
+          float toSet = Float.valueOf(m.group(i)).floatValue();
+          ob.setValue(toSet);
+        } else {
           ob.setValue(m.group(i));
         }
-        
-        captured.put(s, ob);
-        // add Strings up to this match 
-        String toAdd = input.substring( start, m.start(i));
-        start = m.end(i);
-        String[] split = toAdd.split(" ");
-        for(String cur : split){
-          stringMap.push(cur);
-        }
-        //last case
-        if(m.groupCount()==i && start!=input.length()){
-          String toAdd2 = input.substring( start, m.start(i));
-          start = m.end(i);
-          String[] split2 = toAdd.split("\\s");
-          for(String cur : split2){
-            stringMap.push(cur);
-          }
-        }
+        captured.put(s, ob.getValue());
+//        // add Strings up to this match
+//        int f = m.start(i);
+//        String toAdd = input.substring( start, m.start(i));
+//        start = m.end(i);
+//        String[] split = toAdd.split(" ");
+//        for(String cur : split){
+//          stringMap.push(cur);
+//        }
+//        //last case
+//        if(m.groupCount()==i && start!=input.length()){
+//          String toAdd2 = input.substring( start, m.start(i));
+//          start = m.end(i);
+//          String[] split2 = toAdd.split("\\s");
+//          for(String cur : split2){
+//            stringMap.push(cur);
+//          }
+//        }
       }
     }
-    return new SemanticPropertyInstance(name,level,scope,captured,stringMap);
+    return new SemanticPropertyInstance(name,level,scope,captured);
     
   }
   public String getName() {

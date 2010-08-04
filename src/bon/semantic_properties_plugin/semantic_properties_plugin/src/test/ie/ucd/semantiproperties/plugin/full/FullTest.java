@@ -2,6 +2,7 @@ package ie.ucd.semantiproperties.plugin.full;
 
 
 import ie.ucd.semanticproperties.plugin.api.LevelId;
+import ie.ucd.semanticproperties.plugin.api.ScopeId;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertiesHandler;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
 import ie.ucd.semanticproperties.plugin.exceptions.IncompatibleSemanticPropertyInstancesException;
@@ -62,35 +63,35 @@ public class FullTest {
   @Test 
   public void parsingTest1() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException {
     handler.add(new File(PATH + "../concurrency_full.yaml"));
-    handler.parse("concurrency SEQUENTIAL", "concurrency", LevelId.BON_FORMAL);
-    handler.parse("concurrency CONCURRENT", "concurrency", LevelId.BON_FORMAL);
+    handler.parse("concurrency SEQUENTIAL",LevelId.BON_FORMAL, ScopeId.MODULE);
+    handler.parse("concurrency CONCURRENT", LevelId.BON_FORMAL, ScopeId.MODULE);
   }
   
   @Test 
   public void parsingTest2() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException {
     handler.add(new File(PATH + "../concurrency_full.yaml"));
-    handler.parse("concurrency TIMEOUT 5 Esadfadfxception", "concurrency", LevelId.BON_FORMAL);
-    handler.parse("concurrency FAILURE a.Esadfadfxception", "concurrency", LevelId.BON_FORMAL);
+    handler.parse("TIMEOUT 5 Esadfadfxception", "concurrency", LevelId.BON_FORMAL, ScopeId.MODULE);
+    handler.parse("FAILURE a.Esadfadfxception", "concurrency", LevelId.BON_FORMAL, ScopeId.MODULE);
   }
   
   @Test 
   public void parsingTest3() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException {
     handler.add(new File(PATH + "../concurrency_full.yaml"));
-    handler.parse("concurrency SPECIAL 'dsfasdfads'", "concurrency", LevelId.BON_FORMAL);
-    handler.parse("concurrency SPECIAL \"dsf'asd'fads\"", "concurrency", LevelId.BON_FORMAL);    
+    handler.parse("concurrency SPECIAL 'dsfasdfads'",  LevelId.BON_FORMAL, ScopeId.MODULE);
+    handler.parse("concurrency SPECIAL \"dsf'asd'fads\"",  LevelId.BON_FORMAL, ScopeId.MODULE);
   }
   
   @Test(expected=UnknownVariableIdentifierException.class)
   public void parsingTest4() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException, UnknownVariableIdentifierException {
     handler.add(new File(PATH + "../concurrency_full.yaml"));
-    SemanticPropertyInstance inst = handler.parse("concurrency TIMEOUT 5 java.lang.Exception", "concurrency", LevelId.BON_FORMAL);
+    SemanticPropertyInstance inst = handler.parse("concurrency TIMEOUT 5 java.lang.Exception",  LevelId.BON_FORMAL , ScopeId.MODULE);
     inst.getVariable("xxx");
   }
   
   @Test
   public void parsingTest5() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException, UnknownVariableIdentifierException {
     handler.add(new File(PATH + "../concurrency_full.yaml"));
-    SemanticPropertyInstance inst = handler.parse("concurrency TIMEOUT 5 java.lang.Exception", "concurrency", LevelId.BON_FORMAL);
+    SemanticPropertyInstance inst = handler.parse("concurrency TIMEOUT 5 java.lang.Exception",  LevelId.BON_FORMAL, ScopeId.MODULE);
     assertEquals(inst.getVariable("CONCURRENT"), "TIMEOUT");
     assertEquals(inst.getVariable("to"), 5);
     assertEquals(inst.getVariable("e"), "java.lang.Exception");
@@ -99,14 +100,14 @@ public class FullTest {
   @Test
   public void parsingTest6() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException, UnknownVariableIdentifierException {
     handler.add(new File(PATH + "../concurrency_full.yaml"));
-    SemanticPropertyInstance inst = handler.parse("concurrency TIMEOUT 5 java.lang.Exception", "concurrency", LevelId.BON_FORMAL);
+    SemanticPropertyInstance inst = handler.parse("concurrency TIMEOUT 5 java.lang.Exception",  LevelId.BON_FORMAL, ScopeId.MODULE);
     assertEquals(inst.getVariable("to"), 5);
   }
   
   @Test 
   public void refinementTest1() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException, IncompatibleSemanticPropertyInstancesException, InvalidRefinementException {
     handler.add(new File(PATH + "../concurrency_full.yaml"));
-    SemanticPropertyInstance inst = handler.parse("concurrency SEQUENTIAL", "concurrency", LevelId.BON_FORMAL);
+    SemanticPropertyInstance inst = handler.parse("concurrency SEQUENTIAL",  LevelId.BON_FORMAL, ScopeId.MODULE);
     SemanticPropertyInstance refInst = handler.generate(inst, LevelId.JAVA_JML);
     assertEquals(refInst.toString(), "concurrency SEQUENTIAL");
   }
