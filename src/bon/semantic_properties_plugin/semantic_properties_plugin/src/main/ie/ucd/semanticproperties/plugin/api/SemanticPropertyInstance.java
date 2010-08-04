@@ -33,16 +33,7 @@ public class SemanticPropertyInstance {
   }
   public Object getVariable(String identifier) throws UnknownVariableIdentifierException {
     if(captured.containsKey(identifier)){
-      Object capt= captured.get(identifier);
-      /**
-       * If MyObject return value else return the object itself.
-       */
-      if(capt instanceof MyObject){
-        MyObject myCapt = (MyObject)capt;
-        return myCapt.getValue();
-      } else{
-        return captured.get(identifier);
-      }
+      return captured.get(identifier);
     } else{
       throw new UnknownVariableIdentifierException();
     }

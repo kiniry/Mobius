@@ -1,0 +1,46 @@
+#prefix example used in SemanticPropertyRefinementSpecificationTest
+---
+name: equalsEg
+level: bon
+format:
+  
+  - <e=throwable=java.lang.Exception>
+  - <g=class=java.Class>
+  - <j=email=an@email.com>
+  - <k=date=27-08-1988>
+  - <l=version=0.1>
+  - <m=url=http://url.com>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+
+name: equalsEg
+level: java
+format:
+
+  - <e=throwable=java.lang.Exception>
+  - <g=class=java.Class>
+  - <j=email=an@email.com>
+  - <k=date=27-08-1988>
+  - <l=version=0.1>
+  - <m=url=http://url.com>
+scope: 
+ - Module
+description: |
+ des
+...
+---
+property: equalsEg
+relation(bon,java):
+  - keyword:
+  
+  - e: equals
+  - g: equals
+  - j: equals    
+  - k: equals
+  - l: equals
+  - m: equals
+...

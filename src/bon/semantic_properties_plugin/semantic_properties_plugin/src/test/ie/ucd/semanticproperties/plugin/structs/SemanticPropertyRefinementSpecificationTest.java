@@ -67,11 +67,27 @@ public class SemanticPropertyRefinementSpecificationTest extends TestCase {
    * @throws SemanticPropertyException
    * @throws IOException
    */
-  public final void testEqualsRefinement() throws SemanticPropertyException, IOException{
+  public final void testEqualsRefinement1() throws SemanticPropertyException, IOException{
     SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
     testProp.add(new File("resources/examples/junit/equalsEg.yaml"));
     SemanticPropertyInstance instance1 = testProp.parse("equalsEg short des. (an expr) ' string'", LevelId.BON_FORMAL,ScopeId.MODULE);
     SemanticPropertyInstance instance2 = testProp.parse("equalsEg short des. (an expr) ' string'", LevelId.JAVA_JML,ScopeId.MODULE);
+    assertTrue(testProp.isValidRefinement(instance1, instance2));
+    /**
+     * Check that generate method works.
+     */
+    assertTrue(testProp.isValidRefinement(instance1, testProp.generate(instance1, LevelId.JAVA_JML)));
+  }
+  /**
+   * Check equals refinement.
+   * @throws SemanticPropertyException
+   * @throws IOException
+   */
+  public final void testEqualsRefinement2() throws SemanticPropertyException, IOException{
+    SemanticPropertiesHandler testProp = new SemanticPropertiesHandler();
+    testProp.add(new File("resources/examples/junit/equalsEg2.yaml"));
+    SemanticPropertyInstance instance1 = testProp.parse("equalsEg java.lang.t class.c g@gmail.com 27-08-1988 0.1 http://anurl.com", LevelId.BON_FORMAL,ScopeId.MODULE);
+    SemanticPropertyInstance instance2 = testProp.parse("equalsEg java.lang.t class.c g@gmail.com 27-08-1988 0.1 http://anurl.com", LevelId.JAVA_JML,ScopeId.MODULE);
     assertTrue(testProp.isValidRefinement(instance1, instance2));
     /**
      * Check that generate method works.

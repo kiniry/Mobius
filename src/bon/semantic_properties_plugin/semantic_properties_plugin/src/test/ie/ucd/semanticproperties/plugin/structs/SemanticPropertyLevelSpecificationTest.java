@@ -66,7 +66,8 @@ public class SemanticPropertyLevelSpecificationTest extends TestCase {
     MyObject r = new MyObject();
     r.setValue(0);
    capObGroup.put("choice1", r);
-    RegExpStruct li = new RegExpStruct("LReg1[\\s+](a|b)(?:[\\s+]c)?",capGroup, capObGroup ,1);
+    RegExpStruct li = new RegExpStruct("(a|b)(?:[\\s+]c)?",capGroup, capObGroup ,1);
+    
     assertEquals(lr1.getReg(),li);
   }
 

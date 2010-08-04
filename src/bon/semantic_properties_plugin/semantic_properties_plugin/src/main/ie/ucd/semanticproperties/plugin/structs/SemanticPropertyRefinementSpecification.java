@@ -261,6 +261,7 @@ public class SemanticPropertyRefinementSpecification {
         Transitions tran = oConversions.get(presKey);
         //for string conversions
         if ((ob1 instanceof MyStringObject) && (ob2 instanceof MyStringObject)){
+          
           String a = (String) ob1.getValue();
           String b = (String) ob2.getValue();
           //deal with each conversion appropriately
@@ -287,13 +288,13 @@ public class SemanticPropertyRefinementSpecification {
           if(ob1 instanceof MyInt || ob1 instanceof Nat){
             a = ((Number)ob1.getValue()).floatValue();
             b = ((Number)ob2.getValue()).floatValue();
-          }
-          else{
+          } else{
              a = (Float)ob1.getValue();
              b = (Float)ob2.getValue();
           }
-        
-          //deal with each conversion appropriately
+          /**
+           * Deal with transitions
+           */
           if (tran.equals(Transitions.LessThan)) {
             if (!(a<b)) {
               throw new InvalidRefinementException();
@@ -311,9 +312,19 @@ public class SemanticPropertyRefinementSpecification {
               throw new InvalidRefinementException();
             }
           }
+          /**
+           * other transitions ... equal are not 
+           */
+        } else{
+          if (tran.equals(Transitions.equals)) {
+            if(!(ob1.getValue().equals(ob2.getValue()))){
+              throw new InvalidRefinementException();
+            }
+          }
+          
         }
       } catch(UnknownVariableIdentifierException e){
-        //TODO
+        // this just means that not all options for this level were filled in this instance
       }
     }
     return true;
@@ -344,7 +355,6 @@ public class SemanticPropertyRefinementSpecification {
     /**
      * refine all the capturing groups.
      */
-    
     Iterator<String> it = oConversions.keySet().iterator();
     while (it.hasNext()) {
       try {
@@ -383,7 +393,7 @@ public class SemanticPropertyRefinementSpecification {
           MyObject temp = new MyObject();
           temp.setId(ob1.getId());
           temp.setValue((pre + ob1.getValue() + post));
-          newCaptured.put(presKey, temp);
+          newCaptured.put(presKey, temp.getValue());
         } else if ((ob1 instanceof MyNumberObject)){
           /**
            * Convert all to float 
@@ -411,11 +421,18 @@ public class SemanticPropertyRefinementSpecification {
           MyObject temp =new MyObject();
           temp.setId(ob1.getId());
           temp.setValue(newFloat);
-          newCaptured.put(presKey, temp);
-          //adjust p1Match & newInput based on MyObject kind
+          newCaptured.put(presKey, temp.getValue());
+          /**
+           * rest of object kinds
+           */
+        } else{
+          if (tran.equals(Transitions.equals)) {
+            newCaptured.put(presKey, ob1.getValue());
+          }
+          
         }
       } catch(UnknownVariableIdentifierException e) {
-        //TODO
+        // this just means that not all options for this level were filled in this instance
       }
 
     }
