@@ -48,7 +48,9 @@ import org.yaml.snakeyaml.error.YAMLException;
  */
 public class SemanticProperty {
 
-  // Attributes
+  /**
+   * Attributes.
+   */
 
   private LinkedHashMap<LevelId, SemanticPropertyLevelSpecification> levels;
   private List<SemanticPropertyRefinementSpecification> refinements;
@@ -57,9 +59,7 @@ public class SemanticProperty {
 
   /**
    * Constructor for Semantic Property.
-   * 
-   * @param inputFile
-   *          yaml file to parse.
+   * @param inputFile yaml file to parse.
    */
   public SemanticProperty(File inputFile) throws FileNotFoundException,
       InvalidSemanticPropertySpecificationException, IOException {
@@ -69,71 +69,15 @@ public class SemanticProperty {
     name = "unassigned";
     parseFile(input);
   }
-
   /**
-   * Printing class for testing.
-   * <p>
-   * method that prints the name,regexp and map of each regular expression. Used
-   * for testing
-   * </p>
-   */
-  public void printProps() {
-    // for (LevelRepresenation p : levels) {
-    // System.out.println(p);
-    // System.out
-    // .println("Regular expression is " + (p.getReg()).getExp());
-    // System.out.println("Regular expression map is "
-    // + (p.getReg()).getGroupInt());
-    // }
-  }
-
-  /**
-   * Check refinement from String input1 to String input2.
-   * 
-   * @param input1
-   *          source string to check against.
-   * @param input2
-   *          destination string to check.
-   * @param level1
-   *          source level.
-   * @param level2
-   *          destination level.
-   * @return true if valid refinement.
-   */
-  // public boolean checkRefinement(String input1, String input2, LevelId
-  // level1, LevelId level2) {
-  // /**Create levelMatches for the inputs
-  // *
-  // */
-  // LevelRepMatch p1 = new LevelRepMatch(input1, levels.get(level1));
-  // LevelRepMatch p2 = new LevelRepMatch(input2, levels.get(level2));
-  //
-  // /**search through refinements for appropriate one.
-  // *
-  // */
-  // for (Refinement pres : refinements) {
-  // if (pres.getSourceLevel() == level1
-  // && pres.getDestinationLevel() == level2) {
-  // /**Check refinement.
-  // *
-  // */
-  // return pres.isValidRefinement(p1, p2);
-  // }
-  // }
-  // return false;
-  // }
-  /**
-   * parses a file using snakeyaml and creates the appropriate Semantic
-   * Property.
-   * 
-   * 
+   * parses a file using snakeyaml and creates the appropriate Semantic Property.
    * @param inputFile
    *          yaml file to parse, may contain multiple levels and refinements
    */
   private  void parseFile(File inputFile) throws FileNotFoundException, InvalidSemanticPropertySpecificationException, IOException{
 
     /**
-     * get input stream from file
+     * get input stream from file.
      */ 
     InputStream input  = new FileInputStream(inputFile);
 
@@ -153,7 +97,6 @@ public class SemanticProperty {
     try{
       i.hasNext();
     } catch(YAMLException e) {
-      //System.out.println(e);
       throw new InvalidSemanticPropertySpecificationException();
     }
       /**
@@ -162,20 +105,18 @@ public class SemanticProperty {
       if(!i.hasNext()){
         throw new InvalidSemanticPropertySpecificationException();
       }
-      // iterate through the properties and add them
+      /**
+       *  Iterate through the levels and reefinements
+       */
       while (i.hasNext()) {
         Object pres = (Object) i.next();
         if (!(pres instanceof LinkedHashMap< ? , ? >)){
-          System.out.println("this yaml file is" +
-          "incorrectly formated to be a semantic property ");
+          //System.out.println("this yaml file is" +"incorrectly formated to be a semantic property ");
           throw new InvalidSemanticPropertySpecificationException();
-
         }
-
         LinkedHashMap< String , ?> presMap = ((LinkedHashMap< String, ? >)pres);
         /**
          * Check if map represents a level or a refinement.
-         * 
          */
         // level.
         if (presMap.get("name") != null) {

@@ -28,37 +28,29 @@ import java.util.LinkedHashMap;
  * Adds information to a regular expression about what is stored in its
  * capturing groups and provides methods to access these values.
  * </p>
- * 
  * @author eo
- * 
  */
 public class RegExpStruct {
   /**
    * String representation of the RegExp.
-   * 
    */
   private String exp;
   /**
    * Map representing the values in the capturing group of this RegExp.
-   * 
    */
   private LinkedHashMap<String, Integer> groupInt;
   /**
    * Map representing the Objects in the capturing group of this RegExp.
-   * 
    */
   private LinkedHashMap<String, MyObject> groupObj;
   /**
    * Number of capturing groups in this regExp.
-   * 
    */
   private int numberOfGroups;
 
   /**
    * Default constructor.
-   * <p>
-   * initialise all variables to unimportant value.
-   * </p>
+   * Initialise all variables to default value.
    */
   RegExpStruct() {
     exp = "";
@@ -68,8 +60,7 @@ public class RegExpStruct {
   }
 
   /**
-   * Constructor .
-   * 
+   * Constructor for objects.
    * @param s
    *          String representation of the regular expression.
    * @param m
