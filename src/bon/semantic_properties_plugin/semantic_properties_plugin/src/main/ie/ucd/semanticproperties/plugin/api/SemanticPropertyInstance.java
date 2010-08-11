@@ -4,6 +4,8 @@ import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierExce
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.antlr.stringtemplate.StringTemplate;
+
 /**
  * An input matched against a semantic property.
  * @author eo
@@ -26,6 +28,10 @@ public class SemanticPropertyInstance {
    * HashMap of the captured objects and their names as keys.
    */
   private HashMap<String,Object> captured;
+  /**
+   * String Template representing the pretty print for this instance.
+   */
+  private StringTemplate pp;
 
   /**
    * Constructor for a new instance.
@@ -34,7 +40,7 @@ public class SemanticPropertyInstance {
    * @param scope The scope for new instance to cover.
    * @param map The map of objects for new instance
    */
-  public SemanticPropertyInstance(String name, LevelId level, ArrayList<ScopeId> scope,HashMap<String, Object> map) {
+  public SemanticPropertyInstance(String name, LevelId level, ArrayList<ScopeId> scope,HashMap<String, Object> map,StringTemplate pp) {
     /**
      * Assign scope, level and Id.
      */
@@ -42,6 +48,7 @@ public class SemanticPropertyInstance {
     this.level = level;
     this.propId = name;
     this.captured = map;
+    this.pp = pp;
   }
 
   /**
@@ -75,19 +82,13 @@ public class SemanticPropertyInstance {
       Object toCheck = captured.get(identifier);
       if(toCheck instanceof Integer){
         return ((Number)toCheck).intValue();
-      }
-      else{
+      } else{
         throw new  UnknownVariableIdentifierException();
       }
-      
     } else{
       throw new UnknownVariableIdentifierException();
     }
   }
-  
-
-  //TODO
-  //public int getIntVariable(String identifier) throws UnknownVariableIdentifierException {
 
   /**
    * Get the level for this instance.
@@ -109,7 +110,12 @@ public class SemanticPropertyInstance {
    * of the semantic property's format.
    */
   public String toString() {
-    return null;
+    StringTemplate temp = pp;
+    for(String r :captured.keySet()){
+      temp.setAttribute(r, captured.get(r));
+    }
+    return temp.toString();
+    
   }
 
 

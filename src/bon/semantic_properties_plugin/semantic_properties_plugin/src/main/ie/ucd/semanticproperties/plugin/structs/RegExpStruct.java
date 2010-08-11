@@ -20,6 +20,10 @@ package ie.ucd.semanticproperties.plugin.structs;
  */
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
 
+import org.antlr.stringtemplate.*;
+import org.antlr.stringtemplate.language.*;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 /**
@@ -38,7 +42,7 @@ public class RegExpStruct {
   /**
    * Map representing the values in the capturing group of this RegExp.
    */
-  private LinkedHashMap<String, Integer> groupInt;
+  private LinkedHashMap<String, int[]> groupInt;
   /**
    * Map representing the Objects in the capturing group of this RegExp.
    */
@@ -54,7 +58,7 @@ public class RegExpStruct {
    */
   RegExpStruct() {
     exp = "";
-    groupInt = new LinkedHashMap<String, Integer>();
+    groupInt = new LinkedHashMap<String, int[]>();
     groupObj = new LinkedHashMap<String, MyObject>();
     numberOfGroups = 0;
   }
@@ -68,7 +72,7 @@ public class RegExpStruct {
    * @param num
    *          Number of capturing groups.
    */
-  RegExpStruct(String s, LinkedHashMap<String, Integer> m,
+  RegExpStruct(String s, LinkedHashMap<String, int[]> m,
       LinkedHashMap<String, MyObject> objectMap, int num) {
     exp = s;
     groupInt = m;
@@ -98,10 +102,16 @@ public class RegExpStruct {
     /**
      * Concat the int linkedHashMap
      */
-    LinkedHashMap<String, Integer> newIntGroup = groupInt;
-    LinkedHashMap<String, Integer> addGroup = toAdd.getGroupInt();
+    LinkedHashMap<String, int[]> newIntGroup = groupInt;
+    LinkedHashMap<String, int[]> addGroup = toAdd.getGroupInt();
     for (String key : addGroup.keySet()) {
-      newIntGroup.put(key, addGroup.get(key) + numberOfGroups);
+      
+      int[] newAddGroup = addGroup.get(key);
+      for(int i=0;i<newAddGroup.length;i++){
+        newAddGroup[i] = newAddGroup[i] + numberOfGroups;
+      }
+      newIntGroup.put(key, newAddGroup);
+
     }
     /**
      * Concat the obj linkedHashMap
@@ -113,7 +123,49 @@ public class RegExpStruct {
     return (new RegExpStruct(newExp, newIntGroup, newObjGroup, newNum));
 
   }
+  /**
+   * 
+   * Mehods to be used by new generate method--- delete this when implemetntation is completed.
+   * @return
+   */
+  
+  /**
+   * Constructor that takes creates non capturing RegExpStuct for non capturing input string.
+   */
+  RegExpStruct(String input) {
+    exp = input;
+    groupInt = new LinkedHashMap<String, int[]>();
+    groupObj = new LinkedHashMap<String, MyObject>();
+    numberOfGroups = 0;
+  }
+  /**
+   * Add RegExoStruct on to this one
+   */
+  RegExpStruct add(RegExpStruct toAdd){
+    String newExp =  exp + toAdd.getExp();
+    int newNum = numberOfGroups + toAdd.getNumberOfGroups();
 
+    /**
+     * Concat the int linkedHashMap
+     */
+    LinkedHashMap<String, int[]> newIntGroup = groupInt;
+    LinkedHashMap<String, int[]> addGroup = toAdd.getGroupInt();
+    for (String key : addGroup.keySet()) {
+      int[] newAddGroup = addGroup.get(key);
+      for(int i :newAddGroup){
+        newAddGroup[i] = i + numberOfGroups;
+      }
+      newIntGroup.put(key, newAddGroup);
+    }
+    /**
+     * Concat the obj linkedHashMap
+     */
+
+    LinkedHashMap<String, MyObject> newObjGroup = groupObj;
+    newObjGroup.putAll(toAdd.getGroupObj());
+
+    return (new RegExpStruct(newExp, newIntGroup, newObjGroup, newNum));
+  }
 
   public String getExp() {
     return exp;
@@ -127,11 +179,11 @@ public class RegExpStruct {
     this.numberOfGroups = numberOfGroups;
   }
 
-  public LinkedHashMap<String, Integer> getGroupInt() {
+  public LinkedHashMap<String, int[]> getGroupInt() {
     return groupInt;
   }
 
-  public void setGroups(LinkedHashMap<String, Integer> groups) {
+  public void setGroups(LinkedHashMap<String, int[]> groups) {
     this.groupInt = groups;
   }
 
@@ -141,6 +193,14 @@ public class RegExpStruct {
 
   public LinkedHashMap<String, MyObject> getGroupObj() {
     return groupObj;
+  }
+  public StringTemplate getPrettyPrint(){
+    String i = "";
+    for(String key:groupObj.keySet()){
+      i += ("$"+ key+"$ ");
+    }
+    return new StringTemplate(i, DefaultTemplateLexer.class);
+    
   }
   /**
    * Overwrite hashCode as we overwrote equals.
@@ -190,17 +250,33 @@ public class RegExpStruct {
     if ( m1.size() != m2.size() ) {
       return false;
     }
-    for (String s : m1.keySet()) {
+    outerloop:for (String s : m1.keySet()) {
       if(!m2.containsKey(s)){
         return false;
       }
-      if(!m2.containsValue(m1.get(s))){
-        return false;
+      Iterator i = m2.values().iterator();
+      while(i.hasNext()){
+        Object r = i.next();
+        Object p = m1.get(s);
+        if(r instanceof int[]){
+          int [] nr = (int[]) r;
+          int [] np = (int[]) p;
+          if(Arrays.equals(np,nr)){
+            break outerloop;
+          }
+        }
+        else{
+          if(r.equals(p)){
+            break outerloop;
+          }
+        }
+        
       }
+      return false;
+      
     }
     return true;
   }
-  
 
 }
 

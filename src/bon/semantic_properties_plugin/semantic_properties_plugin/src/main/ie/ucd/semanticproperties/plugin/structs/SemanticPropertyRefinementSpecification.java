@@ -46,8 +46,8 @@ import org.yaml.snakeyaml.Yaml;
 
 
 
-/**Stores a refinement property from one level to another. 
- * 
+/**
+ * Stores a refinement property from one level to another.
  * @author eo
  *
  */
@@ -62,17 +62,18 @@ public class SemanticPropertyRefinementSpecification {
 
   /**Constructor for  Object.
    * @param input object with property in it.
-   * @throws UnknownLevelException 
+   * @throws UnknownLevelException
+   * @throws InvalidRefinementSpecificationException
    */
   public SemanticPropertyRefinementSpecification(Object input) throws UnknownLevelException, InvalidRefinementSpecificationException {
     parse(input);
 
   }
-  /**Constructs Refinement LevelRepresenation from input String. 
-   *
+  /**
+   * Constructs Refinement LevelRepresenation from input String.
    * @param input string in yaml form to parse.
-   * @throws UnknownLevelException 
-   * @throws FileNotFoundException 
+   * @throws UnknownLevelException
+   * @throws FileNotFoundException
    */
   public SemanticPropertyRefinementSpecification(final String input) throws UnknownLevelException , InvalidRefinementSpecificationException{
 
@@ -80,12 +81,12 @@ public class SemanticPropertyRefinementSpecification {
     Object ob = yaml.load(input);
     parse(ob);
   }
-  /**Constructs Refinement LevelRepresenation from input file. 
+  /**Constructs Refinement LevelRepresenation from input file.
    * 
    * @param input file to parse
-   * @throws UnknownLevelException 
-   * @throws FileNotFoundException 
-   * @throws FileNotFoundException 
+   * @throws UnknownLevelException
+   * @throws FileNotFoundException
+   * @throws FileNotFoundException
    */
   public SemanticPropertyRefinementSpecification(final File input) throws UnknownLevelException, FileNotFoundException, InvalidRefinementSpecificationException {
 
@@ -97,7 +98,7 @@ public class SemanticPropertyRefinementSpecification {
   /**parse object for values of Refinement LevelRepresenation.
    * 
    * @param currentOb Object to parse.
-   * @throws UnknownLevelException 
+   * @throws UnknownLevelException
    */
   private void parse(final Object currentOb) throws UnknownLevelException, InvalidRefinementSpecificationException {
     /**Entry case
@@ -261,7 +262,6 @@ public class SemanticPropertyRefinementSpecification {
         Transitions tran = oConversions.get(presKey);
         //for string conversions
         if ((ob1 instanceof MyStringObject) && (ob2 instanceof MyStringObject)){
-          
           String a = (String) ob1.getValue();
           String b = (String) ob2.getValue();
           //deal with each conversion appropriately
@@ -448,7 +448,7 @@ public class SemanticPropertyRefinementSpecification {
 //        throw new InvalidRefinementException();
 //      }
 //    }
-    return new SemanticPropertyInstance(p1.getPropertyType(),level,p1.getScope(),newCaptured);
+    return new SemanticPropertyInstance(p1.getPropertyType(),level,p1.getScope(),newCaptured,spl1.getPrettyPrint());
   }
   /**
    * Getters.

@@ -2,6 +2,8 @@ package ie.ucd.semanticproperties.plugin.yaml;
 
 import ie.ucd.semanticproperties.plugin.customobjects.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -96,12 +98,10 @@ public class CustomConstructor extends Constructor {
     private class ConstructMyEmail extends AbstractConstruct {
         @SuppressWarnings("unchecked")
         public Object construct(Node node) {
-        	String val = (String) constructScalar((ScalarNode) node);
-            int position = val.indexOf('=');
-            String a = (val.substring(1, position));     
-            MyEmail temp=new MyEmail();
-            temp.setId(a);
-            return temp;
+          MyObject temp = convertNode(node);
+          String a = temp.getId();
+          String b= (String) temp.getValue();
+          return new MyEmail(a,b);
         }
     }
     private class ConstructMyExpression extends AbstractConstruct {
@@ -139,12 +139,12 @@ public class CustomConstructor extends Constructor {
     private class ConstructMyURL extends AbstractConstruct {
         @SuppressWarnings("unchecked")
         public Object construct(Node node) {
-        	String val = (String) constructScalar((ScalarNode) node);
-            int position = val.indexOf('=');
-            String a = (val.substring(1, position));     
-            MyURL temp=new MyURL();
-            temp.setId(a);
-            return temp;
+          MyObject temp = convertNode(node);
+          String a = temp.getId();
+          String b= (String) temp.getValue();
+        
+          temp = new MyURL(a,b);
+          return temp;
         }
     }
     private class ConstructMyVersion extends AbstractConstruct {

@@ -36,6 +36,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.antlr.stringtemplate.StringTemplate;
 import org.yaml.snakeyaml.Dumper;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
@@ -400,8 +401,10 @@ public class SemanticPropertyLevelSpecification {
         /**
          * Add capturing choice case to choiceCapReg
          */
-        LinkedHashMap<String,Integer> capIntMap = new LinkedHashMap<String, Integer>();
-        capIntMap.put(checkMatcher.group(1), 1);
+        LinkedHashMap<String,int[]> capIntMap = new LinkedHashMap<String, int[]>();
+        int[] i = new int[1];
+        i[0] = 0;
+        capIntMap.put(checkMatcher.group(1), i);
         LinkedHashMap<String, MyObject> capObjMap = new LinkedHashMap<String, MyObject>();
         capObjMap.put(checkMatcher.group(1), new MyObject());
         choiceCapReg = new RegExpStruct("",capIntMap, capObjMap,1);
@@ -410,7 +413,24 @@ public class SemanticPropertyLevelSpecification {
          */
         for (Object obin : choices) {
           RegExpStruct temp = generateRegExp(obin);
-          choiceCapReg = choiceCapReg.concat(temp, "", "|", 0);
+          /**
+           * find
+           */
+          String pat = "<keyword=(\\w+)>";
+          Pattern thisPat = Pattern.compile(pat);
+          Matcher thisMat = thisPat.matcher(temp.getExp());
+//          if(thisMat.matches()){
+//            LinkedHashMap<String, int[]> r =choiceCapReg.getGroupInt();
+//            int[] ne = r.get(checkMatcher.group(1));
+//              
+//            //replace keyword with capturing 
+//            String hi = temp.getExp();
+//            hi.replace("<keyword="+thisMat.group(1)+">", "("+thisMat.group(1)+")");
+//            
+//          } else{
+            choiceCapReg = choiceCapReg.concat(temp, "", "|", 0);
+//          }
+          
         }
         /**
          *Get rid of extra '|'.
@@ -453,7 +473,7 @@ public class SemanticPropertyLevelSpecification {
         RegExpStruct optionReg = generateRegExp(optionOb);
 
         String ex = "(?:" + optionReg.getExp() + ")?";					
-        LinkedHashMap<String, Integer> optionMap = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, int[]> optionMap = new LinkedHashMap<String, int[]>();
         //			optionMap.put(optionReg.getExp(), 1);
         opt=opt.concat(optionReg, "(?:", ")?", 0);
         return opt;
@@ -467,7 +487,7 @@ public class SemanticPropertyLevelSpecification {
 
       return new RegExpStruct(
           (String) ob,
-          new LinkedHashMap<String, Integer>(),
+          new LinkedHashMap<String, int[]>(),
           new LinkedHashMap<String, MyObject>(),
           0);
 
@@ -477,9 +497,11 @@ public class SemanticPropertyLevelSpecification {
       //cast to MyObject.
       MyObject thisOb = (MyObject) ob;
 
-      LinkedHashMap<String, Integer> intMap = 
-        new LinkedHashMap<String, Integer>();
-      intMap.put(thisOb.getId(), 1);
+      LinkedHashMap<String, int[]> intMap = 
+        new LinkedHashMap<String, int[]>();
+        int[] i = new int[1];
+        i[0] = 1;
+      intMap.put(thisOb.getId(), i);
 
       LinkedHashMap<String, MyObject> objMap = 
         new LinkedHashMap<String, MyObject>();
@@ -492,13 +514,192 @@ public class SemanticPropertyLevelSpecification {
       return new RegExpStruct(
           "unexpected type encountered when generating RegExp" 
           + " in Propery.class"
-          + ob, new LinkedHashMap<String, Integer>(),
+          + ob, new LinkedHashMap<String, int[]>(),
           new LinkedHashMap<String, MyObject>(), 0);
 
     }
 
   }
 
+  /**
+   * Recursive method to build RegeExpStruct for an object
+   * @param ob object to generate RegExpStruct from
+   * @return RegExpStruct representation of object 
+   */
+
+  private static RegExpStruct generateRegExp2(Object ob) {
+    RegExpStruct space= new RegExpStruct("[\\s+]");
+
+    /**
+     * ArrayList Case.
+     */
+    if (ob instanceof ArrayList< ? >) {
+
+      /**
+       * Cast Object to list.
+       */
+      ArrayList< ? > list = (ArrayList< ? >) ob;
+      /**
+       * Generate RegExpStuct for each item in list and add them together.
+       */
+      RegExpStruct newReg = new RegExpStruct();
+      int count = list.size();
+      for (Object obin : list) {
+        count--;
+        RegExpStruct temp = generateRegExp(obin);
+        /**
+         * Add space for every item of list but the last one
+         */
+        if(count==0){
+          temp = temp.add(space);
+        }
+          newReg = newReg.add(temp);
+      }
+      return newReg;
+    }
+    /**
+     * Map Case.
+     */
+    if (ob instanceof LinkedHashMap<?, ?>) {
+      /**
+       * Cast object to LinkeHashMap and make new RegExpStuct.
+       */
+      LinkedHashMap<String, ?> all = (LinkedHashMap<String, ?>) ob;
+      RegExpStruct newReg = new RegExpStruct();
+      /**
+       * capturing choice case eg: choice:(name)
+       */
+
+      /**
+       * Loop through all keys and check if capturing choice case and break if it is not.
+       */
+
+      Set<String> keys=all.keySet();
+      for(String s :keys){
+        String check="choice\\s*\\((\\w+)\\)\\s*";
+        Pattern checkPattern = Pattern.compile(check);
+        Matcher checkMatcher = checkPattern.matcher(s);
+        if (!checkMatcher.matches()) {
+          //if not special case exit
+          break;
+        }
+        /**
+         * Get list of choices
+         */
+        ArrayList< ? > choices = (ArrayList< ? >) all.get(checkMatcher.group(0));
+        /**
+         * Add capturing choice case to newReg
+         */
+        LinkedHashMap<String,int[]> capIntMap = new LinkedHashMap<String, int[]>();
+        int[] i = new int[1];
+        capIntMap.put(checkMatcher.group(1), i);
+        LinkedHashMap<String, MyObject> capObjMap = new LinkedHashMap<String, MyObject>();
+        capObjMap.put(checkMatcher.group(1), new MyObject());
+        newReg = new RegExpStruct("",capIntMap, capObjMap,1);
+        /**
+         * Loop through list choices and build RegExpStruct.
+         */
+        RegExpStruct or = new RegExpStruct("|");
+        int count = choices.size();
+        for (Object obin : choices) {
+          RegExpStruct temp = generateRegExp(obin);
+          if(count==0){
+            temp= temp.add(or);
+          }
+          newReg= newReg.add(temp);
+        }
+        /**
+         * Add bracket to regExpStruct.
+         */
+        newReg=(new RegExpStruct("(")).add(newReg);
+        newReg=newReg.add(new RegExpStruct(")"));
+        return newReg;
+      }
+      /** 
+       * Regular choice case.
+       */
+      if (all.containsKey("choice")) {
+        /**
+         * Get list of choices
+         */
+        ArrayList< ? > choices = (ArrayList< ? >) all.get("choice");
+        /**
+         * Loop through list choices and build RegExpStruct.
+         */
+        RegExpStruct or = new RegExpStruct("|");
+        int count = choices.size();
+        for (Object obin : choices) {
+          RegExpStruct temp = generateRegExp(obin);
+          if(count==0){
+            temp= temp.add(or);
+          }
+          newReg= newReg.add(temp);
+        }
+        /**
+         * Add bracket to regExpStruct.
+         */
+        newReg=(new RegExpStruct("(")).add(newReg);
+        newReg=newReg.add(new RegExpStruct(")"));
+        return newReg;
+      }
+      // optional case
+      if (all.containsKey("optional")) {
+        RegExpStruct opt = new RegExpStruct();
+        Object optionOb = all.get("optional");
+        RegExpStruct optionReg = generateRegExp(optionOb);
+
+        // add space here 
+        String ex = "(?:" + optionReg.getExp() + ")?";
+        opt = (new RegExpStruct("(?:")).add(opt);
+        //opt = space.add(opt);
+        opt = opt.add(new RegExpStruct("?)"));
+        return opt;
+
+      }
+      return newReg;
+
+    }
+    //   if string
+    if (ob instanceof String) {
+
+      return new RegExpStruct(
+          (String) ob,
+          new LinkedHashMap<String, int[]>(),
+          new LinkedHashMap<String, MyObject>(),
+          0);
+
+    }
+    // custom objects
+    if (ob instanceof MyObject) {
+      //cast to MyObject.
+      MyObject thisOb = (MyObject) ob;
+
+      LinkedHashMap<String, int[]> intMap = 
+        new LinkedHashMap<String, int[]>();
+        int[] i = new int[1];
+      intMap.put(thisOb.getId(), i);
+
+      LinkedHashMap<String, MyObject> objMap = 
+        new LinkedHashMap<String, MyObject>();
+      objMap.put(thisOb.getId(), thisOb);
+
+      return new RegExpStruct(thisOb.getReg(), 
+          intMap, objMap, 1);
+
+    } else{
+      return new RegExpStruct(
+          "unexpected type encountered when generating RegExp" 
+          + " in Propery.class"
+          + ob, new LinkedHashMap<String, int[]>(),
+          new LinkedHashMap<String, MyObject>(), 0);
+
+    }
+
+  }
+  public StringTemplate getPrettyPrint(){
+    return reg.getPrettyPrint();
+    
+  }
   /**
    * Gets the regular expression for this property
    * @return a RegExpStruct representation of this property
@@ -507,9 +708,7 @@ public class SemanticPropertyLevelSpecification {
   public RegExpStruct getReg() {
     return reg;
   }
-  public void setReg(RegExpStruct reg) {
-    this.reg = reg;
-  }
+
   /**Could be deleted in future.
    * method to check an input string against this property
    * @return Matcher of input string against the regexof this property
@@ -539,13 +738,22 @@ public class SemanticPropertyLevelSpecification {
     /**
      * Fill HashMap with the captured variables for this Instance.
      */
-    HashMap<String, Integer> intMap  = reg.getGroupInt();
+    HashMap<String, int[]> intMap  = reg.getGroupInt();
     HashMap<String, MyObject> obMap = reg.getGroupObj();
 //    LinkedList<String> stringMap = new LinkedList <String>();
 //    int start = 0;
     for(String s: obMap.keySet()) {
       MyObject ob = obMap.get(s);
-      int i = intMap.get(s);
+      int[] g = intMap.get(s);
+      int i = 0;
+      //get valid int for the match
+      for(int pres:g){
+        //fix later
+        
+        if((pres != 0)){
+          i= pres;
+        }
+      }
       //fill only with non null values
       if((m.group(i)!=null)){
         Object temp = m.group(i);
@@ -590,17 +798,12 @@ public class SemanticPropertyLevelSpecification {
 //        }
       }
     }
-    return new SemanticPropertyInstance(name,level,scope,captured);
+    return new SemanticPropertyInstance(name,level,scope,captured,this.getPrettyPrint());
     
   }
   public String getName() {
     return name;
   }
-
-  public static void setName(String name) {
-    SemanticPropertyLevelSpecification.name = name;
-  }
-
   public ArrayList<ScopeId> getScope() {
     return scope;
   }
@@ -608,22 +811,6 @@ public class SemanticPropertyLevelSpecification {
   public void setScope(ArrayList<ScopeId> scope) {
     SemanticPropertyLevelSpecification.scope = scope;
   }
-
-  public static String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String string) {
-    SemanticPropertyLevelSpecification.description = string;
-  }
-
-  public static ArrayList<Object> getFormat() {
-    return format;
-  }
-  public void setFormat(ArrayList<Object> format) {
-    SemanticPropertyLevelSpecification.format = format;
-  }
-
   public LevelId getLevel() {
     return level;
   }

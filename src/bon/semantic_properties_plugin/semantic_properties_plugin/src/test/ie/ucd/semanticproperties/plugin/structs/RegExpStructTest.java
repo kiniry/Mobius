@@ -18,8 +18,10 @@ public class RegExpStructTest extends TestCase {
    */
   public final void testConcatSimple() {
 
-    LinkedHashMap < String, Integer > intMap = new LinkedHashMap < String, Integer > ();
+    LinkedHashMap < String, int[]> intMap = new LinkedHashMap < String, int []> ();
     LinkedHashMap < String, MyObject > obMap = new LinkedHashMap < String, MyObject > ();
+    
+    
     RegExpStruct eg1 = new RegExpStruct("(an exp)", intMap, obMap, 1);
     RegExpStruct eg2 = new RegExpStruct("(add on)", intMap, obMap, 1);
 
@@ -35,15 +37,19 @@ public class RegExpStructTest extends TestCase {
    */
   public final void testConcatWithNonEmptyMaps() {
 
-    LinkedHashMap < String, Integer > intMap1 = new LinkedHashMap < String, Integer > ();
-    intMap1.put("a", 5);
+    LinkedHashMap < String, int[] > intMap1 = new LinkedHashMap < String, int []> ();
+    int[] i = new int[1];
+    i[0] = 5;
+    intMap1.put("a", i);
     LinkedHashMap < String, MyObject > obMap1 = new LinkedHashMap < String, MyObject > ();
     obMap1.put("a", new MyInt("a",5));
     RegExpStruct eg1 = new RegExpStruct("(an exp)", intMap1, obMap1, 1);
     
     
-    LinkedHashMap < String, Integer > intMap2 = new LinkedHashMap < String, Integer > ();
-    intMap2.put("a", 5);
+    LinkedHashMap < String, int[] > intMap2 = new LinkedHashMap < String, int []> ();
+    int[] i2 = new int[1];
+    i2[0] = 5;
+    intMap2.put("a", i2);
     LinkedHashMap < String, MyObject > obMap2 = new LinkedHashMap < String, MyObject > ();
     obMap2.put("b", new MyInt("b",6));
     RegExpStruct eg2 = new RegExpStruct("(more)", intMap2, obMap2, 1);
@@ -66,10 +72,10 @@ public class RegExpStructTest extends TestCase {
    */
   public final void testEqualsSimple() {
 
-    LinkedHashMap < String, Integer > intMap = new LinkedHashMap < String, Integer > ();
+    LinkedHashMap < String, int[] > intMap = new LinkedHashMap < String, int []> ();
     LinkedHashMap < String, MyObject > obMap = new LinkedHashMap < String, MyObject > ();
     String exp = "anexp";
-    Integer num = 1;
+    int num = 1;
     
     RegExpStruct eg1 = new RegExpStruct(exp, intMap, obMap, num);
     RegExpStruct eg2 = new RegExpStruct(exp, intMap, obMap, num);
@@ -84,15 +90,19 @@ public class RegExpStructTest extends TestCase {
    */
   public final void testEqualsWithNonEmptyMaps() {
 
-    LinkedHashMap < String, Integer > intMap = new LinkedHashMap < String, Integer > ();
-    intMap.put("hi", 2);
-    LinkedHashMap < String, Integer > intMap2 = new LinkedHashMap < String, Integer > ();
-    intMap2.put("hi", 2);
+    LinkedHashMap < String, int[] > intMap = new LinkedHashMap < String, int []> ();
+    int[] i2 = new int[1];
+    i2[0] = 2;
+    intMap.put("hi", i2);
+    LinkedHashMap < String, int []> intMap2 = new LinkedHashMap < String, int []> ();
+    int[] i = new int[1];
+    i[0] = 2;
+    intMap2.put("hi", i);
     
     LinkedHashMap < String, MyObject > obMap = new LinkedHashMap < String, MyObject > ();
     LinkedHashMap < String, MyObject > obMap2 = new LinkedHashMap < String, MyObject > ();
     String exp = "anexp";
-    Integer num = 1;
+    int num = 1;
     
     RegExpStruct eg1 = new RegExpStruct(exp, intMap, obMap, num);
     RegExpStruct eg2 = new RegExpStruct(exp, intMap2, obMap2, num);

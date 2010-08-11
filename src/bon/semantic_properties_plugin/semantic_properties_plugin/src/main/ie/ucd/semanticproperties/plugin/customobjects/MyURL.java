@@ -7,7 +7,7 @@ public class MyURL extends MyObject {
 		super();
 	}
 
-	public MyURL(String newId, URL newValue) {
+	public MyURL(String newId, String newValue) {
 		super(newId,newValue);
 	}
 	@Override
