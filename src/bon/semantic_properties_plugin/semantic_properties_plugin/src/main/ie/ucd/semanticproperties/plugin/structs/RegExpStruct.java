@@ -18,13 +18,24 @@ package ie.ucd.semanticproperties.plugin.structs;
  * @version "$Id: 01-07-2010 $"
  * @author eo
  */
+import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
+import ie.ucd.semanticproperties.plugin.customobjects.MyDescription;
+import ie.ucd.semanticproperties.plugin.customobjects.MyExpression;
+import ie.ucd.semanticproperties.plugin.customobjects.MyFloat;
+import ie.ucd.semanticproperties.plugin.customobjects.MyInt;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
+import ie.ucd.semanticproperties.plugin.customobjects.MyString;
+import ie.ucd.semanticproperties.plugin.customobjects.Nat;
+import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertyUseException;
 
 import org.antlr.stringtemplate.*;
 import org.antlr.stringtemplate.language.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class that represents a Regular Expression.
@@ -42,15 +53,19 @@ public class RegExpStruct {
   /**
    * Map representing the values in the capturing group of this RegExp.
    */
-  private LinkedHashMap<String, int[]> groupInt;
+  private HashMap<String, int[]> positionMap;
   /**
    * Map representing the Objects in the capturing group of this RegExp.
    */
-  private LinkedHashMap<String, MyObject> groupObj;
+  private HashMap<String, MyObject> objectMap;
   /**
-   * Number of capturing groups in this regExp.
+   * Type of RegExpStruct this is.
    */
-  private int numberOfGroups;
+  private RegType typeOfReg;
+  /**
+   * Number of positions in this RegExpStruct.
+   */
+  private int totalPositions;
 
   /**
    * Default constructor.
@@ -58,9 +73,10 @@ public class RegExpStruct {
    */
   RegExpStruct() {
     exp = "";
-    groupInt = new LinkedHashMap<String, int[]>();
-    groupObj = new LinkedHashMap<String, MyObject>();
-    numberOfGroups = 0;
+    positionMap = new LinkedHashMap<String, int[]>();
+    objectMap = new LinkedHashMap<String, MyObject>();
+    typeOfReg = RegType.NORMAL;
+    totalPositions = 0;
   }
 
   /**
@@ -72,211 +88,274 @@ public class RegExpStruct {
    * @param num
    *          Number of capturing groups.
    */
-  RegExpStruct(String s, LinkedHashMap<String, int[]> m,
-      LinkedHashMap<String, MyObject> objectMap, int num) {
-    exp = s;
-    groupInt = m;
-    numberOfGroups = num;
-    groupObj = objectMap;
+  RegExpStruct(Object o) {
+    exp = "";
+    positionMap = new LinkedHashMap<String, int[]>();
+    objectMap = new LinkedHashMap<String, MyObject>();
+    typeOfReg = RegType.NORMAL;
+    
+    if(o instanceof MyObject){
+      MyObject temp = (MyObject) o;
+      objectMap.put(temp.getId(), temp);
+      positionMap.put(temp.getId(),new int[]{ 1});
+      exp+=temp.getKind().getReg();
+      totalPositions = 1;
+      
+    } else if(o instanceof String){
+      exp+=(String)o;
+      totalPositions = 0;
+    }
+  }
+ /**
+  * Constructor for choice, option.. etc.
+  * @param p
+  */
+  RegExpStruct(RegType p) {
+    exp = "";
+    positionMap = new LinkedHashMap<String, int[]>();
+    objectMap = new LinkedHashMap<String, MyObject>();
+    typeOfReg = p;
+    totalPositions = 0;
+    if(p.equals(RegType.OPTIONAL)){
+      exp = "(?:)?";
+    } else if (p.equals(RegType.CHOICE)) {
+      exp = "(?:)";
+    }
   }
 
   /**
-   * Method that adds a RegExpStruct on to this one.
-   * <p>
-   * Adds both String rep and map
-   * </p>
-   * @return concatenated RegExpStruct.
-   * @param toAdd
-   *          RegExpStruct to add on end.
-   * @param pre
-   *          String to add to start of whole regEx
-   * @param post
-   *          String to add to end of regEx
-   * @param additionalGroups
-   *          group produced by adding pre and post.
+   * Add RegExoStruct on to this one.
    */
-  public RegExpStruct concat(RegExpStruct toAdd, String pre, String post,int additionalGroups) {
-    String newExp = pre + exp + toAdd.getExp() + post;
-    int newNum = numberOfGroups + toAdd.getNumberOfGroups() + additionalGroups;
+  public void add(RegExpStruct toAdd) {
+    String space = "[\\s]+";
+    String optionalSpace = "[\\s]*";
+    /**
+     * Adjust exp.
+     */
+    if(typeOfReg.equals(RegType.NORMAL)){
+      /**
+       * if exp is empty dont add space
+       */
+      if((exp.equals(""))){
+        exp = toAdd.exp;
+      } else{
+       /**
+        * case where list item is optional space before must also be optional
+        */
+        if(toAdd.typeOfReg.equals(RegType.OPTIONAL)){
+          exp = exp + optionalSpace + toAdd.exp;
+        } else{
+          exp = exp +space+ toAdd.exp;
+        }
+      }
+    } else if(typeOfReg.equals(RegType.OPTIONAL)){
+      String temp = exp.substring(3,exp.length()-2);
+      /**
+       * add on optional. No space before if it is first option.
+       */
+      if((temp.equals(""))){
+        temp = toAdd.exp;
+      } else {
+        temp = temp+space+toAdd.exp;
+        
+      }
+      exp = "(?:"+temp+")?";
+      
+    } else if(typeOfReg.equals(RegType.CHOICE)){
+      String temp = exp.substring(3,exp.length()-1);
+      /**
+       * add on choice. No | before if it is first choice.
+       */
+      if((temp.equals(""))){
+        temp = toAdd.exp;
+      } else {
+        temp = temp+"|"+toAdd.exp;
+      }
+     
+      exp = "(?:"+temp+")";
+      
+    }
 
     /**
-     * Concat the int linkedHashMap
+     * Adjust all maps items in  toAdd and add them to this.
      */
-    LinkedHashMap<String, int[]> newIntGroup = groupInt;
-    LinkedHashMap<String, int[]> addGroup = toAdd.getGroupInt();
-    for (String key : addGroup.keySet()) {
-      
-      int[] newAddGroup = addGroup.get(key);
-      for(int i=0;i<newAddGroup.length;i++){
-        newAddGroup[i] = newAddGroup[i] + numberOfGroups;
+    for(String key : toAdd.positionMap.keySet()) {
+      /**
+       * Adjust positionMap.
+       */
+      int[] newArray = toAdd.positionMap.get(key);
+      // Adjust int[].
+      for(int i=0;i<newArray.length;i++){
+        newArray[i] = newArray[i] + totalPositions;
       }
-      newIntGroup.put(key, newAddGroup);
-
+      // Add to this map and check for duplicates.
+      if(this.positionMap.put(key, newArray)== null){
+        //throw exception here.
+      }
+      /**
+       * Adjust objectMap.
+       */
+      this.objectMap.put(key, toAdd.objectMap.get(key));
+    }
+    
+    /**
+     * Adjust total positions.
+     */
+    totalPositions+=toAdd.totalPositions;
+  }
+  public HashMap<String, Object> match(String input) throws InvalidSemanticPropertyUseException{
+    HashMap<String,Object> captured = new HashMap <String, Object>();
+    /**
+     * Match Instance
+     */
+    Pattern p = Pattern.compile(exp);
+    Matcher m = p.matcher(input);
+    if(!m.matches()){
+      throw new InvalidSemanticPropertyUseException();
     }
     /**
-     * Concat the obj linkedHashMap
+     * Fill HashMap with the captured variables for this Instance.
      */
+    HashMap<String, int[]> intMap  = positionMap;
+    HashMap<String, MyObject> obMap = objectMap;
+//    LinkedList<String> stringMap = new LinkedList <String>();
+//    int start = 0;
+    for(String s: obMap.keySet()) {
+      MyObject ob = obMap.get(s);
+      int[] g = intMap.get(s);
+      int i = 0;
+      //get valid int for the match
+      for(int pres:g){
+        //fix later
+        
+        if((pres != 0)){
+          i= pres;
+        }
+      }
+      //fill only with non null values
+      if((m.group(i)!=null)){
+        Object temp = m.group(i);
+        if(ob instanceof MyString){
+          String toSet =  m.group(i);
+          ob.setValue(toSet.substring(1,toSet.length()-1));
+        } else if(ob instanceof MyExpression){
+          String toSet =  m.group(i);
+          ob.setValue(toSet.substring(1,toSet.length()-1));
+        } else if(ob instanceof MyDescription){
+          String toSet =  m.group(i);
+          ob.setValue(toSet.substring(0,toSet.length()-1));
+        } else if(ob instanceof Nat){
+          Integer toSet =  Integer.parseInt(m.group(i));
+          ob.setValue(toSet);
+        } else if(ob instanceof MyInt){
+          Integer toSet =  Integer.parseInt(m.group(i));
+          ob.setValue(toSet);
+        } else if(ob instanceof MyFloat){
+          float toSet = Float.valueOf(m.group(i)).floatValue();
+          ob.setValue(toSet);
+        } else {
+          ob.setValue(m.group(i));
+        }
+        captured.put(s, ob.getValue());
+      }
+//        // add Strings up to this match
+//        int f = m.start(i);
+//        String toAdd = input.substring( start, m.start(i));
+//        start = m.end(i);
+//        String[] split = toAdd.split(" ");
+//        for(String cur : split){
+//          stringMap.push(cur);
+//        }
+//        //last case
+//        if(m.groupCount()==i && start!=input.length()){
+//          String toAdd2 = input.substring( start, m.start(i));
+//          start = m.end(i);
+//          String[] split2 = toAdd.split("\\s");
+//          for(String cur : split2){
+//            stringMap.push(cur);
+//          }
+//        }
 
-    LinkedHashMap<String, MyObject> newObjGroup = groupObj;
-    newObjGroup.putAll(toAdd.getGroupObj());
-
-    return (new RegExpStruct(newExp, newIntGroup, newObjGroup, newNum));
-
+    }
+    return captured;
   }
   /**
    * 
-   * Mehods to be used by new generate method--- delete this when implemetntation is completed.
    * @return
    */
-  
-  /**
-   * Constructor that takes creates non capturing RegExpStuct for non capturing input string.
-   */
-  RegExpStruct(String input) {
-    exp = input;
-    groupInt = new LinkedHashMap<String, int[]>();
-    groupObj = new LinkedHashMap<String, MyObject>();
-    numberOfGroups = 0;
-  }
-  /**
-   * Add RegExoStruct on to this one
-   */
-  RegExpStruct add(RegExpStruct toAdd){
-    String newExp =  exp + toAdd.getExp();
-    int newNum = numberOfGroups + toAdd.getNumberOfGroups();
-
-    /**
-     * Concat the int linkedHashMap
-     */
-    LinkedHashMap<String, int[]> newIntGroup = groupInt;
-    LinkedHashMap<String, int[]> addGroup = toAdd.getGroupInt();
-    for (String key : addGroup.keySet()) {
-      int[] newAddGroup = addGroup.get(key);
-      for(int i :newAddGroup){
-        newAddGroup[i] = i + numberOfGroups;
-      }
-      newIntGroup.put(key, newAddGroup);
-    }
-    /**
-     * Concat the obj linkedHashMap
-     */
-
-    LinkedHashMap<String, MyObject> newObjGroup = groupObj;
-    newObjGroup.putAll(toAdd.getGroupObj());
-
-    return (new RegExpStruct(newExp, newIntGroup, newObjGroup, newNum));
-  }
-
-  public String getExp() {
-    return exp;
-  }
-
-  public int getNumberOfGroups() {
-    return numberOfGroups;
-  }
-
-  public void setNumberOfGroups(int numberOfGroups) {
-    this.numberOfGroups = numberOfGroups;
-  }
-
-  public LinkedHashMap<String, int[]> getGroupInt() {
-    return groupInt;
-  }
-
-  public void setGroups(LinkedHashMap<String, int[]> groups) {
-    this.groupInt = groups;
-  }
-
-  public void setExp(String exp) {
-    this.exp = exp;
-  }
-
-  public LinkedHashMap<String, MyObject> getGroupObj() {
-    return groupObj;
-  }
   public StringTemplate getPrettyPrint(){
     String i = "";
-    for(String key:groupObj.keySet()){
+    for(String key:objectMap.keySet()){
       i += ("$"+ key+"$ ");
     }
     return new StringTemplate(i, DefaultTemplateLexer.class);
     
   }
-  /**
-   * Overwrite hashCode as we overwrote equals.
-   */
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((exp == null) ? 0 : exp.hashCode());
-    result = prime * result + numberOfGroups;
-    return result;
-  }
-  /**
-   * Overwrite equals method as it dosn't like LinkedHahsMap.
-   */
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    final RegExpStruct other = (RegExpStruct) obj;
-    if (exp == null) {
-      if (other.exp != null)
-        return false;
-    } else if (!exp.equals(other.exp))
-      return false;
-    if (groupInt == null) {
-      if (other.groupInt != null)
-        return false;
-    } else if (!(compareLinkedHashMap(groupInt, other.getGroupInt())))
-      return false;
-    if (groupObj == null) {
-      if (other.groupObj != null)
-        return false;
-    } else if (!(compareLinkedHashMap(groupObj,other.getGroupObj())))
-      return false;
-    if (numberOfGroups != other.numberOfGroups)
-      return false;
-    return true;
-  }
-  private Boolean compareLinkedHashMap(LinkedHashMap<String, ? > m1, LinkedHashMap<String, ? > m2) {
 
-    if ( m1.size() != m2.size() ) {
+  /** 
+   * Used for testing equivalence of two RegExpStructs.
+   */
+  public static boolean equals(final RegExpStruct r1, final RegExpStruct r2) {
+    if(!r1.exp.equals(r2.exp)){
       return false;
     }
-    outerloop:for (String s : m1.keySet()) {
-      if(!m2.containsKey(s)){
+    if(!(r1.totalPositions==r2.totalPositions)){
+      return false;
+    }
+    if(!(r1.typeOfReg.equals(r2.typeOfReg))){
+      return false;
+    }
+    /**
+     * Compare objectMaps and intMaps..
+     */
+    if(r1.objectMap.size()!=r2.objectMap.size()){
+      return false;
+    }
+    if(r1.positionMap.size()!=r2.positionMap.size()){
+      return false;
+    }
+    Iterator obIt = r1.objectMap.keySet().iterator();
+    while(obIt.hasNext()){
+      String key = (String)obIt.next();
+      /**
+       * ob map
+       */
+      if (!(r2.objectMap.get(key).getId().equals(r1.objectMap.get(key).getId()))){
         return false;
       }
-      Iterator i = m2.values().iterator();
-      while(i.hasNext()){
-        Object r = i.next();
-        Object p = m1.get(s);
-        if(r instanceof int[]){
-          int [] nr = (int[]) r;
-          int [] np = (int[]) p;
-          if(Arrays.equals(np,nr)){
-            break outerloop;
-          }
-        }
-        else{
-          if(r.equals(p)){
-            break outerloop;
-          }
-        }
-        
+      if (!(r2.objectMap.get(key).getValue().equals(r1.objectMap.get(key).getValue()))){
+        return false;
       }
-      return false;
-      
+      /**
+       * int map
+       */
+      if (!Arrays.equals(r2.positionMap.get(key),r1.positionMap.get(key))){
+        return false;
+      }
     }
     return true;
   }
+
+  public LinkedHashMap<String, Object> getGroupObj() {
+    
+    return(LinkedHashMap)objectMap;
+  }
+
+  /**
+   * @return the exp
+   */
+  public String getExp() {
+    return exp;
+  }
+
+  /**
+   * @return the totalPositions
+   */
+  public int getTotalPositions() {
+    return totalPositions;
+  }
+
 
 }
 

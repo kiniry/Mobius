@@ -60,18 +60,11 @@ public class SemanticPropertyLevelSpecificationTest extends TestCase {
     /**
      * Compare regular expression.
      */
-    LinkedHashMap < String , int[]> capGroup= new LinkedHashMap< String , int[]>();
-    int[] i = new int[1];
-    i[0]=1;
-    capGroup.put("choice1", i);
-    LinkedHashMap < String , MyObject> capObGroup = new LinkedHashMap<String, MyObject >();
-    MyObject r = new MyObject();
-    r.setValue(0);
-   capObGroup.put("choice1", r);
     
-    RegExpStruct li = new RegExpStruct("(a|b)(?:[\\s+]c)?",capGroup, capObGroup ,1);
+    RegExpStruct li = new RegExpStruct("(a|b)(?:[\\s+]c)?");
+    li.add(new RegExpStruct("choice1"));
     
-    assertEquals(lr1.getReg(),li);
+    assertTrue(RegExpStruct.equals(lr1.getReg(),li));
   }
 
   /**
@@ -85,7 +78,7 @@ public class SemanticPropertyLevelSpecificationTest extends TestCase {
     /**
      * get gorups of objects and assert that they are what we expect.
      */
-    LinkedHashMap<String, MyObject> objs = lr1.getReg().getGroupObj();
+    LinkedHashMap<String, Object> objs = lr1.getReg().getGroupObj();
     
 //    assertEquals(objs.get("c"), new MyClass("c",new Class("jav.lang.class")));
 

@@ -2,7 +2,7 @@
 name: concurrency
 level: bon
 format: 
-  - choice (CONCURRENT): 
+  - choice: 
     - SEQUENTIAL
     - GUARDED
     - CONCURRENT
@@ -20,7 +20,7 @@ description: |
 name: concurrency
 level: java
 format: 
-  - choice (PARALLEL): 
+  - choice: 
     - SEQ
     - GUARD
     - PARALLEL
