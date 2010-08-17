@@ -9,6 +9,9 @@
    <feature url="features/ie.ucd.bon.beetlz_1.2.9.jar" id="ie.ucd.bon.beetlz" version="1.2.9">
       <category name="Beetlz"/>
    </feature>
+   <feature url="features/ie.ucd.bon.plugin_0.3.14.jar" id="ie.ucd.bon.plugin" version="0.3.14">
+      <category name="BONc"/>
+   </feature>
    <category-def name="BONc" label="BONc"/>
    <category-def name="Beetlz" label="Beetlz"/>
 </site>
