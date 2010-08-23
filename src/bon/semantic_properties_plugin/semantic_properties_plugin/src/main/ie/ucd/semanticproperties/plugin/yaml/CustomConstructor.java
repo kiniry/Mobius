@@ -28,6 +28,7 @@ public class CustomConstructor extends Constructor {
         this.yamlConstructors.put(new Tag("!myurl"),new ConstructMyURL());
         this.yamlConstructors.put(new Tag("!myversion"),new ConstructMyVersion());
         this.yamlConstructors.put(new Tag("!mystring"),new ConstructMyString());
+        this.yamlConstructors.put(new Tag("!keyword"),new ConstructKeyword());
     }
 
     private class ConstructNat extends AbstractConstruct {
@@ -158,6 +159,18 @@ public class CustomConstructor extends Constructor {
 
         }
     }
+    
+    private class ConstructKeyword extends AbstractConstruct {
+      @SuppressWarnings("unchecked")
+      public Object construct(Node node) {
+        String val = (String) constructScalar((ScalarNode) node);
+        int position = val.indexOf('=');
+        String a = (val.substring(1, position));
+        String b = (val.substring(position+1,val.length()-1));
+        return new Keyword(a,b);
+
+      }
+  }
     /**
      * Method to concert a Node into generalMyObject.
      * @param node

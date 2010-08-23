@@ -22,6 +22,7 @@ public class CustomRepresenter extends Representer {
         this.representers.put(MyThrowable.class, new RepresentMyThrowable());
         this.representers.put(MyURL.class, new RepresentMyURL());
         this.representers.put(MyVersion.class, new RepresentMyVersion());
+        this.representers.put(Keyword.class, new RepresentKeyword());
         
     }
 
@@ -101,11 +102,19 @@ public class CustomRepresenter extends Representer {
             String value = "<"+eg.getId()+"=myversion>";
             return representScalar(new Tag("!myversion"), value);
         }
-    }    private class RepresentMyURL implements Represent {
+    }    
+    private class RepresentMyURL implements Represent {
         public Node representData(Object data) {
             MyURL eg = (MyURL) data;
             String value = "<"+eg.getId()+"=myurl>";
             return representScalar(new Tag("!myurl"), value);
         }
     }
+    private class RepresentKeyword implements Represent {
+      public Node representData(Object data) {
+         Keyword eg = (Keyword) data;
+          String value = "<"+eg.getValue()+"="+eg.getValue()+">";
+          return representScalar(new Tag("!keyword"), value);
+      }
+  }
 }

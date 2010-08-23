@@ -22,7 +22,8 @@ public class CustomResolver extends Resolver {
 		addImplicitResolver(new Tag("!mystring"), Pattern.compile("<\\w+=string="+MyObjectKind.String.getReg()+">"), null);
 		addImplicitResolver(new Tag("!mythrowable"), Pattern.compile("<\\w+=throwable="+MyObjectKind.Throwable.getReg()+">"), null);
 		addImplicitResolver(new Tag("!myurl"), Pattern.compile("<\\w+=url="+MyObjectKind.URL.getReg()+">"), null);
-		addImplicitResolver(new Tag("!myversion"), Pattern.compile("<\\w+=version="+MyObjectKind.Version.getReg()+">"), null);		
+		addImplicitResolver(new Tag("!myversion"), Pattern.compile("<\\w+=version="+MyObjectKind.Version.getReg()+">"), null);
+		addImplicitResolver(new Tag("!keyword"), Pattern.compile("<\\w+=\\w+>"), null);    
 		
 //		addImplicitResolver(Tag.BOOL, BOOL, "yYnNtTfFoO");
 //		addImplicitResolver(Tag.FLOAT, FLOAT, "-+0123456789.");

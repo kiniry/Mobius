@@ -3,12 +3,12 @@ name: concurrency
 level: bon
 format: 
   - choice: 
-    - SEQUENTIAL
-    - GUARDED
-    - CONCURRENT
-    - [TIMEOUT, <to=nat=0>, <e=throwable=java.lang.EXCEPTION>]
-    - [FAILURE, <f=throwable=java.lang.ERROR>]
-    - SPECIAL
+    - <c1=SEQUENTIAL>
+    - <c1=GUARDED>
+    - <c1=CONCURRENT>
+    - [<c1=TIMEOUT>, <to=nat=0>, <e=throwable=java.lang.EXCEPTION>]
+    - [<c1=FAILURE>, <f=throwable=java.lang.ERROR>]
+    - <c1=SPECIAL>
   - optional: <description=string=''>
 scope: 
   - Module
@@ -21,12 +21,12 @@ name: concurrency
 level: java
 format: 
   - choice: 
-    - SEQ
-    - GUARD
-    - PARALLEL
-    - [TO, <to=nat=0>, <e=throwable=java.lang.Exception>]
-    - [FAILURE, <f=throwable=java.lang.Error>]
-    - SPECIAL
+    - <c1=SEQ>
+    - <c1=GUARD>
+    - <c1=PARALLEL>
+    - [<c1=TO>, <to=nat=0>, <e=throwable=java.lang.Exception>]
+    - [<c1=FAILURE>, <f=throwable=java.lang.Error>]
+    - <c1=SPECIAL>
   - optional: <description=string='No information.'>
   #- optional: <owner=string='unknown'>
 scope: 
@@ -39,6 +39,7 @@ description: |
 property: concurrency
 relation(bon,java):
   - keyword:
+    - c1: c1
     - SEQUENTIAL: SEQ
     - CONCURRENT: PARALLEL
     - GUARDED: GUARD

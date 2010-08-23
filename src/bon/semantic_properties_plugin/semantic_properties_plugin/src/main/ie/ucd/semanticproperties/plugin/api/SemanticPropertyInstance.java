@@ -110,12 +110,11 @@ public class SemanticPropertyInstance {
    * of the semantic property's format.
    */
   public String toString() {
-    StringTemplate temp = pp;
-    for(String r :captured.keySet()){
-      temp.setAttribute(r, captured.get(r));
-    }
-    return temp.toString();
     
+    for(String i:captured.keySet()){
+      pp.setAttribute(i, captured.get(i).toString());
+    }
+    return pp.toString();
   }
 
 

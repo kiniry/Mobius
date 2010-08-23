@@ -3,6 +3,7 @@ package ie.ucd.semanticproperties.plugin.structs;
 import ie.ucd.semanticproperties.plugin.api.LevelId;
 import ie.ucd.semanticproperties.plugin.api.ScopeId;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
+import ie.ucd.semanticproperties.plugin.customobjects.Keyword;
 import ie.ucd.semanticproperties.plugin.customobjects.MyDescription;
 import ie.ucd.semanticproperties.plugin.customobjects.MyExpression;
 import ie.ucd.semanticproperties.plugin.customobjects.MyFloat;
@@ -106,7 +107,12 @@ public class SemanticPropertyRefinementSpecification {
      */
     if (currentOb instanceof Entry< ? , ? >) {
       Entry<Object, Object> ent = (Entry<Object, Object>) currentOb;
-      /*check  for key relation(int,int).
+      
+      /**
+       * do key
+       */
+      
+      /**check  for key relation(int,int).
        * 
        */
 
@@ -191,16 +197,7 @@ public class SemanticPropertyRefinementSpecification {
     }
 
   }
-///**Check Validity Of RefinementProp.
-//* <p> Basic test to check that all variables are not null</p>
-//*/
-//private boolean isValidRefinementProperty() {
-//if (propertyName == null || oConversions == null || sConversions == null) {
-//return false;
-//} else {
-//return true;
-//}
-//}
+
 
   /**Check if LevelRepresenation match p1 refines to p2.
    * @param p1 source property match to check.
@@ -224,7 +221,7 @@ public class SemanticPropertyRefinementSpecification {
       throw new IncompatibleSemanticPropertyInstancesException();
     }
     /**
-     * Check that all strings are refined
+     * Check that all captur strings are refined
      */
 //    for(String cur : p1.getStringMap()) {
 //      if(sConversions.containsKey(cur)){
@@ -326,6 +323,35 @@ public class SemanticPropertyRefinementSpecification {
       } catch(UnknownVariableIdentifierException e){
         // this just means that not all options for this level were filled in this instance
       }
+      
+      
+      //check strings
+      Iterator<String> it2 = sConversions.keySet().iterator();
+      while (it2.hasNext()) {
+        
+        
+          
+          String presKey = (String) it2.next();
+          
+          Object t1 = spl1.getReg().getGroupObj().get(presKey);
+          Object t2 = spl2.getReg().getGroupObj().get(sConversions.get(presKey));
+          
+          
+          if(t1 instanceof Keyword && t2 instanceof Keyword){
+             Keyword k1= (Keyword) t1;
+             Keyword k2 = (Keyword) t2;
+             try{
+               k1 = new Keyword(k1.getKeyword(),(String)p1.getVariable(presKey));
+               k2  = new Keyword(k2.getKeyword(),(String)p2.getVariable(sConversions.get(presKey)));
+             } catch(UnknownVariableIdentifierException e) {
+            
+             }
+             
+             if(!(sConversions.get(k1.getValue()).equals(k2.getValue()))){
+               throw new InvalidRefinementException();
+             }
+          }
+      }
     }
     return true;
   }
@@ -381,12 +407,12 @@ public class SemanticPropertyRefinementSpecification {
           String post="";
           //deal with each conversion appropriately
           if (tran.equals(Transitions.prefix)) {
-            post = "extra";
+            post = "";
           } else if (tran.equals(Transitions.substring)) {
-            pre = "bef";
-            post = "aft";
+            pre = "";
+            post = "";
           } else if (tran.equals(Transitions.suffix)) {
-            pre = "extra";
+            pre = "";
           } else if (tran.equals(Transitions.equals)) {
 
           }
@@ -440,14 +466,35 @@ public class SemanticPropertyRefinementSpecification {
     /**
      * Refine all strings.
      */
-//    for(String cur : p1.getStringMap()) {
-//      if(sConversions.containsKey(cur)){
-//        String keyToCompare = sConversions.get(cur);
-//        newString.push(keyToCompare);
-//      } else {
-//        throw new InvalidRefinementException();
-//      }
-//    }
+    //check strings
+    
+    Iterator<String> it2 = sConversions.keySet().iterator();
+    while (it2.hasNext()) {
+      
+      
+        
+        String presKey = (String) it2.next();
+        
+        Object t1 = spl1.getReg().getGroupObj().get(presKey);
+        
+        
+        
+        if(t1 instanceof Keyword){
+           Keyword k1= (Keyword) t1;
+
+           try{
+             k1 = new Keyword(k1.getKeyword(),(String)p1.getVariable(presKey));
+             
+             Keyword newk = new Keyword(sConversions.get(k1.getKeyword()),sConversions.get(k1.getValue()));
+             newCaptured.put(newk.getKeyword(), newk.getValue());
+
+           } catch(UnknownVariableIdentifierException e) {
+          
+           }
+        
+        }
+    }
+
     return new SemanticPropertyInstance(p1.getPropertyType(),level,p1.getScope(),newCaptured,spl1.getPrettyPrint());
   }
   /**

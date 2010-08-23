@@ -92,7 +92,7 @@ public class FullTest {
   public void parsingTest5() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException, UnknownVariableIdentifierException {
     handler.add(new File(PATH + "../concurrency_full.yaml"));
     SemanticPropertyInstance inst = handler.parse("concurrency TIMEOUT 5 java.lang.Exception",  LevelId.BON_FORMAL, ScopeId.MODULE);
-    assertEquals(inst.getVariable("CONCURRENT"), "TIMEOUT");
+    assertEquals(inst.getVariable("c1"), "TIMEOUT");
     assertEquals(inst.getVariable("to"), 5);
     assertEquals(inst.getVariable("e"), "java.lang.Exception");
   }
@@ -109,7 +109,28 @@ public class FullTest {
     handler.add(new File(PATH + "../concurrency_full.yaml"));
     SemanticPropertyInstance inst = handler.parse("concurrency SEQUENTIAL",  LevelId.BON_FORMAL, ScopeId.MODULE);
     SemanticPropertyInstance refInst = handler.generate(inst, LevelId.JAVA_JML);
-    assertEquals(refInst.toString(), "concurrency SEQUENTIAL");
+    // I changed this from concurrency SEQUENTIAL to concurrency SEQ as i think that should be the correct outcome.
+    assertEquals(inst.toString(), "concurrency SEQUENTIAL");
+
+    assertEquals(refInst.toString(), "concurrency SEQ");
   }
   
+  ///eoins added tests
+
+  @Test(expected=IncompatibleSemanticPropertyInstancesException.class)
+  public void refinementTest2() throws IncompatibleSemanticPropertyInstancesException, InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException, UnknownVariableIdentifierException, InvalidRefinementException {
+    handler.add(new File(PATH + "../concurrency_full.yaml"));
+    SemanticPropertyInstance inst = handler.parse("concurrency SEQUENTIAL",  LevelId.BON_FORMAL, ScopeId.MODULE);
+    handler.isValidRefinement(inst,inst);
+
+  }
+  
+  @Test(expected=InvalidRefinementException.class)
+  public void refinementTest3() throws InvalidRefinementException, InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException, UnknownVariableIdentifierException, InvalidRefinementException, IncompatibleSemanticPropertyInstancesException {
+    handler.add(new File(PATH + "../concurrency_full.yaml"));
+    SemanticPropertyInstance inst = handler.parse("concurrency SEQUENTIAL",  LevelId.BON_FORMAL, ScopeId.MODULE);
+    SemanticPropertyInstance inst2 = handler.parse("concurrency GUARD",  LevelId.JAVA_JML, ScopeId.MODULE);
+    handler.isValidRefinement(inst,inst2);
+
+  }
 }
