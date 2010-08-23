@@ -177,9 +177,6 @@ public class SemanticPropertiesHandler {
      * Check refinement for these two instances
      */
     SemanticPropertyRefinementSpecification ref = mainSP.getRefinement(prop1, prop2);
-    if(ref==null){
-      throw new InvalidRefinementException();
-    }
     /**
      * Check levels for the two instances
      */

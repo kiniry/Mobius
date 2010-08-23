@@ -109,11 +109,7 @@ public class SemanticPropertyRefinementSpecification {
       Entry<Object, Object> ent = (Entry<Object, Object>) currentOb;
       
       /**
-       * do key
-       */
-      
-      /**check  for key relation(int,int).
-       * 
+       * check  for key relation(int,int).
        */
 
       Pattern p = Pattern.compile("relation\\((\\w+),(\\w+)\\)");
@@ -415,7 +411,7 @@ public class SemanticPropertyRefinementSpecification {
             pre = "";
           } else if (tran.equals(Transitions.equals)) {
 
-          }
+          }   
           MyObject temp = new MyObject();
           temp.setId(ob1.getId());
           temp.setValue((pre + ob1.getValue() + post));

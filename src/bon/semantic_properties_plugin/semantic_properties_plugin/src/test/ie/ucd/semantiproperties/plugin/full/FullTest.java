@@ -10,7 +10,9 @@ import ie.ucd.semanticproperties.plugin.exceptions.InvalidRefinementException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertyUseException;
 import ie.ucd.semanticproperties.plugin.exceptions.SemanticPropertyNotValidAtScopeException;
+import ie.ucd.semanticproperties.plugin.exceptions.UnknownLevelException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownPropertyException;
+import ie.ucd.semanticproperties.plugin.exceptions.UnknownScopeException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
 
 import java.io.File;
@@ -25,10 +27,12 @@ import static org.junit.Assert.*;
 public class FullTest {
   private static final String PATH = "resources/examples/junit/";
   private SemanticPropertiesHandler handler;
+  private SemanticPropertiesHandler handler2;
   
   @Before
   public void setUp() throws Exception {
     handler = new SemanticPropertiesHandler();
+    handler2 = new SemanticPropertiesHandler();
   }
 
   @After
@@ -57,6 +61,17 @@ public class FullTest {
   @Test(expected=InvalidSemanticPropertySpecificationException.class) 
   public void addSomewhatInvalidProperty() throws InvalidSemanticPropertySpecificationException, IOException {
     handler.add(new File(PATH + "invalidproperty.yaml"));
+  }
+  
+  @Test(expected=UnknownLevelException.class) 
+  public void addUnknownLevelProperty() throws InvalidSemanticPropertySpecificationException, IOException {
+    handler.add(new File(PATH + "invalidlevel.yaml"));
+  }
+  
+  
+  @Test(expected=UnknownScopeException.class) 
+  public void addUnknownScopeProperty() throws InvalidSemanticPropertySpecificationException, IOException {
+    handler.add(new File(PATH + "invalidscope.yaml"));
   }
   
   
@@ -104,6 +119,34 @@ public class FullTest {
     assertEquals(inst.getVariable("to"), 5);
   }
   
+  @Test (expected=InvalidSemanticPropertyUseException.class)
+  public void parsingTest7() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException  {
+    handler.add(new File(PATH + "../concurrency_full.yaml"));
+    SemanticPropertyInstance inst = handler.parse("concurrency SEQUENPPPPAL",  LevelId.BON_FORMAL, ScopeId.MODULE);
+  }
+  
+  
+  @Test (expected=UnknownPropertyException.class)
+  public void parsingTest8() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException  {
+    handler.add(new File(PATH + "../concurrency_full.yaml"));
+    SemanticPropertyInstance inst = handler.parse("concurrency2222 SEQUENTIAL",  LevelId.BON_FORMAL, ScopeId.MODULE);
+  }
+  
+  
+  
+  @Test(expected=UnknownLevelException.class) 
+  public void parsingTest9() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException  {
+    handler.add(new File(PATH + "../concurrency_full.yaml"));
+    SemanticPropertyInstance inst = handler.parse("concurrency SEQUENTIAL",  LevelId.BON_INFORMAL, ScopeId.MODULE);
+  }
+  
+
+  @Test(expected=UnknownScopeException.class) 
+  public void parsingTest10() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException  {
+    handler.add(new File(PATH + "../concurrency_full.yaml"));
+    SemanticPropertyInstance inst = handler.parse("concurrency SEQUENTIAL",  LevelId.BON_FORMAL, ScopeId.VARIABLE);
+  }
+  
   @Test 
   public void refinementTest1() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException, IncompatibleSemanticPropertyInstancesException, InvalidRefinementException {
     handler.add(new File(PATH + "../concurrency_full.yaml"));
@@ -131,6 +174,33 @@ public class FullTest {
     SemanticPropertyInstance inst = handler.parse("concurrency SEQUENTIAL",  LevelId.BON_FORMAL, ScopeId.MODULE);
     SemanticPropertyInstance inst2 = handler.parse("concurrency GUARD",  LevelId.JAVA_JML, ScopeId.MODULE);
     handler.isValidRefinement(inst,inst2);
+
+  }
+  
+  
+  @Test(expected=IncompatibleSemanticPropertyInstancesException.class) 
+  public void validRefinementTest1() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException, IncompatibleSemanticPropertyInstancesException, UnknownVariableIdentifierException, InvalidRefinementException  {
+    handler.add(new File(PATH + "../concurrency_full.yaml"));
+    handler.add(new File(PATH + "substringEg.yaml"));
+    SemanticPropertyInstance inst = handler.parse("concurrency SEQUENTIAL",  LevelId.BON_FORMAL, ScopeId.MODULE);
+    SemanticPropertyInstance inst2 = handler.parse("substringEg a des. (sd) 'hd'",  LevelId.BON_FORMAL, ScopeId.MODULE);
+    handler.isValidRefinement(inst, inst2);
+  }
+  @Test(expected=UnknownPropertyException.class) 
+  public void validRefinementTest2() throws InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException, IncompatibleSemanticPropertyInstancesException, UnknownVariableIdentifierException, InvalidRefinementException  {
+    handler.add(new File(PATH + "../concurrency_full.yaml"));
+    handler2.add(new File(PATH + "substringEg.yaml"));
+    SemanticPropertyInstance inst = handler.parse("concurrency SEQUENTIAL",  LevelId.BON_FORMAL, ScopeId.MODULE);
+    SemanticPropertyInstance inst2 = handler2.parse("substringEg a des. (sd) 'hd'",  LevelId.BON_FORMAL, ScopeId.MODULE);
+    handler.isValidRefinement(inst, inst2);
+  }
+  
+  @Test(expected=IncompatibleSemanticPropertyInstancesException.class)
+  public void validRefinementTest3() throws InvalidRefinementException, InvalidSemanticPropertySpecificationException, IOException, UnknownPropertyException, InvalidSemanticPropertyUseException, SemanticPropertyNotValidAtScopeException, UnknownVariableIdentifierException, InvalidRefinementException, IncompatibleSemanticPropertyInstancesException {
+    handler.add(new File(PATH + "../concurrency_full.yaml"));
+    SemanticPropertyInstance inst = handler.parse("concurrency SEQUENTIAL",  LevelId.BON_FORMAL, ScopeId.MODULE);
+    SemanticPropertyInstance inst2 = handler.parse("concurrency SEQ",  LevelId.JAVA_JML, ScopeId.MODULE);
+    handler.isValidRefinement(inst2,inst);
 
   }
 }
