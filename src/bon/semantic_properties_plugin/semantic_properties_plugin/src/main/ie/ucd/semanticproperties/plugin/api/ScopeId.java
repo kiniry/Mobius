@@ -1,6 +1,6 @@
 package ie.ucd.semanticproperties.plugin.api;
 
-import ie.ucd.semanticproperties.plugin.exceptions.UnknownScopeException;
+import ie.ucd.semanticproperties.plugin.exceptions.UndefinedScopeException;
 /**
  * Sets the allowable scopes for levels and instances.
  * @author eo
@@ -31,9 +31,9 @@ public enum ScopeId {
    * Returns the scope if one exists for input string.
    * @param name Input string.
    * @return Scope
-   * @throws UnknownScopeException if no scope exists for this input string.
+   * @throws UndefinedScopeException if no scope exists for this input string.
    */
-  public static ScopeId scopeIdFor(String name) throws UnknownScopeException {
+  public static ScopeId scopeIdFor(String name) throws UndefinedScopeException {
     for (ScopeId id : ScopeId.values()) {
       for (String n : id.names) {
         if (n.equals(name)) {
@@ -41,7 +41,7 @@ public enum ScopeId {
         }
       }
     }
-    throw new UnknownScopeException();
+    throw new UndefinedScopeException();
   }
 
 }

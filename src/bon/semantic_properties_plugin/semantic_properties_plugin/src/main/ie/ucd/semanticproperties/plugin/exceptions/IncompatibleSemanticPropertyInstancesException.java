@@ -1,5 +1,5 @@
 package ie.ucd.semanticproperties.plugin.exceptions;
 
-public class IncompatibleSemanticPropertyInstancesException extends SemanticPropertyException {
+public class IncompatibleSemanticPropertyInstancesException extends InvalidSemanticPropertyUseException {
 
 }

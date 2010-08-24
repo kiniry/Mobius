@@ -1,3 +1,4 @@
+
 /**
  * @title "Semantic LevelRepresenation Plugin Package"
  * @description "Class that represents,checks and generates a regexp for a semantic property."
@@ -13,15 +14,12 @@ import ie.ucd.semanticproperties.plugin.api.LevelId;
 import ie.ucd.semanticproperties.plugin.api.ScopeId;
 import ie.ucd.semanticproperties.plugin.api.SemanticPropertyInstance;
 import ie.ucd.semanticproperties.plugin.customobjects.Keyword;
-import ie.ucd.semanticproperties.plugin.customobjects.MyDescription;
-import ie.ucd.semanticproperties.plugin.customobjects.MyExpression;
-import ie.ucd.semanticproperties.plugin.customobjects.MyFloat;
-import ie.ucd.semanticproperties.plugin.customobjects.MyInt;
 import ie.ucd.semanticproperties.plugin.customobjects.MyObject;
-import ie.ucd.semanticproperties.plugin.customobjects.MyString;
-import ie.ucd.semanticproperties.plugin.customobjects.Nat;
+import ie.ucd.semanticproperties.plugin.exceptions.InvalidLevelSpecificationException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertyUseException;
+import ie.ucd.semanticproperties.plugin.exceptions.UndefinedLevelException;
+import ie.ucd.semanticproperties.plugin.exceptions.UndefinedScopeException;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
 import ie.ucd.semanticproperties.plugin.yaml.CustomRepresenter;
 import ie.ucd.semanticproperties.plugin.yaml.CustomResolver;
@@ -31,9 +29,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,10 +57,8 @@ public class SemanticPropertyLevelSpecification {
 
   /**
    * Strings Used for Validity Checks.
-   * <p>
-   * Definition of what makes an acceptable property fors name,scope,description
+   * Definition of what makes an acceptable property for name,scope,description
    * and the different format possibilities
-   * </p>
    */
   final static String prop_Scope = "(files|modules|features|variables|all|special)";
   final static String prop_Description = ".*";
@@ -96,10 +90,11 @@ public class SemanticPropertyLevelSpecification {
    * @throws InvalidSemanticPropertySpecificationException
    */
   public SemanticPropertyLevelSpecification(final LinkedHashMap<String, ?> input)
-      throws InvalidSemanticPropertySpecificationException {
+      throws InvalidLevelSpecificationException {
     parse(input);
   }
-
+  
+    
   /**
    * Constructor for yaml file.
    * 
@@ -109,33 +104,29 @@ public class SemanticPropertyLevelSpecification {
    * @throws IOException
    */
   @SuppressWarnings("unchecked")
-  public SemanticPropertyLevelSpecification(File input)
-      throws InvalidSemanticPropertySpecificationException, IOException {
-    Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
-        new CustomRepresenter(), new DumperOptions()), new CustomResolver());
+  public SemanticPropertyLevelSpecification(File input) throws InvalidLevelSpecificationException, IOException {
+    Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(new CustomRepresenter(), new DumperOptions()), new CustomResolver());
     FileInputStream io = new FileInputStream(input);
     Object ob = yaml.load(io);
     parse((LinkedHashMap<String, ?>) ob);
-
   }
-
-  /**
-   * Constructor for string with yaml content.
-   * 
-   * @param input
-   *          Constructor for yaml file.
-   * @throws InvalidSemanticPropertySpecificationException
-   */
-  @SuppressWarnings("unchecked")
-  public SemanticPropertyLevelSpecification(String input)
-      throws InvalidSemanticPropertySpecificationException {
-    Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
-        new CustomRepresenter(), new DumperOptions()), new CustomResolver());
-    Object ob = yaml.load(input);
-    parse((LinkedHashMap<String, ?>) ob);
-
-  }
-
+//
+///**
+// * Constructor for string with yaml content.
+// * 
+// * @param input
+// *          Constructor for yaml file.
+// * @throws InvalidSemanticPropertySpecificationException
+// */
+//@SuppressWarnings("unchecked")
+//public SemanticPropertyLevelSpecification(String input)
+//    throws InvalidSemanticPropertySpecificationException {
+//  Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(
+//      new CustomRepresenter(), new DumperOptions()), new CustomResolver());
+//  Object ob = yaml.load(input);
+//  parse((LinkedHashMap<String, ?>) ob);
+//
+//}
   /**
    * parse method for LinkedHashMap.
    * <p>
@@ -149,38 +140,40 @@ public class SemanticPropertyLevelSpecification {
    */
 
   @SuppressWarnings("unchecked")
-  private void parse(LinkedHashMap<String, ?> linkedHashMap)
-      throws InvalidSemanticPropertySpecificationException {
+  private void parse(LinkedHashMap<String, ?> linkedHashMap) throws InvalidLevelSpecificationException {
 
-    boolean fun = checkValidity(linkedHashMap);
+    checkValidity(linkedHashMap);
 
-    if (!fun) {
-      System.out.println("linkedHashMap entery " + linkedHashMap
-          + " does not represent a valid property not valid");
-      throw new InvalidSemanticPropertySpecificationException();
-    } else {
-      name = (String) linkedHashMap.get("name");
-      format = (ArrayList<Object>) linkedHashMap.get("format");
-      description = (String) linkedHashMap.get("description");
+    name = (String) linkedHashMap.get("name");
+    format = (ArrayList<Object>) linkedHashMap.get("format");
+    description = (String) linkedHashMap.get("description");
+    /**
+     * get scopes
+     */
+    ArrayList<String> stringScopes = (ArrayList<String>) linkedHashMap.get("scope");
+    scope = new ArrayList<ScopeId>();
+    for (String s : stringScopes) {
       /**
-       * get scopes
+       * Check validity of scope.
        */
-      ArrayList<String> stringScopes = (ArrayList<String>) linkedHashMap
-          .get("scope");
-      scope = new ArrayList<ScopeId>();
-      for (String s : stringScopes) {
+      try{
         scope.add(ScopeId.scopeIdFor(s));
+      }catch (UndefinedScopeException e){
+        throw new InvalidLevelSpecificationException();
       }
-      /**
-       * Generate regExpStruct
-       */
-      reg = generateRegExp();
-      /**
-       * Get level.
-       */
-      level = LevelId.levelIdFor((String) linkedHashMap.get("level"));
     }
-
+    /**
+     * Generate regExpStruct
+     */
+    reg = generateRegExp();
+    /**
+     * Get level and check that it is valid.
+     */
+    try {
+      level = LevelId.levelIdFor((String) linkedHashMap.get("level"));
+    }catch( UndefinedLevelException e){
+      throw new InvalidLevelSpecificationException();
+    }
   }
 
   /**
@@ -194,116 +187,71 @@ public class SemanticPropertyLevelSpecification {
    *          snakeyaml
    * @return true when the property is valid.
    */
-  private boolean checkValidity(final LinkedHashMap<String, ?> newProp)
-      throws InvalidSemanticPropertySpecificationException {
+  private void checkValidity(final LinkedHashMap<String, ?> newProp)
+      throws InvalidLevelSpecificationException {
 
-    //
-    // /**
-    // * Checks the level.
-    // */
-    // Pattern levelPattern = Pattern.compile(prop_Level);
-    //
-    // Matcher levelMatcher =
-    // levelPattern.matcher((String)newProp.get("level"));
-    // if (!levelMatcher.matches()) {
-    //
-    // System.out.println(" level value is invalid @" + name);
-    // throw new InvalidSemanticPropertySpecificationException();
-    // //return false;
-    // }
+
     /**
-     * Checks the name.
+     * Check the name.
      */
     Pattern namePattern = Pattern.compile(prop_Name);
-
     Matcher nameMatcher = namePattern.matcher((String) newProp.get("name"));
     if (!nameMatcher.matches()) {
-      System.out.println(" name value is invalid @" + name);
-      throw new InvalidSemanticPropertySpecificationException();
+      throw new InvalidLevelSpecificationException();
 
-      // return false;
     }
 
-    // /**
-    // * Checks the scope..
-    // */
-    // Pattern scopePattern = Pattern.compile(prop_Scope,
-    // Pattern.CASE_INSENSITIVE);
-    // ArrayList<String> scopes=(ArrayList<String>)newProp.get("scope");
-    // for (String scopeValue : scopes) {
-    // Matcher scopeMatcher = scopePattern.matcher(scopeValue);
-    // if (!scopeMatcher.matches()) {
-    // System.out.println(name + " scope value is invalid @"+ scopeValue);
-    // throw new InvalidSemanticPropertySpecificationException();
-    //
-    // // return false;
-    // }
-    // }
-
     /**
-     * Checks the description.
+     * Check the description.
      */
-    Pattern descriptionPattern = Pattern.compile(prop_Description,
-        Pattern.DOTALL);
-    Matcher descriptionMatcher = descriptionPattern.matcher((String) newProp
-        .get("description"));
+    Pattern descriptionPattern = Pattern.compile(prop_Description,Pattern.DOTALL);
+    Matcher descriptionMatcher = descriptionPattern.matcher((String) newProp.get("description"));
     if (!descriptionMatcher.matches()) {
-      System.out.println("The  properties description is invalid @"
-          + description);
-      throw new InvalidSemanticPropertySpecificationException();
-      // return false;
+      throw new InvalidLevelSpecificationException();
     }
 
     /**
-     * Checks the format with recursive method.
+     * Check the format with recursive method.
      */
     checkFormatValidity((ArrayList<Object>) newProp.get("format"));
-
-    return true;
-
   }
 
   /**
    * recursive method to check if object is a valid format property.
-   * 
-   * @param formatValue
-   *          Object to be checked
-   * @return true when object is a valid format object
+   * @param formatValue Object to be checked
+   * @return true when object is a valid format object.
    */
 
-  private boolean checkFormatValidity(Object formatValue)
-      throws InvalidSemanticPropertySpecificationException {
+  private void checkFormatValidity(Object formatValue)
+      throws InvalidLevelSpecificationException {
 
-    // case for String
+    /**
+     * String case.
+     */
     if (formatValue instanceof String) {
-      // check if its valid sting
       Pattern formatPattern = Pattern.compile(prop_format_String);
       Matcher nameMatcher = formatPattern.matcher((String) formatValue);
       if (!nameMatcher.matches()) {
-        System.out.println("instance of string name value is invalid @"
-            + formatValue);
-        throw new InvalidSemanticPropertySpecificationException();
-        // return false;
+        throw new InvalidLevelSpecificationException();
       }
     }
-    // case for list
+    /**
+     * List Case
+     */
     else if (formatValue instanceof ArrayList<?>) {
-      // check validity of all objects in list
+      /**
+       * check all objects in list.
+       */
       for (Object optionalNameValue : (ArrayList<?>) formatValue) {
-        if (!checkFormatValidity(optionalNameValue)) {
-          System.out.println(optionalNameValue + "in arraylist" + "formatValue"
-              + " is not valid");
-          throw new InvalidSemanticPropertySpecificationException();
-          // return false;
-        }
-
+          checkFormatValidity(optionalNameValue);
       }
-
     }
-    // case for linkedhashmap
+    /**
+     * LinkedHashMap Case.
+     */
     else if (formatValue instanceof LinkedHashMap<?, ?>) {
-      // checks if it is an instance of optional:,choice:, or choice (op): and
-      // returns false otherwise
+      // checks if formatVlaue is an instance of optional: or choice:
+
 
       Pattern formatPattern = Pattern.compile(prop_format_Special);
       LinkedHashMap<String, ?> r = (LinkedHashMap<String, ?>) formatValue;
@@ -312,64 +260,50 @@ public class SemanticPropertyLevelSpecification {
       for (String s : keys) {
         Matcher nameMatcher = formatPattern.matcher(s);
         if (nameMatcher.matches()) {
-          if (!checkFormatValidity(r.get(s))) {
-            System.out.println("option " + s + "has invalid paramters at @"
-                + r.get(s));
-            throw new InvalidSemanticPropertySpecificationException();
-            // return false;
-          }
+          checkFormatValidity(r.get(s));
         } else {
-          System.out.println(" special value(eg:choice,optional) is invalid @"
-              + s);
-          throw new InvalidSemanticPropertySpecificationException();
-          // return false;
+          throw new InvalidLevelSpecificationException();
         }
       }
     }
-    // case for custom objects
+    /**
+     * Custom Object Case.
+     */
     else if (formatValue instanceof MyObject) {
 
       Pattern formatPattern = Pattern.compile(prop_format_CustomObject);
-      Matcher nameMatcher = formatPattern.matcher(((MyObject) formatValue)
-          .toString());
+      Matcher nameMatcher = formatPattern.matcher(((MyObject) formatValue).toString());
       if (!nameMatcher.matches()) {
-        System.out.println(" customObject value is invalid @ " + formatValue);
-        throw new InvalidSemanticPropertySpecificationException();
-        // return false;
+        throw new InvalidLevelSpecificationException();
       }
     }
-    // case for keyword 
+    /**
+     * Keyword Case.
+     */
     else if (formatValue instanceof Keyword){
       Pattern formatPattern = Pattern.compile(prop_format_Keyword);
       Matcher nameMatcher = formatPattern.matcher(((Keyword) formatValue)
           .toString());
       if (!nameMatcher.matches()) {
-        System.out.println(" Keyword value is invalid @ " + formatValue);
-        throw new InvalidSemanticPropertySpecificationException();
-        // return false;
+        throw new InvalidLevelSpecificationException();
       }
     }
-    // case for Unrecognized object
+    /**
+     * Unknown Object Case.
+     */
     else {
-      System.out.println("Should not have got here in name check, reason @ "
-          + formatValue);
-      throw new InvalidSemanticPropertySpecificationException();
-      // return false;
+      throw new InvalidLevelSpecificationException();
     }
-    // returns true if object was recognized and didn't already fail
-    return true;
-
   }
 
   /**
-   * recursive method to build regexp for property
+   * Build a RegExpStruct for property.
    * 
-   * @return regexp representation of property
+   * @return RegExpStruct representation of property
    * @throws InvalidSemanticPropertySpecificationException
    */
 
-  private static RegExpStruct generateRegExp()
-      throws InvalidSemanticPropertySpecificationException {
+  private static RegExpStruct generateRegExp() throws InvalidLevelSpecificationException {
     return generateRegExp(format);
   }
 
@@ -382,8 +316,7 @@ public class SemanticPropertyLevelSpecification {
    * @throws InvalidSemanticPropertySpecificationException
    */
 
-  private static RegExpStruct generateRegExp(Object ob)
-      throws InvalidSemanticPropertySpecificationException {
+  private static RegExpStruct generateRegExp(Object ob) throws InvalidLevelSpecificationException {
     
     //ArrayList Case.
     if (ob instanceof ArrayList<?>) {
@@ -446,7 +379,20 @@ public class SemanticPropertyLevelSpecification {
     }
     
     //Any unacceptable type.
-    throw new InvalidSemanticPropertySpecificationException();
+    throw new InvalidLevelSpecificationException();
+  }
+
+  /**
+   * generate SPI from input for this specification.
+   * 
+   * @return
+   * @throws InvalidSemanticPropertyUseException
+   */
+  public SemanticPropertyInstance makeInstance(String input)
+      throws InvalidSemanticPropertyUseException {
+    HashMap<String, Object> captured = reg.match(input);
+    return new SemanticPropertyInstance(name, level, scope, captured, this.getPrettyPrint());
+  
   }
 
   /**
@@ -468,20 +414,6 @@ public class SemanticPropertyLevelSpecification {
    */
   public RegExpStruct getReg() {
     return reg;
-  }
-
-  /**
-   * generate SPI from input for this specification.
-   * 
-   * @return
-   * @throws InvalidSemanticPropertyUseException
-   */
-  public SemanticPropertyInstance makeInstance(String input)
-      throws InvalidSemanticPropertyUseException {
-    HashMap<String, Object> captured = reg.match(input);
-    return new SemanticPropertyInstance(name, level, scope, captured, this
-        .getPrettyPrint());
-
   }
 
   public String getName() {

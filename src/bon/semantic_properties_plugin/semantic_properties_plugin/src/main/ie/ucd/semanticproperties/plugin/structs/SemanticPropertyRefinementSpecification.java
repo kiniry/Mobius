@@ -15,9 +15,10 @@ import ie.ucd.semanticproperties.plugin.customobjects.MyString;
 import ie.ucd.semanticproperties.plugin.customobjects.MyStringObject;
 import ie.ucd.semanticproperties.plugin.customobjects.Nat;
 import ie.ucd.semanticproperties.plugin.exceptions.IncompatibleSemanticPropertyInstancesException;
+import ie.ucd.semanticproperties.plugin.exceptions.InvalidLevelSpecificationException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidRefinementException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidRefinementSpecificationException;
-import ie.ucd.semanticproperties.plugin.exceptions.UnknownLevelException;
+import ie.ucd.semanticproperties.plugin.exceptions.UndefinedLevelException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
 import ie.ucd.semanticproperties.plugin.yaml.CustomConstructor;
 import ie.ucd.semanticproperties.plugin.yaml.CustomRepresenter;
@@ -53,6 +54,18 @@ import org.yaml.snakeyaml.Yaml;
  *
  */
 public class SemanticPropertyRefinementSpecification {
+  
+  /**
+   * Strings Used for Validity Checks.
+   * Used by new parse method.
+   * Definition of what makes an acceptable property for name,scope,description
+   * and the different format possibilities
+   */
+  final static String prop_Form = "\\s*(\\w+)\\s*";
+  final static String relation_Form = "(\\w+),(\\w+)";
+  final static String keyword_Form = "keyword";
+  final static String trans_Form = "translations";
+  
 
   private LinkedHashMap<String,String> sConversions;
   private LinkedHashMap<String, Transitions> oConversions;
@@ -63,20 +76,20 @@ public class SemanticPropertyRefinementSpecification {
 
   /**Constructor for  Object.
    * @param input object with property in it.
-   * @throws UnknownLevelException
+   * @throws UndefinedLevelException
    * @throws InvalidRefinementSpecificationException
    */
-  public SemanticPropertyRefinementSpecification(Object input) throws UnknownLevelException, InvalidRefinementSpecificationException {
+  public SemanticPropertyRefinementSpecification(Object input) throws UndefinedLevelException, InvalidRefinementSpecificationException {
     parse(input);
 
   }
   /**
    * Constructs Refinement LevelRepresenation from input String.
    * @param input string in yaml form to parse.
-   * @throws UnknownLevelException
+   * @throws UndefinedLevelException
    * @throws FileNotFoundException
    */
-  public SemanticPropertyRefinementSpecification(final String input) throws UnknownLevelException , InvalidRefinementSpecificationException{
+  public SemanticPropertyRefinementSpecification(final String input) throws UndefinedLevelException , InvalidRefinementSpecificationException{
 
     Yaml yaml = new Yaml(new Loader(new RefinementConstructor()), new Dumper(new RefinementRepresenter(), new DumperOptions()), new RefinementResolver());
     Object ob = yaml.load(input);
@@ -85,11 +98,11 @@ public class SemanticPropertyRefinementSpecification {
   /**Constructs Refinement LevelRepresenation from input file.
    * 
    * @param input file to parse
-   * @throws UnknownLevelException
+   * @throws UndefinedLevelException
    * @throws FileNotFoundException
    * @throws FileNotFoundException
    */
-  public SemanticPropertyRefinementSpecification(final File input) throws UnknownLevelException, FileNotFoundException, InvalidRefinementSpecificationException {
+  public SemanticPropertyRefinementSpecification(final File input) throws UndefinedLevelException, FileNotFoundException, InvalidRefinementSpecificationException {
 
     Yaml yaml = new Yaml(new Loader(new RefinementConstructor()), new Dumper(new RefinementRepresenter(), new DumperOptions()), new RefinementResolver());
     FileInputStream io = new FileInputStream(input);
@@ -99,9 +112,9 @@ public class SemanticPropertyRefinementSpecification {
   /**parse object for values of Refinement LevelRepresenation.
    * 
    * @param currentOb Object to parse.
-   * @throws UnknownLevelException
+   * @throws UndefinedLevelException
    */
-  private void parse(final Object currentOb) throws UnknownLevelException, InvalidRefinementSpecificationException {
+  private void parse(final Object currentOb) throws UndefinedLevelException, InvalidRefinementSpecificationException {
     /**Entry case
      * <p>We assume key is string.Possibly fix this later. </p>
      */
@@ -193,6 +206,86 @@ public class SemanticPropertyRefinementSpecification {
     }
 
   }
+  
+  
+  
+  /**parse object for values of Refinement LevelRepresenation.
+   * 
+   * @param currentOb Object to parse.
+   * @throws UndefinedLevelException
+   */
+  private void parse2(final LinkedHashMap<String, ?> newProp) throws UndefinedLevelException, InvalidRefinementSpecificationException {
+   
+    
+    
+    
+
+    /**
+     * Check the property.
+     */
+    Pattern namePattern = Pattern.compile(prop_Form);
+    Matcher nameMatcher = namePattern.matcher((String) newProp.get("property"));
+    if (!nameMatcher.matches()) {
+      throw new InvalidRefinementSpecificationException();
+
+    }
+    propertyName = (String) newProp.get("property");
+    if (sConversions == null) {
+      sConversions = new LinkedHashMap<String, String>();
+    }
+    sConversions.put(propertyName, propertyName);
+    
+    /**
+     * Check relation.
+     */
+    Pattern relPattern = Pattern.compile(relation_Form);
+    Matcher relMatcher = namePattern.matcher((String) newProp.get("relation"));
+    if (!relMatcher.matches()) {
+      throw new InvalidRefinementSpecificationException();
+
+    } else {
+      sourceLevel = LevelId.levelIdFor(relMatcher.group(1));
+      destinationLevel = LevelId.levelIdFor(relMatcher.group(2));
+    }
+    
+   /**
+    * Check Keywords.
+    */
+
+    if(!(newProp.get(keyword_Form) instanceof LinkedHashMap<?,?>)){
+      throw new InvalidRefinementSpecificationException();
+    }
+    LinkedHashMap<String, String> li = (LinkedHashMap<String,String>) newProp.get(keyword_Form);
+    Set<String> keys = li.keySet();
+    for(String pres: keys){
+
+      if (sConversions == null) {
+        sConversions = new LinkedHashMap<String, String>();
+      }
+      sConversions.put(pres,li.get(pres));
+    }
+    /**
+     * Check transitions.
+     */
+    
+    if(!(newProp.get(trans_Form) instanceof LinkedHashMap<?,?>)){
+      throw new InvalidRefinementSpecificationException();
+    }
+    
+    if((newProp.get(trans_Form) instanceof LinkedHashMap<?,?>)){
+      throw new InvalidRefinementSpecificationException();
+    }
+    LinkedHashMap<String, Transitions> i = (LinkedHashMap<String,Transitions>) newProp.get(trans_Form);
+    Set<String> tranKeys = i.keySet();
+    for(String pres: keys){
+      if (oConversions == null) {
+        oConversions = new LinkedHashMap<String, Transitions>();
+      }
+      oConversions.put(pres,i.get(pres));
+    }
+
+  }
+
 
 
   /**Check if LevelRepresenation match p1 refines to p2.

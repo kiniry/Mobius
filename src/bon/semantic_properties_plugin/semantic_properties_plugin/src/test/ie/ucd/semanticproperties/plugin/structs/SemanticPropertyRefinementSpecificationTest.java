@@ -9,10 +9,9 @@ import ie.ucd.semanticproperties.plugin.exceptions.IncompatibleSemanticPropertyI
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertyUseException;
 import ie.ucd.semanticproperties.plugin.exceptions.SemanticPropertyException;
-import ie.ucd.semanticproperties.plugin.exceptions.SemanticPropertyNotValidAtScopeException;
-import ie.ucd.semanticproperties.plugin.exceptions.UnknownLevelException;
+import ie.ucd.semanticproperties.plugin.exceptions.UndefinedLevelException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownPropertyException;
-import ie.ucd.semanticproperties.plugin.exceptions.UnknownScopeException;
+import ie.ucd.semanticproperties.plugin.exceptions.UndefinedScopeException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
 
 import java.io.File;

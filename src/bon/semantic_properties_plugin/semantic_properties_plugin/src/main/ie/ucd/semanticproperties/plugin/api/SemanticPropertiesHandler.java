@@ -4,10 +4,9 @@ import ie.ucd.semanticproperties.plugin.exceptions.IncompatibleSemanticPropertyI
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidRefinementException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertySpecificationException;
 import ie.ucd.semanticproperties.plugin.exceptions.InvalidSemanticPropertyUseException;
-import ie.ucd.semanticproperties.plugin.exceptions.SemanticPropertyNotValidAtScopeException;
-import ie.ucd.semanticproperties.plugin.exceptions.UnknownLevelException;
+import ie.ucd.semanticproperties.plugin.exceptions.UndefinedLevelException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownPropertyException;
-import ie.ucd.semanticproperties.plugin.exceptions.UnknownScopeException;
+import ie.ucd.semanticproperties.plugin.exceptions.UndefinedScopeException;
 import ie.ucd.semanticproperties.plugin.exceptions.UnknownVariableIdentifierException;
 import ie.ucd.semanticproperties.plugin.structs.SemanticProperty;
 import ie.ucd.semanticproperties.plugin.structs.SemanticPropertyLevelSpecification;
@@ -58,13 +57,13 @@ public class SemanticPropertiesHandler {
    * @return new SemanticPropertyInstance for this input string.
    * @throws UnknownPropertyException
    * @throws InvalidSemanticPropertyUseException
-   * @throws UnknownLevelException
-   * @throws UnknownScopeException
+   * @throws UndefinedLevelException
+   * @throws UndefinedScopeException
    * @throws SemanticPropertyNotValidAtScopeException
    */
   public final SemanticPropertyInstance parse(String input, String name, LevelId level,ScopeId scope) 
     throws UnknownPropertyException, InvalidSemanticPropertyUseException,
-           UnknownLevelException, UnknownScopeException, SemanticPropertyNotValidAtScopeException {
+           UndefinedLevelException, UndefinedScopeException {
     /**
      * Check that this Handler has semantic property for this name.
      */
@@ -77,14 +76,14 @@ public class SemanticPropertiesHandler {
      */
     SemanticPropertyLevelSpecification lev = temp.getLevels().get(level);
     if(lev==null){
-      throw new UnknownLevelException();
+      throw new UndefinedLevelException();
     }
     /**
      * Check that the scope is valid.
      */
     ArrayList<ScopeId> levScope= lev.getScope();
       if(!levScope.contains(scope)){
-        throw new UnknownScopeException();
+        throw new UndefinedScopeException();
       }
 
     SemanticPropertyInstance i = lev.makeInstance(input);
@@ -98,13 +97,13 @@ public class SemanticPropertiesHandler {
    * @return new SemanticPropertyInstance for this input string.
    * @throws UnknownPropertyException
    * @throws InvalidSemanticPropertyUseException
-   * @throws UnknownLevelException
-   * @throws UnknownScopeException
+   * @throws UndefinedLevelException
+   * @throws UndefinedScopeException
    * @throws SemanticPropertyNotValidAtScopeException
    */
   public final SemanticPropertyInstance parse(String input,LevelId level,ScopeId scope) 
     throws UnknownPropertyException, InvalidSemanticPropertyUseException,
-           UnknownLevelException, UnknownScopeException, SemanticPropertyNotValidAtScopeException {
+           UndefinedLevelException, UndefinedScopeException {
     /**
      * Extract property name from input.
      */
@@ -123,14 +122,14 @@ public class SemanticPropertiesHandler {
      */
     SemanticPropertyLevelSpecification lev = temp.getLevels().get(level);
     if(lev==null){
-      throw new UnknownLevelException();
+      throw new UndefinedLevelException();
     }
     /**
      * Check that scope is valid.
      */
     ArrayList<ScopeId> levScope= lev.getScope();
       if(!levScope.contains(scope)){
-        throw new UnknownScopeException();
+        throw new UndefinedScopeException();
       }
     /**
      * remove property name from input
@@ -156,10 +155,10 @@ public class SemanticPropertiesHandler {
    * 
    * @throws InvalidRefinementException
    * @throws UnknownPropertyException
-   * @throws UnknownLevelException
+   * @throws UndefinedLevelException
    */
   public boolean isValidRefinement(SemanticPropertyInstance prop1, SemanticPropertyInstance prop2)
-    throws IncompatibleSemanticPropertyInstancesException, UnknownVariableIdentifierException, InvalidRefinementException, UnknownPropertyException, UnknownLevelException {
+    throws IncompatibleSemanticPropertyInstancesException, UnknownVariableIdentifierException, InvalidRefinementException, UnknownPropertyException, UndefinedLevelException {
     /**
      * Check that both instances belong to same Semantic Property
      */
@@ -183,7 +182,7 @@ public class SemanticPropertiesHandler {
     SemanticPropertyLevelSpecification propLev1 = mainSP.getLevels().get(prop1.getLevel());
     SemanticPropertyLevelSpecification propLev2 = mainSP.getLevels().get(prop2.getLevel());
     if(propLev1 == null || propLev2 == null){
-      throw new UnknownLevelException();
+      throw new UndefinedLevelException();
     }
     /**
      * Check refinement.
@@ -201,7 +200,7 @@ public class SemanticPropertiesHandler {
    * @throws UnknownPropertyException
    */
   public SemanticPropertyInstance generate(SemanticPropertyInstance  input, LevelId level)
-    throws UnknownLevelException, IncompatibleSemanticPropertyInstancesException, InvalidRefinementException, UnknownPropertyException {
+    throws UndefinedLevelException, IncompatibleSemanticPropertyInstancesException, InvalidRefinementException, UnknownPropertyException {
     /**
      * Check the semantic property.
      */
@@ -221,7 +220,7 @@ public class SemanticPropertiesHandler {
      */
     SemanticPropertyLevelSpecification propLev = mainSP.getLevels().get(input.getLevel());
     if(propLev == null){
-      throw new UnknownLevelException();
+      throw new UndefinedLevelException();
     }
     /**
      * Generate refinement.

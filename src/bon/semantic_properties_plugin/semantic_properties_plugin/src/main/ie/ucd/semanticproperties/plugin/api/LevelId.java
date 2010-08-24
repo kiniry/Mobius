@@ -1,7 +1,7 @@
 package ie.ucd.semanticproperties.plugin.api;
 
-import ie.ucd.semanticproperties.plugin.exceptions.UnknownLevelException;
-import ie.ucd.semanticproperties.plugin.exceptions.UnknownScopeException;
+import ie.ucd.semanticproperties.plugin.exceptions.UndefinedLevelException;
+import ie.ucd.semanticproperties.plugin.exceptions.UndefinedScopeException;
 /**
  * Sets the allowable levels for semantic property levels and instances.
  * @author eo
@@ -30,9 +30,9 @@ public enum LevelId {
    * Returns the level if one exists for input string.
    * @param name Input string.
    * @return Scope
-   * @throws UnknownLevelException if no level exists for this input string.
+   * @throws UndefinedLevelException if no level exists for this input string.
    */
-  public static LevelId levelIdFor(String name) throws UnknownLevelException {
+  public static LevelId levelIdFor(String name) throws UndefinedLevelException {
     for (LevelId id : LevelId.values()) {
       for (String n : id.names) {
         if (n.equals(name)) {
@@ -40,7 +40,7 @@ public enum LevelId {
         }
       }
     }
-    throw new UnknownLevelException();
+    throw new UndefinedLevelException();
   }
 
 }
