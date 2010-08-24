@@ -87,10 +87,11 @@ public class SemanticPropertyLevelSpecification {
    * 
    * @param input
    *          linkedHashMap with property in it.
+   * @throws UndefinedScopeException 
    * @throws InvalidSemanticPropertySpecificationException
    */
   public SemanticPropertyLevelSpecification(final LinkedHashMap<String, ?> input)
-      throws InvalidLevelSpecificationException {
+      throws InvalidLevelSpecificationException, UndefinedScopeException {
     parse(input);
   }
   
@@ -102,9 +103,10 @@ public class SemanticPropertyLevelSpecification {
    *          Yaml file to parse.
    * @throws InvalidSemanticPropertySpecificationException
    * @throws IOException
+   * @throws UndefinedScopeException 
    */
   @SuppressWarnings("unchecked")
-  public SemanticPropertyLevelSpecification(File input) throws InvalidLevelSpecificationException, IOException {
+  public SemanticPropertyLevelSpecification(File input) throws InvalidLevelSpecificationException, IOException, UndefinedScopeException {
     Yaml yaml = new Yaml(new Loader(new CustomConstructor()), new Dumper(new CustomRepresenter(), new DumperOptions()), new CustomResolver());
     FileInputStream io = new FileInputStream(input);
     Object ob = yaml.load(io);
@@ -136,11 +138,12 @@ public class SemanticPropertyLevelSpecification {
    * 
    * @param linkedHashMap
    *          to parse
+   * @throws UndefinedScopeException 
    * @throws InvalidSemanticPropertySpecificationException
    */
 
   @SuppressWarnings("unchecked")
-  private void parse(LinkedHashMap<String, ?> linkedHashMap) throws InvalidLevelSpecificationException {
+  private void parse(LinkedHashMap<String, ?> linkedHashMap) throws InvalidLevelSpecificationException, UndefinedScopeException {
 
     checkValidity(linkedHashMap);
 
@@ -156,11 +159,8 @@ public class SemanticPropertyLevelSpecification {
       /**
        * Check validity of scope.
        */
-      try{
         scope.add(ScopeId.scopeIdFor(s));
-      }catch (UndefinedScopeException e){
-        throw new InvalidLevelSpecificationException();
-      }
+    
     }
     /**
      * Generate regExpStruct
@@ -402,7 +402,7 @@ public class SemanticPropertyLevelSpecification {
     String i = this.name;
     LinkedHashMap<String, Object> te = reg.getGroupObj();
     for (String key : te.keySet()) {
-      i += ("$ " + key + "$");
+      i += ("$" + key + "$");
     }
     return new StringTemplate(i, DefaultTemplateLexer.class);
   }

@@ -112,7 +112,7 @@ public class SemanticPropertyInstance {
   public String toString() {
     
     for(String i:captured.keySet()){
-      pp.setAttribute(i, captured.get(i).toString());
+      pp.setAttribute(i, " "+captured.get(i).toString());
     }
     return pp.toString();
   }
