@@ -620,7 +620,7 @@ public final class JmlParser {
     } else if (an_expr instanceof JmlTree.JmlBinary) {
       final JmlTree.JmlBinary b = (JmlTree.JmlBinary) an_expr;
       switch (b.op) {
-        case IMPLIES: new_expr = new ImpliesExpression(parseExpr(b.lhs), parseExpr(b.rhs)); 
+        case IMPLIES: new_expr = new ImpliesExpression(parseExpr(b.lhs), parseExpr(b.rhs));
           break;
         case REVERSE_IMPLIES: new_expr = new ImpliesExpression(parseExpr(b.rhs), parseExpr(b.lhs));
           break;

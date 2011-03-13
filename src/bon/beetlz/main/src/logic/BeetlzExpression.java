@@ -864,7 +864,7 @@ public abstract class BeetlzExpression {
      */
     @Override
     public String toBonStringSimple() {
-      return my_left.toBonString() + SPACE + my_op.getJavaName() +
+      return my_left.toBonString() + SPACE + my_op.getBonName() +
         SPACE + my_right.toBonString();
     }
 
