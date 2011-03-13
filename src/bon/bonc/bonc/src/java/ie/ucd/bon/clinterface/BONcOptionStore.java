@@ -44,7 +44,7 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogPrint.setProperty("choices", "SYSO,TXT,DOT,HTML,NEWHTML,DIC,IIG,ICG,CL,PICG,PIIG,TEX");
     ogPrint.setProperty("casesensitive", "false");
     ogPrint.setProperty("aliases", "-p,--print");
-    ogPrint.setProperty("description", "Print the parsed input in the given format. TXT for plain-text, HTML for html generation of informal charts, DIC to generate the class dictionary, IIG for the informal class inheritance graph. See the manpage or README.txt for more information and a list of all printing options.");
+    ogPrint.setProperty("description", "Print the parsed input in the given format. TXT for plain-text, HTML for html generation of informal charts, NEWHTML for the experimental advanced documentation, DIC to generate the class dictionary, IIG for the informal class inheritance graph. See the manpage or README.txt for more information and a list of all printing options.");
     ogPrintOutput = new FileOption("PrintOutput", "(?:-po)|(?:--print-output)");
     addOption(ogPrintOutput);
     ogPrintOutput.setProperty("aliases", "-po,--print-output");
@@ -173,8 +173,8 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogOption.addOptionOrGroup(ogFormal);
     ogAloneOption.addOptionOrGroup(ogHelp);
     ogAloneOption.addOptionOrGroup(ogPrintMan);
-    ogAloneOption.addOptionOrGroup(ogPrintReadme);
     ogAloneOption.addOptionOrGroup(ogVersion);
+    ogAloneOption.addOptionOrGroup(ogPrintReadme);
     ogAloneOption.addOptionOrGroup(ogPrintBashCompletion);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogPrint);

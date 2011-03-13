@@ -7,8 +7,9 @@ Contents:
 
   1. Description
   2. Requirements
+     2.1 Advanced printing
   3. Using the tool
-     3.1 Commandline options
+     3.1 Command line options
      3.2 Printing
          3.2.1 Class dictionary generation
          3.2.2 Pretty-printing
@@ -49,7 +50,23 @@ Contents:
   include the appropriate ANTLR runtime which is Copyright (c) 2003-2007, 
   Terence Parr, under the BSD licence.
   
+2.1 Advanced Printing
+---------------------
+
+  The advanced printing option (-p NEWHTML, see below) requires some additional
+  tools to work successfully, namely rubber (and a working modern latex
+  installation), pdfcrop, and graphicsmagick. 
+
+  OSX (macports):
+  sudo port install graphicsmagick rubber texlive_base
+
+  Debian/Ubuntu:
+  sudo aptitude install graphicsmagick rubber texlive-extra-utils
   
+  Windows:
+  - graphicsmagick is available through cygwin
+  - pdfcrop is available through the tetex packages in cygwin
+  - rubber must be installed manually and available on the path  
 
 3. USING THE TOOL
 ===================
@@ -78,7 +95,7 @@ Contents:
     bonc file1 - file2
     bonc file1 file2 -
     
-3.1 Commandline Options
+3.1 Command line Options
 -----------------------
 
   The tool recognises the following options:

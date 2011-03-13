@@ -5,7 +5,7 @@ NAME::
 ARGS::
 
 Print:{"-p","--print"}:{enum}:[choices="SYSO,TXT,DOT,HTML,NEWHTML,DIC,IIG,ICG,CL,PICG,PIIG,TEX",casesensitive="false"]
- : "Print the parsed input in the given format. TXT for plain-text, HTML for html generation of informal charts, DIC to generate the class dictionary, IIG for the informal class inheritance graph. See the manpage or README.txt for more information and a list of all printing options."
+ : "Print the parsed input in the given format. TXT for plain-text, HTML for html generation of informal charts, NEWHTML for the experimental advanced documentation, DIC to generate the class dictionary, IIG for the informal class inheritance graph. See the manpage or README.txt for more information and a list of all printing options."
 PrintOutput:{"-po","--print-output"}:{file}
  : "Print output to the given file instead of to stdout."
 PrettyPrint:{"-pp","--pretty-print"}
