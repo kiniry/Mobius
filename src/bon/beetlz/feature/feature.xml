@@ -2,7 +2,7 @@
 <feature
       id="ie.ucd.bon.beetlz"
       label="Beetlz Feature"
-      version="1.2.9">
+      version="1.2.10">
 
    <description url="http://kind.ucd.ie/products/opensource/Beetlz/">
       The Beetlz consistency checker for BON, JML and Java.

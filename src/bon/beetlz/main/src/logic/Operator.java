@@ -53,8 +53,10 @@ public enum Operator {
   NOT_EQUAL(30, "/=", "!="), //$NON-NLS-1$ //$NON-NLS-2$
   /** Exclusive or. */
   XOR(33, "xor", "^"), //$NON-NLS-1$ //$NON-NLS-2$
-  /** Logical conjuction. */
-  AND(35, "and", "&&"), //$NON-NLS-1$ //$NON-NLS-2$
+  /** Conditional conjuction. */
+  CONDITIONAL_AND(35, "and", "&&"), //$NON-NLS-1$ //$NON-NLS-2$
+  /** Logical conjunction / bitwise and XXX NOT USED YET! */
+  AND(35, "and", "&"),
   /** Logical disjunction. */
   OR(35, "or", "||"), //$NON-NLS-1$ //$NON-NLS-2$
   /** Implication. */

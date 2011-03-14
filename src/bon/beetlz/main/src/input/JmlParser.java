@@ -604,7 +604,7 @@ public final class JmlParser {
           new_expr = new ArithmeticExpression(parseExpr(bin.lhs), Operator.MODULO, parseExpr(bin.rhs)); 
           break;
         case CONDITIONAL_AND: 
-          new_expr = new LogicalExpression(parseExpr(bin.lhs), Operator.AND, parseExpr(bin.rhs));
+          new_expr = new LogicalExpression(parseExpr(bin.lhs), Operator.CONDITIONAL_AND, parseExpr(bin.rhs));
           break;
         case CONDITIONAL_OR: 
           new_expr = new LogicalExpression(parseExpr(bin.lhs), Operator.OR, parseExpr(bin.rhs));
@@ -612,6 +612,9 @@ public final class JmlParser {
         case XOR: 
           new_expr = new LogicalExpression(parseExpr(bin.lhs), Operator.XOR, parseExpr(bin.rhs));
           break;
+        //case AND:
+        //  new_expr = new LogicalExpression(parseExpr(bin.lhs), Operator.AND, parseExpr(bin.rhs));
+        //  break;
         default: 
           new_expr = new InformalExpression(an_expr.toString()); 
           break;
@@ -842,7 +845,7 @@ public final class JmlParser {
     final List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
     if (an_expr instanceof LogicalExpression) {
       final LogicalExpression and = (LogicalExpression) an_expr;
-      if (and.getOperator() == Operator.AND) {
+      if (and.getOperator() == Operator.CONDITIONAL_AND) {
         list.addAll(splitBooleanExpressions(and.leftExpression()));
         list.addAll(splitBooleanExpressions(and.rightExpression()));
         return list;

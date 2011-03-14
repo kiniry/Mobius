@@ -405,7 +405,7 @@ public final class BONParser {
         case OR: result = new LogicalExpression(parseExpr(bin.getLeft(), c), 
             Operator.OR, parseExpr(bin.getRight(), c)); break;
         case AND: result = new LogicalExpression(parseExpr(bin.getLeft(), c), 
-            Operator.AND, parseExpr(bin.getRight(), c)); break;
+            Operator.CONDITIONAL_AND, parseExpr(bin.getRight(), c)); break;
         
         case MUL: result = new ArithmeticExpression(parseExpr(bin.getLeft(), c), 
             Operator.MULTIPLE, parseExpr(bin.getRight(), c)); break;
@@ -657,7 +657,7 @@ public final class BONParser {
     final List < BeetlzExpression > list = new Vector < BeetlzExpression > ();
     if (an_expr instanceof LogicalExpression) {
       final LogicalExpression and = (LogicalExpression) an_expr;
-      if (and.getOperator() == Operator.AND) {
+      if (and.getOperator() == Operator.CONDITIONAL_AND) {
         list.addAll(splitBooleanExpressions(and.leftExpression()));
         list.addAll(splitBooleanExpressions(and.rightExpression()));
         return list;
