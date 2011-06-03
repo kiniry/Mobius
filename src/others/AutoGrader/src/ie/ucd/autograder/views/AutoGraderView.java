@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
-import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.navigator.resources.ProjectExplorer;
 import org.eclipse.ui.part.ViewPart;
@@ -26,7 +25,7 @@ import org.eclipse.ui.part.ViewPart;
 public class AutoGraderView extends ViewPart {
 
   private NatTable table;
-  
+
   /**
    * The constructor.
    */
@@ -66,11 +65,13 @@ public class AutoGraderView extends ViewPart {
         public void run() {
           table.updateResize();
           // attempted workaround for non-appearing scroll bars
-          Point p = table.getSize();
-          table.pack(true);
-          table.redraw();
-          table.setSize(p);
-          table.redraw();
+          if (!table.isDisposed()) {
+            Point p = table.getSize();
+            table.pack(true);
+            table.redraw();
+            table.setSize(p);
+            table.redraw();
+          }
         }
       });
     }
@@ -81,11 +82,13 @@ public class AutoGraderView extends ViewPart {
     updateTable();
     table.updateResize();
     // attempted workaround for non-appearing scroll bars
-    Point p = table.getSize();
-    table.pack(true);
-    table.redraw();
-    table.setSize(p);
-    table.redraw();
+    if (!table.isDisposed()) {
+      Point p = table.getSize();
+      table.pack(true);
+      table.redraw();
+      table.setSize(p);
+      table.redraw();
+    }
   }
 
   private void updateTable() {
@@ -99,17 +102,17 @@ public class AutoGraderView extends ViewPart {
     DataLayer columnHeaderLayer = new DefaultColumnHeaderDataLayer(columnHeaderProvider);
     DataLayer rowHeaderLayer = new DefaultRowHeaderDataLayer(rowHeaderProvider);
     DataLayer cornerLayer = new DataLayer(cornerProvider);
-    
+
     if (data.validData()) {
       bodyLayer.setDefaultColumnWidth(150);
     } else {
       bodyLayer.setDefaultColumnWidth(700);
     }
-    
+
     bodyLayer.setConfigLabelAccumulator(data);
-    
+
     AutoGraderGridLayer grid = new AutoGraderGridLayer(bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
-    
+
     table.setLayer(grid);    
     configureTable(table);
   }

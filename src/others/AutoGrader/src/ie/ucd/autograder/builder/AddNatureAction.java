@@ -14,67 +14,66 @@ import org.eclipse.ui.IWorkbenchPart;
 
 public class AddNatureAction implements IObjectActionDelegate {
 
-	private ISelection selection;
+  private ISelection selection;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-	 */
-	@SuppressWarnings("unchecked")
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
   public void run(IAction action) {
-		if (selection instanceof IStructuredSelection) {
-			for (Iterator it = ((IStructuredSelection) selection).iterator(); it.hasNext();) {
-				Object element = it.next();
-				IProject project = null;
-				if (element instanceof IProject) {
-					project = (IProject) element;
-				} else if (element instanceof IAdaptable) {
-					project = (IProject) ((IAdaptable) element).getAdapter(IProject.class);
-				}
-				if (project != null) {
-					addNature(project);
-				}
-			}
-		}
-	}
+    if (selection instanceof IStructuredSelection) {
+      for (@SuppressWarnings("rawtypes") Iterator it = ((IStructuredSelection) selection).iterator(); it.hasNext();) {
+        Object element = it.next();
+        IProject project = null;
+        if (element instanceof IProject) {
+          project = (IProject) element;
+        } else if (element instanceof IAdaptable) {
+          project = (IProject) ((IAdaptable) element).getAdapter(IProject.class);
+        }
+        if (project != null) {
+          addNature(project);
+        }
+      }
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-	 *      org.eclipse.jface.viewers.ISelection)
-	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-		this.selection = selection;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
+   */
+  public void selectionChanged(IAction action, ISelection selection) {
+    this.selection = selection;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
-	 *      org.eclipse.ui.IWorkbenchPart)
-	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
+   *      org.eclipse.ui.IWorkbenchPart)
+   */
+  public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+  }
 
-	/**
-	 * Adds nature to a project
-	 * @param project to have sample nature added or removed
-	 */
-	private void addNature(IProject project) {
-		try {
-			IProjectDescription description = project.getDescription();
-			String[] natures = description.getNatureIds();
+  /**
+   * Adds nature to a project
+   * @param project to have sample nature added or removed
+   */
+  private void addNature(IProject project) {
+    try {
+      IProjectDescription description = project.getDescription();
+      String[] natures = description.getNatureIds();
 
-			// Add the nature
-			String[] newNatures = new String[natures.length + 1];
-			System.arraycopy(natures, 0, newNatures, 0, natures.length);
-			newNatures[natures.length] = GraderNature.NATURE_ID;
-			description.setNatureIds(newNatures);
-			project.setDescription(description, null);
-		} catch (CoreException e) {
-		}
-	}
+      // Add the nature
+      String[] newNatures = new String[natures.length + 1];
+      System.arraycopy(natures, 0, newNatures, 0, natures.length);
+      newNatures[natures.length] = GraderNature.NATURE_ID;
+      description.setNatureIds(newNatures);
+      project.setDescription(description, null);
+    } catch (CoreException e) {
+    }
+  }
 
 }

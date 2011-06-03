@@ -9,7 +9,7 @@ public class Pair <A,B> {
 
   public final A first;
   public final B second;
-  
+
   public Pair(A first, B second) {
     this.first = first;
     this.second = second;
@@ -22,8 +22,7 @@ public class Pair <A,B> {
   public B getSecond() {
     return second;
   }
-  
-  @SuppressWarnings("unchecked")
+
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Pair) {
@@ -40,7 +39,7 @@ public class Pair <A,B> {
     } else {
       return false;
     }
-    
+
   }
 
   @Override
@@ -60,19 +59,19 @@ public class Pair <A,B> {
       super(mark, grade);
     }
   }
-  
+
   public static class GradeWeightPair extends Pair<Grade,Double> {
     public GradeWeightPair(Grade grade, Double weight) {
       super(grade, weight);
     }
   }
-  
+
   public static class MarkWeightPair extends Pair<Double,Double> {
     public MarkWeightPair(Double first, Double second) {
       super(first, second);
     }
   }
-  
+
   public static class NameProjectDataPair extends Pair<String,List<AggregateData>> {
     public NameProjectDataPair(String name, List<AggregateData> projectData) {
       super(name, projectData);

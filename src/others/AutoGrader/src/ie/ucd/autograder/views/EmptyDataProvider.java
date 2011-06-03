@@ -21,6 +21,6 @@ public final class EmptyDataProvider implements IDataProvider {
     throw new UnsupportedOperationException();
   }
 
-  
-  
+
+
 }
