@@ -9,19 +9,14 @@ import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.Constants;
 import ie.ucd.bon.ast.FeatureSpecification;
-import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.Type;
-import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.BONST;
-import ie.ucd.bon.typechecker.InstantiatedClassType;
-import ie.ucd.bon.typechecker.errors.InvalidNumberOfGenericsProvided;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

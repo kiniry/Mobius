@@ -20,8 +20,7 @@ public class IsClusterMethod implements TemplateMethodModel {
     this.st = st;
   }
 
-  @SuppressWarnings("unchecked")
-  public Object exec(List arguments) throws TemplateModelException {
+  public Object exec(@SuppressWarnings("rawtypes") List arguments) throws TemplateModelException {
     if (arguments.size() != 1) {
       throw new TemplateModelException("Wrong arguments");
     }
