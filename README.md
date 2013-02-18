@@ -1,0 +1,7 @@
+Mobius
+======
+The focus of the MOBIUS project is the specification and verification of concurrent JML-annotated Java programs at the source code level as well as at the bytecode level using logic- and type-based techniques and the Proof-Carrying Code paradigm. The properties of particular interest include security (e.g., data is secret and never leaked) and resource guarantee properties (e.g., this method will never use more than this much memory or that much CPU) as well as total functional correctness.
+
+One major component that Dr. Kiniry is responsible for in this effort is the development of an Program Verification Environment (PVE). The MOBIUS PVE is thus, in a sense, a prototype realization of the U.K. Grand Challenge 6 Verifying Compiler, specialized to the domain of Java programs.
+
+The MOBIUS PVE integrates theoretical and technical best-practices, leveraging the hard work of many research groups within, as well as outside of, the grant consortium. MOBIUS participants represent twelve of the top institutions in Europe in this domain (INRIA, ETHZ, Nijmegen, Munich, Edinburgh, Tallinn, Chalmers, Imperial, UCD Dublin, Warsaw, and Madrid) and we work with partners in North America (Iowa State, Concordia University, the University of Central Florida, MIT, the University of Washington, Kansas State University, and others), some of which are supported by an NSF Infrastructure Grant, on which Dr. Kiniry is a named collaborator.
